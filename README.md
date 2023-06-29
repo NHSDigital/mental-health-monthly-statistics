@@ -143,8 +143,7 @@ The repository is structured as follows:
     │       └───99_update_testdata_db
     │               00_add_ICB_derivations.py
     │
-    ├───menh_publications_clean
-    │   └───menh_publications
+    ├───menh_publications
     │       │   init_schemas.py
     │       │   run_notebooks.py
     │       │
