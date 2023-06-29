@@ -1,0 +1,113 @@
+-- Databricks notebook source
+--  %md 
+--  # LDA Output Tables
+
+-- COMMAND ----------
+
+--  %sql
+--  
+--  -- DROP TABLE IF EXISTS $db_output.lda_counts ;
+--  
+--  CREATE TABLE IF NOT EXISTS $db_output.LDA_Counts 
+--  (
+--  PreviousMonthEnd string,
+--  PeriodStart string,
+--  PeriodEnd string,
+--  Geography string,
+--  OrgCode string,
+--  OrgName string,
+--  TableNumber int,
+--  PrimaryMeasure string,
+--  PrimaryMeasureNumber string,
+--  PrimarySplit string,
+--  SecondaryMeasure string,
+--  SecondaryMeasureNumber string,
+--  SecondarySplit string,
+--  RestraintsCountOfPeople int,
+--  RestraintsCountOfRestraints int,
+--  HospitalSpellsInCarePreviousMonth int,
+--  HospitalSpellsAdmissionsInMonth int, 
+--  HospitalSpellsDischargedInMonth int, 
+--  HospitalSpellsAdmittedAndDischargedInMonth int, 
+--  HospitalSpellsOpenAtEndOfMonth int, 
+--  WardStaysInCarePreviousMonth int, 
+--  WardStaysAdmissionsInMonth int, 
+--  WardStaysDischargedInMonth int, 
+--  WardStaysAdmittedAndDischargedInMonth int, 
+--  WardStaysOpenAtEndOfMonth int, 
+--  OpenReferralsPreviousMonth int, 
+--  ReferralsStartingInTheMonth int, 
+--  ReferralsEndingInTheMonth int, 
+--  ReferralsStartingAndEndingInTheMonth int, 
+--  ReferralsOpenAtEndOfMonth int,
+--  ORG_TYPE_CODE string,
+--  PRODUCT string,
+--  SOURCE_DB string
+--  ) 
+--  USING DELTA 
+--  PARTITIONED BY (PRODUCT, PeriodEnd)
+
+-- COMMAND ----------
+
+--  %sql
+--  
+--  DROP TABLE IF EXISTS $db_output.lda_data_1 ;
+--  
+--  CREATE TABLE IF NOT EXISTS $db_output.LDA_Data_1
+--  ( 
+--          Person_ID string,
+--  		AgeRepPeriodEnd int,
+--  		Gender string,
+--  		NHSDEthnicity string,
+--  		PatMRecInRP string,
+--  		UniqServReqID string,
+--  		ReferralRequestReceivedDate string,
+--  		ServDischDate string,
+--  		REF_OrgCodeProv string,
+--  		OrgIDComm string,
+--  		UniqHospProvSpellID string,
+--  		StartDateHospProvSpell string,
+--  		DischDateHospProvSpell string,
+--  		MethAdmMHHospProvSpell string,
+--  		DestOfDischHospProvSpell string,
+--  		HSP_OrgCodeProv string,
+--  		PlannedDischDateHospProvSpell string,
+--  		UniqWardStayID string,
+--          SiteIDOfTreat string,
+--  		StartDateWardStay string,
+--  		EndDateWardStay string,
+--  		WardLocDistanceHome string,
+--  		WardSecLevel string,
+--  		WardType string,
+--  		StartDateDelayDisch string,
+--  		EndDateDelayDisch string,
+--  		DelayDischReason string,
+--          RespiteCare string,
+--  		HSP_LOS string,
+--  		WARD_LOS string,
+--          CombinedProvider string,
+--  		CombinedCommissioner string,
+--          realrestraintinttype string,
+--          RestrictiveIntType string,
+--          StartDateRestrictiveInt string,
+--          EndDateRestrictiveInt string,
+--          RestrictiveIntTypeDesc string,	
+--          RestrictiveID string,
+--          NAME string,
+--          ORG_TYPE_CODE_PROV string,
+--          OrgCode string,
+--          OrgName string,
+--          TCP_Code string,
+--          TCP_NAME string,
+--          Region_code string,
+--          Region_name string,
+--          ORG_TYPE_ORG_R string, 
+--          ORG_CODE_R string,
+--          ORG_NAME_R string,
+--          ORG_TYPE_CODE string
+--  ) 
+--  USING DELTA 
+--  -- PARTITIONED BY (PRODUCT, PeriodEnd)
+
+-- COMMAND ----------
+
