@@ -5,7 +5,7 @@ INSERT INTO $db_output.cyp_ed_wt_breakdown_values VALUES
   ('England'),
   ('CCG - GP Practice or Residence'),
   ('Provider'),
-  ('STP');
+  ('STP - GP Practice or Residence');
 
 
 -- COMMAND ----------
@@ -26,7 +26,7 @@ SELECT DISTINCT
   'NONE' as secondary_level,
   'NONE' as secondary_level_desc,
   'Provider' as breakdown 
- FROM $db_output.Provider_list -- WARNING: The data in this view differs depending on the month_id - this list is incorrect, it only pulls one month of data not three...
+ FROM $db_output.providers_between_rp_start_end_dates 
 UNION ALL
 SELECT DISTINCT
   IC_Rec_CCG as primary_level, 
@@ -41,7 +41,7 @@ SELECT DISTINCT
  COALESCE(STP_DESCRIPTION, "UNKNOWN") as primary_level_desc,
  'NONE' as secondary_level,
  'NONE' as secondary_level_desc,
- 'STP' as breakdown 
+ 'STP - GP Practice or Residence' as breakdown 
 FROM $db_output.STP_Region_mapping_post_2020
 
 

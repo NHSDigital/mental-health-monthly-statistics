@@ -6,9 +6,9 @@ assert db_output
 db_source=dbutils.widgets.get("db_source")
 print(db_source)
 assert db_source
-database=dbutils.widgets.get("database")
-print(database)
-assert database
+$reference_data=dbutils.widgets.get("$reference_data")
+print($reference_data)
+assert $reference_data
 status=dbutils.widgets.get("status")
 print(status)
 assert status

@@ -1,7 +1,6 @@
 # Databricks notebook source
-
 # dbutils.widgets.text("automatic_run","false","automatic_run")
-# dbutils.widgets.text("custom_run","true","custom_run")
+# dbutils.widgets.text("adhoc_desc","testing","adhoc_desc")
 
 # COMMAND ----------
 
@@ -17,7 +16,7 @@
  status  = dbutils.widgets.get("status")
  rp_enddate  = dbutils.widgets.get("rp_enddate")
  rp_startdate  = dbutils.widgets.get("rp_startdate")
- db_source  = dbutils.widgets.get("db_source")
+ $reference_data = dbutils.widgets.get("$reference_data")
  automatic_run  = dbutils.widgets.get("automatic_run")
  custom_run  = dbutils.widgets.get("custom_run")
  adhoc_desc = dbutils.widgets.get("adhoc_desc")
@@ -36,7 +35,7 @@
      "status": status,
      "rp_enddate": rp_enddate,
      "rp_startdate": rp_startdate,
-     "db_source": db_source,
+     "$reference_data": $reference_data,
      "automatic_run": automatic_run,
      "custom_run": custom_run,
      "adhoc_desc": adhoc_desc,
@@ -100,7 +99,8 @@ def convert_date(inputdate:str):
    '00_Master/5.Run_CYP_monthly',
  #  '00_Master/7.Run_Ascof',
    
-   '02_Aggregate/90.Pre_April_2021_Measures'
+   '02_Aggregate/90.Pre_April_2021_Measures',
+   '02_Aggregate/90a.Pre_April_2023_Measures'
  ]
    
  
@@ -129,6 +129,17 @@ def convert_date(inputdate:str):
    print('The following measures have been decommissioned for ' + str(month_id) + ': ACC02, CYP02, AMH02, AMH03, ACC53, AMH15, AMH04, AMH18, AMH05, AMH06, MHS02. So, we dont need to run 02_Aggregate/90.Pre_April_2021_Measures')
    if('02_Aggregate/90.Pre_April_2021_Measures' in notebooks_list):
      notebooks_list.remove('02_Aggregate/90.Pre_April_2021_Measures')
+     
+ 
+ '''This 02_Aggregate/90a.Pre_April_2023_Measures notebook is being run on if condition for both provisional and performance (possible for custom run but that is ages ago though!) so removing it from the list based on condition monthid condition is which is there before'''
+ 
+ if int(params['month_id']) <= 1476:
+   print('We are keeping the notebook 02_Aggregate/90a.Pre_April_2023_Measures')
+ 
+ else:
+   print('The following measures have been decommissioned for ' + str(month_id) + ': CCR70, CCR70a, CCR70b, CCR71, CCR71a, CCR71b, CCR72, CCR72a, CCR72b, CCR73, CCR73a, CCR73b. So, we dont need to run 02_Aggregate/90a.Pre_April_2023_Measures')
+   if('02_Aggregate/90a.Pre_April_2023_Measures' in notebooks_list):
+     notebooks_list.remove('02_Aggregate/90a.Pre_April_2023_Measures')
  
  
  
@@ -154,7 +165,7 @@ def convert_date(inputdate:str):
  
  %python
  
- # UKD 01/03/2022 BITC-3061 menh_analysis: Create audit table
+ # 01/03/2022: Create audit table
  def auditInsertLog(params, runStart, runEnd):
    try:
      # MARKS THE LOG WITH Auto FOR RUNs ON SCHEUDLED BASIS
@@ -244,7 +255,7 @@ def convert_date(inputdate:str):
    # NB, you can't run the report section out of this 'try' block as we are assigning the performance parameters during a second loop. (Old code used to call on the params rp_startdate, rp_enddate, month_id names so used the same names to call for performance)
    # This case should only run in prod, it can't work in ref and it hinders with job fail if not kept under IF condition
      if(os.environ.get('env') == 'prod'):
-   #   if(os.environ.get('env') == 'ref'):
+ #     if(os.environ.get('env') == 'ref'):
    #       dbutils.notebook.run("Publication_csvs", 0, params); # old one when reports are all in single book
    #       print(f'Publication_csvs run complete\n')
  

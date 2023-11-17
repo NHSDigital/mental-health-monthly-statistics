@@ -284,7 +284,47 @@ dbutils.widgets.text("db_output", "menh_analysis", "Target database")
 # COMMAND ----------
 
  %sql
- --select * from menh_analysis.validcodes where Measure = 'CAMHS';
-
-# COMMAND ----------
-
+ Truncate table $db_output.delayeddischdim;
+ INSERT INTO $db_output.delayeddischdim VALUES
+  ('att','04','NHS, excluding housing', 1429, null),
+  ('att','05','Social Care, excluding housing', 1429, null),
+  ('att','06','Both (NHS and Social Care), excluding housing', 1429, null),
+  ('att','07','Housing (including supported/specialist housing)', 1429, null),
+  
+  ('att','UNKNOWN','UNKNOWN', 1429, null),
+  ('reason','UNKNOWN','UNKNOWN', 1429, null),
+  
+  ('reason','A2','Awaiting care coordinator allocation', 1429, null),
+  ('reason','B1','Awaiting public funding', 1429, null),
+  ('reason','C1','Awaiting further non-acute (including community and mental health) NHS care (including intermediate care, rehabilitation services etc)', 1429, null),
+  ('reason','D1','Awaiting Care Home Without Nursing placement or availability', 1429, null),
+  ('reason','D2','Awaiting Care Home With Nursing placement or availability', 1429, null),
+  ('reason','E1','Awaiting care package in own home', 1429, null),
+  ('reason','F2','Awaiting community equipment, telecare and/or adaptations', 1429, null),
+  ('reason','G2','Patient or Family choice (reason not stated by patient or family)', 1429, null),
+  ('reason','G3','Patient or Family choice - Non-acute (including community and mental health) NHS care (including intermediate care, rehabilitation services etc)', 1429, null),
+  ('reason','G4','Patient or Family choice - Care Home Without Nursing placement', 1429, null),
+  ('reason','G5','Patient or Family choice - Care Home With Nursing placement', 1429, null),
+  ('reason','G6','Patient or Family choice - Care package in own home', 1429, null),
+  ('reason','G7','Patient or Family choice - Community equipment, telecare and/or adaptations', 1429, null),
+  ('reason','G8','Patient or Family Choice - general needs housing/private landlord acceptance as patient NOT covered by Housing Act/Care Act', 1429, null),
+  ('reason','G9','Patient or Family choice - Supported accommodation', 1429, null),
+  ('reason','G10','Patient or Family choice - Emergency accommodation from the Local Authority under the Housing Act', 1429, null),
+  ('reason','G11','Patient or Family choice - Child or young person awaiting social care or family placement', 1429, null),
+  ('reason','G12','Patient or Family choice - Ministry of Justice agreement/permission of proposed placement', 1429, null),
+  ('reason','H1','Disputes', 1429, null),
+  ('reason','I2','Housing - Awaiting availability of general needs housing/private landlord accommodation acceptance as patient NOT covered by Housing Act and/or Care Act', 1429, null),
+  ('reason','I3','Housing - Single homeless patients or asylum seekers NOT covered by Care Act', 1429, null),
+  ('reason','J2','Housing - Awaiting supported accommodation', 1429, null),
+  ('reason','K2','Housing - Awaiting emergency accommodation from the Local Authority under the Housing Act', 1429, null),
+  ('reason','L1','Child or young person awaiting social care or family placement', 1429, null),
+  ('reason','M1','Awaiting Ministry of Justice agreement/permission of proposed placement', 1429, null),
+  ('reason','N1','Awaiting outcome of legal requirements (mental capacity/mental health legislation)', 1429, null),
+  ('reason','P1','Awaiting residential special school or college placement or availability', 1459, null),
+  ('reason','Q1','Lack of local education support', 1459, null),
+  ('reason','R1','Public safety concern unrelated to clinical treatment need (care team)', 1459, null),
+  ('reason','R2','Public safety concern unrelated to clinical treatment need (Ministry of Justice)', 1459, null),
+  ('reason','S1','No lawful community care package available', 1459, null),
+  ('reason','T1','Lack of health care service provision', 1459, null),
+  ('reason','T2','Lack of social care support', 1459, null),
+  ('reason','98','No reason given', 1459, null)

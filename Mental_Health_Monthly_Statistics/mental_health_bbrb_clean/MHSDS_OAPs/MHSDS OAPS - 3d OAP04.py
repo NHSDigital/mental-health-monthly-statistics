@@ -1,4 +1,26 @@
 # Databricks notebook source
+# DBTITLE 1,OAP04 - OAPS Ended in Period
+# Prep tables build
+# dbutils.widgets.removeAll()
+
+# COMMAND ----------
+
+# startchoices = [str(r[0]) for r in spark.sql("select distinct ReportingPeriodStartDate from $mhsds_database.mhs000header order by ReportingPeriodStartDate").collect()]
+# endchoices = [str(r[0]) for r in spark.sql("select distinct ReportingPeriodEndDate from $mhsds_database.mhs000header order by ReportingPeriodEndDate").collect()]
+# monthid = [str(r[0]) for r in spark.sql("select distinct Uniqmonthid from $mhsds_database.mhs000header order by Uniqmonthid").collect()]
+
+# dbutils.widgets.dropdown("rp_startdate_1m", "2021-05-01", startchoices)
+# dbutils.widgets.dropdown("rp_enddate", "2021-05-31", endchoices)
+# dbutils.widgets.dropdown("rp_startdate_qtr", "2021-03-01", startchoices)
+# dbutils.widgets.dropdown("rp_startdate_12m", "2020-06-01", startchoices)
+# dbutils.widgets.dropdown("start_month_id", "1454", monthid)
+# dbutils.widgets.dropdown("end_month_id", "1454", monthid)
+# dbutils.widgets.text("db_output","$user_id")
+# dbutils.widgets.text("db_source","$db_source")
+# dbutils.widgets.text("status","Final")
+
+# COMMAND ----------
+
 db_output  = dbutils.widgets.get("db_output")
 db_source = dbutils.widgets.get("db_source")
 start_month_id = dbutils.widgets.get("start_month_id")
@@ -14,6 +36,9 @@ status  = dbutils.widgets.get("status")
  %sql
  TRUNCATE TABLE $db_output.metric_info;
  INSERT INTO $db_output.metric_info
+ -- SELECT  'OAP04' AS metric,
+ --         'Number of OAPs (not bed-nights) ended in the period' AS metric_description
+ -- UNION ALL
  SELECT  'OAP04' AS metric,
          'Number of Inappropriate OAPs (not bed-nights) ended in the period' AS metric_description
 
@@ -27,7 +52,10 @@ rp_startdates
 
 # COMMAND ----------
 
-counts_metadata = {
+counts_metadata = {##'OAP04':  {'type'  : 'count',
+#                               'aggcol': 'DISTINCT UniqServReqID',
+#                               'reasonoat': '',
+#                               'activeend': ''},
                    'OAP04':  {'type'  : 'count',
                               'aggcol': 'DISTINCT UniqServReqID',
                               'reasonoat': '10',
@@ -188,6 +216,11 @@ for metric in counts_metadata:
 
 # COMMAND ----------
 
+ %sql
+ -- truncate table $db_output.oaps_output
+
+# COMMAND ----------
+
 for metric in counts_metadata:
   print(f"""Metric: {metric}""")
   aggtype = counts_metadata[metric]['type']
@@ -255,3 +288,8 @@ for metric in counts_metadata:
                                     COALESCE({colname},'Unknown')""")
       spark.sql(f"OPTIMIZE {db_output}.oaps_output ZORDER BY (Metric, Breakdown)")
   spark.sql(f"DROP TABLE IF EXISTS {db_output}.DATA_{metric}_{rp_startdate}")
+
+# COMMAND ----------
+
+ %sql
+ -- select * from $db_output.oaps_output

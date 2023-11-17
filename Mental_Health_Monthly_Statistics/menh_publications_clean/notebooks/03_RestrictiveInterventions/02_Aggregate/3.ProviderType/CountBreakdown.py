@@ -19,53 +19,53 @@ print(db_source)
 # COMMAND ----------
 
 # DBTITLE 1,Provider type total
-%sql
-
-Insert into $db_output.MHSRestrictiveInterventionCount
-  SELECT           '$rp_startdate' AS REPORTING_PERIOD_START
-                   ,'$rp_enddate' AS REPORTING_PERIOD_END
-                   ,'$status' AS STATUS
-                   ,'Provider type' AS BREAKDOWN
-                   ,DerivedOrgType AS PRIMARY_LEVEL
-                   ,DerivedOrgType AS PRIMARY_LEVEL_DESCRIPTION
-                   ,'NONE' AS SECONDARY_LEVEL
-                   ,'NONE' AS SECONDARY_LEVEL_DESCRIPTION
-                   ,'NONE' AS TERTIARY_LEVEL
-                   ,'NONE' AS TERTIARY_LEVEL_DESCRIPTION
-                   ,'NONE' AS QUARTERNARY_LEVEL
-                   ,'NONE' AS QUARTERNARY_LEVEL_DESCRIPTION
-                   ,'MHS77' AS MEASURE_ID
-                   ,'Number of restrictive interventions in the reporting period' as MEASURE_NAME
-                   ,Count(DISTINCT MHS505UniqID) AS MEASURE_VALUE
-                   ,$month_id as UniqMonthID
-                   ,current_timestamp() as CreatedAt,
-                   '$db_source' as SOURCE_DB
-  FROM             $db_output.MHSRestrictiveInterventionRaw
-  GROUP BY         DerivedOrgType
+ %sql
+ 
+ Insert into $db_output.MHSRestrictiveInterventionCount
+   SELECT           '$rp_startdate' AS REPORTING_PERIOD_START
+                    ,'$rp_enddate' AS REPORTING_PERIOD_END
+                    ,'$status' AS STATUS
+                    ,'Provider type' AS BREAKDOWN
+                    ,DerivedOrgType AS PRIMARY_LEVEL
+                    ,DerivedOrgType AS PRIMARY_LEVEL_DESCRIPTION
+                    ,'NONE' AS SECONDARY_LEVEL
+                    ,'NONE' AS SECONDARY_LEVEL_DESCRIPTION
+                    ,'NONE' AS TERTIARY_LEVEL
+                    ,'NONE' AS TERTIARY_LEVEL_DESCRIPTION
+                    ,'NONE' AS QUARTERNARY_LEVEL
+                    ,'NONE' AS QUARTERNARY_LEVEL_DESCRIPTION
+                    ,'MHS77' AS MEASURE_ID
+                    ,'Number of restrictive interventions in the reporting period' as MEASURE_NAME
+                    ,Count(DISTINCT MHS505UniqID) AS MEASURE_VALUE
+                    ,$month_id as UniqMonthID
+                    ,current_timestamp() as CreatedAt,
+                    '$db_source' as SOURCE_DB
+   FROM             $db_output.MHSRestrictiveInterventionRaw
+   GROUP BY         DerivedOrgType
 
 # COMMAND ----------
 
 # DBTITLE 1,Restrictive Intervention Type per Provider Type
-%sql
-
-Insert into $db_output.MHSRestrictiveInterventionCount
-  SELECT           '$rp_startdate' AS REPORTING_PERIOD_START
-                   ,'$rp_enddate' AS REPORTING_PERIOD_END
-                   ,'$status' AS Status
-                   ,'Provider type; Restrictive intervention type' AS BREAKDOWN
-                   ,DerivedOrgType AS PRIMARY_LEVEL
-                   ,DerivedOrgType AS PRIMARY_LEVEL_DESCRIPTION
-                   ,DerivedRestrictiveIntTypeCode AS SECONDARY_LEVEL
-                   ,DerivedRestrictiveIntTypeDescription AS SECONDARY_LEVEL_DESCRIPTION
-                   ,'NONE' AS TERTIARY_LEVEL
-                   ,'NONE' AS TERTIARY_LEVEL_DESCRIPTION
-                   ,'NONE' AS QUARTERNARY_LEVEL
-                   ,'NONE' AS QUARTERNARY_LEVEL_DESCRIPTION
-                   ,'MHS77' AS MEASURE_ID
-                   ,'Number of restrictive interventions in the reporting period' as MEASURE_NAME
-                   ,Count(DISTINCT MHS505UniqID) AS MEASURE_VALUE
-                   ,$month_id as UniqMonthID
-                   ,current_timestamp() as CreatedAt,
-                   '$db_source' as SOURCE_DB
-  FROM             $db_output.MHSRestrictiveInterventionRaw
-  GROUP BY         DerivedOrgType, DerivedRestrictiveIntTypeCode, DerivedRestrictiveIntTypeDescription
+ %sql
+ 
+ Insert into $db_output.MHSRestrictiveInterventionCount
+   SELECT           '$rp_startdate' AS REPORTING_PERIOD_START
+                    ,'$rp_enddate' AS REPORTING_PERIOD_END
+                    ,'$status' AS Status
+                    ,'Provider type; Restrictive intervention type' AS BREAKDOWN
+                    ,DerivedOrgType AS PRIMARY_LEVEL
+                    ,DerivedOrgType AS PRIMARY_LEVEL_DESCRIPTION
+                    ,DerivedRestrictiveIntTypeCode AS SECONDARY_LEVEL
+                    ,DerivedRestrictiveIntTypeDescription AS SECONDARY_LEVEL_DESCRIPTION
+                    ,'NONE' AS TERTIARY_LEVEL
+                    ,'NONE' AS TERTIARY_LEVEL_DESCRIPTION
+                    ,'NONE' AS QUARTERNARY_LEVEL
+                    ,'NONE' AS QUARTERNARY_LEVEL_DESCRIPTION
+                    ,'MHS77' AS MEASURE_ID
+                    ,'Number of restrictive interventions in the reporting period' as MEASURE_NAME
+                    ,Count(DISTINCT MHS505UniqID) AS MEASURE_VALUE
+                    ,$month_id as UniqMonthID
+                    ,current_timestamp() as CreatedAt,
+                    '$db_source' as SOURCE_DB
+   FROM             $db_output.MHSRestrictiveInterventionRaw
+   GROUP BY         DerivedOrgType, DerivedRestrictiveIntTypeCode, DerivedRestrictiveIntTypeDescription

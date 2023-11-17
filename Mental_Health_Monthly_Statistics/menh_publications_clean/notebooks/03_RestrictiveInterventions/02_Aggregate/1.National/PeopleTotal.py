@@ -23,25 +23,25 @@ assert month_id
 # COMMAND ----------
 
 # DBTITLE 1,England
-%sql
-
-Insert into $db_output.MHSRestrictiveInterventionPeople
-  SELECT           '$rp_startdate' AS REPORTING_PERIOD_START
-                   ,'$rp_enddate' AS REPORTING_PERIOD_END
-                   ,'$status' AS Status
-                   ,'England' AS BREAKDOWN
-                   ,'England' AS PRIMARY_LEVEL
-                   ,'England' AS PRIMARY_LEVEL_DESCRIPTION
-                   ,'NONE' AS SECONDARY_LEVEL
-                   ,'NONE' AS SECONDARY_LEVEL_DESCRIPTION
-                   ,'NONE' AS TERTIARY_LEVEL
-                   ,'NONE' AS TERTIARY_LEVEL_DESCRIPTION
-                   ,'NONE' AS QUARTERNARY_LEVEL
-                   ,'NONE' AS QUARTERNARY_LEVEL_DESCRIPTION
-                   ,'MHS76' AS MEASURE_ID
-                   ,'Number of people subject to restrictive intervention in the reporting period' as MEASURE_NAME
-                   ,Count(DISTINCT person_id) AS MEASURE_VALUE
-                   ,$month_id AS UniqMonthID
-                   ,current_timestamp() as CreatedAt,
-                   '$db_source' as SOURCE_DB
-  FROM             $db_output.MHSRestrictiveInterventionRaw
+ %sql
+ 
+ Insert into $db_output.MHSRestrictiveInterventionPeople
+   SELECT           '$rp_startdate' AS REPORTING_PERIOD_START
+                    ,'$rp_enddate' AS REPORTING_PERIOD_END
+                    ,'$status' AS Status
+                    ,'England' AS BREAKDOWN
+                    ,'England' AS PRIMARY_LEVEL
+                    ,'England' AS PRIMARY_LEVEL_DESCRIPTION
+                    ,'NONE' AS SECONDARY_LEVEL
+                    ,'NONE' AS SECONDARY_LEVEL_DESCRIPTION
+                    ,'NONE' AS TERTIARY_LEVEL
+                    ,'NONE' AS TERTIARY_LEVEL_DESCRIPTION
+                    ,'NONE' AS QUARTERNARY_LEVEL
+                    ,'NONE' AS QUARTERNARY_LEVEL_DESCRIPTION
+                    ,'MHS76' AS MEASURE_ID
+                    ,'Number of people subject to restrictive intervention in the reporting period' as MEASURE_NAME
+                    ,Count(DISTINCT person_id) AS MEASURE_VALUE
+                    ,$month_id AS UniqMonthID
+                    ,current_timestamp() as CreatedAt,
+                    '$db_source' as SOURCE_DB
+   FROM             $db_output.MHSRestrictiveInterventionRaw

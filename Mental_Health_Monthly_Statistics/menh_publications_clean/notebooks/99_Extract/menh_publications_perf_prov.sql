@@ -60,11 +60,11 @@ workflow_id = 'GNASH_MHSDS'
 # status = "Performance"
 # rp_enddate =  "2020-12-31"
 # rp_startdate = "2020-12-01"
-# database =  "database"
+# $reference_data =  "$reference_data"
 
 
 # db_output1 = 'menh_publications' #dbutils.widgets.get("menh_publications") #----------
-# menh_publications_source = '$db_source' #dbutils.widgets.get("$db_source") #-----------
+# menh_publications_source = '$mhsds_database' #dbutils.widgets.get("$mhsds_database") #-----------
 
 
 
@@ -93,11 +93,11 @@ workflow_id = 'GNASH_MHSDS'
 
 -- DBTITLE 1,Reports for Performance and Provisional
 %python
-local_id = str(datetime.now().date()) +'-menh_pub'
+local_id = str(datetime.now().date()) +'-menh_pub' # Confluence doesn't specify which id to pass as it says 'user specified id'. So given date combo with project name
 print(f'Second part of file name: {file_part_name}')
 
 ##############################################################
-#              Extract the CSV of most products (MHSDS Data)  
+#              Extract the CSV of most products (MHSDS Data)  ## REMOVE THE COMMENTS FROM THE ACTUAL SQLS STATEMENT !!! OTHERWISE IT IS GIVING ERRORS
 ##############################################################
 df_mhsds_monthly_csv = spark.sql("SELECT DISTINCT \
                                   REPORTING_PERIOD_START, \
@@ -134,7 +134,7 @@ else:
   display(df_mhsds_monthly_csv)
 
 ##############################################################
-#              Extract the CSV of most products
+#              Extract the CSV of most products - UNROUNDED ## REMOVE THE COMMENTS FROM THE ACTUAL SQLS STATEMENT !!! OTHERWISE IT IS GIVING ERRORS
 ##############################################################
 df_mhsds_monthly_raw_csv = spark.sql("SELECT DISTINCT \
                                       REPORTING_PERIOD_START, \

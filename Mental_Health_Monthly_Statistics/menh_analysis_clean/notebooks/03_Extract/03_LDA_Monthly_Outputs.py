@@ -41,7 +41,7 @@ month_id = dbutils.widgets.get("month_id")
 
 # DBTITLE 1,for standalone run/testing
 # db_output =  "menh_analysis"
-# db_source =  "db_source"
+# $reference_data=  "$reference_data"
 # status = "Performance"
 
 # v4.1 code
@@ -111,7 +111,7 @@ else:
   #   print('outputs can be downloaded from the Ephemeral Notebook link above')
 
 # OUTPUT LDA_ALL  LDA_Monthly_Mmm_YYYY
-df_to_extract = sqlContext.sql('select * from global_temp.lda_all')
+df_to_extract = spark.table(f'{db_output}.lda_all')
 #   RunTime = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 
 #CHECK FOR DUPLICATES IN OUTPUT SENSE CHECK
@@ -142,7 +142,7 @@ else:
 
 # DBTITLE 1,output LDA_MI -
 # OUTPUT LDA_MI  LDA_MI_Mmm_YYYY
-df_to_extract = sqlContext.sql('select * from global_temp.lda_mi')
+df_to_extract = spark.table(f'{db_output}.lda_mi')
 #   RunTime = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 
 #CHECK FOR DUPLICATES IN OUTPUT SENSE CHECK
@@ -170,6 +170,62 @@ else:
 
 # COMMAND ----------
 
+# DBTITLE 1,output LDA_Table14_<ShortMonth_<year>
+# OUTPUT LDA_Table14
+df_to_extract = spark.table(f'{db_output}.lda_table14')
+#   RunTime = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+
+#CHECK FOR DUPLICATES IN OUTPUT SENSE CHECK
+if df_to_extract.count() > df_to_extract.dropDuplicates().count():
+  display(df_to_extract.exceptAll(df_to_extract.dropDuplicates()))
+  raise ValueError("LDA Table14 data has duplicates. Duplicate rows above")
+else:
+  print("test_lda_table14_duplicates: PASSED")
+
+if(os.environ.get('env') == 'prod'):
+  filename = f"LDA_Table14_{lda_filename_part}.csv"
+  local_id = filename
+  print(local_id)
+  try:
+    request_id = cp_mesh_send(spark, df_to_extract, mailbox_to, workflow_id, filename, local_id)
+    print(f"{filename} file has been pushed to MESH with request id {request_id}. \n")
+    print("df_to_extract rowcount", df_to_extract.count())
+  except Exception as ex:
+    print(ex, 'MESH exception on SPARK 3 can be ignored, file will be delivered in the destined path')
+else:
+#   display(df_to_extract)
+  print("df_to_extract rowcount", df_to_extract.count())
+
+# COMMAND ----------
+
+# DBTITLE 1,output LDA_Published_<ShortMonth>_<year>
+# OUTPUT LDA_Published
+df_to_extract = spark.table(f'{db_output}.lda_published')
+#   RunTime = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+
+#CHECK FOR DUPLICATES IN OUTPUT SENSE CHECK
+if df_to_extract.count() > df_to_extract.dropDuplicates().count():
+  display(df_to_extract.exceptAll(df_to_extract.dropDuplicates()))
+  raise ValueError("LDA Published CSV data has duplicates. Duplicate rows above")
+else:
+  print("test_lda_published_duplicates: PASSED")
+
+if(os.environ.get('env') == 'prod'):
+  filename = f"LDA_Published_{lda_filename_part}.csv"
+  local_id = filename
+  print(local_id)
+  try:
+    request_id = cp_mesh_send(spark, df_to_extract, mailbox_to, workflow_id, filename, local_id)
+    print(f"{filename} file has been pushed to MESH with request id {request_id}. \n")
+    print("df_to_extract rowcount", df_to_extract.count())
+  except Exception as ex:
+    print(ex, 'MESH exception on SPARK 3 can be ignored, file will be delivered in the destined path')
+else:
+#   display(df_to_extract)
+  print("df_to_extract rowcount", df_to_extract.count())
+
+# COMMAND ----------
+
 # DBTITLE 1,RUN LDA_nonRespite & output 
 if int(params['month_id']) < 1459:
   #   RUN LDA_child
@@ -182,7 +238,7 @@ else:
 
 
 # OUTPUT LDA_nonRespite  LDA_nonRespite_Mmm_YYYY
-df_to_extract = sqlContext.sql('select * from global_temp.lda_nonR')
+df_to_extract = spark.table(f'{db_output}.lda_nonR')
 #   RunTime = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 
 #CHECK FOR DUPLICATES IN OUTPUT SENSE CHECK

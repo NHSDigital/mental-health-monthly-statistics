@@ -8,9 +8,9 @@ rp_enddate = dbutils.widgets.get("rp_enddate")
 rp_startdate = dbutils.widgets.get("rp_startdate")
 rp_startdate_quarterly = dbutils.widgets.get("rp_startdate_quarterly")
 status = dbutils.widgets.get("status")
-db_source = dbutils.widgets.get("db_source")
+$reference_data= dbutils.widgets.get("$reference_data")
 
-params = {'db_output': db_output, 'db_source': db_source, 'month_id': month_id, 'rp_enddate': rp_enddate, 'rp_startdate': rp_startdate, 'status': status, 'db_source': db_source, 'rp_startdate_quarterly': rp_startdate_quarterly}
+params = {'db_output': db_output, 'db_source': db_source, 'month_id': month_id, 'rp_enddate': rp_enddate, 'rp_startdate': rp_startdate, 'status': status, '$reference_data': $reference_data, 'rp_startdate_quarterly': rp_startdate_quarterly}
 
 rp_enddate = datetime.strptime(rp_enddate, '%Y-%m-%d')
 
@@ -61,8 +61,8 @@ print(params)
 
 # DBTITLE 1,Product-specific preparation (quarterly start date)
 #params["rp_startdate_quarterly"] = rp_startdate_quarterly
-#Nina: This one to change for the EIP fix
-# GBT: FYFV_prep needs rp_startdate_quarterly (re-introduced above) - although only because of the way it's coded - not REALLY needed
+
+# FYFV_prep needs rp_startdate_quarterly (re-introduced above) - although only because of the way it's coded - not REALLY needed
 # If you assign the value of rp_startdate_quarterly to the rp_startdate parameter then this REALLY messes up FYFV_prep - changes the bed days...
 # I am therefore changing rp_startdate_quarterly to be rp_startdate_quarterly and keeping rp_startdate as rp_startdate.
 # rp_stardate is set to rp_startdate_quarterly in AWT_agg for display and aggregation purposes - the prep code uses Month_id -1 or -2 when needed

@@ -32,7 +32,7 @@
 
 # DBTITLE 1,1. Expand Main monthly
  %sql
- --GBT reinstated this SQL version now that the need to restrict outputs for Provisional & Final has dropped
+ --reinstated this SQL version now that the need to restrict outputs for Provisional & Final has dropped
  --also Final is now Performance anyway!
  
  CREATE OR REPLACE GLOBAL TEMP VIEW Main_monthly_expanded AS
@@ -61,18 +61,87 @@
    AND m.REPORTING_PERIOD_END = '$rp_enddate'
    AND m.STATUS = '$status'
  AND m.SOURCE_DB = '$db_source'
- WHERE (
-         (
-           p.BREAKDOWN NOT IN ('CASSR; Provider', 'CASSR')
-         )
-         OR 
-         (
-           p.BREAKDOWN IN ('CASSR')
-           AND p.METRIC IN ('AMH03','AMH14','AMH15','AMH17','AMH18')
-         
-         )
-       )
+ WHERE
+   (p.BREAKDOWN NOT IN 
+           ('CASSR; Provider', 
+           'CASSR',
+           'England; Accommodation Type',
+           'England; Age',
+           'England; Age Group',
+           'England; Attendance',
+           'England; Bed Type',
+           'England; ConsMechanismMH',
+           'England; Disability',
+           'England; Employment Status',
+           'England; Ethnicity',
+           'England; Gender',
+           'England; IMD Decile',
+           'England; Sexual Orientation',
+           'Provider; Age Group',
+           'Provider; Attendance',
+           'Provider; Bed Type',
+           'Provider; ConsMechanismMH',
+           'CCG - GP Practice or Residence; Age Group',
+           'CCG - GP Practice or Residence; Attendance',
+           'CCG - GP Practice or Residence; Bed Type',
+           'CCG - GP Practice or Residence; ConsMechanismMH') 
+           OR 
+           (p.BREAKDOWN IN ('CASSR') AND p.METRIC IN ('AMH03','AMH14','AMH15','AMH17','AMH18')))
+           --METRICS REMOVED AS THEY ONLY HAVE GRANULAR BREAKDOWNS (i.e. DO NOT EXIST WITH England, Provider, CCG BREAKDOWNS ONLY)
+           AND 
+           (p.METRIC NOT IN ('MHS27a','MHS29f','MHS30h'))
  
+ union all
+ 
+ SELECT  
+   COALESCE(m.REPORTING_PERIOD_START, '$rp_startdate') as REPORTING_PERIOD_START,
+   COALESCE(m.REPORTING_PERIOD_END, '$rp_enddate') as REPORTING_PERIOD_END,
+   COALESCE(m.STATUS, '$status') as STATUS,
+   COALESCE(m.BREAKDOWN, p.BREAKDOWN) as BREAKDOWN,
+   COALESCE(m.PRIMARY_LEVEL, p.PRIMARY_LEVEL) as PRIMARY_LEVEL,
+   p.PRIMARY_LEVEL_DESC as PRIMARY_LEVEL_DESCRIPTION,
+   COALESCE(m.SECONDARY_LEVEL, p.SECONDARY_LEVEL) as SECONDARY_LEVEL,
+   p.SECONDARY_LEVEL_DESC as SECONDARY_LEVEL_DESCRIPTION,
+   COALESCE(m.METRIC, p.METRIC) as METRIC,
+   p.METRIC_NAME AS METRIC_NAME,
+   m.METRIC_VALUE AS METRIC_VALUE,
+   COALESCE(m.SOURCE_DB, '$db_source') AS SOURCE_DB
+ 
+ FROM $db_output.Main_monthly_unformatted as m
+ RIGHT OUTER JOIN global_temp.main_monthly_possible_metrics as p
+   ON m.BREAKDOWN = p.BREAKDOWN
+   AND m.PRIMARY_LEVEL = p.PRIMARY_LEVEL
+   AND m.SECONDARY_LEVEL = p.SECONDARY_LEVEL
+   AND m.METRIC = p.METRIC
+   AND m.REPORTING_PERIOD_START = '$rp_startdate'
+   AND m.REPORTING_PERIOD_END = '$rp_enddate'
+   AND m.STATUS = '$status'
+ AND m.SOURCE_DB = '$db_source'
+ WHERE 
+   (p.BREAKDOWN IN ('England; Accommodation Type') AND p.METRIC IN ('MHS01', 'MHS07', 'MHS29', 'MHS32')) OR
+   (p.BREAKDOWN IN ('England; Age') AND p.METRIC IN ('MHS01', 'MHS07', 'MHS29', 'MHS32')) OR
+   (p.BREAKDOWN IN ('England; Age Group') AND p.METRIC IN ('MHS23d', 'MHS29d', 'MHS30f', 'MHS32c', 'MHS57b')) OR
+   (p.BREAKDOWN IN ('England; Attendance') AND p.METRIC IN ('MHS29a', 'MHS29d', 'MHS29f')) OR
+   (p.BREAKDOWN IN ('England; Bed Type')	AND p.METRIC IN ('MHS27a')) OR
+   (p.BREAKDOWN IN ('England; ConsMechanismMH') AND p.METRIC IN ('MHS30e','MHS61b','MHS30a','MHS30f','MHS30h')) OR
+   (p.BREAKDOWN IN ('England; Disability') AND p.METRIC IN ('MHS01', 'MHS07', 'MHS29', 'MHS32')) OR
+   (p.BREAKDOWN IN ('England; Employment Status') AND p.METRIC IN ('MHS01', 'MHS07', 'MHS29', 'MHS32')) OR
+   (p.BREAKDOWN IN ('England; Ethnicity') AND p.METRIC IN ('MHS01', 'MHS07', 'MHS29', 'MHS32')) OR
+   (p.BREAKDOWN IN ('England; Gender') AND p.METRIC IN ('MHS01', 'MHS07', 'MHS29', 'MHS32')) OR
+   (p.BREAKDOWN IN ('England; IMD Decile') AND p.METRIC IN ('MHS01', 'MHS07', 'MHS29', 'MHS32')) OR
+   (p.BREAKDOWN IN ('England; Sexual Orientation') AND p.METRIC IN ('MHS01', 'MHS07', 'MHS29', 'MHS32')) OR
+   
+   (p.BREAKDOWN IN ('Provider; Age Group') AND p.METRIC IN ('MHS23d', 'MHS29d', 'MHS30f', 'MHS32c', 'MHS57b')) OR
+   (p.BREAKDOWN IN ('Provider; Attendance') AND p.METRIC IN ('MHS29a', 'MHS29d', 'MHS29f')) OR
+   (p.BREAKDOWN IN ('Provider; Bed Type') AND p.METRIC IN ('MHS27a')) OR
+   (p.BREAKDOWN IN ('Provider; ConsMechanismMH') AND p.METRIC IN ('MHS30e','MHS61b','MHS30a','MHS30f','MHS30h')) OR
+   
+   (p.BREAKDOWN IN ('CCG - GP Practice or Residence; Age Group')	AND p.METRIC IN ('MHS23d', 'MHS29d', 'MHS30f', 'MHS32c', 'MHS57b')) OR
+   (p.BREAKDOWN IN ('CCG - GP Practice or Residence; Attendance') AND p.METRIC IN ('MHS29a', 'MHS29d', 'MHS29f')) OR
+   (p.BREAKDOWN IN ('CCG - GP Practice or Residence; Bed Type')	AND p.METRIC IN ('MHS27a')) OR
+   (p.BREAKDOWN IN ('CCG - GP Practice or Residence; ConsMechanismMH') AND p.METRIC IN ('MHS30e','MHS61b','MHS30a','MHS30f','MHS30h')) 
+   
+   
  union all
  
  -- these other measures only include rows where data has been submitted
@@ -107,7 +176,7 @@
 
 # DBTITLE 1,1.1 Expand Main monthly - MHA26
  %sql
- --GBT added as a separate element for MHS26
+ --added as a separate element for MHS26
  
  CREATE OR REPLACE GLOBAL TEMP VIEW DD_expanded AS
  
@@ -226,7 +295,7 @@
 # DBTITLE 1,4. Expand CAP
  %sql
  
- --GBT reinstated this SQL version now that the need to restrict outputs for Provisional & Final has dropped
+ --reinstated this SQL version now that the need to restrict outputs for Provisional & Final has dropped
  --also Final is now Performance anyway!
  
  CREATE OR REPLACE GLOBAL TEMP VIEW CAP_expanded AS 
@@ -271,7 +340,7 @@
 # DBTITLE 1,5. CYP Monthly expanded
  %sql
  
- --GBT reinstated this SQL version now that the need to restrict outputs for Provisional & Final has dropped
+ -- reinstated this SQL version now that the need to restrict outputs for Provisional & Final has dropped
  --also Final is now Performance anyway!
  
  CREATE OR REPLACE GLOBAL TEMP VIEW CYP_monthly_expanded AS
@@ -300,22 +369,10 @@
    AND m.STATUS = '$status'
    AND m.SOURCE_DB = '$db_source'
  WHERE (
-       (
-         p.METRIC NOT IN ('MHS30e', 'MHS58a', 'MHS61b', 'MHS32a')
-         AND p.BREAKDOWN IN ('England','CCG - GP Practice or Residence','Provider')
-       ) OR (
-         -- Coms medium used
-         p.METRIC IN ('MHS30e', 'MHS61b')
-         AND p.BREAKDOWN IN ('England; ConsMechanismMH', 'CCG - GP Practice or Residence; ConsMechanismMH', 'Provider; ConsMechanismMH')
-       ) OR (
-         -- DNA Reason
-         p.METRIC = 'MHS58a'
-         AND p.BREAKDOWN IN ('England; DNA Reason', 'CCG - GP Practice or Residence; DNA Reason', 'Provider; DNA Reason')
-       ) OR (
-         -- Referral Source
-         p.METRIC = 'MHS32a'
-         AND p.BREAKDOWN IN ('England', 'CCG - GP Practice or Residence', 'Provider', 'England; Referral Source', 'CCG - GP Practice or Residence; Referral Source', 'Provider; Referral Source')
-       )
+       (p.METRIC NOT IN ('MHS30e', 'MHS58a', 'MHS61b', 'MHS32a') AND p.BREAKDOWN IN ('England','CCG - GP Practice or Residence','Provider')) OR 
+       (p.METRIC IN ('MHS30e', 'MHS61b') AND p.BREAKDOWN IN ('England; ConsMechanismMH', 'CCG - GP Practice or Residence; ConsMechanismMH', 'Provider; ConsMechanismMH')) OR 
+       (p.METRIC = 'MHS58a' AND p.BREAKDOWN IN ('England; DNA Reason', 'CCG - GP Practice or Residence; DNA Reason', 'Provider; DNA Reason')) OR 
+       (p.METRIC = 'MHS32a' AND p.BREAKDOWN IN ('England', 'CCG - GP Practice or Residence', 'Provider', 'England; Referral Source', 'CCG - GP Practice or Residence; Referral Source', 'Provider; Referral Source'))
      )
 
 # COMMAND ----------

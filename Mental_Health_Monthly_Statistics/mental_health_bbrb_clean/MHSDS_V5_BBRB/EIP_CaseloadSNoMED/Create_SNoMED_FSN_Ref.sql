@@ -1,4 +1,27 @@
 -- Databricks notebook source
+%py
+db_output  = dbutils.widgets.get("db_output")
+db_source = dbutils.widgets.get("db_source")
+month_id = dbutils.widgets.get("end_month_id")
+rp_startdate = dbutils.widgets.get("rp_startdate_1m")
+rp_enddate = dbutils.widgets.get("rp_enddate")
+
+-- COMMAND ----------
+
+%py
+# startchoices = [str(r[0]) for r in spark.sql("select distinct ReportingPeriodStartDate from $db_source.mhs000header order by ReportingPeriodStartDate").collect()]
+# endchoices = [str(r[0]) for r in spark.sql("select distinct ReportingPeriodEndDate from $db_source.mhs000header order by ReportingPeriodEndDate").collect()]
+# monthid = [str(r[0]) for r in spark.sql("select distinct Uniqmonthid from $db_source.mhs000header order by Uniqmonthid").collect()]
+
+# dbutils.widgets.dropdown("rp_startdate", "2021-03-01", startchoices)
+# dbutils.widgets.dropdown("rp_enddate", "2021-03-31", endchoices)
+# dbutils.widgets.dropdown("month_id", "1452", monthid)
+# dbutils.widgets.text("status","Performance")
+# dbutils.widgets.text("db_output","$user_id")
+# dbutils.widgets.text("db_source","$mhsds_database")
+
+-- COMMAND ----------
+
 DROP TABLE IF EXISTS $db_output.sct_concepts; 
 CREATE TABLE $db_output.SCT_Concepts
 (
@@ -15,13 +38,13 @@ SYSTEM_CREATED_DATE date
 
 INSERT INTO $db_output.SCT_Concepts
 SELECT *
-FROM $ref_database.snomed_ct_rf2_concepts
+FROM $reference_data.snomed_ct_rf2_concepts
 
 -- COMMAND ----------
 
 INSERT INTO $db_output.SCT_Concepts
 SELECT *
-FROM $ref_database.SNOMED_CT_RF2_DRUG_CONCEPTS
+FROM $reference_data.SNOMED_CT_RF2_DRUG_CONCEPTS
 
 -- COMMAND ----------
 
@@ -48,13 +71,13 @@ SYSTEM_CREATED_DATE date
 
 INSERT INTO $db_output.SCT_Descriptions
 SELECT *
-FROM $ref_database.snomed_ct_rf2_descriptions
+FROM $reference_data.snomed_ct_rf2_descriptions
 
 -- COMMAND ----------
 
 INSERT INTO $db_output.SCT_Descriptions
 SELECT DSS_KEY ,ID ,EFFECTIVE_TIME ,ACTIVE ,MODULE_ID ,CONCEPT_ID ,LANGUAGE_CODE ,TYPE_ID ,TERM ,CASE_SIGNIFICANCE_ID ,DSS_SYSTEM_CREATED_DATE
-FROM $ref_database.snomed_ct_rf2_drug_desc_v01
+FROM $reference_data.snomed_ct_rf2_drug_desc_v01
 
 -- COMMAND ----------
 
@@ -79,13 +102,13 @@ SYSTEM_CREATED_DATE date
 
 INSERT INTO $db_output.SCT_Language
 SELECT DSS_KEY, ID , EFFECTIVE_TIME , ACTIVE ,MODULE_ID ,REFSET_ID ,REFERENCED_COMPONENT_ID ,ACCEPTABILITY_ID ,DSS_SYSTEM_CREATED_DATE 
-FROM $ref_database.snomed_ct_rf2_crefset_language
+FROM $reference_data.snomed_ct_rf2_crefset_language
 
 -- COMMAND ----------
 
 INSERT INTO $db_output.SCT_Language
 SELECT DSS_KEY, ID , EFFECTIVETIME , ACTIVE ,MODULEID ,REFSETID ,REFERENCEDCOMPONENTID ,ACCEPTABILITYID ,DSS_SYSTEM_CREATED_DATE 
-FROM $ref_database.snomed_ct_rf2_drug_language
+FROM $reference_data.snomed_ct_rf2_drug_language
 
 -- COMMAND ----------
 
@@ -135,8 +158,8 @@ AND r.active=1
 
 -- COMMAND ----------
 
---  %sql
---  select count(ID), count(distinct ID) from global_temp.concept_snap
+%sql
+select count(ID), count(distinct ID) from global_temp.concept_snap
 
 -- COMMAND ----------
 

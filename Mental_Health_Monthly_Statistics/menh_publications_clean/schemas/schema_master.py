@@ -6,33 +6,33 @@ db_output = dbutils.widgets.get("db_output")
 print(db_output)
 assert db_output
 
-database = dbutils.widgets.get("database")
-print(database)
-assert database
+$reference_data = dbutils.widgets.get("$reference_data")
+print($reference_data)
+assert $reference_data
 
 reload_ref_data = dbutils.widgets.get("reload_ref_data")
 print(reload_ref_data)
 assert reload_ref_data
 
-$db_source = dbutils.widgets.get("$db_source")
-print($db_source)
-assert $db_source
+$mhsds_database = dbutils.widgets.get("$mhsds_database")
+print($mhsds_database)
+assert $mhsds_database
 
 # COMMAND ----------
 
 params = {
   "db_output"      : db_output, 
   "product"        : product,
-  "database"  : database,
+  "$reference_data"  : $reference_data,
   "reload_ref_data": reload_ref_data,
-  "$db_source"   : $db_source
+  "$mhsds_database"   : $mhsds_database
 }
 params
 
 # COMMAND ----------
 
-%md
-always call all notebooks under create_common_notebooks 
+ %md
+ always call all notebooks under create_common_notebooks 
 
 # COMMAND ----------
 
@@ -43,11 +43,6 @@ dbutils.notebook.run('00_create_common_objects/01_create_common_tables', 0, para
 
 # DBTITLE 1,create new tables for v5 restructure
 dbutils.notebook.run('00_create_common_objects/5.0_create_version_change_tables', 0, params)
-
-# COMMAND ----------
-
-# DBTITLE 1,alter structure of existing tables
-dbutils.notebook.run('00_create_common_objects/99_alter_existing_tables', 0, params)
 
 # COMMAND ----------
 
@@ -105,3 +100,8 @@ else:
     dbutils.notebook.run(f'{path}', 0, params)
     
 #   dbutils.notebook.run(f"{rows[0]['notebook_path']}", 0, params)
+
+# COMMAND ----------
+
+# DBTITLE 1,alter structure of existing tables - needs to be at the end so it can alter ANY existing tables
+dbutils.notebook.run('00_create_common_objects/99_alter_existing_tables', 0, params)

@@ -1,11 +1,11 @@
 # Databricks notebook source
- %md
- 
- this notebook is named db_upgrade_3a as it is mostly making changes to tables created in db_upgrade_3
- 
- it must be run after db_upgrade_5 as it alters tables created there.
- 
- the changes are the addition of the SOURCE_DB column to various tables
+%md
+
+this notebook is named db_upgrade_3a as it is mostly making changes to tables created in db_upgrade_3
+
+it must be run after db_upgrade_5 as it alters tables created there.
+
+the changes are the addition of the SOURCE_DB column to various tables
 
 # COMMAND ----------
 

@@ -615,6 +615,56 @@
 
 # COMMAND ----------
 
+ %sql
+ INSERT INTO $db_output.Main_monthly_unformatted
+     SELECT '$rp_startdate' AS REPORTING_PERIOD_START
+             ,'$rp_enddate' AS REPORTING_PERIOD_END
+ 			,'$status'AS STATUS
+ 			,'Provider; Bed Type' AS BREAKDOWN
+ 			,a.OrgIDProv AS PRIMARY_LEVEL
+ 			,'NONE' AS PRIMARY_LEVEL_DESCRIPTION
+ 			,CASE WHEN HospitalBedTypeMH in ('10') THEN 'Adult Acute'
+                WHEN HospitalBedTypeMH in ('11') THEN 'Older Adult Acute'
+                WHEN HospitalBedTypeMH in ('12','13','14','15','16','17','18','19','20','21','22') THEN 'Adult Specialist'
+                WHEN HospitalBedTypeMH in ('23','24') THEN 'CYP Acute'
+                WHEN HospitalBedTypeMH in ('25','26','27','28','29','30','31','32','33','34') THEN 'CYP Specialist'
+                ELSE 'UNKNOWN'
+                END AS SECONDARY_LEVEL
+             ,CASE WHEN HospitalBedTypeMH in ('10') THEN 'Adult Acute'
+                WHEN HospitalBedTypeMH in ('11') THEN 'Older Adult Acute'
+                WHEN HospitalBedTypeMH in ('12','13','14','15','16','17','18','19','20','21','22') THEN 'Adult Specialist'
+                WHEN HospitalBedTypeMH in ('23','24') THEN 'CYP Acute'
+                WHEN HospitalBedTypeMH in ('25','26','27','28','29','30','31','32','33','34') THEN 'CYP Specialist'
+                ELSE 'UNKNOWN'
+                END AS SECONDARY_LEVEL_DESCRIPTION
+ 			,'MHS27a' AS METRIC
+ 			,CAST (IFNULL (cast(COUNT (a.UniqHospProvSpellID) as INT), 0) AS STRING)	AS METRIC_VALUE
+             ,'$db_source' AS SOURCE_DB
+             
+        FROM $db_source.MHS501HospProvSpell a
+         LEFT JOIN $db_source.MHS502WardStay b on a.UniqHospProvSpellID = b.UniqHospProvSpellID and a.StartDateHospProvSpell = b.StartDateWardStay and ((a.starttimehospprovspell = b.starttimewardstay) or a.starttimehospprovspell is null) and b.UniqMonthID = '$month_id'
+       WHERE a.UniqMonthID = '$month_id'
+             AND StartDateHospProvSpell >= '$rp_startdate' 
+             AND StartDateHospProvSpell <= '$rp_enddate'
+       GROUP BY 
+       a.OrgIDProv,
+       CASE WHEN HospitalBedTypeMH in ('10') THEN 'Adult Acute'
+                WHEN HospitalBedTypeMH in ('11') THEN 'Older Adult Acute'
+                WHEN HospitalBedTypeMH in ('12','13','14','15','16','17','18','19','20','21','22') THEN 'Adult Specialist'
+                WHEN HospitalBedTypeMH in ('23','24') THEN 'CYP Acute'
+                WHEN HospitalBedTypeMH in ('25','26','27','28','29','30','31','32','33','34') THEN 'CYP Specialist'
+                ELSE 'UNKNOWN'
+                END
+             ,CASE WHEN HospitalBedTypeMH in ('10') THEN 'Adult Acute'
+                WHEN HospitalBedTypeMH in ('11') THEN 'Older Adult Acute'
+                WHEN HospitalBedTypeMH in ('12','13','14','15','16','17','18','19','20','21','22') THEN 'Adult Specialist'
+                WHEN HospitalBedTypeMH in ('23','24') THEN 'CYP Acute'
+                WHEN HospitalBedTypeMH in ('25','26','27','28','29','30','31','32','33','34') THEN 'CYP Specialist'
+                ELSE 'UNKNOWN'
+                END
+
+# COMMAND ----------
+
 # DBTITLE 1,MHS28
  %sql
  INSERT INTO $db_output.Main_monthly_unformatted

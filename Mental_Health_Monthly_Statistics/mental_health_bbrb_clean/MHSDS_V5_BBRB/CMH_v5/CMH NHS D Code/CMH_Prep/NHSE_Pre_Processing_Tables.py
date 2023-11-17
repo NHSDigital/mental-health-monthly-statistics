@@ -1,11 +1,17 @@
 # Databricks notebook source
+ %sql
+ create widget text rp_enddate default "2022-03-31";
+ create widget text end_month_id default "1464";
+
+# COMMAND ----------
+
 # DBTITLE 1,Header
  %sql
  DROP TABLE IF EXISTS $db_output.nhse_pre_proc_header;
  CREATE TABLE         $db_output.NHSE_Pre_Proc_Header USING DELTA AS
  select distinct uniqmonthid, reportingperiodstartdate, reportingperiodenddate, label as Der_FY
- from $db_source.mhs000header h
- left join $ref_database.calendar_financial_year fy on h.reportingperiodstartdate between fy.START_DATE and fy.END_DATE
+ from $reference_data.mhs000header h
+ left join $reference_data.calendar_financial_year fy on h.reportingperiodstartdate between fy.START_DATE and fy.END_DATE
  order by 1 desc
 
 # COMMAND ----------
@@ -52,9 +58,9 @@
  m.AgeDeath,
  m.OrgIDLocalPatientId,
  m.OrgIDResidenceResp,
- CASE WHEN m.UniqMonthID <= 1467 then m.OrgIDCCGRes ---Added new case when statement 27/09/22
+ CASE WHEN m.UniqMonthID <= 1467 then m.OrgIDCCGRes ---Added new case when statement AT 27/09/22
       WHEN m.UniqMonthID > 1467 then m.OrgIDSubICBLocResidence
-      ELSE 'ERROR' end as OrgIDCCGRes, --added 7/9/22
+      ELSE 'ERROR' end as OrgIDCCGRes, --gvf added 7/9/22 OrgIDSubICBLocResidence 
  m.LADistrictAuth,
  m.PostcodeDistrict,
  m.DefaultPostcode,
@@ -207,6 +213,7 @@
                                        AND h.UniqHospProvSpellID = w.UniqHospProvSpellID  --updated for v5
                                        AND h.RecordNumber = w.RecordNumber
  LEFT JOIN $db_output.NHSE_Pre_Proc_Header he ON h.UniqMonthID = he.UniqMonthID                                      
+ -- WHERE h.UniqMonthID >= $end_month_id
 
 # COMMAND ----------
 

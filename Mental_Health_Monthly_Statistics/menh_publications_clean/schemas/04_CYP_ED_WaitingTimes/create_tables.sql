@@ -3,9 +3,9 @@
 db_output=dbutils.widgets.get("db_output")
 print(db_output)
 assert db_output
-$db_source=dbutils.widgets.get("$db_source")
-print($db_source)
-assert $db_source
+$mhsds_database=dbutils.widgets.get("$mhsds_database")
+print($mhsds_database)
+assert $mhsds_database
 
 -- COMMAND ----------
 
@@ -135,6 +135,6 @@ for table, column in tableColumn.items():
 -- # # update only needs doing once - DONE
 
 -- # for table, column in tableColumn.items():
--- #   action = """Update {db_output}.{table} SET {column} = '{$db_source}' where {column} is null""".format(db_output=db_output,table=table,column=column,$db_source=$db_source)
+-- #   action = """Update {db_output}.{table} SET {column} = '{$mhsds_database}' where {column} is null""".format(db_output=db_output,table=table,column=column,$mhsds_database=$mhsds_database)
 -- #   print(action)
 -- #   spark.sql(action)

@@ -45,42 +45,43 @@ for table in listoftables:
 # COMMAND ----------
 
 # DBTITLE 1,Delete Existing Month Data - original - replaced by the code above
-%sql
-
-
--- DELETE FROM $db_output.All_products_formatted
--- WHERE MONTH_ID = '$month_id'
--- AND STATUS = '$status'
--- AND SOURCE_DB = '$db_source';
-
--- DELETE FROM $db_output.main_monthly_unformatted_new
--- WHERE MONTH_ID = '$month_id'
--- AND STATUS = '$status'
--- AND SOURCE_DB = '$db_source';
-
--- DELETE FROM $db_output.all_products_cached
--- WHERE MONTH_ID = '$month_id'
--- AND STATUS = '$status'
--- AND SOURCE_DB = '$db_source';
-
--- DELETE FROM $db_output.third_level_products_cached
--- WHERE MONTH_ID = '$month_id'
--- AND STATUS = '$status'
--- AND SOURCE_DB = '$db_source';
-
--- DELETE FROM $db_output.third_level_products_formatted
--- WHERE MONTH_ID = '$month_id'
--- AND STATUS = '$status'
--- AND SOURCE_DB = '$db_source';
+ %sql
+ 
+ -- GBT: this needs PRODUCT adding in to it to prevent a re-run of a single product from annihilating the full month's data :o(
+ 
+ -- DELETE FROM $db_output.All_products_formatted
+ -- WHERE MONTH_ID = '$month_id'
+ -- AND STATUS = '$status'
+ -- AND SOURCE_DB = '$db_source';
+ 
+ -- DELETE FROM $db_output.main_monthly_unformatted_new
+ -- WHERE MONTH_ID = '$month_id'
+ -- AND STATUS = '$status'
+ -- AND SOURCE_DB = '$db_source';
+ 
+ -- DELETE FROM $db_output.all_products_cached
+ -- WHERE MONTH_ID = '$month_id'
+ -- AND STATUS = '$status'
+ -- AND SOURCE_DB = '$db_source';
+ 
+ -- DELETE FROM $db_output.third_level_products_cached
+ -- WHERE MONTH_ID = '$month_id'
+ -- AND STATUS = '$status'
+ -- AND SOURCE_DB = '$db_source';
+ 
+ -- DELETE FROM $db_output.third_level_products_formatted
+ -- WHERE MONTH_ID = '$month_id'
+ -- AND STATUS = '$status'
+ -- AND SOURCE_DB = '$db_source';
 
 # COMMAND ----------
 
 # DBTITLE 1,Vacuum formatted output tables for performance
-%sql
-
-VACUUM $db_output.all_products_cached RETAIN 8 HOURS;
-VACUUM $db_output.All_products_formatted RETAIN 8 HOURS;
-VACUUM $db_output.main_monthly_unformatted_new RETAIN 8 HOURS;
+ %sql
+ 
+ VACUUM $db_output.all_products_cached RETAIN 8 HOURS;
+ VACUUM $db_output.All_products_formatted RETAIN 8 HOURS;
+ VACUUM $db_output.main_monthly_unformatted_new RETAIN 8 HOURS;
 
 # COMMAND ----------
 

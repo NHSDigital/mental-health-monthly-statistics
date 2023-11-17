@@ -1,42 +1,55 @@
 -- Databricks notebook source
---  %md 
---  
---  ## Outputs
---  #### [Go to Unsuppressed/raw Output](https://db.core.data.digital.nhs.uk/#notebook/4835364/command/4835401)
---  #### [Go to Suppressed/rounded Output](https://db.core.data.digital.nhs.uk/#notebook/4835364/command/4835402)
+%md 
+
+## Outputs
+#### [Go to Unsuppressed/raw Output](https://db.core.data.digital.nhs.uk/#notebook/4835364/command/4835401)
+#### [Go to Suppressed/rounded Output](https://db.core.data.digital.nhs.uk/#notebook/4835364/command/4835402)
 
 -- COMMAND ----------
 
---  %md
---  ##### Please note as of March 2022 the name of the widgets has changed
---  example below is for: January 2022
---  
---  **db_output:**
---  Your database name
---  
---  **db_source:**
---  The database from which data is sourced
---  
---  ~~**rp_enddate_1m: (previously "rp_enddate")**~~
---  **rp_enddate:**
---  this is end of the reporting month, in this example '2022-01-31'
---  
---  **rp_startdate_qtr: (not previously used)**
---  this is quarterly so its your "rp_startdate_1m" minus two, so in this example its '2021-11-01'
---  
---  **status**
---  this depends on whether you're running 'Performance' or 'Provisional' so remember to update this
---  
---  ////////////////// below not required ///////////////////
---  
---  **start_month_id (not previoulsy used)** (not used for this process)
---  this is start of the reporting month so you would use the month from 'rp_startdate_12m' in this example will be '1451' (Feb2021)
---  
---  **end_month_id (previously "month_id")** (not used for this process)
---  this is the month you are reporting, eg 1462 (Jan 2022)
---  
---  **rp_startdate_12m (previoulsy "rp_startdate")** (not used for this process)
---  this is the start date of the report (12 rolling month) so in this example will be '2021-02-01'
+%md
+##### Please note as of March 2022 the name of the widgets has changed
+example below is for: January 2022
+
+**db_output:**
+Your database name
+
+**db_source:**
+$reference_data
+
+~~**rp_enddate_1m: (previously "rp_enddate")**~~
+**rp_enddate:**
+this is end of the reporting month, in this example '2022-01-31'
+
+**rp_startdate_qtr: (not previously used)**
+this is quarterly so its your "rp_startdate_1m" minus two, so in this example its '2021-11-01'
+
+**status**
+this depends on whether you're running 'Performance' or 'Provisional' so remember to update this
+
+////////////////// below not required ///////////////////
+
+**start_month_id (not previoulsy used)** (not used for this process)
+this is start of the reporting month so you would use the month from 'rp_startdate_12m' in this example will be '1451' (Feb2021)
+
+**end_month_id (previously "month_id")** (not used for this process)
+this is the month you are reporting, eg 1462 (Jan 2022)
+
+**rp_startdate_12m (previoulsy "rp_startdate")** (not used for this process)
+this is the start date of the report (12 rolling month) so in this example will be '2021-02-01'
+
+-- COMMAND ----------
+
+%py
+db_output = dbutils.widgets.get("db_output")
+db_source = dbutils.widgets.get("db_source")
+start_month_id = dbutils.widgets.get("start_month_id")
+end_month_id = dbutils.widgets.get("end_month_id")
+rp_startdate_1m = dbutils.widgets.get("rp_startdate_1m")
+rp_startdate_12m = dbutils.widgets.get("rp_startdate_12m")
+rp_startdate_qtr = dbutils.widgets.get("rp_startdate_qtr")
+rp_enddate = dbutils.widgets.get("rp_enddate")
+status = dbutils.widgets.get("status")
 
 -- COMMAND ----------
 
@@ -68,10 +81,10 @@ select
 ,sum(case when (pop_v2.age_lower > 17 and pop_v2.age_lower < 65) then pop_v2.population_count else 0 end) as Aged_18_to_64
 ,sum(case when (pop_v2.age_lower > 64) then pop_v2.population_count else 0 end) as Aged_65_OVER
 ,sum(case when (pop_v2.age_lower < 18) then pop_v2.population_count else 0 end) as Aged_0_to_17
-from $reference_database.ONS_POPULATION_V2 pop_v2
-inner join  $reference_database.ONS_CHD_GEO_EQUIVALENTS geo
+from $reference_data.ONS_POPULATION_V2 pop_v2
+inner join  $reference_data.ONS_CHD_GEO_EQUIVALENTS geo
 on pop_v2.GEOGRAPHIC_SUBGROUP_CODE = geo.geography_code 
-Left join $reference_database.odsapisuccessordetails successorDetails 
+Left join $reference_data.odsapisuccessordetails successorDetails 
 on geo.DH_GEOGRAPHY_CODE = successorDetails.Organisationid and successorDetails.Type = 'Successor' and successorDetails.startDate > '2021-03-31'--and geo.IS_CURRENT =1
 where pop_v2.GEOGRAPHIC_GROUP_CODE = 'E38'
 and geo.ENTITY_CODE = 'E38'
@@ -100,8 +113,8 @@ select * from reference_list_rn where RN = 1
         ref.Aged_65_OVER,
         ref.Aged_0_to_17
 from reference_list ref
-inner join $reference_database.ODSAPIOrganisationDetails org1
--- inner join $ref_database.org_daily org1
+inner join $reference_data.ODSAPIOrganisationDetails org1
+-- inner join $reference_data.org_daily org1
 on ref.DH_GEOGRAPHY_CODE = org1.OrganisationId
 where ref.OrganisationID is null
 and org1.EndDate is null
@@ -119,7 +132,7 @@ order by ccg_predecessor_code
         ref2.Aged_65_OVER,
         ref2.Aged_0_to_17
 from reference_list ref2
-inner join $reference_database.ODSAPIOrganisationDetails org2
+inner join $reference_data.ODSAPIOrganisationDetails org2
 on ref2.DH_GEOGRAPHY_CODE = org2.OrganisationId
 where org2.DateType = 'Operational'
 )
@@ -128,7 +141,7 @@ where org2.DateType = 'Operational'
         org3.name as name, 
         ref3.TargetOrganisationId as Org_CODE
 from reference_list ref3
-inner join $reference_database.ODSAPIOrganisationDetails org3
+inner join $reference_data.ODSAPIOrganisationDetails org3
 on ref3.TargetOrganisationId = org3.OrganisationId
 
 where org3.DateType = 'Operational'
@@ -157,13 +170,13 @@ select * from with_successor
 
 -- COMMAND ----------
 
---DROP TABLE IF EXISTS $db_output.RD_CCG_LATEST; updated 13/9/22
+--DROP TABLE IF EXISTS $db_output.RD_CCG_LATEST; updated 13/9/22 gvf
 DROP TABLE IF EXISTS $db_output.RD_SubICB_LATEST;
 
 CREATE TABLE IF NOT EXISTS $db_output.RD_SubICB_LATEST USING DELTA AS
 SELECT DISTINCT ORG_CODE,
                 NAME
-           FROM $ref_database.org_daily
+           FROM $reference_data.org_daily
           WHERE (BUSINESS_END_DATE >= add_months('$rp_enddate', 1) OR ISNULL(BUSINESS_END_DATE))
                 AND BUSINESS_START_DATE <= add_months('$rp_enddate', 1)    
                 AND ORG_TYPE_CODE = 'CC'
@@ -184,10 +197,14 @@ DROP TABLE IF EXISTS $db_output.rd_org_daily_latest;
 CREATE TABLE IF NOT EXISTS $db_output.RD_ORG_DAILY_LATEST USING DELTA AS
 SELECT DISTINCT ORG_CODE, 
                 NAME
-           FROM $ref_database.org_daily
+           FROM $reference_data.org_daily
           WHERE (BUSINESS_END_DATE >= add_months('$rp_enddate', 1) OR ISNULL(BUSINESS_END_DATE))
                 AND BUSINESS_START_DATE <= add_months('$rp_enddate', 1)	
-                AND ORG_TYPE_CODE NOT IN ('MP', 'IR', 'F', 'GO', 'CN', 'CQ');
+                AND ORG_TYPE_CODE NOT IN ('MP', 'IR', 'F', 'GO', 'CN','CQ','PP'); 
+
+-- COMMAND ----------
+
+--DROP TABLE IF EXISTS $db_output.spells 
 
 -- COMMAND ----------
 
@@ -195,92 +212,136 @@ DROP TABLE IF EXISTS $db_output.spells;
 
 -- COMMAND ----------
 
---  %py
---  if int(end_month_id) > 1467:
---    spark.sql(f"""
---               CREATE TABLE {db_output}.SPELLS USING DELTA AS 
---  
---                SELECT 
---  
---                A.PERSON_ID, 
---                A.UniqMonthID,
---                A.UniqHospProvSpellID, -- renamed A.UNIQHOSPPROVSPELLNUM to UniqHospProvSpellID 11/1/22
---                A.OrgIDProv,
---                E.NAME AS PROV_NAME,
---                A.StartDateHospProvSpell,
---                A.DischDateHospProvSpell,
---                DATEDIFF(A.DischDateHospProvSpell, A.StartDateHospProvSpell) as HOSP_LOS,
---                B.UniqWardStayID,
---                B.HospitalBedTypeMH,
---                B.StartDateWardStay,
---                B.EndDateWardStay,
---                DATEDIFF(B.EndDateWardStay, B.StartDateWardStay) as WARD_LOS,
---                C.AgeRepPeriodEnd,
---                -- C.OrgIDCCGRes, ---- Old  CCG derivation retained for now in case used further on
---                -- C.OrgIDSubICBLocResidence,
---                CASE WHEN a.UniqMonthID <= 1467 then OrgIDCCGRes
---                  WHEN a.UniqMonthID  > 1467 then OrgIDSubICBLocResidence
---                  ELSE 'ERROR'
---                  END AS IC_REC_GP_RES
---                -- COALESCE(F.ORG_CODE,'UNKNOWN') AS IC_REC_CCG, --amended for sub-icb/icb 8/9/22 
---                -- COALESCE(F.NAME, 'UNKNOWN') as CCG_NAME
---  
---                FROM
---                {db_source}.MHS501HospProvSpell a 
---                LEFT JOIN {db_source}.MHS502WARDSTAY B on a.UniqHospProvSpellID = b.UniqHospProvSpellID and a.Recordnumber = b.RecordNumber -- renamed UNIQHOSPPROVSPELLNUM to UniqHospProvSpellID 11/1/22
---                LEFT JOIN {db_source}.MHS001MPI C ON A.RECORDNUMBER = C.RECORDNUMBER --AND c.PatMRecInRP = TRUE - Removed this as using RecordNumber (so will use demographics of person in that provider at time of discharge)
---                --LEFT JOIN CCG D ON A.PERSON_ID = D.PERSON_ID -- Removed CCG table since moving to using OrgIDCCGRes, previous prep cells
---                LEFT JOIN {db_output}.RD_ORG_DAILY_LATEST E ON A.ORGIDPROV = E.ORG_CODE
---                -- LEFT JOIN $db_output.RD_CCG_LATEST F ON C.ORGIDCCGRES = F.ORG_CODE ---amended for sub-icb/icb 8/9/22 (moved to below)
---  
---  
---                WHERE
---                (a.RECORDENDDATE IS NULL OR a.RECORDENDDATE > '{rp_enddate}') AND a.RECORDSTARTDATE BETWEEN '{rp_startdate_qtr}' AND '{rp_enddate}'
---                AND A.DischDateHospProvSpell BETWEEN '{rp_startdate_qtr}' AND '{rp_enddate}'
---               """)
---  else:
---    spark.sql(f"""
---               CREATE TABLE {db_output}.SPELLS USING DELTA AS 
---  
---                SELECT 
---  
---                A.PERSON_ID, 
---                A.UniqMonthID,
---                A.UniqHospProvSpellID, -- renamed A.UNIQHOSPPROVSPELLNUM to UniqHospProvSpellID 11/1/22
---                A.OrgIDProv,
---                E.NAME AS PROV_NAME,
---                A.StartDateHospProvSpell,
---                A.DischDateHospProvSpell,
---                DATEDIFF(A.DischDateHospProvSpell, A.StartDateHospProvSpell) as HOSP_LOS,
---                B.UniqWardStayID,
---                B.HospitalBedTypeMH,
---                B.StartDateWardStay,
---                B.EndDateWardStay,
---                DATEDIFF(B.EndDateWardStay, B.StartDateWardStay) as WARD_LOS,
---                C.AgeRepPeriodEnd,
---                -- C.OrgIDCCGRes, ---- Old  CCG derivation retained for now in case used further on 
---                -- C.OrgIDSubICBLocResidence,
---                OrgIDCCGRes AS IC_REC_GP_RES
---                -- COALESCE(F.ORG_CODE,'UNKNOWN') AS IC_REC_CCG, --amended for sub-icb/icb 8/9/22 
---                -- COALESCE(F.NAME, 'UNKNOWN') as CCG_NAME
---  
---                FROM
---                {db_source}.MHS501HospProvSpell a 
---                LEFT JOIN {db_source}.MHS502WARDSTAY B on a.UniqHospProvSpellID = b.UniqHospProvSpellID and a.Recordnumber = b.RecordNumber -- renamed UNIQHOSPPROVSPELLNUM to UniqHospProvSpellID  11/1/22
---                LEFT JOIN {db_source}.MHS001MPI C ON A.RECORDNUMBER = C.RECORDNUMBER --AND c.PatMRecInRP = TRUE - Removed this as using RecordNumber (so will use demographics of person in that provider at time of discharge)
---                --LEFT JOIN CCG D ON A.PERSON_ID = D.PERSON_ID -- Removed CCG table since moving to using OrgIDCCGRes, previous prep cells
---                LEFT JOIN {db_output}.RD_ORG_DAILY_LATEST E ON A.ORGIDPROV = E.ORG_CODE
---                -- LEFT JOIN $db_output.RD_CCG_LATEST F ON C.ORGIDCCGRES = F.ORG_CODE ---amended for sub-icb/icb 8/9/22 (moved to below)
---  
---  
---                WHERE
---                (a.RECORDENDDATE IS NULL OR a.RECORDENDDATE > '{rp_enddate}') AND a.RECORDSTARTDATE BETWEEN '{rp_startdate_qtr}' AND '{rp_enddate}'
---                AND A.DischDateHospProvSpell BETWEEN '{rp_startdate_qtr}' AND '{rp_enddate}'
---               """)
+%py
+if int(end_month_id) > 1467:
+  spark.sql(f"""
+             CREATE TABLE {db_output}.SPELLS USING DELTA AS 
+
+              SELECT 
+
+              A.PERSON_ID, 
+              A.UniqMonthID,
+              A.UniqHospProvSpellID, -- renamed A.UNIQHOSPPROVSPELLNUM to UniqHospProvSpellID HL 11/1/22
+              A.OrgIDProv,
+              E.NAME AS PROV_NAME,
+              A.StartDateHospProvSpell,
+              A.DischDateHospProvSpell,
+              DATEDIFF(A.DischDateHospProvSpell, A.StartDateHospProvSpell) as HOSP_LOS,
+              B.UniqWardStayID,
+              B.HospitalBedTypeMH,
+              B.StartDateWardStay,
+              B.EndDateWardStay,
+              DATEDIFF(B.EndDateWardStay, B.StartDateWardStay) as WARD_LOS,
+              C.AgeRepPeriodEnd,
+              -- C.OrgIDCCGRes, ---- Old  CCG derivation retained for now in case used further on gvf
+              -- C.OrgIDSubICBLocResidence,
+              CASE WHEN a.UniqMonthID <= 1467 then OrgIDCCGRes
+                WHEN a.UniqMonthID  > 1467 then OrgIDSubICBLocResidence
+                ELSE 'ERROR'
+                END AS IC_REC_GP_RES
+              -- COALESCE(F.ORG_CODE,'UNKNOWN') AS IC_REC_CCG, --amended for sub-icb/icb 8/9/22 gvf
+              -- COALESCE(F.NAME, 'UNKNOWN') as CCG_NAME
+
+              FROM
+              {db_source}.MHS501HospProvSpell a 
+              LEFT JOIN {db_source}.MHS502WARDSTAY B on a.UniqHospProvSpellID = b.UniqHospProvSpellID and a.Recordnumber = b.RecordNumber -- renamed UNIQHOSPPROVSPELLNUM to UniqHospProvSpellID HL 11/1/22
+              LEFT JOIN {db_source}.MHS001MPI C ON A.RECORDNUMBER = C.RECORDNUMBER --AND c.PatMRecInRP = TRUE - Removed this as using RecordNumber (so will use demographics of person in that provider at time of discharge)
+              --LEFT JOIN CCG D ON A.PERSON_ID = D.PERSON_ID -- Removed CCG table since moving to using OrgIDCCGRes, previous prep cells
+              LEFT JOIN {db_output}.RD_ORG_DAILY_LATEST E ON A.ORGIDPROV = E.ORG_CODE
+              -- LEFT JOIN $db_output.RD_CCG_LATEST F ON C.ORGIDCCGRES = F.ORG_CODE ---amended for sub-icb/icb 8/9/22 gvf (moved to below)
+
+
+              WHERE
+              (a.RECORDENDDATE IS NULL OR a.RECORDENDDATE > '{rp_enddate}') AND a.RECORDSTARTDATE BETWEEN '{rp_startdate_qtr}' AND '{rp_enddate}'
+              AND A.DischDateHospProvSpell BETWEEN '{rp_startdate_qtr}' AND '{rp_enddate}'
+             """)
+else:
+  spark.sql(f"""
+             CREATE TABLE {db_output}.SPELLS USING DELTA AS 
+
+              SELECT 
+
+              A.PERSON_ID, 
+              A.UniqMonthID,
+              A.UniqHospProvSpellID, -- renamed A.UNIQHOSPPROVSPELLNUM to UniqHospProvSpellID HL 11/1/22
+              A.OrgIDProv,
+              E.NAME AS PROV_NAME,
+              A.StartDateHospProvSpell,
+              A.DischDateHospProvSpell,
+              DATEDIFF(A.DischDateHospProvSpell, A.StartDateHospProvSpell) as HOSP_LOS,
+              B.UniqWardStayID,
+              B.HospitalBedTypeMH,
+              B.StartDateWardStay,
+              B.EndDateWardStay,
+              DATEDIFF(B.EndDateWardStay, B.StartDateWardStay) as WARD_LOS,
+              C.AgeRepPeriodEnd,
+              -- C.OrgIDCCGRes, ---- Old  CCG derivation retained for now in case used further on gvf
+              -- C.OrgIDSubICBLocResidence,
+              OrgIDCCGRes AS IC_REC_GP_RES
+              -- COALESCE(F.ORG_CODE,'UNKNOWN') AS IC_REC_CCG, --amended for sub-icb/icb 8/9/22 gvf
+              -- COALESCE(F.NAME, 'UNKNOWN') as CCG_NAME
+
+              FROM
+              {db_source}.MHS501HospProvSpell a 
+              LEFT JOIN {db_source}.MHS502WARDSTAY B on a.UniqHospProvSpellID = b.UniqHospProvSpellID and a.Recordnumber = b.RecordNumber -- renamed UNIQHOSPPROVSPELLNUM to UniqHospProvSpellID HL 11/1/22
+              LEFT JOIN {db_source}.MHS001MPI C ON A.RECORDNUMBER = C.RECORDNUMBER --AND c.PatMRecInRP = TRUE - Removed this as using RecordNumber (so will use demographics of person in that provider at time of discharge)
+              --LEFT JOIN CCG D ON A.PERSON_ID = D.PERSON_ID -- Removed CCG table since moving to using OrgIDCCGRes, previous prep cells
+              LEFT JOIN {db_output}.RD_ORG_DAILY_LATEST E ON A.ORGIDPROV = E.ORG_CODE
+              -- LEFT JOIN $db_output.RD_CCG_LATEST F ON C.ORGIDCCGRES = F.ORG_CODE ---amended for sub-icb/icb 8/9/22 gvf (moved to below)
+
+
+              WHERE
+              (a.RECORDENDDATE IS NULL OR a.RECORDENDDATE > '{rp_enddate}') AND a.RECORDSTARTDATE BETWEEN '{rp_startdate_qtr}' AND '{rp_enddate}'
+              AND A.DischDateHospProvSpell BETWEEN '{rp_startdate_qtr}' AND '{rp_enddate}'
+             """)
 
 -- COMMAND ----------
 
-----this step needs to be done to put invalid/expired ccg/sub-icb codes into UNKNOWN
+-- -- DROP TABLE IF EXISTS $db_output.spells;
+
+-- CREATE TABLE $db_output.SPELLS USING DELTA AS 
+
+-- SELECT 
+
+-- A.PERSON_ID, 
+-- A.UniqMonthID,
+-- A.UniqHospProvSpellID, -- renamed A.UNIQHOSPPROVSPELLNUM to UniqHospProvSpellID HL 11/1/22
+-- A.OrgIDProv,
+-- E.NAME AS PROV_NAME,
+-- A.StartDateHospProvSpell,
+-- A.DischDateHospProvSpell,
+-- DATEDIFF(A.DischDateHospProvSpell, A.StartDateHospProvSpell) as HOSP_LOS,
+-- B.UniqWardStayID,
+-- B.HospitalBedTypeMH,
+-- B.StartDateWardStay,
+-- B.EndDateWardStay,
+-- DATEDIFF(B.EndDateWardStay, B.StartDateWardStay) as WARD_LOS,
+-- C.AgeRepPeriodEnd,
+-- -- C.OrgIDCCGRes, ---- Old  CCG derivation retained for now in case used further on gvf
+-- -- C.OrgIDSubICBLocResidence,
+-- CASE WHEN a.UniqMonthID <= 1467 then OrgIDCCGRes
+--   WHEN a.UniqMonthID  > 1467 then OrgIDSubICBLocResidence
+--   ELSE 'ERROR'
+--   END AS IC_REC_GP_RES
+-- -- COALESCE(F.ORG_CODE,'UNKNOWN') AS IC_REC_CCG, --amended for sub-icb/icb 8/9/22 gvf
+-- -- COALESCE(F.NAME, 'UNKNOWN') as CCG_NAME
+
+-- FROM
+-- $db_source.MHS501HospProvSpell a 
+-- LEFT JOIN $db_source.MHS502WARDSTAY B on a.UniqHospProvSpellID = b.UniqHospProvSpellID and a.Recordnumber = b.RecordNumber -- renamed UNIQHOSPPROVSPELLNUM to UniqHospProvSpellID HL 11/1/22
+-- LEFT JOIN $db_source.MHS001MPI C ON A.RECORDNUMBER = C.RECORDNUMBER --AND c.PatMRecInRP = TRUE - Removed this as using RecordNumber (so will use demographics of person in that provider at time of discharge)
+-- --LEFT JOIN CCG D ON A.PERSON_ID = D.PERSON_ID -- Removed CCG table since moving to using OrgIDCCGRes, previous prep cells
+-- LEFT JOIN $db_output.RD_ORG_DAILY_LATEST E ON A.ORGIDPROV = E.ORG_CODE
+-- -- LEFT JOIN $db_output.RD_CCG_LATEST F ON C.ORGIDCCGRES = F.ORG_CODE ---amended for sub-icb/icb 8/9/22 gvf (moved to below)
+
+
+-- WHERE
+-- (a.RECORDENDDATE IS NULL OR a.RECORDENDDATE > '$rp_enddate') AND a.RECORDSTARTDATE BETWEEN '$rp_startdate_qtr' AND '$rp_enddate'
+-- AND A.DischDateHospProvSpell BETWEEN '$rp_startdate_qtr' AND '$rp_enddate'
+
+-- COMMAND ----------
+
+----this step needs to be done to bin invalid/expired ccg/sub-icb codes into UNKNOWN
 DROP TABLE IF EXISTS $db_output.spells1;
 
 CREATE TABLE $db_output.SPELLS1 USING DELTA AS 
@@ -289,7 +350,7 @@ SELECT
 
 A.PERSON_ID, 
 A.UniqMonthID,
-A.UniqHospProvSpellID, -- renamed A.UNIQHOSPPROVSPELLNUM to UniqHospProvSpellID 11/1/22
+A.UniqHospProvSpellID, -- renamed A.UNIQHOSPPROVSPELLNUM to UniqHospProvSpellID HL 11/1/22
 A.OrgIDProv,
 A.PROV_NAME,
 A.StartDateHospProvSpell,
@@ -301,7 +362,7 @@ A.StartDateWardStay,
 A.EndDateWardStay,
 A.WARD_LOS,
 A.AgeRepPeriodEnd,
--- A.OrgIDCCGRes, ---- Old  CCG derivation retained for now in case used further on
+-- A.OrgIDCCGRes, ---- Old  CCG derivation retained for now in case used further on gvf
 -- A.OrgIDSubICBLocResidence,
 COALESCE(F.ORG_CODE,'UNKNOWN') as IC_REC_GP_RES,
 COALESCE(F.NAME, 'UNKNOWN') as CCG_NAME
@@ -311,6 +372,11 @@ LEFT JOIN $db_output.RD_SubICB_LATEST F ON A.IC_REC_GP_RES = F.ORG_CODE
 -- COMMAND ----------
 
 DROP TABLE IF EXISTS $db_output.mh_acute_los
+
+-- COMMAND ----------
+
+%py
+# spark.conf.set("spark.sql.legacy.allowCreatingManagedTableUsingNonemptyLocation","true")
 
 -- COMMAND ----------
 
@@ -675,9 +741,12 @@ SELECT
 '$rp_startdate_qtr' AS REPORTING_PERIOD_START,
 '$rp_enddate' AS REPORTING_PERIOD_END,
 '$status' AS STATUS,
-'Sub ICB of Residence' AS BREAKDOWN, 
+'Sub ICB of Residence' AS BREAKDOWN, -- updated with space 04/10/22
 A.IC_REC_GP_RES AS PRIMARY_LEVEL,
 A.SubICB_NAME AS PRIMARY_LEVEL_DESCRIPTION,
+--'CCG of Residence' AS BREAKDOWN,
+-- A.IC_Rec_CCG AS PRIMARY_LEVEL, amended 13/9/22 gvf
+-- A.CCG_NAME AS PRIMARY_LEVEL_DESCRIPTION,
 'NONE' AS SECONDARY_LEVEL,
 'NONE' AS SECONDARY_LEVEL_DESCRIPTION,
 'MHS100' AS MEASURE_ID,
@@ -685,8 +754,11 @@ A.SubICB_NAME AS PRIMARY_LEVEL_DESCRIPTION,
 COALESCE(COUNT(DISTINCT PERSON_ID),0) AS MEASURE_VALUE
 FROM 
 (SELECT DISTINCT 
+-- ORG_CODE AS IC_REC_CCG,
+-- NAME AS CCG_NAME
 ORG_CODE AS IC_REC_GP_RES,
 NAME AS SubICB_NAME
+--FROM $db_output.RD_CCG_LATEST) A amended 13/9/22 gvf
 FROM $db_output.RD_SubICB_LATEST) A
 LEFT JOIN $db_output.SPELLS1 B ON A.IC_REC_GP_RES = COALESCE(B.IC_REC_GP_RES, "UNKNOWN")
                                 and b.HOSPITALBEDTYPEMH = '10'
@@ -695,6 +767,8 @@ LEFT JOIN $db_output.SPELLS1 B ON A.IC_REC_GP_RES = COALESCE(B.IC_REC_GP_RES, "U
 GROUP BY 
 A.IC_REC_GP_RES,
 A.SubICB_NAME
+-- A.IC_REC_CCG,amended 13/9/22 gvf
+-- A.CCG_NAME
 
 -- COMMAND ----------
 
@@ -704,9 +778,12 @@ SELECT
 '$rp_startdate_qtr' AS REPORTING_PERIOD_START,
 '$rp_enddate' AS REPORTING_PERIOD_END,
 '$status' AS STATUS,
-'Sub ICB of Residence' AS BREAKDOWN, 
+'Sub ICB of Residence' AS BREAKDOWN, -- updated with space 04/10/22
 A.IC_REC_GP_RES  AS PRIMARY_LEVEL,
 A.SubICB_NAME AS PRIMARY_LEVEL_DESCRIPTION,
+-- 'CCG of Residence' AS BREAKDOWN,
+-- A.IC_Rec_CCG AS PRIMARY_LEVEL,  amended 13/9/22 gvf
+-- A.CCG_NAME AS PRIMARY_LEVEL_DESCRIPTION,
 'NONE' AS SECONDARY_LEVEL,
 'NONE' AS SECONDARY_LEVEL_DESCRIPTION,
 'MHS101' AS MEASURE_ID,
@@ -714,14 +791,20 @@ A.SubICB_NAME AS PRIMARY_LEVEL_DESCRIPTION,
 COALESCE(COUNT(DISTINCT PERSON_ID),0) AS MEASURE_VALUE
 FROM 
 (SELECT DISTINCT 
+-- ORG_CODE AS IC_REC_CCG,
+-- NAME AS CCG_NAME
+-- FROM $db_output.RD_CCG_LATEST) A
 ORG_CODE AS IC_REC_GP_RES,
 NAME AS SubICB_NAME
 FROM $db_output.RD_SubICB_LATEST) A
+--LEFT JOIN $db_output.SPELLS B ON A.IC_REC_CCG = B.IC_REC_CCG   amended 13/9/22 gvf
 LEFT JOIN $db_output.SPELLS1 B ON A.IC_REC_GP_RES = B.IC_REC_GP_RES
                                 and b.HOSPITALBEDTYPEMH = '10'
                                 AND b.HOSP_LOS >= 90
                                 AND b.AGEREPPERIODEND BETWEEN 18 AND 64
 GROUP BY 
+-- A.IC_REC_CCG,
+-- A.CCG_NAMEamended 13/9/22 gvf
 A.IC_REC_GP_RES,
 A.SubICB_NAME
 
@@ -733,7 +816,10 @@ SELECT
 '$rp_startdate_qtr' AS REPORTING_PERIOD_START,
 '$rp_enddate' AS REPORTING_PERIOD_END,
 '$status' AS STATUS,
-'Sub ICB of Residence' AS BREAKDOWN, 
+-- 'CCG of Residence' AS BREAKDOWN,
+-- A.IC_Rec_CCG AS PRIMARY_LEVEL,   amended 13/9/22 gvf
+-- A.CCG_NAME AS PRIMARY_LEVEL_DESCRIPTION,
+'Sub ICB of Residence' AS BREAKDOWN, -- updated with space 04/10/22
 A.IC_REC_GP_RES AS PRIMARY_LEVEL,
 A.SubICB_NAME AS PRIMARY_LEVEL_DESCRIPTION,
 'NONE' AS SECONDARY_LEVEL,
@@ -743,14 +829,20 @@ A.SubICB_NAME AS PRIMARY_LEVEL_DESCRIPTION,
 COALESCE(COUNT(DISTINCT PERSON_ID),0) AS MEASURE_VALUE
 FROM 
 (SELECT DISTINCT 
+-- ORG_CODE AS IC_REC_CCG,
+-- NAME AS CCG_NAME   amended 13/9/22 gvf
+-- FROM $db_output.RD_CCG_LATEST) A
 ORG_CODE AS IC_REC_GP_RES,
 NAME AS SubICB_NAME
 FROM $db_output.RD_SubICB_LATEST) A
+--LEFT JOIN $db_output.SPELLS B ON A.IC_REC_CCG = B.IC_REC_CCG   amended 13/9/22 gvf
 LEFT JOIN $db_output.SPELLS1 B ON A.IC_REC_GP_RES = B.IC_REC_GP_RES
                                 and b.HOSPITALBEDTYPEMH = '11'
                                 AND b.HOSP_LOS >= 60
                                 AND b.AGEREPPERIODEND >= 65
 GROUP BY 
+-- A.IC_REC_CCG,   amended 13/9/22 gvf
+-- A.CCG_NAME
 A.IC_REC_GP_RES,
 A.SubICB_NAME
 
@@ -762,7 +854,10 @@ SELECT
 '$rp_startdate_qtr' AS REPORTING_PERIOD_START,
 '$rp_enddate' AS REPORTING_PERIOD_END,
 '$status' AS STATUS,
-'Sub ICB of Residence' AS BREAKDOWN, 
+-- 'CCG of Residence' AS BREAKDOWN,
+-- A.IC_Rec_CCG AS PRIMARY_LEVEL,   amended 13/9/22 gvf
+-- A.CCG_NAME AS PRIMARY_LEVEL_DESCRIPTION,
+'Sub ICB of Residence' AS BREAKDOWN, -- updated with space 04/10/22
 A.IC_REC_GP_RES AS PRIMARY_LEVEL,
 A.SubICB_NAME AS PRIMARY_LEVEL_DESCRIPTION,
 'NONE' AS SECONDARY_LEVEL,
@@ -772,26 +867,35 @@ A.SubICB_NAME AS PRIMARY_LEVEL_DESCRIPTION,
 COALESCE(COUNT(DISTINCT PERSON_ID),0) AS MEASURE_VALUE
 FROM 
 (SELECT DISTINCT 
+-- ORG_CODE AS IC_REC_CCG,
+-- NAME AS CCG_NAME   amended 13/9/22 gvf
+-- FROM $db_output.RD_CCG_LATEST) A
 ORG_CODE AS IC_REC_GP_RES,
 NAME AS SubICB_NAME
 FROM $db_output.RD_SubICB_LATEST) A
+--LEFT JOIN $db_output.SPELLS B ON A.IC_REC_CCG = B.IC_REC_CCG   amended 13/9/22 gvf
 LEFT JOIN $db_output.SPELLS1 B ON A.IC_REC_GP_RES = B.IC_REC_GP_RES
                                 and b.HOSPITALBEDTYPEMH = '11'
                                 AND b.HOSP_LOS >= 90
                                 AND b.AGEREPPERIODEND >= 65
 GROUP BY 
+-- A.IC_REC_CCG,
+-- A.CCG_NAME   amended 13/9/22 gvf
 A.IC_REC_GP_RES,
 A.SubICB_NAME
 
 -- COMMAND ----------
 
-INSERT INTO $db_output.MH_ACUTE_LOS 
+INSERT INTO $db_output.MH_ACUTE_LOS --IC_REC_GP_RES   RD_SubICB_LATEST 
 
 SELECT 
 '$rp_startdate_qtr' AS REPORTING_PERIOD_START,
 '$rp_enddate' AS REPORTING_PERIOD_END,
 '$status' AS STATUS,
-'Sub ICB of Residence' AS BREAKDOWN, 
+-- 'CCG of Residence' AS BREAKDOWN,
+-- A.IC_Rec_CCG AS PRIMARY_LEVEL,   amended 13/9/22 gvf
+-- A.CCG_NAME AS PRIMARY_LEVEL_DESCRIPTION,
+'Sub ICB of Residence' AS BREAKDOWN, -- updated with space
 A.IC_REC_GP_RES AS PRIMARY_LEVEL,
 A.SubICB_NAME AS PRIMARY_LEVEL_DESCRIPTION,
 'NONE' AS SECONDARY_LEVEL,
@@ -801,25 +905,34 @@ A.SubICB_NAME AS PRIMARY_LEVEL_DESCRIPTION,
 COALESCE(COUNT(DISTINCT PERSON_ID),0) AS MEASURE_VALUE
 FROM 
 (SELECT DISTINCT 
+-- ORG_CODE AS IC_REC_CCG,
+-- NAME AS CCG_NAME   amended 13/9/22 gvf
+-- FROM $db_output.RD_CCG_LATEST) A
 ORG_CODE AS IC_REC_GP_RES,
 NAME AS SubICB_NAME
 FROM $db_output.RD_SubICB_LATEST) A
+--LEFT JOIN $db_output.SPELLS B ON A.IC_REC_CCG = B.IC_REC_CCG   amended 13/9/22 gvf
 LEFT JOIN $db_output.SPELLS1 B ON A.IC_REC_GP_RES = B.IC_REC_GP_RES
                                 AND B.HOSP_LOS >= 60
                                 AND AGEREPPERIODEND BETWEEN 0 AND 17
 GROUP BY 
+-- A.IC_REC_CCG,   amended 13/9/22 gvf
+-- A.CCG_NAME
 A.IC_REC_GP_RES,
 A.SubICB_NAME
 
 -- COMMAND ----------
 
-INSERT INTO $db_output.MH_ACUTE_LOS 
+INSERT INTO $db_output.MH_ACUTE_LOS --IC_REC_GP_RES   RD_SubICB_LATEST 
 
 SELECT 
 '$rp_startdate_qtr' AS REPORTING_PERIOD_START,
 '$rp_enddate' AS REPORTING_PERIOD_END,
 '$status' AS STATUS,
-'Sub ICB of Residence' AS BREAKDOWN, 
+-- 'CCG of Residence' AS BREAKDOWN,
+-- A.IC_Rec_CCG AS PRIMARY_LEVEL,
+-- A.CCG_NAME AS PRIMARY_LEVEL_DESCRIPTION,
+'Sub ICB of Residence' AS BREAKDOWN, -- updated with space 04/10/22
 A.IC_REC_GP_RES AS PRIMARY_LEVEL,
 A.SubICB_NAME AS PRIMARY_LEVEL_DESCRIPTION,
 'NONE' AS SECONDARY_LEVEL,
@@ -829,13 +942,19 @@ A.SubICB_NAME AS PRIMARY_LEVEL_DESCRIPTION,
 COALESCE(COUNT(DISTINCT PERSON_ID),0) AS MEASURE_VALUE
 FROM 
 (SELECT DISTINCT 
+-- ORG_CODE AS IC_REC_CCG,
+-- NAME AS CCG_NAME
+-- FROM $db_output.RD_CCG_LATEST) A
 ORG_CODE AS IC_REC_GP_RES,
 NAME AS SubICB_NAME
 FROM $db_output.RD_SubICB_LATEST) A
+--LEFT JOIN $db_output.SPELLS B ON A.IC_REC_CCG = B.IC_REC_CCG
 LEFT JOIN $db_output.SPELLS1 B ON A.IC_REC_GP_RES = B.IC_REC_GP_RES
                                   AND B.HOSP_LOS >= 90
                                   AND B.AGEREPPERIODEND BETWEEN 0 AND 17
 GROUP BY 
+-- A.IC_REC_CCG,
+-- A.CCG_NAME
 A.IC_REC_GP_RES,
 A.SubICB_NAME
 
@@ -915,12 +1034,17 @@ $db_output.MH_ACUTE_LOS A
 LEFT JOIN (SELECT 
             SubICB_2021_CODE,
             SubICB_2021_NAME,
+--             CCG_2021_CODE,
+--             CCG_2021_NAME,
             SUM(Aged_18_to_64) as Aged_18_to_64,
             SUM(Aged_65_OVER) as Aged_65_OVER,
             SUM(Aged_0_to_17) as Aged_0_to_17
             FROM
-            $db_output.SubICB_POP 
+           -- $db_output.CCG_POP 
+            $db_output.SubICB_POP --updated 27/09/22
             GROUP BY
+--             CCG_2021_CODE,
+--             CCG_2021_NAME) 
             SubICB_2021_CODE,
             SubICB_2021_NAME) 
             as B
@@ -930,6 +1054,7 @@ LEFT JOIN (SELECT
             SUM(Aged_18_to_64) AS Aged_18_to_64, 
             SUM(Aged_65_OVER) AS Aged_65_OVER ,
             SUM(Aged_0_to_17) AS Aged_0_to_17
+            --FROM $db_output.CCG_POP) 
             FROM $db_output.SubICB_POP) 
             AS C 
             ON A.BREAKDOWN = C.England
@@ -1151,16 +1276,16 @@ select * from $db_output.los_supp_final
 
 -- COMMAND ----------
 
---  %md
---  
---  ### [Go back to top](https://db.core.data.digital.nhs.uk/#notebook/4835364/command/4835366)
+%md
+
+### [Go back to top](https://db.core.data.digital.nhs.uk/#notebook/4835364/command/4835366)
 
 -- COMMAND ----------
 
---  %py
---  import json
---  dbutils.notebook.exit(json.dumps({
---    "status": "OK",
---    "unsuppressed_table": "los_raw",
---    "suppressed_table": "los_supp_final"
---  }))
+%py
+import json
+dbutils.notebook.exit(json.dumps({
+  "status": "OK",
+  "unsuppressed_table": "los_raw",
+  "suppressed_table": "los_supp_final"
+}))

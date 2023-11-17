@@ -1,0 +1,2345 @@
+-- Databricks notebook source
+-- providCREATE WIDGET TEXT MONTH_ID DEFAULT "1449";
+-- CREATE WIDGET TEXT MSDS_15 DEFAULT "$mat15_database";
+-- CREATE WIDGET TEXT MSDS_2 DEFAULT "mat_pre_clear";
+-- CREATE WIDGET TEXT MHSDS DEFAULT "$mhsds_database";
+-- CREATE WIDGET TEXT RP_STARTDATE DEFAULT "2020-01-01";
+-- CREATE WIDGET TEXT RP_ENDDATE DEFAULT "2020-12-31";
+-- CREATE WIDGET TEXT personal_db DEFAULT "glenda_fozzard_100069";
+
+--TRUNCATE TABLE $personal_db.Perinatal
+
+-- COMMAND ----------
+
+CREATE OR REPLACE GLOBAL TEMPORARY VIEW ORG_DAILY AS
+SELECT DISTINCT ORG_CODE,
+                NAME,
+                ORG_TYPE_CODE,
+                ORG_OPEN_DATE, 
+                ORG_CLOSE_DATE, 
+                BUSINESS_START_DATE, 
+                BUSINESS_END_DATE
+           FROM $reference_data.org_daily
+          WHERE (BUSINESS_END_DATE >= add_months('$RP_ENDDATE', 1) OR ISNULL(BUSINESS_END_DATE))
+                AND BUSINESS_START_DATE <= add_months('$RP_ENDDATE', 1)	
+                AND (ORG_CLOSE_DATE >= '$RP_ENDDATE' OR ISNULL(ORG_CLOSE_DATE))              
+                AND ORG_OPEN_DATE <= '$RP_ENDDATE'
+
+-- COMMAND ----------
+
+CREATE OR REPLACE GLOBAL TEMPORARY VIEW ORG_RELATIONSHIP_DAILY AS 
+SELECT 
+REL_TYPE_CODE,
+REL_FROM_ORG_CODE,
+REL_TO_ORG_CODE, 
+REL_OPEN_DATE,
+REL_CLOSE_DATE
+FROM 
+$reference_data.ORG_RELATIONSHIP_DAILY
+WHERE
+(REL_CLOSE_DATE >= '$RP_ENDDATE' OR ISNULL(REL_CLOSE_DATE))              
+AND REL_OPEN_DATE <= '$RP_ENDDATE'
+
+-- COMMAND ----------
+
+CREATE OR REPLACE GLOBAL TEMPORARY VIEW STP_MAPPING AS 
+
+SELECT 
+A.ORG_cODE as STP_CODE, 
+A.NAME as STP_DESCRIPTION, 
+C.ORG_CODE as CCG_CODE, 
+C.NAME as CCG_DESCRIPTION,
+E.ORG_CODE as REGION_CODE,
+E.NAME as REGION_DESCRIPTION
+
+FROM 
+global_temp.ORG_DAILY A
+LEFT JOIN global_temp.ORG_RELATIONSHIP_DAILY B ON A.ORG_CODE = B.REL_TO_ORG_CODE AND B.REL_TYPE_CODE = 'CCST'
+LEFT JOIN global_temp.ORG_DAILY C ON B.REL_FROM_ORG_CODE = C.ORG_CODE
+LEFT JOIN global_temp.ORG_RELATIONSHIP_DAILY D ON A.ORG_CODE = D.REL_FROM_ORG_CODE AND D.REL_TYPE_CODE = 'STCE'
+LEFT JOIN global_temp.ORG_DAILY E ON D.REL_TO_ORG_CODE = E.ORG_CODE
+WHERE
+A.ORG_TYPE_CODE = 'ST'
+AND B.REL_TYPE_CODE is not null
+
+-- COMMAND ----------
+
+%md
+
+# OUTPUT
+
+-- COMMAND ----------
+
+%md
+
+####PMH01b - People in contact aged 16 and over
+
+-- COMMAND ----------
+
+--PMH01b - People in contact aged 16 and over
+
+INSERT INTO $personal_db.Perinatal
+
+SELECT '$RP_STARTDATE'
+AS REPORTING_PERIOD_START
+,'$RP_ENDDATE'
+AS REPORTING_PERIOD_END
+,'Final'
+AS STATUS
+,'England'
+AS BREAKDOWN
+,'England'
+AS LEVEL
+,'England'
+AS LEVEL_DESCRIPTION
+,'None' as LEVEL_2
+,'None' as LEVEL_2_Description
+,'PMH01b'
+AS METRIC
+,COALESCE (COUNT (DISTINCT PERI.Person_ID_Mother), 0)
+AS METRIC_VALUE
+
+FROM global_temp.PMH01b_DF
+AS PERI
+
+-- COMMAND ----------
+
+INSERT INTO $personal_db.Perinatal
+
+SELECT '$RP_STARTDATE'
+AS REPORTING_PERIOD_START
+,'$RP_ENDDATE'
+AS REPORTING_PERIOD_END
+,'Final'
+AS STATUS
+,'Age at Booking Appointment'
+AS BREAKDOWN
+,CASE WHEN (PERI.AgeAtBookingMother <= 0 OR PERI.AgeAtBookingMother IS NULL)
+THEN 'Unknown'
+--WHEN PERI.AgeAtBookingMother < 16
+--THEN 'Under 16'
+WHEN PERI.AgeAtBookingMother < 20
+THEN '16-19'
+WHEN PERI.AgeAtBookingMother < 25
+THEN '20-24'
+WHEN PERI.AgeAtBookingMother < 30
+THEN '25-29'
+WHEN PERI.AgeAtBookingMother < 35
+THEN '30-34'
+WHEN PERI.AgeAtBookingMother < 40
+THEN '35-39'
+WHEN PERI.AgeAtBookingMother < 45
+THEN '40-44'
+ELSE '45 and over'
+END
+AS LEVEL
+,CASE WHEN (PERI.AgeAtBookingMother <= 0 OR PERI.AgeAtBookingMother IS NULL)
+THEN 'Unknown'
+--WHEN PERI.AgeAtBookingMother < 16
+--THEN 'Under 16'
+WHEN PERI.AgeAtBookingMother < 20
+THEN '16-19'
+WHEN PERI.AgeAtBookingMother < 25
+THEN '20-24'
+WHEN PERI.AgeAtBookingMother < 30
+THEN '25-29'
+WHEN PERI.AgeAtBookingMother < 35
+THEN '30-34'
+WHEN PERI.AgeAtBookingMother < 40
+THEN '35-39'
+WHEN PERI.AgeAtBookingMother < 45
+THEN '40-44'
+ELSE '45 and over'
+END
+AS LEVEL_DESCRIPTION
+,'None' as LEVEL_2
+,'None' as LEVEL_2_Description
+,'PMH01b'
+AS METRIC
+,COALESCE (COUNT (DISTINCT PERI.Person_ID_Mother), 0)
+AS METRIC_VALUE
+
+FROM global_temp.PMH01b_DF
+AS PERI
+
+WHERE
+rnk = 1
+
+GROUP BY CASE WHEN (PERI.AgeAtBookingMother <= 0 OR PERI.AgeAtBookingMother IS NULL)
+THEN 'Unknown'
+--WHEN PERI.AgeAtBookingMother < 16
+--THEN 'Under 16'
+WHEN PERI.AgeAtBookingMother < 20
+THEN '16-19'
+WHEN PERI.AgeAtBookingMother < 25
+THEN '20-24'
+WHEN PERI.AgeAtBookingMother < 30
+THEN '25-29'
+WHEN PERI.AgeAtBookingMother < 35
+THEN '30-34'
+WHEN PERI.AgeAtBookingMother < 40
+THEN '35-39'
+WHEN PERI.AgeAtBookingMother < 45
+THEN '40-44'
+ELSE '45 and over'
+END
+
+-- COMMAND ----------
+
+INSERT INTO $personal_db.Perinatal
+
+SELECT 
+'$RP_STARTDATE'
+AS REPORTING_PERIOD_START
+,'$RP_ENDDATE'
+AS REPORTING_PERIOD_END
+,'Final'
+AS STATUS
+,'Ethnicity'
+AS BREAKDOWN
+,EthnicCategoryMother 
+AS LEVEL
+,EthnicCategoryMother_Description 
+AS LEVEL_DESCRIPTION
+,'None' as LEVEL_2
+,'None' as LEVEL_2_Description
+,'PMH01b'
+AS METRIC
+,COALESCE (COUNT (DISTINCT PERI.Person_ID_Mother), 0)
+AS METRIC_VALUE
+FROM global_temp.PMH01b_DF
+AS PERI
+WHERE 
+rnk = 1
+Group by 
+EthnicCategoryMother, EthnicCategoryMother_Description
+
+-- COMMAND ----------
+
+%md
+
+####PMH02b - NUMBER OF PEOPLE IN THE PERINATAL PERIOD IN RP WITH A MENTAL HEALTH REFERRAL OPEN IN RP AND DURING THE PERINATAL PERIOD AGED 16+
+
+-- COMMAND ----------
+
+INSERT INTO $personal_db.Perinatal
+
+SELECT '$RP_STARTDATE'
+AS REPORTING_PERIOD_START
+,'$RP_ENDDATE'
+AS REPORTING_PERIOD_END
+,'Final'
+AS STATUS
+,'England'
+AS BREAKDOWN
+,'England'
+AS LEVEL
+,'England'
+AS LEVEL_DESCRIPTION
+,'None' as LEVEL_2
+,'None' as LEVEL_2_Description
+,'PMH02b'
+AS METRIC
+,COALESCE (COUNT (DISTINCT PERI.Person_ID_Mother), 0)
+AS METRIC_VALUE
+
+FROM global_temp.PMH02b_DF
+AS PERI
+
+-- COMMAND ----------
+
+INSERT INTO $personal_db.Perinatal
+
+SELECT '$RP_STARTDATE'
+AS REPORTING_PERIOD_START
+,'$RP_ENDDATE'
+AS REPORTING_PERIOD_END
+,'Final'
+AS STATUS
+,'Age at Booking Appointment'
+AS BREAKDOWN
+,CASE WHEN (PERI.AgeAtBookingMother <= 0 OR PERI.AgeAtBookingMother IS NULL)
+THEN 'Unknown'
+--WHEN PERI.AgeAtBookingMother < 16
+--THEN 'Under 16'
+WHEN PERI.AgeAtBookingMother < 20
+THEN '16-19'
+WHEN PERI.AgeAtBookingMother < 25
+THEN '20-24'
+WHEN PERI.AgeAtBookingMother < 30
+THEN '25-29'
+WHEN PERI.AgeAtBookingMother < 35
+THEN '30-34'
+WHEN PERI.AgeAtBookingMother < 40
+THEN '35-39'
+WHEN PERI.AgeAtBookingMother < 45
+THEN '40-44'
+ELSE '45 and over'
+END
+AS LEVEL
+,CASE WHEN (PERI.AgeAtBookingMother <= 0 OR PERI.AgeAtBookingMother IS NULL)
+THEN 'Unknown'
+--WHEN PERI.AgeAtBookingMother < 16
+--THEN 'Under 16'
+WHEN PERI.AgeAtBookingMother < 20
+THEN '16-19'
+WHEN PERI.AgeAtBookingMother < 25
+THEN '20-24'
+WHEN PERI.AgeAtBookingMother < 30
+THEN '25-29'
+WHEN PERI.AgeAtBookingMother < 35
+THEN '30-34'
+WHEN PERI.AgeAtBookingMother < 40
+THEN '35-39'
+WHEN PERI.AgeAtBookingMother < 45
+THEN '40-44'
+ELSE '45 and over'
+END
+AS LEVEL_DESCRIPTION
+,'None' as LEVEL_2
+,'None' as LEVEL_2_Description
+,'PMH02b'
+AS METRIC
+,COALESCE (COUNT (DISTINCT PERI.Person_ID_Mother), 0)
+AS METRIC_VALUE
+
+FROM global_temp.PMH02b_DF
+AS PERI
+
+WHERE 
+rnk = 1
+
+GROUP BY CASE WHEN (PERI.AgeAtBookingMother <= 0 OR PERI.AgeAtBookingMother IS NULL)
+THEN 'Unknown'
+--WHEN PERI.AgeAtBookingMother < 16
+--THEN 'Under 16'
+WHEN PERI.AgeAtBookingMother < 20
+THEN '16-19'
+WHEN PERI.AgeAtBookingMother < 25
+THEN '20-24'
+WHEN PERI.AgeAtBookingMother < 30
+THEN '25-29'
+WHEN PERI.AgeAtBookingMother < 35
+THEN '30-34'
+WHEN PERI.AgeAtBookingMother < 40
+THEN '35-39'
+WHEN PERI.AgeAtBookingMother < 45
+THEN '40-44'
+ELSE '45 and over'
+END
+
+-- COMMAND ----------
+
+INSERT INTO $personal_db.Perinatal
+
+SELECT '$RP_STARTDATE'
+AS REPORTING_PERIOD_START
+,'$RP_ENDDATE'
+AS REPORTING_PERIOD_END
+,'Final'
+AS STATUS
+,'Ethnicity'
+AS BREAKDOWN
+,EthnicCategoryMother 
+AS LEVEL
+,EthnicCategoryMother_Description 
+AS LEVEL_DESCRIPTION
+
+,'None' as LEVEL_2
+,'None' as LEVEL_2_Description
+,'PMH02b'
+AS METRIC
+,COALESCE (COUNT (DISTINCT PERI.Person_ID_Mother), 0)
+AS METRIC_VALUE
+
+FROM global_temp.PMH02b_DF
+AS PERI
+
+WHERE 
+rnk = 1
+Group by EthnicCategoryMother, EthnicCategoryMother_Description
+
+
+-- COMMAND ----------
+
+INSERT INTO $personal_db.Perinatal
+
+SELECT DISTINCT  '$RP_STARTDATE'
+AS REPORTING_PERIOD_START
+,'$RP_ENDDATE'
+AS REPORTING_PERIOD_END
+,'Final'
+AS STATUS
+,'Provider'
+AS BREAKDOWN
+,PERI.OrgIDProv
+AS LEVEL
+,'None'
+AS LEVEL_DESCRIPTION
+,'None' as LEVEL_2
+,'None' as LEVEL_2_Description
+,'PMH02b'
+AS METRIC
+,COALESCE (COUNT (DISTINCT PERI.Person_ID_Mother), 0)
+AS METRIC_VALUE
+
+FROM global_temp.PMH02b_DF
+AS PERI
+
+GROUP BY PERI.OrgIDProv
+
+-- COMMAND ----------
+
+INSERT INTO $personal_db.Perinatal
+
+SELECT '$RP_STARTDATE'
+AS REPORTING_PERIOD_START
+,'$RP_ENDDATE'
+AS REPORTING_PERIOD_END
+,'Final'
+AS STATUS
+,'CCG'
+AS BREAKDOWN
+,IC_Rec_CCG
+AS LEVEL
+,NAME
+AS LEVEL_DESCRIPTION
+,'None' as LEVEL_2
+,'None' as LEVEL_2_Description
+,'PMH02b'
+AS METRIC
+,COALESCE (COUNT (DISTINCT PERI.Person_ID_Mother), 0)
+AS METRIC_VALUE
+
+FROM global_temp.PMH02b_DF
+AS PERI
+
+WHERE
+rnk = 1
+
+GROUP BY 
+IC_Rec_CCG, NAME
+
+-- COMMAND ----------
+
+INSERT INTO $personal_db.Perinatal
+
+SELECT '$RP_STARTDATE'
+AS REPORTING_PERIOD_START
+,'$RP_ENDDATE'
+AS REPORTING_PERIOD_END
+,'Final'
+AS STATUS
+,'STP'
+AS BREAKDOWN
+,CASE 
+  WHEN STP.STP_CODE IS NULL THEN 'UNKNOWN'
+  ELSE STP.STP_CODE END
+  AS LEVEL
+,CASE 
+  WHEN STP.STP_DESCRIPTION IS NULL THEN 'UNKNOWN'
+  ELSE STP.STP_DESCRIPTION END
+  AS LEVEL_DESCRIPTION
+,'None' as LEVEL_2
+,'None' as LEVEL_2_Description
+,'PMH02b'
+AS METRIC
+,COALESCE (COUNT (DISTINCT PERI.Person_ID_Mother), 0)
+AS METRIC_VALUE
+
+FROM global_temp.PMH02b_DF
+AS PERI
+
+LEFT JOIN global_temp.STP_MAPPING
+AS STP
+ON STP.CCG_CODE = PERI.IC_REC_CCG
+
+WHERE
+rnk = 1
+
+GROUP BY 
+CASE 
+  WHEN STP.STP_CODE IS NULL THEN 'UNKNOWN'
+  ELSE STP.STP_CODE END
+,CASE 
+  WHEN STP.STP_DESCRIPTION IS NULL THEN 'UNKNOWN'
+  ELSE STP.STP_DESCRIPTION END
+
+-- COMMAND ----------
+
+%md
+
+####PMH06a - NUMBER OF PEOPLE IN THE PERINATAL PERIOD IN RP IN CONTACT WITH SPECIALIST PMH SERVICES IN RP AND DURING THE PERINATAL PERIOD AGED 16+
+
+-- COMMAND ----------
+
+INSERT INTO $personal_db.Perinatal
+
+SELECT '$RP_STARTDATE'
+AS REPORTING_PERIOD_START
+,'$RP_ENDDATE'
+AS REPORTING_PERIOD_END
+,'Final'
+AS STATUS
+,'England'
+AS BREAKDOWN
+,'England'
+AS LEVEL
+,'England'
+AS LEVEL_DESCRIPTION
+,'None' as LEVEL_2
+,'None' as LEVEL_2_Description
+,'PMH06a'
+AS METRIC
+,COALESCE (COUNT (DISTINCT Person_ID_Mother), 0)
+AS METRIC_VALUE
+
+FROM global_temp.PMH06a_DF
+
+-- COMMAND ----------
+
+INSERT INTO $personal_db.Perinatal
+
+
+SELECT '$RP_STARTDATE'
+AS REPORTING_PERIOD_START
+,'$RP_ENDDATE'
+AS REPORTING_PERIOD_END
+,'Final'
+AS STATUS
+,'Age at Booking Appointment'
+AS BREAKDOWN
+,CASE WHEN (PERI.AgeAtBookingMother <= 0 OR PERI.AgeAtBookingMother IS NULL)
+THEN 'Unknown'
+--WHEN PERI.AgeAtBookingMother < 16
+--THEN 'Under 16'
+WHEN PERI.AgeAtBookingMother < 20
+THEN '16-19'
+WHEN PERI.AgeAtBookingMother < 25
+THEN '20-24'
+WHEN PERI.AgeAtBookingMother < 30
+THEN '25-29'
+WHEN PERI.AgeAtBookingMother < 35
+THEN '30-34'
+WHEN PERI.AgeAtBookingMother < 40
+THEN '35-39'
+WHEN PERI.AgeAtBookingMother < 45
+THEN '40-44'
+ELSE '45 and over'
+END
+AS LEVEL
+,CASE WHEN (AgeAtBookingMother <= 0 OR AgeAtBookingMother IS NULL)
+THEN 'Unknown'
+--WHEN PERI.AgeAtBookingMother < 16
+--THEN 'Under 16'
+WHEN PERI.AgeAtBookingMother < 20
+THEN '16-19'
+WHEN PERI.AgeAtBookingMother < 25
+THEN '20-24'
+WHEN PERI.AgeAtBookingMother < 30
+THEN '25-29'
+WHEN PERI.AgeAtBookingMother < 35
+THEN '30-34'
+WHEN PERI.AgeAtBookingMother < 40
+THEN '35-39'
+WHEN PERI.AgeAtBookingMother < 45
+THEN '40-44'
+ELSE '45 and over'
+END
+AS LEVEL_DESCRIPTION
+,'None' as LEVEL_2
+,'None' as LEVEL_2_Description
+,'PMH06a'
+AS METRIC
+,COALESCE (COUNT (DISTINCT Person_ID_Mother), 0)
+AS METRIC_VALUE
+
+FROM global_temp.PMH06a_DF PERI
+
+WHERE 
+rnk = 1
+
+GROUP BY 
+CASE WHEN (PERI.AgeAtBookingMother <= 0 OR PERI.AgeAtBookingMother IS NULL)
+THEN 'Unknown'
+--WHEN PERI.AgeAtBookingMother < 16
+--THEN 'Under 16'
+WHEN PERI.AgeAtBookingMother < 20
+THEN '16-19'
+WHEN PERI.AgeAtBookingMother < 25
+THEN '20-24'
+WHEN PERI.AgeAtBookingMother < 30
+THEN '25-29'
+WHEN PERI.AgeAtBookingMother < 35
+THEN '30-34'
+WHEN PERI.AgeAtBookingMother < 40
+THEN '35-39'
+WHEN PERI.AgeAtBookingMother < 45
+THEN '40-44'
+ELSE '45 and over'
+END
+
+
+-- COMMAND ----------
+
+INSERT INTO $personal_db.Perinatal
+
+SELECT '$RP_STARTDATE'
+AS REPORTING_PERIOD_START
+,'$RP_ENDDATE'
+AS REPORTING_PERIOD_END
+,'Final'
+AS STATUS
+,'Ethnicity'
+AS BREAKDOWN
+,EthnicCategoryMother 
+AS LEVEL
+,EthnicCategoryMother_Description 
+AS LEVEL_DESCRIPTION                       
+,'None' as LEVEL_2
+,'None' as LEVEL_2_Description
+,'PMH06a'
+AS METRIC
+,COALESCE (COUNT (DISTINCT Person_ID_Mother), 0)
+AS METRIC_VALUE
+
+FROM global_temp.PMH06a_DF
+
+WHERE 
+rnk = 1
+
+Group by 
+EthnicCategoryMother, 
+EthnicCategoryMother_Description
+
+-- COMMAND ----------
+
+INSERT INTO $personal_db.Perinatal
+
+SELECT DISTINCT 
+'$RP_STARTDATE'
+AS REPORTING_PERIOD_START
+,'$RP_ENDDATE'
+AS REPORTING_PERIOD_END
+,'Final'
+AS STATUS
+,'Provider'
+AS BREAKDOWN
+,OrgIDProv
+AS LEVEL
+,'NONE'
+AS LEVEL_DESCRIPTION
+,'None' as LEVEL_2
+,'None' as LEVEL_2_Description
+,'PMH06a'
+AS METRIC
+,COALESCE (COUNT(DISTINCT Person_ID_Mother),0)
+AS METRIC_VALUE
+
+FROM global_temp.PMH06a_DF
+
+GROUP BY 
+OrgIDProv
+
+-- COMMAND ----------
+
+INSERT INTO $personal_db.Perinatal
+
+SELECT '$RP_STARTDATE'
+AS REPORTING_PERIOD_START
+,'$RP_ENDDATE'
+AS REPORTING_PERIOD_END
+,'Final'
+AS STATUS
+,'CCG'
+AS BREAKDOWN
+,IC_Rec_CCG
+AS LEVEL
+,NAME
+AS LEVEL_DESCRIPTION
+,'None' as LEVEL_2
+,'None' as LEVEL_2_Description
+,'PMH06a'
+AS METRIC
+,COALESCE (COUNT (DISTINCT Person_ID_Mother), 0)
+AS METRIC_VALUE
+
+FROM global_temp.PMH06a_DF
+
+WHERE
+rnk = 1
+
+GROUP BY
+IC_Rec_CCG,
+NAME
+
+-- COMMAND ----------
+
+INSERT INTO $personal_db.Perinatal
+
+SELECT '$RP_STARTDATE'
+AS REPORTING_PERIOD_START
+,'$RP_ENDDATE'
+AS REPORTING_PERIOD_END
+,'Final'
+AS STATUS
+,'STP'
+AS BREAKDOWN
+,CASE 
+  WHEN STP.STP_CODE IS NULL THEN 'UNKNOWN'
+  ELSE STP.STP_CODE END
+  AS LEVEL
+,CASE 
+  WHEN STP.STP_DESCRIPTION IS NULL THEN 'UNKNOWN'
+  ELSE STP.STP_DESCRIPTION END
+  AS LEVEL_DESCRIPTION
+,'None' as LEVEL_2
+,'None' as LEVEL_2_Description
+,'PMH06a'
+AS METRIC
+,COALESCE (COUNT (DISTINCT A.Person_ID_Mother), 0)
+AS METRIC_VALUE
+
+FROM global_temp.PMH06a_DF A
+LEFT JOIN global_temp.STP_MAPPING
+AS STP
+ON STP.CCG_CODE = A.IC_REC_CCG
+
+WHERE
+rnk = 1
+
+GROUP BY
+CASE 
+  WHEN STP.STP_CODE IS NULL THEN 'UNKNOWN'
+  ELSE STP.STP_CODE END
+,CASE 
+  WHEN STP.STP_DESCRIPTION IS NULL THEN 'UNKNOWN'
+  ELSE STP.STP_DESCRIPTION END
+
+-- COMMAND ----------
+
+%md
+
+####PMH07a - NUMBER OF PEOPLE IN THE PERINATAL PERIOD IN RP WHO HAVE SPENT TIME IN A MBU IN RP AND DURING THE PERINATAL PERIOD AGED 16+
+
+-- COMMAND ----------
+
+INSERT INTO $personal_db.Perinatal
+
+SELECT '$RP_STARTDATE'
+AS REPORTING_PERIOD_START
+,'$RP_ENDDATE'
+AS REPORTING_PERIOD_END
+,'Final'
+AS STATUS
+,'England'
+AS BREAKDOWN
+,'England'
+AS LEVEL
+,'England'
+AS LEVEL_DESCRIPTION
+,'None' as LEVEL_2
+,'None' as LEVEL_2_Description
+,'PMH07a'
+AS METRIC
+,COALESCE (COUNT (DISTINCT PERI.Person_ID_Mother), 0)
+AS METRIC_VALUE
+
+FROM $personal_db.MHSDSPerinatalPeriodMH_DF
+AS PERI
+LEFT OUTER JOIN global_temp.MHS101Referral_service_area_peri_in_rp_DF
+AS REF
+ON PERI.Person_ID = REF.Person_ID
+INNER JOIN $MHSDS.MHS501HospProvSpell
+AS HSP
+ON HSP.UniqServReqID = REF.UniqServReqID AND (HSP.UniqMonthID BETWEEN '$MONTH_ID' - 23 AND '$MONTH_ID') AND HSP.StartDateHospProvSpell <= '$RP_ENDDATE' AND (HSP.DischDateHospProvSpell IS NULL OR HSP.DischDateHospProvSpell >= '$RP_STARTDATE') AND HSP.StartDateHospProvSpell <= PERI.EndDate AND (HSP.DischDateHospProvSpell IS NULL OR HSP.DischDateHospProvSpell >= PERI.StartDate) AND (HSP.RecordEndDate IS NULL OR HSP.RecordEndDate >= '$RP_ENDDATE') AND HSP.RecordStartDate <= '$RP_ENDDATE'
+
+INNER JOIN $MHSDS.MHS502WardStay
+AS WST
+ON HSP.UniqHospProvSpellNum = WST.UniqHospProvSpellNum 
+AND (WST.UniqMonthID BETWEEN '$MONTH_ID' - 23 AND '$MONTH_ID') 
+AND WST.StartDateWardStay <= '$RP_ENDDATE'
+AND (WST.EndDateWardStay IS NULL OR WST.EndDateWardStay >= '$RP_STARTDATE') 
+AND WST.StartDateWardStay <= PERI.EndDate 
+AND (WST.EndDateWardStay  IS NULL OR WST.EndDateWardStay  >= PERI.StartDate) 
+AND (WST.RecordEndDate IS NULL OR WST.RecordEndDate >= '$RP_ENDDATE') 
+AND WST.RecordStartDate <= '$RP_ENDDATE'
+AND WST.SiteIDOfTreat in
+('RVNPA','RXTD3','RV312','RXM54','RDYGA','RWK62',
+'R1LAH','RXVM8','RWRA9','RGD05','RX4E2','RHARA',
+'RV505','RRE3K','RW119')
+
+WHERE PERI.StartDate <= '$RP_ENDDATE'
+AND PERI.EndDate >= '$RP_STARTDATE'
+AND REF.RecordStartDate <= '$RP_ENDDATE' AND (REF.RecordEndDate IS NULL OR REF.RecordEndDate >= '$RP_ENDDATE') -- LAST VERSION OF RECORD DURING RP
+AND (((REF.ServDischDate IS NULL OR REF.ServDischDate > '$RP_ENDDATE') AND REF.UniqMonthID = '$MONTH_ID') OR REF.ServDischDate <= '$RP_ENDDATE') -- MAKE SURE THAT THE REFERRAL EITHER CLOSED DOWN DURING THE RP, OR IF OPEN AT END RP WE HAVE RECORD FOR FINAL MONTH IN RP
+AND REF.ReferralRequestReceivedDate <= '$RP_ENDDATE'
+AND (REF.ServDischDate IS NULL OR REF.ServDischDate >= '$RP_STARTDATE')
+AND REF.ReferralRequestReceivedDate <= PERI.EndDate
+AND (REF.ServDischDate IS NULL OR REF.ServDischDate >= PERI.StartDate)
+AND (REF.MH = 'Y' OR REF.CAMHS = 'Y')
+AND PERI.AgeAtBookingMother >= 16
+
+-- COMMAND ----------
+
+%md
+
+####PMH08a - NUMBER OF PEOPLE IN THE PERINATAL PERIOD IN RP IN CONTACT WITH SPECIALIST COMMUNITY BASED PMH SERVICES IN RP AND DURING THE PERINATAL PERIOD AGED 16+
+
+-- COMMAND ----------
+
+
+INSERT INTO $personal_db.Perinatal
+
+SELECT '$RP_STARTDATE'
+AS REPORTING_PERIOD_START
+,'$RP_ENDDATE'
+AS REPORTING_PERIOD_END
+,'Final'
+AS STATUS
+,'England'
+AS BREAKDOWN
+,'England'
+AS LEVEL
+,'England'
+AS LEVEL_DESCRIPTION
+,'None' as LEVEL_2
+,'None' as LEVEL_2_Description
+,'PMH08a'
+AS METRIC
+,COALESCE (COUNT (DISTINCT Person_ID_Mother), 0)
+AS METRIC_VALUE
+
+FROM global_temp.PMH08a_DF
+
+-- COMMAND ----------
+
+
+INSERT INTO $personal_db.Perinatal
+
+
+SELECT  '$RP_STARTDATE'
+AS REPORTING_PERIOD_START
+,'$RP_ENDDATE'
+AS REPORTING_PERIOD_END
+,'Final'
+AS STATUS
+,'Age at Booking Appointment'
+AS BREAKDOWN
+,CASE WHEN (PERI.AgeAtBookingMother <= 0 OR PERI.AgeAtBookingMother IS NULL)
+THEN 'Unknown'
+--WHEN PERI.AgeAtBookingMother < 16
+--THEN 'Under 16'
+WHEN PERI.AgeAtBookingMother < 20
+THEN '16-19'
+WHEN PERI.AgeAtBookingMother < 25
+THEN '20-24'
+WHEN PERI.AgeAtBookingMother < 30
+THEN '25-29'
+WHEN PERI.AgeAtBookingMother < 35
+THEN '30-34'
+WHEN PERI.AgeAtBookingMother < 40
+THEN '35-39'
+WHEN PERI.AgeAtBookingMother < 45
+THEN '40-44'
+ELSE '45 and over'
+END
+AS LEVEL
+,CASE WHEN (PERI.AgeAtBookingMother <= 0 OR PERI.AgeAtBookingMother IS NULL)
+THEN 'Unknown'
+--WHEN PERI.AgeAtBookingMother < 16
+--THEN 'Under 16'
+WHEN PERI.AgeAtBookingMother < 20
+THEN '16-19'
+WHEN PERI.AgeAtBookingMother < 25
+THEN '20-24'
+WHEN PERI.AgeAtBookingMother < 30
+THEN '25-29'
+WHEN PERI.AgeAtBookingMother < 35
+THEN '30-34'
+WHEN PERI.AgeAtBookingMother < 40
+THEN '35-39'
+WHEN PERI.AgeAtBookingMother < 45
+THEN '40-44'
+ELSE '45 and over'
+END
+AS LEVEL_DESCRIPTION
+,'None' as LEVEL_2
+,'None' as LEVEL_2_Description
+,'PMH08a'
+AS METRIC
+,COALESCE (COUNT (DISTINCT PERI.Person_ID_Mother), 0)
+AS METRIC_VALUE
+
+FROM global_temp.PMH08a_DF PERI
+
+WHERE 
+rnk = 1
+
+GROUP BY
+CASE WHEN (PERI.AgeAtBookingMother <= 0 OR PERI.AgeAtBookingMother IS NULL)
+THEN 'Unknown'
+--WHEN PERI.AgeAtBookingMother < 16
+--THEN 'Under 16'
+WHEN PERI.AgeAtBookingMother < 20
+THEN '16-19'
+WHEN PERI.AgeAtBookingMother < 25
+THEN '20-24'
+WHEN PERI.AgeAtBookingMother < 30
+THEN '25-29'
+WHEN PERI.AgeAtBookingMother < 35
+THEN '30-34'
+WHEN PERI.AgeAtBookingMother < 40
+THEN '35-39'
+WHEN PERI.AgeAtBookingMother < 45
+THEN '40-44'
+ELSE '45 and over'
+END
+
+-- COMMAND ----------
+
+INSERT INTO $personal_db.Perinatal
+
+SELECT  '$RP_STARTDATE'
+AS REPORTING_PERIOD_START
+,'$RP_ENDDATE'
+AS REPORTING_PERIOD_END
+,'Final'
+AS STATUS
+,'Ethnicity'
+AS BREAKDOWN
+,EthnicCategoryMother 
+AS LEVEL
+,EthnicCategoryMother_Description 
+AS LEVEL_DESCRIPTION
+,'None' as LEVEL_2
+,'None' as LEVEL_2_Description
+,'PMH08a'
+AS METRIC
+,COALESCE (COUNT (DISTINCT PERI.Person_ID_Mother), 0)
+AS METRIC_VALUE
+
+FROM global_temp.PMH08a_DF PERI
+
+WHERE 
+rnk = 1
+
+GROUP BY
+EthnicCategoryMother,
+EthnicCategoryMother_Description
+
+-- COMMAND ----------
+
+INSERT INTO $personal_db.Perinatal
+
+SELECT  
+'$RP_STARTDATE'
+AS REPORTING_PERIOD_START
+,'$RP_ENDDATE'
+AS REPORTING_PERIOD_END
+,'Final'
+AS STATUS
+,'Provider'
+AS BREAKDOWN
+,OrgIDProv
+AS LEVEL
+,'NONE'
+AS LEVEL_DESCRIPTION
+,'None' as LEVEL_2
+,'None' as LEVEL_2_Description
+,'PMH08a'
+AS METRIC
+,COALESCE (COUNT(DISTINCT Person_ID_Mother),0)
+AS METRIC_VALUE
+
+FROM global_temp.PMH08a_DF
+
+GROUP BY 
+OrgIDProv
+
+-- COMMAND ----------
+
+INSERT INTO $personal_db.Perinatal
+
+SELECT  
+'$RP_STARTDATE'
+AS REPORTING_PERIOD_START
+,'$RP_ENDDATE'
+AS REPORTING_PERIOD_END
+,'Final'
+AS STATUS
+,'CCG'
+AS BREAKDOWN
+,IC_REC_CCG
+AS LEVEL
+,NAME
+AS LEVEL_DESCRIPTION
+,'None' as LEVEL_2
+,'None' as LEVEL_2_Description
+,'PMH08a'
+AS METRIC
+,COALESCE (COUNT (DISTINCT Person_ID_Mother), 0)
+AS METRIC_VALUE
+
+FROM global_temp.PMH08a_DF
+
+WHERE 
+rnk = 1
+
+GROUP BY
+IC_REC_CCG,
+NAME
+
+-- COMMAND ----------
+
+INSERT INTO $personal_db.Perinatal
+
+SELECT  
+'$RP_STARTDATE'
+AS REPORTING_PERIOD_START
+,'$RP_ENDDATE'
+AS REPORTING_PERIOD_END
+,'Final'
+AS STATUS
+,'STP'
+AS BREAKDOWN
+,CASE 
+  WHEN STP.STP_CODE IS NULL THEN 'UNKNOWN'
+  ELSE STP.STP_CODE END
+  AS LEVEL
+,CASE 
+  WHEN STP.STP_DESCRIPTION IS NULL THEN 'UNKNOWN'
+  ELSE STP.STP_DESCRIPTION END
+  AS LEVEL_DESCRIPTION
+,'None' as LEVEL_2
+,'None' as LEVEL_2_Description
+,'PMH08a'
+AS METRIC
+,COALESCE (COUNT (DISTINCT A.Person_ID_Mother), 0)
+AS METRIC_VALUE
+
+FROM global_temp.PMH08a_DF A
+LEFT JOIN global_temp.STP_MAPPING
+AS STP
+ON STP.CCG_CODE = A.IC_REC_CCG
+
+WHERE 
+rnk = 1
+
+GROUP BY
+CASE 
+  WHEN STP.STP_CODE IS NULL THEN 'UNKNOWN'
+  ELSE STP.STP_CODE END
+,CASE 
+  WHEN STP.STP_DESCRIPTION IS NULL THEN 'UNKNOWN'
+  ELSE STP.STP_DESCRIPTION END
+
+-- COMMAND ----------
+
+%md
+
+####PMH18a - NUMBER OF pregnancies IN THE PERINATAL PERIOD IN RP AGED 16+
+
+-- COMMAND ----------
+
+INSERT INTO $personal_db.Perinatal
+
+SELECT 
+'$RP_STARTDATE'
+AS REPORTING_PERIOD_START
+,'$RP_ENDDATE'
+AS REPORTING_PERIOD_END
+,'Final'
+AS STATUS
+,'England'
+AS BREAKDOWN
+,'England'
+AS LEVEL
+,'England'
+AS LEVEL_DESCRIPTION
+,'None' as LEVEL_2
+,'None' as LEVEL_2_Description
+,'PMH18a'
+AS METRIC
+,COALESCE (COUNT (DISTINCT PERI.UniqPregID), 0)
+AS METRIC_VALUE
+
+FROM global_temp.PMH01b_DF
+AS PERI
+
+-- COMMAND ----------
+
+INSERT INTO $personal_db.Perinatal
+
+SELECT 
+'$RP_STARTDATE'
+AS REPORTING_PERIOD_START
+,'$RP_ENDDATE'
+AS REPORTING_PERIOD_END
+,'Final'
+AS STATUS
+,'Age at Booking Appointment'
+AS BREAKDOWN
+,CASE WHEN (PERI.AgeAtBookingMother <= 0 OR PERI.AgeAtBookingMother IS NULL)
+THEN 'Unknown'
+--WHEN PERI.AgeAtBookingMother < 16
+--THEN 'Under 16'
+WHEN PERI.AgeAtBookingMother < 20
+THEN '16-19'
+WHEN PERI.AgeAtBookingMother < 25
+THEN '20-24'
+WHEN PERI.AgeAtBookingMother < 30
+THEN '25-29'
+WHEN PERI.AgeAtBookingMother < 35
+THEN '30-34'
+WHEN PERI.AgeAtBookingMother < 40
+THEN '35-39'
+WHEN PERI.AgeAtBookingMother < 45
+THEN '40-44'
+ELSE '45 and over'
+END
+AS LEVEL
+,CASE WHEN (PERI.AgeAtBookingMother <= 0 OR PERI.AgeAtBookingMother IS NULL)
+THEN 'Unknown'
+--WHEN PERI.AgeAtBookingMother < 16
+--THEN 'Under 16'
+WHEN PERI.AgeAtBookingMother < 20
+THEN '16-19'
+WHEN PERI.AgeAtBookingMother < 25
+THEN '20-24'
+WHEN PERI.AgeAtBookingMother < 30
+THEN '25-29'
+WHEN PERI.AgeAtBookingMother < 35
+THEN '30-34'
+WHEN PERI.AgeAtBookingMother < 40
+THEN '35-39'
+WHEN PERI.AgeAtBookingMother < 45
+THEN '40-44'
+ELSE '45 and over'
+END
+AS LEVEL_DESCRIPTION
+,'None' as LEVEL_2
+,'None' as LEVEL_2_Description
+,'PMH18a'
+AS METRIC
+,COALESCE (COUNT (DISTINCT PERI.UniqPregID), 0)
+AS METRIC_VALUE
+
+FROM global_temp.PMH01b_DF
+AS PERI
+
+WHERE PERI.Preg_rnk = 1
+
+GROUP BY CASE WHEN (PERI.AgeAtBookingMother <= 0 OR PERI.AgeAtBookingMother IS NULL)
+THEN 'Unknown'
+--WHEN PERI.AgeAtBookingMother < 16
+--THEN 'Under 16'
+WHEN PERI.AgeAtBookingMother < 20
+THEN '16-19'
+WHEN PERI.AgeAtBookingMother < 25
+THEN '20-24'
+WHEN PERI.AgeAtBookingMother < 30
+THEN '25-29'
+WHEN PERI.AgeAtBookingMother < 35
+THEN '30-34'
+WHEN PERI.AgeAtBookingMother < 40
+THEN '35-39'
+WHEN PERI.AgeAtBookingMother < 45
+THEN '40-44'
+ELSE '45 and over'
+END
+
+-- COMMAND ----------
+
+INSERT INTO $personal_db.Perinatal
+
+SELECT 
+'$RP_STARTDATE'
+AS REPORTING_PERIOD_START
+,'$RP_ENDDATE'
+AS REPORTING_PERIOD_END
+,'Final'
+AS STATUS
+,'Ethnicity'
+AS BREAKDOWN
+,EthnicCategoryMother 
+AS LEVEL
+,EthnicCategoryMother_Description 
+AS LEVEL_DESCRIPTION
+,'None' as LEVEL_2
+,'None' as LEVEL_2_Description
+,'PMH18a'
+AS METRIC
+,COALESCE (COUNT (DISTINCT PERI.UniqPregID), 0)
+AS METRIC_VALUE
+
+FROM global_temp.PMH01b_DF
+AS PERI
+
+WHERE PERI.Preg_rnk = 1
+
+Group by 
+EthnicCategoryMother, EthnicCategoryMother_Description
+
+-- COMMAND ----------
+
+%md
+
+####PMH19A - NUMBER OF PREGNANCIES IN THE PERINATAL PERIOD IN RP WITH A MENTAL HEALTH REFERRAL OPEN IN RP AND DURING THE PERINATAL PERIOD AGED 16
+
+-- COMMAND ----------
+
+INSERT INTO $personal_db.Perinatal
+
+SELECT 
+'$RP_STARTDATE'
+AS REPORTING_PERIOD_START
+,'$RP_ENDDATE'
+AS REPORTING_PERIOD_END
+,'Final'
+AS STATUS
+,'England'
+AS BREAKDOWN
+,'England'
+AS LEVEL
+,'England'
+AS LEVEL_DESCRIPTION
+,'None' as LEVEL_2
+,'None' as LEVEL_2_Description
+,'PMH19a'
+AS METRIC
+,COALESCE (COUNT (DISTINCT UniqPregID), 0)
+AS METRIC_VALUE
+
+FROM global_temp.PMH19a_DF
+
+-- COMMAND ----------
+
+INSERT INTO $personal_db.Perinatal
+
+SELECT 
+'$RP_STARTDATE'
+AS REPORTING_PERIOD_START
+,'$RP_ENDDATE'
+AS REPORTING_PERIOD_END
+,'Final'
+AS STATUS
+,'Age at Booking Appointment'
+AS BREAKDOWN
+,CASE WHEN (PERI.AgeAtBookingMother <= 0 OR PERI.AgeAtBookingMother IS NULL)
+THEN 'Unknown'
+--WHEN PERI.AgeAtBookingMother < 16
+--THEN 'Under 16'
+WHEN PERI.AgeAtBookingMother < 20
+THEN '16-19'
+WHEN PERI.AgeAtBookingMother < 25
+THEN '20-24'
+WHEN PERI.AgeAtBookingMother < 30
+THEN '25-29'
+WHEN PERI.AgeAtBookingMother < 35
+THEN '30-34'
+WHEN PERI.AgeAtBookingMother < 40
+THEN '35-39'
+WHEN PERI.AgeAtBookingMother < 45
+THEN '40-44'
+ELSE '45 and over'
+END
+AS LEVEL
+,CASE WHEN (PERI.AgeAtBookingMother <= 0 OR PERI.AgeAtBookingMother IS NULL)
+THEN 'Unknown'
+--WHEN PERI.AgeAtBookingMother < 16
+--THEN 'Under 16'
+WHEN PERI.AgeAtBookingMother < 20
+THEN '16-19'
+WHEN PERI.AgeAtBookingMother < 25
+THEN '20-24'
+WHEN PERI.AgeAtBookingMother < 30
+THEN '25-29'
+WHEN PERI.AgeAtBookingMother < 35
+THEN '30-34'
+WHEN PERI.AgeAtBookingMother < 40
+THEN '35-39'
+WHEN PERI.AgeAtBookingMother < 45
+THEN '40-44'
+ELSE '45 and over'
+END
+AS LEVEL_DESCRIPTION
+,'None' as LEVEL_2
+,'None' as LEVEL_2_Description
+,'PMH19a'
+AS METRIC
+,COALESCE (COUNT (DISTINCT PERI.UniqPregID), 0)
+AS METRIC_VALUE
+
+FROM global_temp.PMH19a_DF AS PERI
+
+where
+PREG_RNK = 1
+
+GROUP BY
+CASE 
+WHEN (PERI.AgeAtBookingMother <= 0 OR PERI.AgeAtBookingMother IS NULL)
+THEN 'Unknown'
+--WHEN PERI.AgeAtBookingMother < 16
+--THEN 'Under 16'
+WHEN PERI.AgeAtBookingMother < 20
+THEN '16-19'
+WHEN PERI.AgeAtBookingMother < 25
+THEN '20-24'
+WHEN PERI.AgeAtBookingMother < 30
+THEN '25-29'
+WHEN PERI.AgeAtBookingMother < 35
+THEN '30-34'
+WHEN PERI.AgeAtBookingMother < 40
+THEN '35-39'
+WHEN PERI.AgeAtBookingMother < 45
+THEN '40-44'
+ELSE '45 and over'
+END
+
+-- COMMAND ----------
+
+INSERT INTO $personal_db.Perinatal
+
+SELECT 
+'$RP_STARTDATE'
+AS REPORTING_PERIOD_START
+,'$RP_ENDDATE'
+AS REPORTING_PERIOD_END
+,'Final'
+AS STATUS
+,'Ethnicity'
+AS BREAKDOWN
+,EthnicCategoryMother 
+AS LEVEL
+,EthnicCategoryMother_Description 
+AS LEVEL_DESCRIPTION
+,'None' as LEVEL_2
+,'None' as LEVEL_2_Description
+,'PMH19a'
+AS METRIC
+,COALESCE (COUNT (DISTINCT PERI.UniqPregID), 0)
+AS METRIC_VALUE
+
+FROM global_temp.PMH19a_DF as PERI
+
+where
+PREG_RNK = 1
+
+GROUP BY 
+EthnicCategoryMother 
+,EthnicCategoryMother_Description 
+
+-- COMMAND ----------
+
+INSERT INTO $personal_db.Perinatal
+
+SELECT 
+'$RP_STARTDATE'
+AS REPORTING_PERIOD_START
+,'$RP_ENDDATE'
+AS REPORTING_PERIOD_END
+,'Final'
+AS STATUS
+,'Provider'
+AS BREAKDOWN
+,OrgIDProv
+AS LEVEL
+,'NONE'
+AS LEVEL_DESCRIPTION
+,'None' as LEVEL_2
+,'None' as LEVEL_2_Description
+,'PMH19a'
+AS METRIC
+,COALESCE (COUNT(DISTINCT UniqPregID),0)
+AS METRIC_VALUE
+
+FROM global_temp.PMH19a_DF
+
+GROUP BY 
+OrgIDProv
+
+-- COMMAND ----------
+
+INSERT INTO $personal_db.Perinatal
+
+SELECT 
+'$RP_STARTDATE'
+AS REPORTING_PERIOD_START
+,'$RP_ENDDATE'
+AS REPORTING_PERIOD_END
+,'Final'
+AS STATUS
+,'CCG'
+AS BREAKDOWN
+,IC_Rec_CCG
+AS LEVEL
+,name
+AS LEVEL_DESCRIPTION
+,'None' as LEVEL_2
+,'None' as LEVEL_2_Description
+,'PMH19a'
+AS METRIC
+,COALESCE (COUNT (DISTINCT UniqPregID), 0)
+AS METRIC_VALUE
+
+FROM global_temp.PMH19a_DF
+
+where
+PREG_RNK = 1
+
+GROUP BY
+IC_Rec_CCG,
+NAME
+
+-- COMMAND ----------
+
+INSERT INTO $personal_db.Perinatal
+
+SELECT 
+'$RP_STARTDATE'
+AS REPORTING_PERIOD_START
+,'$RP_ENDDATE'
+AS REPORTING_PERIOD_END
+,'Final'
+AS STATUS
+,'STP'
+AS BREAKDOWN
+,CASE 
+  WHEN STP.STP_CODE IS NULL THEN 'UNKNOWN'
+  ELSE STP.STP_CODE END
+  AS LEVEL
+,CASE 
+  WHEN STP.STP_DESCRIPTION IS NULL THEN 'UNKNOWN'
+  ELSE STP.STP_DESCRIPTION END
+  AS LEVEL_DESCRIPTION
+,'None' as LEVEL_2
+,'None' as LEVEL_2_Description
+,'PMH19a'
+AS METRIC
+,COALESCE (COUNT (DISTINCT UniqPregID), 0)
+AS METRIC_VALUE
+
+FROM global_temp.PMH19a_DF A
+LEFT JOIN global_temp.STP_MAPPING 
+AS STP
+ON STP.CCG_CODE = A.IC_REC_CCG
+
+where
+PREG_RNK = 1
+
+GROUP BY
+CASE 
+  WHEN STP.STP_CODE IS NULL THEN 'UNKNOWN'
+  ELSE STP.STP_CODE END
+,CASE 
+  WHEN STP.STP_DESCRIPTION IS NULL THEN 'UNKNOWN'
+  ELSE STP.STP_DESCRIPTION END
+
+-- COMMAND ----------
+
+%md
+
+####PMH20a - NUMBER OF PREGNANCIES IN THE PERINATAL PERIOD IN RP IN CONTACT WITH SPECIALIST PMH SERVICES IN RP AND DURING THE PERINATAL PERIOD AGED 16+
+
+-- COMMAND ----------
+
+INSERT INTO $personal_db.Perinatal
+
+SELECT 
+'$RP_STARTDATE'
+AS REPORTING_PERIOD_START
+,'$RP_ENDDATE'
+AS REPORTING_PERIOD_END
+,'Final'
+AS STATUS
+,'England'
+AS BREAKDOWN
+,'England'
+AS LEVEL
+,'England'
+AS LEVEL_DESCRIPTION
+,'None' as LEVEL_2
+,'None' as LEVEL_2_Description
+,'PMH20a'
+AS METRIC
+,COALESCE (COUNT (DISTINCT PERI.UniqPregID), 0)
+AS METRIC_VALUE
+
+FROM global_temp.PMH20a_DF PERI
+
+-- COMMAND ----------
+
+INSERT INTO $personal_db.Perinatal
+
+SELECT 
+'$RP_STARTDATE'
+AS REPORTING_PERIOD_START
+,'$RP_ENDDATE'
+AS REPORTING_PERIOD_END
+,'Final'
+AS STATUS
+,'Age at Booking Appointment'
+AS BREAKDOWN
+,CASE WHEN (PERI.AgeAtBookingMother <= 0 OR PERI.AgeAtBookingMother IS NULL)
+THEN 'Unknown'
+--WHEN PERI.AgeAtBookingMother < 16
+--THEN 'Under 16'
+WHEN PERI.AgeAtBookingMother < 20
+THEN '16-19'
+WHEN PERI.AgeAtBookingMother < 25
+THEN '20-24'
+WHEN PERI.AgeAtBookingMother < 30
+THEN '25-29'
+WHEN PERI.AgeAtBookingMother < 35
+THEN '30-34'
+WHEN PERI.AgeAtBookingMother < 40
+THEN '35-39'
+WHEN PERI.AgeAtBookingMother < 45
+THEN '40-44'
+ELSE '45 and over'
+END
+AS LEVEL
+,CASE WHEN (PERI.AgeAtBookingMother <= 0 OR PERI.AgeAtBookingMother IS NULL)
+THEN 'Unknown'
+--WHEN PERI.AgeAtBookingMother < 16
+--THEN 'Under 16'
+WHEN PERI.AgeAtBookingMother < 20
+THEN '16-19'
+WHEN PERI.AgeAtBookingMother < 25
+THEN '20-24'
+WHEN PERI.AgeAtBookingMother < 30
+THEN '25-29'
+WHEN PERI.AgeAtBookingMother < 35
+THEN '30-34'
+WHEN PERI.AgeAtBookingMother < 40
+THEN '35-39'
+WHEN PERI.AgeAtBookingMother < 45
+THEN '40-44'
+ELSE '45 and over'
+END
+AS LEVEL_DESCRIPTION
+,'None' as LEVEL_2
+,'None' as LEVEL_2_Description
+,'PMH20a'
+AS METRIC
+,COALESCE (COUNT (DISTINCT PERI.UniqPregID), 0)
+AS METRIC_VALUE
+
+FROM global_temp.PMH20a_DF PERI
+
+where
+PREG_RNK = 1
+
+GROUP BY 
+CASE 
+WHEN (PERI.AgeAtBookingMother <= 0 OR PERI.AgeAtBookingMother IS NULL)
+THEN 'Unknown'
+--WHEN PERI.AgeAtBookingMother < 16
+--THEN 'Under 16'
+WHEN PERI.AgeAtBookingMother < 20
+THEN '16-19'
+WHEN PERI.AgeAtBookingMother < 25
+THEN '20-24'
+WHEN PERI.AgeAtBookingMother < 30
+THEN '25-29'
+WHEN PERI.AgeAtBookingMother < 35
+THEN '30-34'
+WHEN PERI.AgeAtBookingMother < 40
+THEN '35-39'
+WHEN PERI.AgeAtBookingMother < 45
+THEN '40-44'
+ELSE '45 and over'
+END
+
+-- COMMAND ----------
+
+INSERT INTO $personal_db.Perinatal
+
+SELECT 
+'$RP_STARTDATE'
+AS REPORTING_PERIOD_START
+,'$RP_ENDDATE'
+AS REPORTING_PERIOD_END
+,'Final'
+AS STATUS
+,'Ethnicity'
+AS BREAKDOWN
+,EthnicCategoryMother 
+AS LEVEL
+,EthnicCategoryMother_Description 
+AS LEVEL_DESCRIPTION                       
+,'None' as LEVEL_2
+,'None' as LEVEL_2_Description
+,'PMH20a'
+AS METRIC
+,COALESCE (COUNT (DISTINCT PERI.UniqPregID), 0)
+AS METRIC_VALUE
+
+FROM global_temp.PMH20a_DF AS PERI
+
+where
+PREG_RNK = 1
+
+GROUP BY 
+EthnicCategoryMother, 
+EthnicCategoryMother_Description 
+
+-- COMMAND ----------
+
+INSERT INTO $personal_db.Perinatal
+
+SELECT 
+'$RP_STARTDATE'
+AS REPORTING_PERIOD_START
+,'$RP_ENDDATE'
+AS REPORTING_PERIOD_END
+,'Final'
+AS STATUS
+,'Provider'
+AS BREAKDOWN
+,OrgIDProv
+AS LEVEL
+,'NONE'
+AS LEVEL_DESCRIPTION
+,'None' as LEVEL_2
+,'None' as LEVEL_2_Description
+,'PMH20a'
+AS METRIC
+,COALESCE (COUNT(DISTINCT UniqPregID),0)
+AS METRIC_VALUE
+
+FROM global_temp.PMH20a_DF
+
+
+
+GROUP BY 
+OrgIDProv
+
+-- COMMAND ----------
+
+INSERT INTO $personal_db.Perinatal
+
+SELECT 
+'$RP_STARTDATE'
+AS REPORTING_PERIOD_START
+,'$RP_ENDDATE'
+AS REPORTING_PERIOD_END
+,'Final'
+AS STATUS
+,'CCG'
+AS BREAKDOWN
+,PERI.IC_Rec_CCG
+AS LEVEL
+,PERI.NAME
+AS LEVEL_DESCRIPTION
+,'None' as LEVEL_2
+,'None' as LEVEL_2_Description
+,'PMH20a'
+AS METRIC
+,COALESCE (COUNT (DISTINCT PERI.UniqPregID), 0)
+AS METRIC_VALUE
+
+FROM global_temp.PMH20a_DF AS PERI
+
+where
+PREG_RNK = 1
+
+GROUP BY
+IC_REC_CCG,
+NAME
+
+-- COMMAND ----------
+
+INSERT INTO $personal_db.Perinatal
+
+SELECT 
+'$RP_STARTDATE'
+AS REPORTING_PERIOD_START
+,'$RP_ENDDATE'
+AS REPORTING_PERIOD_END
+,'Final'
+AS STATUS
+,'STP'
+AS BREAKDOWN
+,CASE 
+  WHEN STP.STP_CODE IS NULL THEN 'UNKNOWN'
+  ELSE STP.STP_CODE END
+  AS LEVEL
+,CASE 
+  WHEN STP.STP_DESCRIPTION IS NULL THEN 'UNKNOWN'
+  ELSE STP.STP_DESCRIPTION END
+  AS LEVEL_DESCRIPTION
+,'None' as LEVEL_2
+,'None' as LEVEL_2_Description
+,'PMH20a'
+AS METRIC
+,COALESCE (COUNT (DISTINCT PERI.UniqPregID), 0)
+AS METRIC_VALUE
+
+FROM global_temp.PMH20a_DF AS PERI
+LEFT JOIN global_temp.STP_MAPPING
+AS STP
+ON STP.CCG_CODE = PERI.IC_REC_CCG
+
+where
+PREG_RNK = 1
+
+GROUP BY
+CASE 
+  WHEN STP.STP_CODE IS NULL THEN 'UNKNOWN'
+  ELSE STP.STP_CODE END
+,CASE 
+  WHEN STP.STP_DESCRIPTION IS NULL THEN 'UNKNOWN'
+  ELSE STP.STP_DESCRIPTION END
+
+-- COMMAND ----------
+
+%md
+
+#### PMH21a - NUMBER OF PREGNANCIES IN THE PERINATAL PERIOD IN RP WHO HAVE SPENT TIME IN A MBU IN RP AND DURING THE PERINATAL PERIOD AGED 16+
+
+-- COMMAND ----------
+
+INSERT INTO $personal_db.Perinatal
+
+SELECT 
+'$RP_STARTDATE'
+AS REPORTING_PERIOD_START
+,'$RP_ENDDATE'
+AS REPORTING_PERIOD_END
+,'Final'
+AS STATUS
+,'England'
+AS BREAKDOWN
+,'England'
+AS LEVEL
+,'England'
+AS LEVEL_DESCRIPTION
+,'None' as LEVEL_2
+,'None' as LEVEL_2_Description
+,'PMH21a'
+AS METRIC
+,COALESCE (COUNT (DISTINCT PERI.UniqPregID), 0)
+AS METRIC_VALUE
+
+FROM $personal_db.MHSDSPerinatalPeriodMH_DF
+AS PERI
+
+LEFT OUTER JOIN global_temp.MHS101Referral_service_area_peri_in_rp_DF
+AS REF
+ON PERI.Person_ID = REF.Person_ID
+
+INNER JOIN $MHSDS.MHS501HospProvSpell
+AS HSP
+ON HSP.UniqServReqID = REF.UniqServReqID AND (HSP.UniqMonthID BETWEEN '$MONTH_ID' - 23 AND '$MONTH_ID') AND HSP.StartDateHospProvSpell <= '$RP_ENDDATE' AND (HSP.DischDateHospProvSpell IS NULL OR HSP.DischDateHospProvSpell >= '$RP_STARTDATE') AND HSP.StartDateHospProvSpell <= PERI.EndDate AND (HSP.DischDateHospProvSpell IS NULL OR HSP.DischDateHospProvSpell >= PERI.StartDate) AND (HSP.RecordEndDate IS NULL OR HSP.RecordEndDate >= '$RP_ENDDATE') AND HSP.RecordStartDate <= '$RP_ENDDATE'
+
+INNER JOIN $MHSDS.MHS502WardStay
+AS WST
+ON HSP.UniqHospProvSpellNum = WST.UniqHospProvSpellNum 
+AND (WST.UniqMonthID BETWEEN '$MONTH_ID' - 23 AND '$MONTH_ID') 
+AND WST.StartDateWardStay <= '$RP_ENDDATE' 
+AND (WST.EndDateWardStay IS NULL OR WST.EndDateWardStay >= '$RP_STARTDATE') 
+AND WST.StartDateWardStay <= PERI.EndDate 
+AND (WST.EndDateWardStay  IS NULL OR WST.EndDateWardStay  >= PERI.StartDate) 
+AND (WST.RecordEndDate IS NULL OR WST.RecordEndDate >= '$RP_ENDDATE') 
+AND WST.RecordStartDate <= '$RP_ENDDATE' 
+AND WST.SiteIDOfTreat in
+('RVNPA','RXTD3','RV312','RXM54','RDYGA','RWK62',
+'R1LAH','RXVM8','RWRA9','RGD05','RX4E2','RHARA',
+'RV505','RRE3K','RW119')
+
+WHERE PERI.StartDate <= '$RP_ENDDATE'
+AND PERI.EndDate >= '$RP_STARTDATE'
+AND REF.RecordStartDate <= '$RP_ENDDATE' AND (REF.RecordEndDate IS NULL OR REF.RecordEndDate >= '$RP_ENDDATE') -- LAST VERSION OF RECORD DURING RP
+AND (((REF.ServDischDate IS NULL OR REF.ServDischDate > '$RP_ENDDATE') AND REF.UniqMonthID = '$MONTH_ID') OR REF.ServDischDate <= '$RP_ENDDATE') -- MAKE SURE THAT THE REFERRAL EITHER CLOSED DOWN DURING THE RP, OR IF OPEN AT END RP WE HAVE RECORD FOR FINAL MONTH IN RP
+AND REF.ReferralRequestReceivedDate <= '$RP_ENDDATE'
+AND (REF.ServDischDate IS NULL OR REF.ServDischDate >= '$RP_STARTDATE')
+AND REF.ReferralRequestReceivedDate <= PERI.EndDate
+AND (REF.ServDischDate IS NULL OR REF.ServDischDate >= PERI.StartDate)
+AND (REF.MH = 'Y' OR REF.CAMHS = 'Y')
+AND PERI.AgeAtBookingMother >= 16
+
+-- COMMAND ----------
+
+%md
+
+####PMH22a - NUMBER OF PREGNANCIES IN THE PERINATAL PERIOD IN RP IN CONTACT WITH SPECIALIST COMMUNITY BASED PMH SERVICES IN RP AND DURING THE PERINATAL PERIOD AGED 16+
+
+-- COMMAND ----------
+
+INSERT INTO $personal_db.Perinatal
+
+SELECT 
+'$RP_STARTDATE'
+AS REPORTING_PERIOD_START
+,'$RP_ENDDATE'
+AS REPORTING_PERIOD_END
+,'Final'
+AS STATUS
+,'England'
+AS BREAKDOWN
+,'England'
+AS LEVEL
+,'England'
+AS LEVEL_DESCRIPTION
+,'None' as LEVEL_2
+,'None' as LEVEL_2_Description
+,'PMH22a'
+AS METRIC
+,COALESCE (COUNT (DISTINCT UniqPregID), 0)
+AS METRIC_VALUE
+
+FROM global_temp.PMH22a_DF
+
+-- COMMAND ----------
+
+INSERT INTO $personal_db.Perinatal
+
+SELECT 
+'$RP_STARTDATE'
+AS REPORTING_PERIOD_START
+,'$RP_ENDDATE'
+AS REPORTING_PERIOD_END
+,'Final'
+AS STATUS
+,'Age at Booking Appointment'
+AS BREAKDOWN
+,CASE WHEN (PERI.AgeAtBookingMother <= 0 OR PERI.AgeAtBookingMother IS NULL)
+THEN 'Unknown'
+--WHEN PERI.AgeAtBookingMother < 16
+--THEN 'Under 16'
+WHEN PERI.AgeAtBookingMother < 20
+THEN '16-19'
+WHEN PERI.AgeAtBookingMother < 25
+THEN '20-24'
+WHEN PERI.AgeAtBookingMother < 30
+THEN '25-29'
+WHEN PERI.AgeAtBookingMother < 35
+THEN '30-34'
+WHEN PERI.AgeAtBookingMother < 40
+THEN '35-39'
+WHEN PERI.AgeAtBookingMother < 45
+THEN '40-44'
+ELSE '45 and over'
+END
+AS LEVEL
+,CASE WHEN (PERI.AgeAtBookingMother <= 0 OR PERI.AgeAtBookingMother IS NULL)
+THEN 'Unknown'
+--WHEN PERI.AgeAtBookingMother < 16
+--THEN 'Under 16'
+WHEN PERI.AgeAtBookingMother < 20
+THEN '16-19'
+WHEN PERI.AgeAtBookingMother < 25
+THEN '20-24'
+WHEN PERI.AgeAtBookingMother < 30
+THEN '25-29'
+WHEN PERI.AgeAtBookingMother < 35
+THEN '30-34'
+WHEN PERI.AgeAtBookingMother < 40
+THEN '35-39'
+WHEN PERI.AgeAtBookingMother < 45
+THEN '40-44'
+ELSE '45 and over'
+END
+AS LEVEL_DESCRIPTION
+,'None' as LEVEL_2
+,'None' as LEVEL_2_Description
+,'PMH22a'
+AS METRIC
+,COALESCE (COUNT (DISTINCT UniqPregID), 0)
+AS METRIC_VALUE
+
+FROM global_temp.PMH22a_DF AS PERI
+
+where
+PREG_RNK = 1
+
+GROUP BY 
+CASE 
+WHEN (PERI.AgeAtBookingMother <= 0 OR PERI.AgeAtBookingMother IS NULL)
+THEN 'Unknown'
+--WHEN PERI.AgeAtBookingMother < 16
+--THEN 'Under 16'
+WHEN PERI.AgeAtBookingMother < 20
+THEN '16-19'
+WHEN PERI.AgeAtBookingMother < 25
+THEN '20-24'
+WHEN PERI.AgeAtBookingMother < 30
+THEN '25-29'
+WHEN PERI.AgeAtBookingMother < 35
+THEN '30-34'
+WHEN PERI.AgeAtBookingMother < 40
+THEN '35-39'
+WHEN PERI.AgeAtBookingMother < 45
+THEN '40-44'
+ELSE '45 and over'
+END
+
+-- COMMAND ----------
+
+INSERT INTO $personal_db.Perinatal
+
+SELECT 
+'$RP_STARTDATE'
+AS REPORTING_PERIOD_START
+,'$RP_ENDDATE'
+AS REPORTING_PERIOD_END
+,'Final'
+AS STATUS
+,'Ethnicity'
+AS BREAKDOWN
+,EthnicCategoryMother 
+AS LEVEL
+,EthnicCategoryMother_Description 
+AS LEVEL_DESCRIPTION
+,'None' as LEVEL_2
+,'None' as LEVEL_2_Description
+,'PMH22a'
+AS METRIC
+,COALESCE (COUNT (DISTINCT PERI.UniqPregID), 0)
+AS METRIC_VALUE
+
+FROM global_temp.PMH22a_DF AS PERI
+
+where
+PREG_RNK = 1
+
+GROUP BY 
+EthnicCategoryMother 
+,EthnicCategoryMother_Description 
+
+-- COMMAND ----------
+
+INSERT INTO $personal_db.Perinatal
+
+SELECT 
+'$RP_STARTDATE'
+AS REPORTING_PERIOD_START
+,'$RP_ENDDATE'
+AS REPORTING_PERIOD_END
+,'Final'
+AS STATUS
+,'Provider'
+AS BREAKDOWN
+,OrgIDProv
+AS LEVEL
+,'NONE'
+AS LEVEL_DESCRIPTION
+,'None' as LEVEL_2
+,'None' as LEVEL_2_Description
+,'PMH22a'
+AS METRIC
+,COALESCE (COUNT(DISTINCT UniqPregID),0)
+AS METRIC_VALUE
+
+FROM global_temp.PMH22a_DF
+
+GROUP BY
+OrgIDProv
+
+-- COMMAND ----------
+
+INSERT INTO $personal_db.Perinatal
+
+SELECT 
+'$RP_STARTDATE'
+AS REPORTING_PERIOD_START
+,'$RP_ENDDATE'
+AS REPORTING_PERIOD_END
+,'Final'
+AS STATUS
+,'CCG'
+AS BREAKDOWN
+,PERI.IC_Rec_CCG
+AS LEVEL
+,PERI.NAME
+AS LEVEL_DESCRIPTION
+,'None' as LEVEL_2
+,'None' as LEVEL_2_Description
+,'PMH22a'
+AS METRIC
+,COALESCE (COUNT (DISTINCT PERI.UniqPregID), 0)
+AS METRIC_VALUE
+
+FROM global_temp.PMH22a_DF as PERI
+
+where
+PREG_RNK = 1
+
+GROUP BY 
+IC_Rec_CCG,
+NAME
+
+-- COMMAND ----------
+
+INSERT INTO $personal_db.Perinatal
+
+SELECT 
+'$RP_STARTDATE'
+AS REPORTING_PERIOD_START
+,'$RP_ENDDATE'
+AS REPORTING_PERIOD_END
+,'Final'
+AS STATUS
+,'STP'
+AS BREAKDOWN
+,CASE 
+  WHEN STP.STP_CODE IS NULL THEN 'UNKNOWN'
+  ELSE STP.STP_CODE END
+  AS LEVEL
+,CASE 
+  WHEN STP.STP_DESCRIPTION IS NULL THEN 'UNKNOWN'
+  ELSE STP.STP_DESCRIPTION END
+  AS LEVEL_DESCRIPTION
+,'None' as LEVEL_2
+,'None' as LEVEL_2_Description
+,'PMH22a'
+AS METRIC
+,COALESCE (COUNT (DISTINCT PERI.UniqPregID), 0)
+AS METRIC_VALUE
+
+FROM global_temp.PMH22a_DF as PERI
+LEFT JOIN global_temp.STP_MAPPING
+AS STP
+ON STP.CCG_CODE = PERI.IC_REC_CCG
+
+where
+PREG_RNK = 1
+
+GROUP BY
+CASE 
+  WHEN STP.STP_CODE IS NULL THEN 'UNKNOWN'
+  ELSE STP.STP_CODE END
+,CASE 
+  WHEN STP.STP_DESCRIPTION IS NULL THEN 'UNKNOWN'
+  ELSE STP.STP_DESCRIPTION END
+
+
+-- COMMAND ----------
+
+%md 
+## Collate measures
+
+-- COMMAND ----------
+
+SELECT 
+*
+FROM $personal_db.PERINATAL
+
+-- COMMAND ----------
+
+%md
+
+#### SUPPRESS AND ROUND
+
+-- COMMAND ----------
+
+CREATE OR REPLACE TEMPORARY VIEW ENGLAND AS 
+
+SELECT 
+REPORTING_PERIOD_START 
+,REPORTING_PERIOD_END
+,STATUS
+,BREAKDOWN
+,LEVEL as LEVEL_ONE
+,LEVEL_DESCRIPTION as LEVEL_ONE_DESCRIPTION
+,LEVEL_2 as LEVEL_TWO
+,LEVEL_2_DESCRIPTION as LEVEL_TWO_DESCRIPTION
+,METRIC
+,cast(METRIC_VALUE as string) as METRIC_VALUE
+FROM
+$personal_db.Perinatal
+WHERE
+BREAKDOWN in ('England')
+
+-- COMMAND ----------
+
+CREATE OR REPLACE TEMPORARY VIEW DEMOG_BREAKDOWNS AS 
+
+SELECT 
+REPORTING_PERIOD_START 
+,REPORTING_PERIOD_END
+,STATUS
+,BREAKDOWN
+,LEVEL as LEVEL_ONE
+,LEVEL_DESCRIPTION as LEVEL_ONE_DESCRIPTION
+,LEVEL_2 as LEVEL_TWO
+,LEVEL_2_DESCRIPTION as LEVEL_TWO_DESCRIPTION
+,METRIC
+,cast(METRIC_VALUE as string) as METRIC_VALUE
+FROM
+$personal_db.Perinatal
+WHERE
+BREAKDOWN in ('Age at Booking Appointment','Ethnicity')
+
+-- COMMAND ----------
+
+CREATE OR REPLACE TEMPORARY VIEW SubNational AS 
+
+SELECT 
+REPORTING_PERIOD_START
+,REPORTING_PERIOD_END
+,STATUS
+,BREAKDOWN
+,LEVEL
+,LEVEL_DESCRIPTION
+,LEVEL_2
+,LEVEL_2_DESCRIPTION
+,METRIC
+,cast(case when cast(Metric_value as int) < 5 then '9999999' else cast(round(cast(metric_value as float)/5,0)*5 as int) end as string) as  METRIC_VALUE
+FROM
+$personal_db.Perinatal
+WHERE
+BREAKDOWN IN ('Provider','CCG', 'STP')
+
+-- COMMAND ----------
+
+CREATE OR REPLACE TEMPORARY VIEW SubNational_Supp AS
+
+SELECT 
+REPORTING_PERIOD_START 
+,REPORTING_PERIOD_END
+,STATUS
+,BREAKDOWN
+,LEVEL as LEVEL_ONE
+,LEVEL_DESCRIPTION as LEVEL_ONE_DESCRIPTION
+,LEVEL_2 as LEVEL_TWO
+,LEVEL_2_DESCRIPTION as LEVEL_TWO_DESCRIPTION
+,METRIC
+,case when METRIC_VALUE = '9999999' then '*' else METRIC_VALUE end  as metric_value
+FROM 
+SubNational
+
+-- COMMAND ----------
+
+SELECT 
+*
+FROM 
+England
+
+UNION ALL
+
+SELECT 
+*
+FROM 
+DEMOG_BREAKDOWNS
+
+UNION ALL
+
+SELECT 
+*
+FROM
+SubNational_Supp
+
+-- COMMAND ----------
+
+%md 
+
+#### Format output
+
+-- COMMAND ----------
+
+CREATE OR REPLACE  TEMPORARY VIEW RD_CCG_LATEST AS
+SELECT 
+DISTINCT 
+'1' AS ID,
+'CCG' AS BREAKDOWN,
+ORG_CODE,
+NAME
+
+FROM $reference_data.org_daily
+
+WHERE 
+ORG_TYPE_CODE = 'CC'
+AND BUSINESS_END_DATE IS NULL
+AND NAME NOT LIKE '%HUB'
+AND NAME NOT LIKE '%NATIONAL%'
+AND (ORG_CLOSE_DATE >= add_months('$RP_STARTDATE',-13) OR ISNULL(ORG_CLOSE_DATE))
+
+-- COMMAND ----------
+
+CREATE OR REPLACE TEMPORARY VIEW RD_ORG_DAILY_LATEST AS
+SELECT DISTINCT ORG_CODE, 
+                NAME
+           FROM $reference_data.org_daily
+          WHERE (BUSINESS_END_DATE >= add_months('$RP_ENDDATE', 1) OR ISNULL(BUSINESS_END_DATE))
+                AND BUSINESS_START_DATE <= add_months('$RP_ENDDATE', 1)	
+                AND ORG_TYPE_CODE NOT IN ('MP', 'IR', 'F', 'GO', 'CN');
+
+-- COMMAND ----------
+
+CREATE OR REPLACE TEMPORARY VIEW Provider_list AS
+SELECT 
+DISTINCT 
+'1' AS ID,
+'Provider' AS BREAKDOWN,
+OrgIDProvider as ORG_CODE, 
+x.NAME as NAME
+
+FROM $MHSDS.MHS000Header as Z
+
+LEFT OUTER JOIN RD_ORG_DAILY_LATEST AS X
+              ON Z.OrgIDProvider = X.ORG_CODE
+
+WHERE	Z.UniqMonthID between '$MONTH_ID' - 23 AND '$MONTH_ID' 
+
+
+-- COMMAND ----------
+
+CREATE OR REPLACE TEMPORARY VIEW STP_LIST AS
+
+SELECT DISTINCT
+'STP' AS BREAKDOWN,
+STP_CODE,
+STP_DESCRIPTION
+FROM
+global_temp.STP_MAPPING
+
+UNION
+
+SELECT 
+'STP' AS BREAKDOWN,
+'UNKNOWN' AS STP_CODE,
+'UNKNOWN' AS STP_DESCRIPTION
+
+-- COMMAND ----------
+
+CREATE OR REPLACE TEMPORARY VIEW Measures AS
+SELECT 
+DISTINCT 
+BREAKDOWN, 
+METRIC
+FROM 
+$personal_db.Perinatal
+
+-- COMMAND ----------
+
+CREATE OR REPLACE TEMPORARY VIEW DEMOGRAPHICS AS 
+SELECT 
+DISTINCT 
+BREAKDOWN,
+LEVEL,
+LEVEL_DESCRIPTION
+FROM 
+$personal_db.PERINATAL
+WHERE
+BREAKDOWN IN ('Age at Booking Appointment', 'Ethnicity')
+
+-- COMMAND ----------
+
+CREATE OR REPLACE TEMPORARY VIEW SubNatList AS
+
+SELECT 
+DISTINCT
+A.BREAKDOWN,
+B.ORG_CODE AS LEVEL,
+B.NAME AS LEVEL_DESCRIPTION,
+A.METRIC
+FROM MEASURES A
+CROSS JOIN PROVIDER_LIST B ON A.BREAKDOWN = B.BREAKDOWN
+
+UNION ALL 
+
+SELECT 
+DISTINCT
+A.BREAKDOWN,
+B.ORG_CODE AS LEVEL,
+B.NAME AS LEVEL_DESCRIPTION,
+A.METRIC
+FROM MEASURES A
+CROSS JOIN RD_CCG_LATEST B ON A.BREAKDOWN = B.BREAKDOWN 
+
+UNION ALL
+
+SELECT 
+DISTINCT 
+A.BREAKDOWN,
+'UNKNOWN' AS LEVEL,
+'UNKNOWN' AS LEVEL_DESCRIPTION,
+A.METRIC
+FROM MEASURES A
+WHERE
+A.BREAKDOWN = 'CCG'
+
+UNION ALL
+
+SELECT 
+DISTINCT
+A.BREAKDOWN,
+B.STP_CODE AS LEVEL,
+B.STP_DESCRIPTION AS LEVEL_DESCRIPTION,
+A.METRIC
+FROM MEASURES A
+CROSS JOIN STP_LIST B ON A.BREAKDOWN = B.BREAKDOWN
+
+UNION ALL
+
+SELECT 
+DISTINCT
+A.BREAKDOWN,
+B.LEVEL AS LEVEL,
+B.LEVEL_DESCRIPTION AS LEVEL_DESCRIPTION,
+A.METRIC
+FROM MEASURES A
+CROSS JOIN DEMOGRAPHICS B ON A.BREAKDOWN = B.BREAKDOWN
+
+-- COMMAND ----------
+
+INSERT INTO $personal_db.Perinatal_Output
+
+SELECT 
+ '$RP_STARTDATE' AS REPORTING_PERIOD_START 
+,'$RP_ENDDATE' AS REPORTING_PERIOD_END
+,'Final' AS STATUS
+,BREAKDOWN
+,LEVEL_ONE AS LEVEL_ONE
+,LEVEL_ONE_DESCRIPTION AS LEVEL_ONE_DESCRIPTION
+,'NONE' AS LEVEL_TWO
+,'NONE' AS LEVEL_TWO_DESCRIPTION
+,METRIC
+,COALESCE(METRIC_VALUE,"*") AS METRIC_VALUE
+FROM 
+England
+
+-- COMMAND ----------
+
+INSERT INTO $personal_db.Perinatal_Output
+
+SELECT 
+'$RP_STARTDATE' AS REPORTING_PERIOD_START 
+,'$RP_ENDDATE' AS REPORTING_PERIOD_END
+,'Final' AS STATUS
+,A.BREAKDOWN
+,A.LEVEL AS LEVEL_ONE
+,A.LEVEL_DESCRIPTION AS LEVEL_ONE_DESCRIPTION
+,'NONE' AS LEVEL_TWO
+,'NONE' AS LEVEL_TWO_DESCRIPTION
+,A.METRIC
+,COALESCE(B.METRIC_VALUE,"*") AS METRIC_VALUE
+FROM 
+SubNatList A
+LEFT JOIN SubNational_Supp B ON A.BREAKDOWN = B.BREAKDOWN AND A.LEVEL = B.LEVEL_ONE AND A.METRIC = B.METRIC
+WHERE 
+A.BREAKDOWN IN ('Provider','CCG','STP')
+
+-- COMMAND ----------
+
+INSERT INTO $personal_db.Perinatal_Output
+
+SELECT 
+ '$RP_STARTDATE' AS REPORTING_PERIOD_START 
+,'$RP_ENDDATE' AS REPORTING_PERIOD_END
+,'Final' AS STATUS
+,A.BREAKDOWN
+,A.LEVEL AS LEVEL_ONE
+,A.LEVEL_DESCRIPTION AS LEVEL_ONE_DESCRIPTION
+,'NONE' AS LEVEL_TWO
+,'NONE' AS LEVEL_TWO_DESCRIPTION
+,A.METRIC
+,COALESCE(B.METRIC_VALUE,"*") AS METRIC_VALUE
+FROM 
+SUBNATLIST A
+LEFT JOIN DEMOG_BREAKDOWNS B ON A.BREAKDOWN = B.BREAKDOWN AND A.LEVEL = B.LEVEL_ONE AND A.METRIC = B.METRIC
+WHERE 
+A.BREAKDOWN IN ('Age at Booking Appointment', 'Ethnicity')

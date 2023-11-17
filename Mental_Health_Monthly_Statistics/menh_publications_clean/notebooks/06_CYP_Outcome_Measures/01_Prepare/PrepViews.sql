@@ -87,11 +87,11 @@ else:
    SELECT 'DIRECT' AS CONT_TYPE, c.UniqMonthID, c.Person_ID, c.UniqServReqID, c.AgeCareContDate, c.UniqCareContID AS ContID, c.CareContDate AS ContDate, c.MHS201UniqID as UniqID \
    FROM {db_source}.MHS201CareContact c \
    LEFT JOIN {db_output}.validcodes as vc \
-   ON vc.table = 'mhs201carecontact' and vc.field = 'ConsMechanismMH' and vc.Measure = 'CYP' and vc.type = 'include' and c.ConsMechanismMH = vc.ValidValue \
+   ON vc.tablename = 'mhs201carecontact' and vc.field = 'ConsMechanismMH' and vc.Measure = 'CYP' and vc.type = 'include' and c.ConsMechanismMH = vc.ValidValue \
    and c.UniqMonthID >= vc.FirstMonth and (vc.LastMonth is null or c.UniqMonthID <= vc.LastMonth) \
    and OrgIdProv != 'DFC' \
    LEFT JOIN {db_output}.validcodes as vck \
-   ON vck.table = 'mhs201carecontact' and vck.field = 'ConsMechanismMH' and vck.Measure = 'CYP_KOOTH' and vck.type = 'include' and c.ConsMechanismMH = vck.ValidValue \
+   ON vck.tablename = 'mhs201carecontact' and vck.field = 'ConsMechanismMH' and vck.Measure = 'CYP_KOOTH' and vck.type = 'include' and c.ConsMechanismMH = vck.ValidValue \
    and c.UniqMonthID >= vck.FirstMonth and (vck.LastMonth is null or c.UniqMonthID <= vck.LastMonth) \
    and OrgIdProv = 'DFC' \
    WHERE c.AttendOrDNACode IN ('5','6') \

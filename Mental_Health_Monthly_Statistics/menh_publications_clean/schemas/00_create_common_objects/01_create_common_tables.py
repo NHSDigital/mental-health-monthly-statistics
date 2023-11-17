@@ -2,9 +2,9 @@
 db_output = dbutils.widgets.get("db_output")
 print(db_output)
 assert db_output
-$db_source = dbutils.widgets.get("$db_source")
-print($db_source)
-assert $db_source
+$mhsds_database = dbutils.widgets.get("$mhsds_database")
+print($mhsds_database)
+assert $mhsds_database
 
 # COMMAND ----------
 
@@ -55,7 +55,8 @@ assert $db_source
      SECONDARY_LEVEL_DESCRIPTION string,
      METRIC string,
      METRIC_VALUE float,
-     SOURCE_DB string
+     SOURCE_DB string,
+     PRODUCT_NO INT
  )
  USING DELTA
  PARTITIONED BY (MONTH_ID, STATUS)
@@ -65,12 +66,13 @@ assert $db_source
 # DBTITLE 1,all_products_cached
  %sql
  -- DROP TABLE IF EXISTS $db_output.all_products_cached;
+ 
  CREATE TABLE IF NOT EXISTS $db_output.all_products_cached (
     MONTH_ID INT, 
     STATUS STRING,
     PRODUCT_NO INT, 
-    REPORTING_PERIOD_START STRING, 
-    REPORTING_PERIOD_END STRING, 
+    REPORTING_PERIOD_START DATE, 
+    REPORTING_PERIOD_END DATE, 
     BREAKDOWN STRING, 
     PRIMARY_LEVEL STRING, 
     PRIMARY_LEVEL_DESCRIPTION STRING, 
@@ -189,6 +191,28 @@ assert $db_source
 
 # COMMAND ----------
 
+ %sql
+ 
+ -- DROP TABLE IF EXISTS $db_output.provider_list; 
+ 
+ CREATE TABLE IF NOT EXISTS $db_output.providers_between_rp_start_end_dates
+  (ORG_CODE          STRING,
+   NAME              STRING)
+ USING delta
+
+# COMMAND ----------
+
+ %sql
+ 
+ -- DROP TABLE IF EXISTS $db_output.provider_list; 
+ 
+ CREATE TABLE IF NOT EXISTS $db_output.providers_between_rp_start_end_dates_12m
+  (ORG_CODE          STRING,
+   NAME              STRING)
+ USING delta
+
+# COMMAND ----------
+
 # DBTITLE 1,CCG
  %sql
  -- drop table IF EXISTS $db_output.ccg;
@@ -214,9 +238,9 @@ assert $db_source
 
 # DBTITLE 1,ed_ccg_latest
  %sql
- drop table IF EXISTS $db_output.ed_ccg_latest;
+ -- drop table IF EXISTS $db_output.ed_ccg_latest;
  
- drop table IF EXISTS $db_output.rd_ccg_latest;
+ -- drop table IF EXISTS $db_output.rd_ccg_latest;
  
  -- these tables were duplicates with different names - this is just a clear out - new table created below
 
@@ -250,6 +274,17 @@ assert $db_source
  --DROP TABLE IF EXISTS $db_output.mhs001_ccg_latest;
  
  CREATE TABLE IF NOT EXISTS $db_output.MHS001_CCG_LATEST 
+         (Person_ID            STRING,
+          IC_Rec_CCG           STRING)
+ USING delta 
+
+# COMMAND ----------
+
+ %sql
+ 
+ --DROP TABLE IF EXISTS $db_output.mhs001_ccg_latest_12m;
+ 
+ CREATE TABLE IF NOT EXISTS $db_output.MHS001_CCG_LATEST_12m
          (Person_ID            STRING,
           IC_Rec_CCG           STRING)
  USING delta 

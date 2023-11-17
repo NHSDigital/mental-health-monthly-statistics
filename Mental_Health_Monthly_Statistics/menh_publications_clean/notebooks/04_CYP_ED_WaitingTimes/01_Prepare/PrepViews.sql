@@ -47,7 +47,7 @@ LEFT OUTER JOIN (SELECT m.Person_ID,
     -- join added for uplift from v4.1 to v5
     LEFT JOIN $db_output.validcodes as vc
 --     join updated to evaluate validity at time of data rather than reporting month
-    ON vc.table = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'CYP_ED_WT' and vc.type = 'include' and A.ClinRespPriorityType = vc.ValidValue
+    ON vc.tablename = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'CYP_ED_WT' and vc.type = 'include' and A.ClinRespPriorityType = vc.ValidValue
     and A.UniqMonthID >= vc.FirstMonth and (vc.LastMonth is null or A.UniqMonthID <= vc.LastMonth)
 WHERE A.ReferralRequestReceivedDate <= '$rp_enddate'
     And A.ReferralRequestReceivedDate >= '2016-01-01'  
@@ -82,7 +82,7 @@ ON cc.Person_ID = ca.Person_ID AND ca.UniqCareContID = cc.UniqCareContID AND ca.
 
 INNER JOIN $db_output.validcodes as vc
 --     join updated to evaluate validity at time of data rather than reporting month
-  ON vc.table = 'mhs201carecontact' 
+  ON vc.tablename = 'mhs201carecontact' 
   and vc.field = 'ConsMechanismMH' 
   and vc.Measure = 'CYP_ED_WaitingTimes' 
   and vc.type = 'include' 
