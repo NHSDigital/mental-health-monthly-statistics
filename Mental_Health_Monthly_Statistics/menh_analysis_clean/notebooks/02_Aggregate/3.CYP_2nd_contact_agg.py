@@ -119,32 +119,6 @@
 
 # COMMAND ----------
 
-# DBTITLE 1,MHS69 - Region - uses STP_Region_mapping_post_2018 - keep for old runs - need to put in conditional - commented out
-# %sql
-
-# INSERT INTO $db_output.CYP_2nd_contact_unformatted
-# SELECT '$rp_startdate' AS REPORTING_PERIOD_START,
-#    '$rp_enddate' AS REPORTING_PERIOD_END,
-#    '$status' as STATUS,
-#    'Region' as BREAKDOWN,
-#    COALESCE(stp.Region_code, 'UNKNOWN') AS PRIMARY_LEVEL,
-#    COALESCE(stp.Region_description, 'UNKNOWN') AS PRIMARY_LEVEL_DESCRIPTION,
-#    'NONE' AS SECONDARY_LEVEL,
-#    'NONE' AS SECONDARY_LEVEL_DESCRIPTION,
-#    'MHS69' AS METRIC,
-#    COUNT(DISTINCT w.Person_ID) AS METRIC_VALUE,
-# '$db_source' AS SOURCE_DB
-# FROM global_temp.CYPFinal w
-#    LEFT OUTER JOIN global_temp.CCG ccg 
-#    ON w.Person_ID = ccg.Person_ID 
-#    --created a static table in breakdowns for this - will need reviewing as and when
-#    LEFT JOIN $db_output.STP_Region_mapping_post_2018 stp ON
-#    CASE WHEN w.OrgIDProv = 'DFC' THEN w.OrgIDComm ELSE ccg.IC_Rec_CCG END = stp.CCG_code
-# GROUP BY COALESCE(stp.Region_code, 'UNKNOWN'),
-#    COALESCE(STP.Region_description, 'UNKNOWN');
-
-# COMMAND ----------
-
 # DBTITLE 1,MHS69 - Region - uses STP_Region_mapping_post_2020 - need to put in conditional
  %sql
  
@@ -172,32 +146,6 @@
 
 # COMMAND ----------
 
-# DBTITLE 1,MHS69 - STP - uses STP_Region_mapping_post_2018 - keep for old runs - need to put in conditional  - commented out
-# %sql
-
-# INSERT INTO $db_output.CYP_2nd_contact_unformatted
-# SELECT '$rp_startdate' AS REPORTING_PERIOD_START,
-#        '$rp_enddate' AS REPORTING_PERIOD_END,
-#        '$status' AS STATUS,
-#        'STP' AS BREAKDOWN,
-#        COALESCE(stp.STP_code, 'UNKNOWN') AS PRIMARY_LEVEL,
-#        COALESCE(STP.STP_description, 'UNKNOWN') AS PRIMARY_LEVEL_DESCRIPTION,
-#        'NONE' AS SECONDARY_LEVEL,
-#        'NONE' AS SECONDARY_LEVEL_DESCRIPTION,
-#        'MHS69' AS METRIC,
-#        COUNT(DISTINCT w.Person_ID) AS METRIC_VALUE,
-# '$db_source' AS SOURCE_DB
-#   FROM global_temp.CYPFinal w
-#        LEFT OUTER JOIN global_temp.CCG ccg 
-#        ON w.Person_ID = ccg.Person_ID 
-#        --created a static table in breakdowns for this - will need reviewing as and when
-#        LEFT JOIN $db_output.STP_Region_mapping_post_2018 stp ON 
-#        CASE WHEN w.OrgIDProv = 'DFC' THEN w.OrgIDComm ELSE ccg.IC_Rec_CCG END = stp.CCG_code
-# GROUP BY COALESCE(stp.STP_code, 'UNKNOWN'),
-#        COALESCE(STP.STP_description, 'UNKNOWN');
-
-# COMMAND ----------
-
 # DBTITLE 1,MHS69 - STP - uses STP_Region_mapping_post_2020 - need to put in conditional
  %sql
  
@@ -205,7 +153,7 @@
  SELECT '$rp_startdate' AS REPORTING_PERIOD_START,
         '$rp_enddate' AS REPORTING_PERIOD_END,
         '$status' AS STATUS,
-        'STP' AS BREAKDOWN,
+        'STP - GP Practice or Residence' AS BREAKDOWN,
         COALESCE(stp.STP_code, 'UNKNOWN') AS PRIMARY_LEVEL,
         COALESCE(STP.STP_description, 'UNKNOWN') AS PRIMARY_LEVEL_DESCRIPTION,
         'NONE' AS SECONDARY_LEVEL,

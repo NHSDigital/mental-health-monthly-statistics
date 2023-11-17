@@ -29,41 +29,6 @@ month_id = dbutils.widgets.get("month_id")
 
 # COMMAND ----------
 
-# DBTITLE 1,1. Get all attended contacts (not email or SMS) and indirect activity - replaced by cell below
-# %sql
-# -- Joint to validcodes is null unless ConsMechanismMH is a code for which rows is to be excluded from view
-# CREATE OR REPLACE GLOBAL TEMPORARY VIEW Cont AS	
-#     SELECT c.UniqMonthID,
-#            c.Person_ID,
-#            c.UniqServReqID,
-#            c.AgeCareContDate,
-#            c.UniqCareContID AS ContID,
-#            c.CareContDate AS ContDate, 
-#            c.MHS201UniqID AS UniqID 
-#            FROM $db_source.MHS201CareContact as c
-           
-#       LEFT JOIN $db_output.validcodes as vc
-#             ON vc.table = 'mhs201carecontact' and vc.field = 'ConsMechanismMH' and vc.Measure = 'CYP' and vc.type = 'exclude' and c.ConsMechanismMH = vc.ValidValue
-#             and c.UniqMonthID >= vc.FirstMonth and (vc.LastMonth is null or c.UniqMonthID <= vc.LastMonth)
-#      WHERE (
-#           (c.AttendOrDNACode IN ('5','6') and vc.Field is null)
-#           or 
-#           (OrgIdProv = 'DFC' and vc.Field is not null)
-#           )
-#           AND UniqMonthID <= '$month_id'
-# UNION ALL
-#     SELECT i.UniqMonthID,
-#            i.Person_ID,
-#            i.UniqServReqID,
-#            NULL AS AgeCareContDate,
-#            CAST(i.MHS204UniqID AS string) AS ContID,
-#            i.IndirectActDate AS ContDate,
-#            i.MHS204UniqID as UniqID 
-#       FROM $db_source.MHS204IndirectActivity i
-#       WHERE UniqMonthID <= '$month_id'
-
-# COMMAND ----------
-
 # DBTITLE 1,1. Get all attended contacts (not email or SMS) and indirect activity
 
 # adapted to use v4.1 methodology for v4.1 months (pre month_id 1459) and v5 methodology for later months
@@ -87,11 +52,11 @@ else:
    SELECT c.UniqMonthID, c.Person_ID, c.UniqServReqID, c.AgeCareContDate, c.UniqCareContID AS ContID, c.CareContDate AS ContDate, c.MHS201UniqID AS UniqID \
    FROM {db_source}.MHS201CareContact as c \
    LEFT JOIN {db_output}.validcodes as vc \
-    ON vc.table = 'mhs201carecontact' and vc.field = 'ConsMechanismMH' and vc.Measure = 'CYP' and vc.type = 'include' and c.ConsMechanismMH = vc.ValidValue \
+    ON vc.Tablename = 'mhs201carecontact' and vc.field = 'ConsMechanismMH' and vc.Measure = 'CYP' and vc.type = 'include' and c.ConsMechanismMH = vc.ValidValue \
     and c.UniqMonthID >= vc.FirstMonth and (vc.LastMonth is null or c.UniqMonthID <= vc.LastMonth) \
     and OrgIdProv != 'DFC' \
    LEFT JOIN {db_output}.validcodes as vck \
-    ON vck.table = 'mhs201carecontact' and vck.field = 'ConsMechanismMH' and vck.Measure = 'CYP_KOOTH' and vck.type = 'include' and c.ConsMechanismMH = vck.ValidValue \
+    ON vck.Tablename = 'mhs201carecontact' and vck.field = 'ConsMechanismMH' and vck.Measure = 'CYP_KOOTH' and vck.type = 'include' and c.ConsMechanismMH = vck.ValidValue \
     and c.UniqMonthID >= vck.FirstMonth and (vck.LastMonth is null or c.UniqMonthID <= vck.LastMonth) \
     and OrgIdProv = 'DFC' \
    WHERE c.AttendOrDNACode IN ('5','6') \
@@ -118,8 +83,7 @@ spark.sql(sql)
             r.OrgIDComm,
             c.ContID,
             c.ContDate,
-            c.UniqID, --Azeez
-            ---New Azeez
+            c.UniqID, 
             ROW_NUMBER () OVER(PARTITION BY r.Person_ID, r.UniqServReqID ORDER BY c.ContDate ASC, c.UniqID ASC , COALESCE(c.AgeCareContDate, r.AgeServReferRecDate) ASC) AS RN1 ,
             ROW_NUMBER () OVER(PARTITION BY r.UniqServReqID ORDER BY c.ContDate ASC, c.UniqID ASC, COALESCE(c.AgeCareContDate, r.AgeServReferRecDate) ASC) AS DFC_RN1
             
@@ -150,7 +114,7 @@ spark.sql(sql)
             r.ContDate,
             r.AgeCareContDate,
             r.RN1,
-            r.UniqID --Azeez
+            r.UniqID 
        FROM global_temp.RefCont r
       WHERE ((r.RN1 = 1 and r.OrgIDProv <> 'DFC') OR (r.DFC_RN1 = 1 and r.OrgIDProv = 'DFC'))
             AND r.AgeCareContDate <18
@@ -170,7 +134,7 @@ spark.sql(sql)
             r.ContDate,
             r.AgeCareContDate,
             r.RN1,
-            r.UniqID -- 
+            r.UniqID  
        FROM global_temp.RefCont r
  INNER JOIN global_temp.FirstCont f 
             ON f.Person_ID = r.Person_ID 
@@ -194,10 +158,10 @@ spark.sql(sql)
             c.ContID,
             c.ContDate,
             c.UniqID, 
-              ---New code AZEEZ
+           
             ROW_NUMBER () OVER(PARTITION BY r.Person_ID, r.UniqServReqID ORDER BY c.ContDate ASC, c.UniqID ASC, COALESCE(c.AgeCareContDate, r.AgeServReferRecDate) ASC ) AS RN1,
             ROW_NUMBER () OVER(PARTITION BY r.UniqServReqID ORDER BY c.ContDate ASC, c.UniqID ASC, COALESCE(c.AgeCareContDate, r.AgeServReferRecDate) ASC ) AS DFC_RN1
-            -- OLD
+            -- OLD version, UniqID added into the ordering to ensure consistency
           --ROW_NUMBER () OVER(PARTITION BY r.Person_ID, r.UniqServReqID ORDER BY c.ContDate ASC, c.ContID ASC) AS RN1,
           --ROW_NUMBER () OVER(PARTITION BY r.UniqServReqID ORDER BY c.ContDate ASC, c.ContID ASC) AS DFC_RN1
        FROM global_temp.Cont c
@@ -286,7 +250,7 @@ spark.sql(sql)
  
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW FirstPersQtr AS
      SELECT *,
-           --New Code AZEEZ
+           --New Code 
              ROW_NUMBER () OVER(PARTITION BY Person_ID ORDER BY ContDate ASC, UniqID ASC, AgeCareContDate ASC) AS QtrRN
            --Old Code
             -- ROW_NUMBER () OVER(PARTITION BY Person_ID ORDER BY ContDate ASC, ContID ASC) AS QtrRN

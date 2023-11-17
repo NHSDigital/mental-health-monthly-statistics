@@ -578,7 +578,7 @@
 
 # DBTITLE 1,4.Cache CAP
  %sql
- --GBT reinstated this SQL version now that the need to restrict outputs for Provisional & Final has dropped
+ --reinstated this SQL version now that the need to restrict outputs for Provisional & Final has dropped
  --also Final is now Performance anyway!
  
  INSERT INTO $db_output.all_products_cached 

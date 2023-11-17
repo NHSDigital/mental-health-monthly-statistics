@@ -36,6 +36,7 @@ FROM $db_output.CCG -- WARNING: The data in this view differs depending on each 
 
 
 
+
 -- COMMAND ----------
 
 TRUNCATE TABLE $db_output.mha_metric_values;

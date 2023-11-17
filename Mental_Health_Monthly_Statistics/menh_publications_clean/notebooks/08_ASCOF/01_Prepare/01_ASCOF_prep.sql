@@ -116,7 +116,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 -- COMMAND ----------
 
 -- DBTITLE 1,AMH16e_17e_prep
- ANDTRUNCATE TABLE $db_output.AMH16e_17e_prep;
+TRUNCATE TABLE $db_output.AMH16e_17e_prep;
 
 INSERT INTO TABLE $db_output.AMH16e_17e_prep
         

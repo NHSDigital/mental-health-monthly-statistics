@@ -186,7 +186,7 @@
  
  select distinct Person_ID, '006' as table
  from  $db_source.MHS006MHCareCoord g 
- where  g.CareProfServOrTeamTypeAssoc in ('B02','C01','E01','E02','E03') 
+ where  g.CareProfServOrTeamTypeAssoc in ('B02','C01','E01','E02','E03') -- should E04 be included? It is included in the LD service split in the monthly
  and (g.EndDateAssCareCoord is null or g.EndDateAssCareCoord >= '$rp_startdate')
  and UniqMonthID = $month_id;
 
@@ -199,7 +199,7 @@
  
  select distinct Person_ID, '102' as table
  from  $db_source.MHS102ServiceTypeReferredTo c 
- where c.ServTeamTypeRefToMH in ('B02','C01','E01','E02','E03') 
+ where c.ServTeamTypeRefToMH in ('B02','C01','E01','E02','E03') -- should E04 be included? It is included in the LD service split in the monthly
  and ((c.ReferClosureDate is null or c.ReferClosureDate >= '$rp_startdate') and (c.ReferRejectionDate is null or c.ReferRejectionDate >= '$rp_startdate'))
  and UniqMonthID = $month_id;
 
@@ -325,6 +325,18 @@
 
 # COMMAND ----------
 
+from pyspark.sql import functions as F
+
+# COMMAND ----------
+
+def get_provider_type(provider_code: str) -> str:
+  if provider_code[0] == 'R' or provider_code[0] == 'T':
+    return 'NHS'
+  return 'Independent'
+spark.udf.register("get_provider_type", get_provider_type)
+
+# COMMAND ----------
+
  %sql
  -- This is similar to the generic prep RD_ORG_DAILY_LATEST, however it is broader and has an extra column. Possible to combine?
  -- in temp_views
@@ -347,7 +359,7 @@
                WHEN ORG_TYPE_CODE = 'LA' THEN 'Local Authority'       
                WHEN ORG_TYPE_CODE = 'NN' THEN 'Non-NHS Organisation'                
                END AS ORG_TYPE_CODE                                                
- FROM   db_source.org_daily                
+ FROM   $reference_data.org_daily --replace with ORG DAILY API?
  WHERE  (BUSINESS_END_DATE >= '$rp_enddate' OR BUSINESS_END_DATE IS NULL)       
         AND BUSINESS_START_DATE <= '$rp_enddate'
         AND ORG_TYPE_CODE in ('CC','CF','LB','PT','CT','OU','NS','TR','HA','LA','PH','NN') 
@@ -374,23 +386,23 @@
              ,T.TCP_NAME
              ,O2.REL_TO_ORG_CODE as Region_code
              ,O4.NAME as Region_name
- from      db_source.ORG_DAILY O3 
- left join db_source.NHSE_CCG_TCP_V01 T 
+ from      $reference_data.ORG_DAILY O3 --replace with ORG DAILY API?
+ left join $reference_data.NHSE_CCG_TCP_V01 T 
         on T.CCG_ODS_CODE = O3.org_code 
         and (DSS_RECORD_END_DATE is null or DSS_RECORD_END_DATE >= '$rp_startdate') 
         and DSS_RECORD_START_DATE <= '$rp_startdate'
- inner join db_source.ORG_RELATIONSHIP_DAILY O1 
+ inner join $reference_data.ORG_RELATIONSHIP_DAILY O1 --replace with ORG DAILY API?
          on O1.REL_FROM_ORG_CODE = O3.ORG_CODE 
          and O1.REL_FROM_ORG_TYPE_CODE = 'CC' 
          and O1.REL_TYPE_CODE = 'CCCF' 
          and (O1.REL_IS_CURRENT = 1 or o1.REL_CLOSE_DATE >= '$rp_startdate') 
          and O1.REL_OPEN_DATE <= '$rp_startdate'
- inner join db_source.ORG_RELATIONSHIP_DAILY O2 
+ inner join $reference_data.ORG_RELATIONSHIP_DAILY O2 --replace with ORG DAILY API?
          on O2.REL_FROM_ORG_CODE = O1.REL_TO_ORG_CODE 
          and O2.REL_TYPE_CODE = 'CFCE' 
          and (O2.REL_IS_CURRENT = 1 or O2.REL_CLOSE_DATE >= '$rp_startdate') 
          and O2.REL_OPEN_DATE <= '$rp_startdate'
- left join db_source.ORG_DAILY O4 
+ left join $reference_data.ORG_DAILY O4 --replace with ORG DAILY API?
         on O4.ORG_CODE = O2.REL_TO_ORG_CODE 
         and O4.ORG_TYPE_CODE = 'CE' 
         and (O4.ORG_IS_CURRENT = 1 or O4.org_close_DATE >= '$rp_startdate') 
@@ -663,23 +675,16 @@
        on O5.ORG_CODE = left(L.CombinedCommissioner,3) ;
        
   
- ---- join to the correct TCP/Region -------
+ ---- join to the correct STP/Region -------
  
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW LDA_Data_T AS
  Select L.*
-        ,case when TCP_Code IS null then 'No TCP Mapping' 
-        else TCP_Code 
-        end as TCP_Code
-        ,TCP_NAME
-        ,case when C.Region_code is null then 'Invalid' 
-        else C.Region_code 
-        end as Region_code
-        ,case when C.Region_name is null then 'Invalid' 
-        else C.Region_name 
-        end as Region_name
+        ,COALESCE(STP_Code, "UNKNOWN") as TCP_Code
+        ,COALESCE(STP_DESCRIPTION, "UNKNOWN") as TCP_Name
+        ,COALESCE(Region_code, "UNKNOWN") as Region_Code
+        ,COALESCE(Region_DESCRIPTION, "UNKNOWN") as Region_name
  from global_temp.LDA_Data_C L
- left join global_temp.COMMISSIONERS C
-       on C.ORG_CODE = L.OrgCode;
+ left join $db_output.STP_Region_mapping_post_2020 C on L.OrgCode = C.CCG_CODE;
  
  ----- Convert all the commissioner groupings --------
  
@@ -1029,7 +1034,7 @@
  'National' as OrgCode,
  'National' as OrgName,
  3 AS TableNumber,
- 'Gender' AS PrimaryMeasure,
+ 'Gender' AS PrimaryMeasure, --Should this include the new gender identity codes??
  CASE
         WHEN Gender = '1' then '1'
         WHEN Gender = '2' then '2'
@@ -1196,7 +1201,7 @@
         WHEN WardLocDistanceHome between 21 and 50 then '21-50km'
         WHEN WardLocDistanceHome between 51 and 100 then '51-100km'
         WHEN WardLocDistanceHome > 100 then 'Over 100km'       
-        ELSE 'Unknown  '
+        ELSE 'Unknown'
         END AS PrimarySplit,
  '' as SecondaryMeasure,
  '' as SecondaryMeasureNumber,
@@ -1239,7 +1244,7 @@
         WHEN WardLocDistanceHome between 21 and 50 then '21-50km'
         WHEN WardLocDistanceHome between 51 and 100 then '51-100km'
         WHEN WardLocDistanceHome > 100 then 'Over 100km'       
-        ELSE 'Unknown  '
+        ELSE 'Unknown'
         END  
 
 # COMMAND ----------
@@ -1272,7 +1277,7 @@
         WHEN WardSecLevel = '1' then 'Low Secure'
         WHEN WardSecLevel = '2' then 'Medium Secure'
         WHEN WardSecLevel = '3' then 'High Secure'
-        ELSE 'Unknown '
+        ELSE 'Unknown'
         END AS PrimarySplit,
  '' as SecondaryMeasure,
  '' as SecondaryMeasureNumber,
@@ -1313,7 +1318,7 @@
         WHEN WardSecLevel = '1' then 'Low Secure'
         WHEN WardSecLevel = '2' then 'Medium Secure'
         WHEN WardSecLevel = '3' then 'High Secure'
-        ELSE 'Unknown '
+        ELSE 'Unknown'
         END
 
 # COMMAND ----------
@@ -1744,7 +1749,7 @@
         WHEN WardType = '04' then 'Non mental health ward'
         WHEN WardType = '05' then 'Learning disabilities ward'
         WHEN WardType = '06' then 'Older peoples mental health ward'
-        ELSE 'Unknown   '
+        ELSE 'Unknown'
         END as PrimarySplit,
  '' as SecondaryMeasure,
  '' as SecondaryMeasureNumber,
@@ -1789,7 +1794,7 @@
         WHEN WardType = '04' then 'Non mental health ward'
         WHEN WardType = '05' then 'Learning disabilities ward'
         WHEN WardType = '06' then 'Older peoples mental health ward'
-        ELSE 'Unknown   '
+        ELSE 'Unknown'
         END
 
 # COMMAND ----------
@@ -1932,7 +1937,7 @@
      WHEN DelayDischReason = 'D2' then 'Awaiting Care Home With Nursing placement or availability'                       
      WHEN DelayDischReason = 'E1' then 'Awaiting care package in own home'                     
      WHEN DelayDischReason = 'F2' then 'Awaiting community equipment, telecare and/or adaptations'                        
-     WHEN DelayDischReason = 'G2' then 'Patient or Family choice (reason not stated by patient or family)'                       
+     WHEN DelayDischReason = 'G2' then 'Patient or Family choice - (reason not stated by patient or family)'                       
      WHEN DelayDischReason = 'G3' then 'Patient or Family choice - non-acute (including community and mental health) NHS care'                      
      WHEN DelayDischReason = 'G4' then 'Patient or Family choice - Care Home Without Nursing placement'                    
      WHEN DelayDischReason = 'G5' then 'Patient or Family choice - Care Home With Nursing placement'                    
@@ -2035,7 +2040,7 @@
      WHEN DelayDischReason = 'D2' then 'Awaiting Care Home With Nursing placement or availability'                       
      WHEN DelayDischReason = 'E1' then 'Awaiting care package in own home'                     
      WHEN DelayDischReason = 'F2' then 'Awaiting community equipment, telecare and/or adaptations'                        
-     WHEN DelayDischReason = 'G2' then 'Patient or Family choice (reason not stated by patient or family)'                       
+     WHEN DelayDischReason = 'G2' then 'Patient or Family choice - (reason not stated by patient or family)'                       
      WHEN DelayDischReason = 'G3' then 'Patient or Family choice - non-acute (including community and mental health) NHS care'                      
      WHEN DelayDischReason = 'G4' then 'Patient or Family choice - Care Home Without Nursing placement'                    
      WHEN DelayDischReason = 'G5' then 'Patient or Family choice - Care Home With Nursing placement'                    
@@ -2766,7 +2771,7 @@
  '$PreviousMonthEnd' as PreviousMonthEnd,
  '$rp_startdate' as PeriodStart,
  '$rp_enddate' as PeriodEnd,
- 'Commissioner Groupings' AS Geography,
+ 'Commissioner Groupings' AS Geography,  --Can we reove this if its TCP, WE NEED TO CHECK FIRST
  ORG_TYPE_CODE  as OrgCode,  -------  to do? ----
  ORG_TYPE_CODE as OrgName, ------- to do ----
  80 AS TableNumber,
@@ -2857,18 +2862,18 @@
 # COMMAND ----------
 
  %sql
- --TCP-----
- 
+ ----Commissioning Region-----
+  
  INSERT INTO $db_output.LDA_Counts
- 
+  
  -- CREATE OR REPLACE TEMP VIEW Table100_LDA AS
  SELECT 
- 	  '$PreviousMonthEnd' as PreviousMonthEnd,
- 	  '$rp_startdate' as PeriodStart,
- 	  '$rp_enddate' as PeriodEnd,
-       'TCP Region' AS Geography
-       ,case when REGION_code IS NULL THEN 'Invalid' ELSE REGION_code end as REGION_code
-       ,case when Region_name IS NULL THEN 'Invalid' ELSE Region_name end as Region_name
+       '$PreviousMonthEnd' as PreviousMonthEnd,
+       '$rp_startdate' as PeriodStart,
+       '$rp_enddate' as PeriodEnd,
+       'Commissioning Region' AS Geography
+       ,Region_Code as OrgCode
+       ,Region_name as OrgName
        ,100 AS TableNumber,
  'Total' AS PrimaryMeasure,
  1 AS PrimaryMeasureNumber,
@@ -2897,28 +2902,27 @@
  'Monthly' as PRODUCT, 
  '$db_source' as SOURCE_DB
  FROM  $db_output.LDA_Data_1 O
- 
+  
   --and OrgCode = '13Y'
  --AND NHS_ENGLAND_TCP_CODE <> 'Invalid'
- 
- GROUP BY REGION_code
-       ,Region_name
+  
+ GROUP BY REGION_code,Region_name
 
 # COMMAND ----------
 
  %sql
  --TCP 101-----
- 
+  
  INSERT INTO $db_output.LDA_Counts
- 
+  
  -- CREATE OR REPLACE TEMP VIEW Table101_LDA AS
  SELECT 
- 	  '$PreviousMonthEnd' as PreviousMonthEnd,
- 	  '$rp_startdate' as PeriodStart,
- 	  '$rp_enddate' as PeriodEnd,
-       'TCP' AS Geography
-       ,case when TCP_code IS NULL THEN 'Invalid' ELSE TCP_code end as OrgCode
-       ,case when TCP_name IS NULL THEN 'Invalid' ELSE TCP_name end as OrgName
+       '$PreviousMonthEnd' as PreviousMonthEnd,
+       '$rp_startdate' as PeriodStart,
+       '$rp_enddate' as PeriodEnd,
+       'ICB' AS Geography 
+       ,TCP_Code as OrgCode --ICB label but STP_COde
+       ,TCP_Name as OrgName
        ,101 AS TableNumber,
  'Total' AS PrimaryMeasure,
  1 AS PrimaryMeasureNumber,
@@ -2946,14 +2950,13 @@
  '' as ORG_TYPE_CODE,
  'Monthly' as PRODUCT, 
  '$db_source' as SOURCE_DB
- 
+  
  FROM  $db_output.LDA_Data_1 O
- 
+  
   --and OrgCode = '13Y'
  --AND NHS_ENGLAND_TCP_CODE <> 'Invalid'
- 
- GROUP BY TCP_code
-       ,TCP_name
+  
+ GROUP BY TCP_code, TCP_name
 
 # COMMAND ----------
 
@@ -3016,12 +3019,96 @@
 # COMMAND ----------
 
  %sql
+ --###TABLE 14 FOR EXECL OUTPUT PREP TABLE###
+ CREATE OR REPLACE GLOBAL TEMPORARY VIEW LD_cohort_CTR_SNOMED AS
+ SELECT
+ m.person_ID,
+ m.Uniqmonthid,
+ m.AgeRepPeriodEnd,
+ m.Gender,
+ c.CareContDate,
+ c.UniqCareContID,
+ c.AttendOrDNACode,
+ c1.FindSchemeInUse,
+ c1.CodeProcAndProcStatus,
+ CASE WHEN c1.CodeProcAndProcStatus = '1060751000000101' THEN "CommunityCTR"
+      WHEN c1.CodeProcAndProcStatus = '1060761000000103' THEN "InpatientCTR"
+      WHEN c1.CodeProcAndProcStatus = '1060741000000104' THEN "PostAdmissionCTR"
+      END AS CodeProcAndProcStatusName,
+ H.UniqHospProvSpellID,
+ H.StartDateHospProvSpell,
+ H.DischDateHospProvSpell,
+ CASE
+   WHEN H.OrgIDProv is null then R.OrgIDProv
+   ELSE H.OrgIDProv END as CombinedProvider,
+ od.NAME as CombinedProviderName,
+ get_provider_type(CASE
+   WHEN H.OrgIDProv is null then R.OrgIDProv
+   ELSE H.OrgIDProv END) as CombinedProviderType
+   
+   From $db_source.MHS001MPI m
+   left join $db_source.MHS101Referral r on m.person_ID = r.person_ID and r.UniqMonthID = $month_id
+   left join $db_source.MHS501HospProvSpell h on r.UniqServReqID = h.UniqServReqID and h.UniqMonthID = $month_id
+   left join $db_source.MHS201CareContact c on r.UniqServReqID = c.UniqServReqID and c.UniqMonthID = $month_id
+   left join $db_source.MHS202CareActivity c1 on c.UniqCareContID = c1.UniqCareContID and c1.UniqMonthID = $month_id
+   left join global_temp.RD_ORG_DAILY_LATEST_LDA od on CASE WHEN H.OrgIDProv is null then R.OrgIDProv ELSE H.OrgIDProv END = od.ORG_CODE
+   
+   where
+   m.Person_ID IN (SELECT LD.Person_ID from global_temp.LD_cohort LD)
+   --m.LDAFlag = 'Y' 
+   AND m.UniqMonthID = $month_id
+   
+   and c1.CodeProcAndProcStatus in ('1060751000000101','1060761000000103','1060741000000104')
+   
+   Group by
+ m.person_ID,
+ m.Uniqmonthid,
+ m.AgeRepPeriodEnd,
+ m.Gender,
+ c.CareContDate,
+ c.UniqCareContID,
+ c.AttendOrDNACode,
+ c1.FindSchemeInUse,
+ c1.CodeProcAndProcStatus,
+ CASE WHEN c1.CodeProcAndProcStatus = '1060751000000101' THEN "CommunityCTR"
+      WHEN c1.CodeProcAndProcStatus = '1060761000000103' THEN "InpatientCTR"
+      WHEN c1.CodeProcAndProcStatus = '1060741000000104' THEN "PostAdmissionCTR"
+      END,
+ H.UniqHospProvSpellID,
+ H.StartDateHospProvSpell,
+ H.DischDateHospProvSpell,
+ CASE
+   WHEN H.OrgIDProv is null then R.OrgIDProv
+   ELSE H.OrgIDProv END,
+ od.NAME,
+ get_provider_type(CASE
+   WHEN H.OrgIDProv is null then R.OrgIDProv
+   ELSE H.OrgIDProv END)
+
+# COMMAND ----------
+
+###TABLE 14 FOR EXECL OUTPUT AND REQURIED FOR AUTOMATED LD Process###
+db_output = dbutils.widgets.get("db_output")
+df = spark.table("global_temp.LD_cohort_CTR_SNOMED")
+piv_df = df.groupBy("CombinedProvider", "CombinedProviderName", "CombinedProviderType").pivot("CodeProcAndProcStatusName").agg(F.countDistinct("UniqCareContId"))
+piv_df_fill = piv_df.fillna(0)
+piv_df_table14_df = (
+  piv_df_fill
+  .select("CombinedProvider", "CombinedProviderName", "CombinedProviderType", "CommunityCTR", "PostAdmissionCTR", "InpatientCTR")
+  .orderBy("CombinedProviderType", "CombinedProviderName")
+)
+piv_df_table14_df.write.insertInto(f"{db_output}.lda_table14", overwrite=True)
+
+# COMMAND ----------
+
+ %sql
  --this creates the monthly output data file
- 
- CREATE OR REPLACE GLOBAL TEMPORARY VIEW lda_all AS
- 
+  
+ -- CREATE OR REPLACE GLOBAL TEMPORARY VIEW lda_all AS
+ INSERT OVERWRITE TABLE $db_output.lda_all
+  
  Select 
- 
+  
  PreviousMonthEnd,
  PeriodStart,
  PeriodEnd,
@@ -3052,30 +3139,214 @@
  case when ReferralsEndingInTheMonth is null then 0 else ReferralsEndingInTheMonth  end as ReferralsEndingInTheMonth,
  case when ReferralsStartingAndEndingInTheMonth is null then 0 else ReferralsStartingAndEndingInTheMonth  end as ReferralsStartingAndEndingInTheMonth,
  case when ReferralsOpenAtEndOfMonth is null then 0 else ReferralsOpenAtEndOfMonth  end as ReferralsOpenAtEndOfMonth,
- 
+  
  case 
  when Tablenumber not in ('70','71','72','73','74','90') then null
  when OrgCode = 'Invalid' then 'Invalid'
  when OrgName like '%NHS%' then 'NHS'
  else 'Independent' end as NHS_NHD_SPLIT,
  case
- when Tablenumber <> '90' then null
+ when Tablenumber not in ('90', '100', '101') then null
+ when TableNumber = '100' then "Commissioning Region"
+ when TableNumber = '101' then 'ICB'
  else ORG_TYPE_CODE end as ORG_TYPE_CODE
- 
- 
+  
+  
  from $db_output.LDA_Counts l
  WHERE PRODUCT ='Monthly' 
  AND PeriodEnd = '$rp_enddate'
  AND SOURCE_DB = '$db_source'
- 
+  
  order by TableNumber,PrimaryMeasureNumber,SecondaryMeasureNumber
+
+# COMMAND ----------
+
+params = {"db_output": dbutils.widgets.get("db_output"), "db_source": dbutils.widgets.get("db_source"), "rp_enddate": dbutils.widgets.get("rp_enddate")}
+dbutils.notebook.run("LDA_metadata", 0, params)
+
+# COMMAND ----------
+
+def count_suppression(x: str, base=5) -> str:  
+  """  The function has the logic for suppression of MHSDS count measures
+  i.e. "denominator" == 0 in measure_metadata
+  
+  Examples:
+  count_suppression(254)
+  >> 255
+  count_suppression(3)
+  >> *
+  """       
+  if isinstance(x, str):     
+    return '-'  
+  elif x is None:     
+    return '-' 
+  elif x < 5:
+    return '*'
+  else:
+    return str(int(base * round(float(x)/int(base)))) 
+  
+spark.udf.register("count_suppression", count_suppression)
+
+# COMMAND ----------
+
+ %sql
+ CREATE OR REPLACE GLOBAL TEMP VIEW lda_csv_lookup_tb AS
+ select *,
+ case 
+ when Geography = "National" and PrimaryMeasure = "Total" and SecondaryMeasure = "" then 1
+ when Geography = "National" and PrimaryMeasure = "Age" and SecondaryMeasure = "" then 2
+ when Geography = "National" and PrimaryMeasure = "Gender" and SecondaryMeasure = "" then 3
+ when Geography = "National" and PrimaryMeasure = "Ethnicity" and SecondaryMeasure = "" then 4
+ when Geography = "National" and PrimaryMeasure = "Distance from Home" and SecondaryMeasure = "" then 5
+ when Geography = "National" and PrimaryMeasure = "Ward security" and SecondaryMeasure = "" then 6
+ when Geography = "National" and PrimaryMeasure = "Planned Discharge Date Present" and SecondaryMeasure = "" then 7
+ when Geography = "National" and PrimaryMeasure = "Time to Planned Discharge" and SecondaryMeasure = "" then 8
+ when Geography = "National" and PrimaryMeasure = "Respite care" and SecondaryMeasure = "" then 9
+ when Geography = "National" and PrimaryMeasure = "Length of stay" and SecondaryMeasure = "" then 10
+ when Geography = "National" and PrimaryMeasure = "Discharge Destination Grouped" and SecondaryMeasure = "" then 11
+ when Geography = "National" and PrimaryMeasure = "Ward Type" and SecondaryMeasure = "" then 12
+ when Geography = "National" and PrimaryMeasure = "Mental Health Act" and SecondaryMeasure = "" then 13
+ when Geography = "National" and PrimaryMeasure = "Delayed Discharges" and SecondaryMeasure = "" then 14
+ when Geography = "National" and PrimaryMeasure = "Restraints" and SecondaryMeasure = "" then 15
+ when Geography = "National" and PrimaryMeasure = "Mental Health Act" and SecondaryMeasure = "Length of stay" then 50
+ when Geography = "National" and PrimaryMeasure = "Restraints" and SecondaryMeasure = "Age" then 51
+ when Geography = "Provider" and PrimaryMeasure = "Total" and SecondaryMeasure = "" then 70
+ when Geography = "Provider" and PrimaryMeasure = "Length of stay" and SecondaryMeasure = "" then 71
+ when Geography = "Provider" and PrimaryMeasure = "Ward Type" and SecondaryMeasure = "" then 72
+ when Geography = "Provider" and PrimaryMeasure = "Ward security" and SecondaryMeasure = "" then 73
+ when Geography = "Provider" and PrimaryMeasure = "Restraints" and SecondaryMeasure = "" then 74
+ when Geography = "Commissioner Groupings" and PrimaryMeasure = "Total" and SecondaryMeasure = "" then 80
+ when Geography = "Commissioner" and PrimaryMeasure = "Total" and SecondaryMeasure = "" then 90
+ when Geography = "Commissioning Region" and PrimaryMeasure = "Total" and SecondaryMeasure = "" then 100
+ when Geography = "ICB" and PrimaryMeasure = "Total" and SecondaryMeasure = "" then 101
+ end as TableNumber
+ from $db_output.lda_csv_lookup
+
+# COMMAND ----------
+
+ %sql
+ --this creates the monthly output data file
+  
+ -- CREATE OR REPLACE GLOBAL TEMPORARY VIEW lda_published AS
+ INSERT OVERWRITE TABLE $db_output.lda_published
+  
+ select 
+  
+ CASE WHEN m.Geography = "National" THEN "Total data as submitted" ELSE m.Geography END AS Geography,
+ CASE WHEN m.OrgCode = "National" THEN "Total data as submitted" ELSE m.OrgCode END AS OrgCode,
+ CASE WHEN m.OrgName = "National" THEN "Total data as submitted" ELSE m.OrgName END AS OrgName,
+ m.PrimaryMeasure,
+ m.PrimarySplit,
+ CASE WHEN m.SecondaryMeasure = "" THEN "NULL" ELSE m.SecondaryMeasure END AS SecondaryMeasure,
+ CASE WHEN m.SecondarySplit = "" THEN "NULL" ELSE m.SecondarySplit END AS SecondarySplit,
+  
+ CASE WHEN m.TableNumber NOT IN (1,2,15,51,70,74) THEN '-'  
+      WHEN m.TableNumber = 70 AND (i.OrgCode IS null and l.OrgCode != "Invalid") THEN '-'
+      WHEN m.TableNumber IN (1,2,15,51,70,74) AND RestraintsCountOfPeople is null THEN "*"
+      ELSE count_suppression(RestraintsCountOfPeople) END AS Restraints_Count_of_people,
+  
+ CASE WHEN m.TableNumber NOT IN (1,2,15,51,70,74) THEN '-'  
+      WHEN m.TableNumber = 70 AND (i.OrgCode IS null and l.OrgCode != "Invalid") THEN '-'
+      WHEN m.TableNumber IN (1,2,15,51,70,74) AND RestraintsCountOfRestraints is null THEN "*"
+      ELSE count_suppression(RestraintsCountOfRestraints) END AS Restraints_Count_of_restraints,
+      
+ CASE WHEN m.TableNumber NOT IN (1,2,3,4,10,13,80,90,100,101) THEN '-'
+      WHEN m.TableNumber IN (1,2,3,4,10,13,80,90,100,101) and HospitalSpellsInCarePreviousMonth is null THEN "*"
+      ELSE count_suppression(HospitalSpellsInCarePreviousMonth) END AS LDA43_Hospital_spells_open_at_start_of_RP,
+      
+ CASE WHEN m.TableNumber NOT IN (1,2,3,4,10,13,80,90,100,101) THEN '-'   
+      WHEN m.TableNumber = 10 AND l.PrimaryMeasureNumber > 5 THEN '-'
+      WHEN m.TableNumber IN (1,2,3,4,10,13,80,90,100,101) and HospitalSpellsAdmissionsInMonth is null THEN "*"
+      ELSE count_suppression(HospitalSpellsAdmissionsInMonth) END AS LDA27_Hospital_admissions_in_the_RP,
+      
+ CASE WHEN m.TableNumber NOT IN (1,2,3,4,10,11,13,80,90,100,101) THEN '-'
+      WHEN m.TableNumber IN (1,2,3,4,10,11,13,80,90,100,101) and HospitalSpellsDischargedInMonth is null THEN "*"
+      ELSE count_suppression(HospitalSpellsDischargedInMonth) END AS LDA28_Hospital_discharges_in_the_RP,
+      
+ CASE WHEN m.TableNumber NOT IN (1,2,3,4,10,11,13,80,90,100,101) THEN '-'
+      WHEN m.TableNumber = 10 and l.PrimaryMeasureNumber > 5 THEN '-'
+      WHEN m.TableNumber IN (1,2,3,4,10,11,13,80,90,100,101) AND HospitalSpellsAdmittedAndDischargedInMonth is null THEN "*"
+      ELSE count_suppression(HospitalSpellsAdmittedAndDischargedInMonth) END AS LDA44_Hospital_admissions_and_discharges_in_the_RP,
+      
+ CASE WHEN m.TableNumber NOT IN (1,2,3,4,7,8,10,13,14,50,71,80,90,100,101) THEN '-'
+      WHEN m.TableNumber = 70 AND (i.OrgCode IS null and l.OrgCode != "Invalid") THEN '-'
+      WHEN m.TableNumber IN (1,2,3,4,7,8,10,13,14,50,71,80,90,100,101) AND HospitalSpellsOpenAtEndOfMonth is null THEN "*"
+      ELSE count_suppression(HospitalSpellsOpenAtEndOfMonth) END AS LDA45_Hospital_spells_open_at_the_end_of_the_RP,
+      
+ CASE WHEN m.TableNumber IN (2,3,4,7,8,10,11,13,14,15,50,51,71,72,73,74,80,90,100,101) THEN '-' 
+      WHEN m.TableNumber = 70 AND (i.OrgCode IS null and l.OrgCode != "Invalid") THEN '-'
+      WHEN m.TableNumber NOT IN (2,3,4,7,8,10,11,13,14,15,50,51,71,72,73,74,80,90,100,101, 70) AND WardStaysInCarePreviousMonth is null THEN "*"
+      ELSE count_suppression(WardStaysInCarePreviousMonth) END AS LDA46_Ward_stays_open_at_start_of_the_RP,
+      
+ CASE WHEN m.TableNumber IN (2,3,4,7,8,10,11,13,14,15,50,51,71,72,73,74,80,90,100,101) THEN '-' 
+      WHEN m.TableNumber = 70 AND (i.OrgCode IS null and l.OrgCode != "Invalid") THEN '-'
+      WHEN m.TableNumber NOT IN (2,3,4,7,8,10,11,13,14,15,50,51,71,72,73,74,80,90,100,101, 70) AND WardStaysAdmissionsInMonth is null THEN "*"
+      ELSE count_suppression(WardStaysAdmissionsInMonth) END AS LDA47_Ward_stays_starting_in_the_RP,
+      
+ CASE WHEN m.TableNumber IN (2,3,4,7,8,10,11,13,14,15,50,51,71,72,73,74,80,90,100,101) THEN '-' 
+      WHEN m.TableNumber = 70 AND (i.OrgCode IS null and l.OrgCode != "Invalid") THEN '-'
+      WHEN m.TableNumber NOT IN (2,3,4,7,8,10,11,13,14,15,50,51,71,72,73,74,80,90,100,101, 70) AND WardStaysDischargedInMonth is null THEN "*"
+      ELSE count_suppression(WardStaysDischargedInMonth) END AS LDA48_Ward_stays_ending_in_the_RP,
+      
+ CASE WHEN m.TableNumber IN (2,3,4,7,8,10,11,13,14,15,50,51,71,72,73,74,80,90,100,101) THEN '-' 
+      WHEN m.TableNumber = 70 AND (i.OrgCode IS null and l.OrgCode != "Invalid") THEN '-'
+      WHEN m.TableNumber NOT IN (2,3,4,7,8,10,11,13,14,15,50,51,71,72,73,74,80,90,100,101, 70) AND WardStaysAdmittedAndDischargedInMonth is null THEN "*"
+      ELSE count_suppression(WardStaysAdmittedAndDischargedInMonth) END AS LDA49_Ward_stays_starting_and_ending_in_the_RP,
+      
+ CASE WHEN m.TableNumber IN (2,3,4,7,8,10,11,13,14,15,50,51,71,74,80,90,100,101) THEN '-'
+      WHEN m.TableNumber IN (70,72,73,74) AND (i.OrgCode IS null and l.OrgCode != "Invalid") THEN '-'
+      WHEN m.TableNumber NOT IN (2,3,4,7,8,10,11,13,14,15,50,51,71,72,73,74,80,90,100,101,70,72,73,74) AND WardStaysOpenAtEndOfMonth is null THEN "*"
+      ELSE count_suppression(WardStaysOpenAtEndOfMonth) END AS LDA21_Ward_stays_open_at_the_end_of_the_RP,
+      
+ CASE WHEN m.TableNumber NOT IN (1,2,3,4,70) THEN '-'
+      WHEN m.TableNumber IN (1,2,3,4,70) AND OpenReferralsPreviousMonth is null THEN "*"
+      ELSE count_suppression(OpenReferralsPreviousMonth) END AS LDA50_Referrals_open_at_the_start_of_the_RP,
+      
+ CASE WHEN m.TableNumber NOT IN (1,2,3,4,70) THEN '-'
+      WHEN m.TableNumber IN (1,2,3,4,70) AND ReferralsStartingInTheMonth is null THEN "*"
+      ELSE count_suppression(ReferralsStartingInTheMonth) END AS LDA32_Referrals_starting_in_the_RP,
+      
+ CASE WHEN m.TableNumber NOT IN (1,2,3,4,70) THEN '-'
+      WHEN m.TableNumber IN (1,2,3,4,70) AND ReferralsEndingInTheMonth is null THEN "*"
+      ELSE count_suppression(ReferralsEndingInTheMonth) END AS LDA51_Referrals_ending_in_the_RP,
+      
+ CASE WHEN m.TableNumber NOT IN (1,2,3,4,70) THEN '-'
+      WHEN m.TableNumber IN (1,2,3,4,70) AND ReferralsStartingAndEndingInTheMonth is null THEN "*"
+      ELSE count_suppression(ReferralsStartingAndEndingInTheMonth) END AS LDA52_Referrals_starting_and_ending_in_the_RP,
+      
+ CASE WHEN m.TableNumber NOT IN (1,2,3,4,70) THEN '-'
+      WHEN m.TableNumber IN (1,2,3,4,70) AND ReferralsOpenAtEndOfMonth is null THEN "*"
+      ELSE count_suppression(ReferralsOpenAtEndOfMonth) END AS LDA23_Referrals_open_at_the_end_of_the_RP,
+ CASE WHEN m.TableNumber != 70 THEN '-'
+      ELSE COALESCE(CASE WHEN t.CommunityCTR < 5 THEN "*" ELSE CAST(round(t.CommunityCTR/5,0)*5 as int) END, 'NULL') END AS Community_Care_and_Treatment_Review_Pre_admission,
+      
+ CASE WHEN m.TableNumber != 70 THEN '-'
+      ELSE COALESCE(CASE WHEN t.PostAdmissionCTR < 5 THEN "*" ELSE CAST(round(t.PostAdmissionCTR/5,0)*5 as int) END, 'NULL') END AS Post_admission_Care_and_Treatment_Review,
+  
+ CASE WHEN m.TableNumber != 70 THEN '-'
+      ELSE COALESCE(CASE WHEN t.InpatientCTR < 5 THEN "*" ELSE CAST(round(t.InpatientCTR/5,0)*5 as int) END, 'NULL') END AS Inpatient_Care_and_Treatment_Review_More_than_two_weeks_post_admission
+  
+ from global_temp.lda_csv_lookup_tb m
+ LEFT JOIN $db_output.LDA_Counts l
+ ----JOINING LDA_COUNTS TO CSV SKELETON 
+ ON m.Geography = l.Geography AND m.OrgCode = l.OrgCode AND m.OrgName = l.OrgName
+ AND m.TableNumber = l.TableNumber
+ AND m.PrimaryMeasure = l.PrimaryMeasure AND m.PrimarySplit = l.PrimarySplit AND m.SecondaryMeasure = l.SecondaryMeasure AND m.SecondarySplit = l.SecondarySplit
+ AND l.PRODUCT ='Monthly' AND l.PeriodEnd = '$rp_enddate' AND l.SOURCE_DB = '$db_source'
+  
+ ---JOINING TABLE14 COUNTS TO CSV SKELETON
+ LEFT JOIN $db_output.lda_table14 t on m.OrgCode = t.CombinedProvider and m.PrimarySplit = 'Total'
+  
+ ---JOINING INPATIENT PROVIDERS IN MONTH
+ LEFT JOIN global_temp.ProvNoIPs i ON l.OrgCode = i.OrgCode
 
 # COMMAND ----------
 
  %sql
  --generate the MI file
  
- CREATE OR REPLACE GLOBAL TEMPORARY VIEW lda_mi AS
+ -- CREATE OR REPLACE GLOBAL TEMPORARY VIEW lda_mi AS
+ INSERT OVERWRITE TABLE $db_output.lda_mi
  
  select 
    person_id,

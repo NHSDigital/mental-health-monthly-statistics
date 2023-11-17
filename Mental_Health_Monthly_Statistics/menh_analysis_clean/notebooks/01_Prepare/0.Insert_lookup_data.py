@@ -283,6 +283,90 @@
 
 # COMMAND ----------
 
+ %md 
+ Breakdown values
+
+# COMMAND ----------
+
+ %sql
+ TRUNCATE TABLE $db_output.RefAgeGroup;
+ INSERT INTO $db_output.RefAgeGroup VALUES
+ ('Under 18','People aged under 18'),
+ ('18-64','People aged 18 to 64'),
+ ('65+','People aged 65 or over'),
+ ('UNKNOWN','UNKNOWN');
+
+# COMMAND ----------
+
+ %sql
+ TRUNCATE TABLE $db_output.RefAgeBand;
+ INSERT INTO $db_output.RefAgeBand VALUES
+   ('0 to 5'),             
+   ('6 to 10'),
+   ('11 to 15'),
+   ('16'),
+   ('17'),
+   ('18'),
+   ('19'),
+   ('20 to 24'),
+   ('25 to 29'),
+   ('30 to 34'), 
+   ('35 to 39'),
+   ('40 to 44'),
+   ('45 to 49'),
+   ('50 to 54'),
+   ('55 to 59'),
+   ('60 to 64'),
+   ('65 to 69'),
+   ('70 to 74'),
+   ('75 to 79'),
+   ('80 to 84'),
+   ('85 to 89'),
+   ('90 or over'),
+   ('UNKNOWN');
+
+# COMMAND ----------
+
+ %sql
+ TRUNCATE TABLE $db_output.RefBedType;
+ INSERT INTO $db_output.RefBedType VALUES
+ ('Adult Acute'),
+ ('Adult Specialist'),
+ ('CYP Acute'),
+ ('CYP Specialist'),
+ ('Older Adult Acute'),
+ ('UNKNOWN');
+
+# COMMAND ----------
+
+ %sql
+ TRUNCATE TABLE $db_output.RefIMD;
+ INSERT INTO $db_output.RefIMD VALUES
+ ('01 Most deprived'),
+ ('02 More deprived'),
+ ('03 More deprived'),
+ ('04 More deprived'),
+ ('05 More deprived'),
+ ('06 Less deprived'),
+ ('07 Less deprived'),
+ ('08 Less deprived'),
+ ('09 Less deprived'),
+ ('10 Least deprived'),
+ ('UNKNOWN');
+
+# COMMAND ----------
+
+ %sql
+ TRUNCATE TABLE $db_output.ConsMechanismMH;
+ 
+ INSERT INTO $db_output.ConsMechanismMH 
+ SELECT Code AS Level, Description as Level_description
+ FROM $db_output.ConsMechanismMH_dim
+ WHERE 
+ '$month_id' >= FirstMonth and (LastMonth is null or '$month_id' <= LastMonth)
+
+# COMMAND ----------
+
 # DBTITLE 1,1. Main monthly
  %sql
  
@@ -291,8 +375,28 @@
  TRUNCATE TABLE $db_output.Main_monthly_breakdown_values;
  INSERT INTO $db_output.Main_monthly_breakdown_values VALUES
  ('England'),
+ ('England; Age Group'),
+ ('England; ConsMechanismMH'),
+ ('England; Accommodation Type'),
+ ('England; Age'),
+ ('England; Attendance'),
+ ('England; Bed Type'),
+ ('England; Disability'),
+ ('England; Employment Status'),
+ ('England; Ethnicity'),
+ ('England; Gender'),
+ ('England; IMD Decile'),
+ ('England; Sexual Orientation'),
  ('CCG - GP Practice or Residence'),
+ ('CCG - GP Practice or Residence; Age Group'),
+ ('CCG - GP Practice or Residence; Attendance'),
+ ('CCG - GP Practice or Residence; Bed Type'),
+ ('CCG - GP Practice or Residence; ConsMechanismMH'),
  ('Provider'),
+ ('Provider; Age Group'),
+ ('Provider; Attendance'),
+ ('Provider; Bed Type'),
+ ('Provider; ConsMechanismMH'),
  ('CASSR'),
  ('CASSR; Provider');
  
@@ -308,6 +412,26 @@
    'CCG - GP Practice or Residence' as breakdown 
  FROM global_temp.CCG -- WARNING: The data in this view differs depending on each month rp_enddate
  
+ union all
+ 
+ SELECT DISTINCT 
+   IC_Rec_CCG as primary_level, 
+   COALESCE(NAME, "UNKNOWN") as primary_level_desc,
+   AgeGroup as secondary_level,
+   AgeGroupName as secondary_level_desc,
+   'CCG - GP Practice or Residence; Age Group' as breakdown 
+ FROM global_temp.CCG cross join $db_output.RefAgeGroup
+ 
+ union all
+ 
+ SELECT DISTINCT 
+   IC_Rec_CCG as primary_level, 
+   COALESCE(NAME, "UNKNOWN") as primary_level_desc,
+   level as secondary_level,
+   level_description as secondary_level_desc,
+   'CCG - GP Practice or Residence; ConsMechanismMH' as breakdown 
+ FROM global_temp.CCG cross join $db_output.ConsMechanismMH
+ 
  --************************************************************************************************************************
  union all
  SELECT DISTINCT
@@ -318,6 +442,59 @@
    'Provider' as breakdown 
  FROM $db_output.Provider_list -- WARNING: The data in this view differs depending on the month_id
  
+ UNION ALL
+ 
+ SELECT DISTINCT 
+   ORG_CODE as primary_level, 
+   NAME as primary_level_desc,
+   PrimaryCode as secondary_level,
+   Description as secondary_level_desc,
+   'Provider; Attendance' as breakdown 
+ FROM $db_output.Provider_list CROSS JOIN (
+   SELECT PrimaryCode, Description
+   FROM $reference_data.datadictionarycodes
+   where ItemName = 'ATTENDANCE_STATUS'
+   UNION ALL
+   SELECT 'Invalid','Invalid'
+   UNION ALL
+   SELECT 'UNKNOWN','UNKNOWN')
+   
+ UNION ALL
+   
+ SELECT DISTINCT 
+   IC_Rec_CCG as primary_level, 
+   COALESCE(NAME, "UNKNOWN") as primary_level_desc,
+   PrimaryCode as secondary_level,
+   Description as secondary_level_desc,
+   'CCG - GP Practice or Residence; Attendance' as breakdown 
+ FROM global_temp.CCG CROSS JOIN (
+   SELECT PrimaryCode, Description
+   FROM $reference_data.datadictionarycodes
+   where ItemName = 'ATTENDANCE_STATUS'
+   UNION ALL
+   SELECT 'Invalid','Invalid'
+   UNION ALL
+   SELECT 'UNKNOWN','UNKNOWN')
+   
+ union all
+ 
+ SELECT DISTINCT
+   ORG_CODE as primary_level, 
+   NAME as primary_level_desc,
+   AgeGroup as secondary_level,
+   AgeGroupName as secondary_level_desc,
+   'Provider; Age Group' as breakdown 
+ FROM $db_output.Provider_list cross join $db_output.RefAgeGroup
+ 
+ union all
+ 
+ SELECT DISTINCT
+   ORG_CODE as primary_level, 
+   NAME as primary_level_desc,
+   level as secondary_level,
+   level_description as secondary_level_desc,
+   'Provider; ConsMechanismMH' as breakdown 
+ FROM $db_output.Provider_list cross join $db_output.ConsMechanismMH
  
  --************************************************************************************************************************
  union all
@@ -328,6 +505,186 @@
    'NONE' as secondary_level_desc,
    'England' as breakdown
  
+ union all
+ SELECT DISTINCT
+   'England' as primary_level, 
+   'England' as primary_level_desc,
+   AgeGroup as secondary_level,
+   AgeGroupName as secondary_level_desc,
+   'England; Age Group' as breakdown
+ FROM $db_output.RefAgeGroup
+   
+ union all
+ SELECT DISTINCT
+   'England' as primary_level, 
+   'England' as primary_level_desc,
+   level as secondary_level,
+   level_description as secondary_level_desc,
+   'England; ConsMechanismMH' as breakdown
+ FROM $db_output.ConsMechanismMH
+ 
+ union all
+ SELECT DISTINCT
+   'England' as primary_level, 
+   'England' as primary_level_desc,
+   PrimaryCode as secondary_level,
+   Description as secondary_level_desc,
+   'England; Accommodation Type' as breakdown
+ FROM (
+   SELECT PrimaryCode, Description
+   FROM $reference_data.datadictionarycodes 
+   where ItemName = 'ACCOMMODATION_TYPE'
+   UNION ALL
+   SELECT 'UNKNOWN','UNKNOWN')
+   
+ union all
+ SELECT DISTINCT
+   'England' as primary_level, 
+   'England' as primary_level_desc,
+   AgeBand as secondary_level,
+   AgeBand as secondary_level_desc,
+   'England; Age' as breakdown
+ FROM $db_output.RefAgeBand
+   
+ union all
+ SELECT DISTINCT
+   'England' as primary_level, 
+   'England' as primary_level_desc,
+   PrimaryCode as secondary_level,
+   Description as secondary_level_desc,
+   'England; Attendance' as breakdown
+ FROM (
+   SELECT PrimaryCode, Description
+   FROM $reference_data.datadictionarycodes 
+   where ItemName = 'ATTENDANCE_STATUS'
+   UNION ALL
+   SELECT 'Invalid','Invalid'
+   UNION ALL
+   SELECT 'UNKNOWN','UNKNOWN')
+   
+ union all
+ SELECT DISTINCT
+   'England' as primary_level, 
+   'England' as primary_level_desc,
+   BedType as secondary_level,
+   BedType as secondary_level_desc,
+   'England; Bed Type' as breakdown 
+ FROM $db_output.RefBedType
+   
+ union all
+ 
+ SELECT DISTINCT 
+   IC_Rec_CCG as primary_level, 
+   COALESCE(NAME, "UNKNOWN") as primary_level_desc,
+   BedType as secondary_level,
+   BedType as secondary_level_desc,
+   'CCG - GP Practice or Residence; Bed Type' as breakdown 
+ FROM global_temp.CCG cross join $db_output.RefBedType
+ 
+ union all
+ 
+ SELECT DISTINCT
+   ORG_CODE as primary_level, 
+   NAME as primary_level_desc,
+   BedType as secondary_level,
+   BedType as secondary_level_desc,
+   'Provider; Bed Type' as breakdown 
+ FROM $db_output.Provider_list cross join $db_output.RefBedType
+ 
+ union all
+ 
+ SELECT DISTINCT
+   'England' as primary_level, 
+   'England' as primary_level_desc,
+   PrimaryCode as secondary_level,
+   Description as secondary_level_desc,
+   'England; Disability' as breakdown
+ FROM (
+ SELECT PrimaryCode, Description
+ FROM $reference_data.datadictionarycodes 
+ where ItemName = 'DISABILITY_CODE'
+ UNION ALL
+ SELECT 'UNKNOWN','UNKNOWN')
+ 
+ union all
+ SELECT DISTINCT
+   'England' as primary_level, 
+   'England' as primary_level_desc,
+   PrimaryCode as secondary_level,
+   Description as secondary_level_desc,
+   'England; Employment Status' as breakdown
+ FROM (
+   SELECT PrimaryCode, Description
+   FROM $reference_data.datadictionarycodes 
+   where ItemName = 'EMPLOYMENT_STATUS'
+   UNION ALL
+   SELECT 'UNKNOWN','UNKNOWN')
+   
+ union all
+ SELECT DISTINCT
+   'England' as primary_level, 
+   'England' as primary_level_desc,
+   PrimaryCode as secondary_level,
+   Description as secondary_level_desc,
+   'England; Ethnicity' as breakdown
+ FROM (
+    SELECT PrimaryCode, Description
+   FROM $reference_data.datadictionarycodes 
+   where ItemName = 'ETHNIC_CATEGORY_CODE'
+   UNION ALL
+   SELECT 'UNKNOWN','UNKNOWN'
+   UNION ALL
+   SELECT '99','Not Known')
+   
+ union all
+ SELECT DISTINCT
+   'England' as primary_level, 
+   'England' as primary_level_desc,
+   PrimaryCode as secondary_level,
+   Description as secondary_level_desc,
+   'England; Gender' as breakdown
+ FROM (
+   SELECT PrimaryCode, Description
+   FROM $reference_data.datadictionarycodes 
+   WHERE ItemName = 'GENDER_IDENTITY_CODE'
+   AND PrimaryCode NOT IN ('Z','X')
+   UNION ALL
+   SELECT PrimaryCode, Description
+   FROM $reference_data.datadictionarycodes 
+   WHERE ItemName = 'PERSON_STATED_GENDER_CODE'
+   AND PrimaryCode = '9'
+   UNION ALL
+   SELECT 'UNKNOWN','UNKNOWN')
+   
+ union all
+ SELECT DISTINCT
+   'England' as primary_level, 
+   'England' as primary_level_desc,
+   IMD_Desc as secondary_level,
+   IMD_Desc as secondary_level_desc,
+   'England; IMD Decile' as breakdown
+ FROM $db_output.RefIMD
+   
+ union all
+ SELECT DISTINCT
+   'England' as primary_level, 
+   'England' as primary_level_desc,
+   Description as secondary_level,
+   Description as secondary_level_desc,
+   'England; Sexual Orientation' as breakdown
+ FROM (
+   SELECT Description
+   FROM $reference_data.datadictionarycodes 
+   where ItemName = 'SEXUAL_ORIENTATION_CODE' AND 1=2 UNION ALL
+   SELECT 'Asexual (not sexually attracted to either gender)' UNION ALL
+   SELECT 'Bisexual' UNION ALL
+   SELECT 'Gay or Lesbian' UNION ALL
+   SELECT 'Heterosexual or Straight' UNION ALL
+   SELECT 'Not known (not recorded)' UNION ALL
+   SELECT 'Not Stated (Person asked but declined to provide a response)' UNION ALL
+   SELECT 'Person asked and does not know or is not sure' UNION ALL
+   SELECT 'UNKNOWN'
+ )
  
  --************************************************************************************************************************
  union all
@@ -366,7 +723,7 @@
    ('MHS07c', 'People with an open hospital spell at the end of the reporting period aged 65 and over'),
      ('MHS21', 'Open ward stays at the end of the reporting period')
    , ('MHS21a', 'Open ward stays at the end of the reporting period, aged 0 to 18')
-   , ('MHS21b', 'Open ward stays at the end of the reporting period, aged 19 to64')
+   , ('MHS21b', 'Open ward stays at the end of the reporting period, aged 19 to 64')
    , ('MHS21c', 'Open ward stays at the end of the reporting period, aged 65 and over')
    , ('AMH21', 'Open ward stays (adult mental health services) at the end of the reporting period')
    , ('CYP21', "Open ward stays (children and young people's mental health services) at the end of the reporting period")
@@ -382,6 +739,7 @@
    , ('MHS25', 'Bed days less leave in RP')
  --   , ('MHS26', 'Days of delayed discharge in RP')
    , ('MHS27', 'Admissions to hospital in the RP')
+   , ('MHS27a', 'Number of admissions to hospital in the reporting period')
    , ('MHS28', 'Discharges from hospital in the RP')
    , ('MHS31', 'AWOL episodes in RP')
    , ('AMH48a', 'Ward stays ending, adult acute MH care, in the Reporting Period')
@@ -449,35 +807,40 @@
    , ('MHS23a', 'Open referrals to perinatal MH team at the end of the Reporting Period')
    , ('MHS23b', 'Open referrals to crisis resolution service or home treatment team at the end of the Reporting Period')
    , ('MHS23c', 'Open referrals to memory services team at the end of the Reporting Period')
- --   , ('MHS23d', 'Open referrals to community mental health services for adult and older adults with severe mental illness')  BITC-4133, BITC-4679
+   , ('MHS23d', 'Open referrals to community mental health services for adult and older adults with severe mental illness')  --BITC-4133, BITC-4679
    , ('MHS29', 'Contacts in RP')
    , ('MHS29a', 'Contacts with perinatal MH team in the Reporting Period')
    , ('MHS29b', 'Contacts with crisis resolution service or home treatment team in the Reporting Period')
    , ('MHS29c', 'Contacts with memory services team in the reporting period')
- --   ,('MHS29d', 'Contacts in the RP with community mental health services for adult and older adults with severe mental illness')
+    ,('MHS29d', 'Contacts in the RP with community mental health services for adult and older adults with severe mental illness')
    , ('MHS29f', 'Care contacts by Attended / did not attend code')
    , ('MHS30', 'Attended contacts in RP')
    , ('MHS30a', 'Attended contacts with perinatal MH team in Reporting Period')
    , ('MHS30b', 'Attended contacts with crisis resolution service or home treatment team in Reporting Period')
    , ('MHS30c', 'Attended contacts with memory services team in Reporting Period')
- --   , ('MHS30f', 'Attended contacts in the RP with community mental health services for adult and older adults with severe mental illness')
- --   , ('MHS30h', 'Attended contacts in the RP by consultation medium')
+   , ('MHS30f', 'Attended contacts in the RP with community mental health services for adult and older adults with severe mental illness')
+   , ('MHS30h', 'Attended contacts in the RP by consultation medium')
    , ('MHS32', 'Referrals starting in RP')
+   , ('MHS32c', 'Referrals starting in the RP to community mental health services for adult and older adults with severe mental illness')
+   , ('MHS32d', 'Referrals starting in the RP to specialist perinatal Mental Health services')
    , ('MHS33', 'People assigned to an adult MH Care Cluster at end of the reporting period')
    , ('MHS57', 'People discharged from a referral in the reporting period')
+   , ('MHS57b', 'People discharged from a referral in the RP from community mental health services for adult and older adults with severe mental illness')
+   , ('MHS57c', 'People discharged from a referral in the RP from specialist perinatal Mental Health services')
    , ('MHS58', 'Missed care contacts in the RP')
-   , ('CCR70', 'New Emergency Referrals to Crisis Care teams in the Reporting Period')
-   , ('CCR70a', 'New Emergency Referrals to Crisis Care teams in the Reporting Period, Aged 18 and over')
-   , ('CCR70b', 'New Emergency Referrals to Crisis Care teams in the Reporting Period, Aged under 18')
-   , ('CCR71', 'New Urgent Referrals to Crisis Care teams in the Reporting Period')
-   , ('CCR71a', 'New Urgent Referrals to Crisis Care teams in the Reporting Period, Aged 18 and over')
-   , ('CCR71b', 'New Urgent Referrals to Crisis Care teams in the Reporting Period, Aged under 18')
-   , ('CCR72', 'New Emergency Referrals to Crisis Care teams in the Reporting Period with first face to face contact')
-   , ('CCR72a', 'New Emergency Referrals to Crisis Care teams in the Reporting Period, with first face to face contact. Aged 18 and over')
-   , ('CCR72b', 'New Emergency Referrals to Crisis Care teams in the Reporting Period, with first face to face contact. Aged under 18')
-   , ('CCR73', 'New Urgent Referrals to Crisis Care teams in the Reporting Period with first face to face contact')
-   , ('CCR73a', 'New Urgent Referrals to Crisis Care teams in the Reporting Period, with first face to face contact. Aged 18 and over')
-   , ('CCR73b', 'New Urgent Referrals to Crisis Care teams in the Reporting Period, with first face to face contact. Aged under 18');
+ --  , ('CCR70', 'New Emergency Referrals to Crisis Care teams in the Reporting Period')
+ --  , ('CCR70a', 'New Emergency Referrals to Crisis Care teams in the Reporting Period, Aged 18 and over')
+ --  , ('CCR70b', 'New Emergency Referrals to Crisis Care teams in the Reporting Period, Aged under 18')
+ --  , ('CCR71', 'New Urgent Referrals to Crisis Care teams in the Reporting Period')
+ --  , ('CCR71a', 'New Urgent Referrals to Crisis Care teams in the Reporting Period, Aged 18 and over')
+ --  , ('CCR71b', 'New Urgent Referrals to Crisis Care teams in the Reporting Period, Aged under 18')
+ --  , ('CCR72', 'New Emergency Referrals to Crisis Care teams in the Reporting Period with first face to face contact')
+ --  , ('CCR72a', 'New Emergency Referrals to Crisis Care teams in the Reporting Period, with first face to face contact. Aged 18 and over')
+ --  , ('CCR72b', 'New Emergency Referrals to Crisis Care teams in the Reporting Period, with first face to face contact. Aged under 18')
+ --  , ('CCR73', 'New Urgent Referrals to Crisis Care teams in the Reporting Period with first face to face contact')
+ --  , ('CCR73a', 'New Urgent Referrals to Crisis Care teams in the Reporting Period, with first face to face contact. Aged 18 and over')
+ --  , ('CCR73b', 'New Urgent Referrals to Crisis Care teams in the Reporting Period, with first face to face contact. Aged under 18')
+ ;
 
 # COMMAND ----------
 
@@ -674,7 +1037,7 @@
  ('England'),
  ('Provider'),
  ('Commissioning Region'),
- ('STP'),
+ ('STP - GP Practice or Residence'),
  ('CCG - GP Practice or Residence'),
  ('CCG - GP Practice or Residence; Provider');
  
@@ -727,7 +1090,7 @@
    coalesce(STP_description,"UNKNOWN") as primary_level_desc,
    'NONE' as secondary_level,
    'NONE' as secondary_level_desc,
-   'STP' as breakdown
+   'STP - GP Practice or Residence' as breakdown
  FROM $db_output.STP_Region_mapping_post_2020;
  
  TRUNCATE TABLE $db_output.CYP_2nd_contact_metric_values;
@@ -810,17 +1173,6 @@
  spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output, table='CaP_level_values'))
  spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output, table='CaP_cluster_values'))
  spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output, table='CaP_metric_values'))
-
-# COMMAND ----------
-
-# DBTITLE 1,ConsMechanismMH (was ConsMediumUsed prior to v5)
- %sql
- TRUNCATE TABLE $db_output.ConsMechanismMH;
- 
- INSERT INTO $db_output.ConsMechanismMH 
- SELECT Code, Description
- FROM $db_output.ConsMechanismMH_dim
- WHERE '$month_id' >= FirstMonth and (LastMonth is null or '$month_id' <= LastMonth)
 
 # COMMAND ----------
 

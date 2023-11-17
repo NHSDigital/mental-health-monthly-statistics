@@ -6,10 +6,10 @@
  
    This returns the OrgIDProvider codes between the reporting period dates from MHS000Header
    
-                                                                                  */ 
+                                                                                   */ 
  /* ---------------------------------------------------------------------------------------------------------*/
  
- -- GBT: 2020-12-12 changed rp_startdate to rp_startdate_quarterly as this is the parameter required for this query and explicit naming makes this more obvious.
+ -- 2020-12-12 changed rp_startdate to rp_startdate_quarterly as this is the parameter required for this query and explicit naming makes this more obvious.
  
  CREATE OR REPLACE GLOBAL TEMP VIEW providers_between_rp_start_end_dates AS 
  SELECT DISTINCT OrgIDProvider, x.NAME as NAME
@@ -18,7 +18,7 @@
  					ON Z.OrgIDProvider = X.ORG_CODE
              WHERE	UniqMonthID BETWEEN '$month_id_1' AND '$month_id'
              
- -- GBT changed to use UniqMonthID rather than ReportingPeriodStart / EndDates 
+ -- changed to use UniqMonthID rather than ReportingPeriodStart / EndDates 
  -- UniqMonthID is indexed, ReportingPeriodStart / EndDates don't exist in the menh_primary_refresh asset and this is the only place in the code they are used!
  --           WHERE	ReportingPeriodStartDate >= '$rp_startdate_quarterly'
  --             AND ReportingPeriodEndDate <= '$rp_enddate';
@@ -26,12 +26,11 @@
 # COMMAND ----------
 
  %sql
- --NP 15 feb 2021 : copied to common objects in menh_publications\notebooks\common_objects\02_load_common_ref_data
- --CQ 20 Sep 2021 : #COPIED_EIP
+ --15 feb 2021 : copied to common objects in menh_publications\notebooks\common_objects\02_load_common_ref_data
+ --20 Sep 2021 : #COPIED_EIP
  
  
- -- This code replicates PatMRecInRP for Feb and Mar 2018 to account for these derivation not being available on legacy data. It has been coded so that this only makes a difference if the relevant reporting period is called, otherwise the subsequent
- -- bricks use the DDC coded derivation. Don't worry about it, it's fine. - DC
+ -- This code replicates PatMRecInRP for Feb and Mar 2018 to account for these derivation not being available on legacy data. It has been coded so that this only makes a difference if the relevant reporting period is called, otherwise the subsequent bricks use the DDC coded derivation. 
  
  CREATE OR REPLACE GLOBAL TEMP VIEW MHS001_PATMRECINRP_201819_F_M AS
  
@@ -61,7 +60,7 @@
 # COMMAND ----------
 
  %sql
- --NP 15 feb 2021 : copied to common objects in menh_publications\notebooks\common_objects\02_load_common_ref_data
+ --15 feb 2021 : copied to common objects in menh_publications\notebooks\common_objects\02_load_common_ref_data
  
  CREATE OR REPLACE GLOBAL TEMP VIEW MHS001MPI_PATMRECINRP_FIX AS
  
@@ -77,8 +76,8 @@
 
 # DBTITLE 1,EIP CCG Methodology Prep update  - copied to FYFV_prep
  %sql
- --NP 15 feb 2021 : copied to common objects in menh_publications\notebooks\common_objects\02_load_common_ref_data
- -- GBT: 07-07-2022 : this table is needed by the cell below (used in FYFV_prep) - with the move of EIP/AWT measures to menh_publications this can move to FYFV_prep notebook
+ --15 feb 2021 : copied to common objects in menh_publications\notebooks\common_objects\02_load_common_ref_data
+ --07-07-2022 : this table is needed by the cell below (used in FYFV_prep) - with the move of EIP/AWT measures to menh_publications this can move to FYFV_prep notebook
  
  CREATE OR REPLACE GLOBAL TEMP VIEW CCG_prep_EIP AS
  SElECT DISTINCT    a.Person_ID
@@ -101,8 +100,8 @@
 
 # DBTITLE 1,EIP CCG Methodology update - copied to FYFV_prep
  %sql
- --NP 15 feb 2021 : copied to common objects in menh_publications\notebooks\common_objects\02_load_common_ref_data
- -- GBT: 07-07-2022 : this table is needed by FYFV_prep - with the move of EIP/AWT measures to menh_publications this can move to FYFV_prep notebook
+ -- 15 feb 2021 : copied to common objects in menh_publications\notebooks\common_objects\02_load_common_ref_data
+ -- 07-07-2022 : this table is needed by FYFV_prep - with the move of EIP/AWT measures to menh_publications this can move to FYFV_prep notebook
  -- uses global_temp.CCG_prep_EIP
  
  TRUNCATE TABLE $db_output.MHS001_CCG_LATEST;
@@ -148,7 +147,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
    This provides the latest MSH006CareCoord Assessment care coordination dates for a given provider between 
    the reporting period dates
    
-   Sam Hollings - 2018-02-25                                                                                 */ 
+                                                                                 */ 
  /* ---------------------------------------------------------------------------------------------------------*/
  
  CREATE OR REPLACE GLOBAL TEMP VIEW MHS006MHCareCoord_LATEST AS 
@@ -172,7 +171,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
  /* MHS101Referral_LATEST:  This is a view used in a lot of EIP metrics breakdowns . This provides the latest 
    records between the reporting period dates from MHS101Referral
    
-   Sam Hollings - 2018-02-25                                                              */
+                                                                 */
    /* ---------------------------------------------------------------------------------------------------------*/
  /* Latest Referrals */
  -- TODO: RecEndDateRef required in MHS101Referral as per TOS
@@ -198,8 +197,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
  /* ---------------------------------------------------------------------------------------------------------*/
  /* MHS101Referral_LATEST: Extension of MHS101Referral_LATEST with additional filters which are used across 
    EIP metrics
-   
-   Sam Hollings - 2018-02-25                                                              */
+                                                                 */
    /* ---------------------------------------------------------------------------------------------------------*/
  
  --CREATE OR REPLACE GLOBAL TEMP VIEW EIP_MHS101Referral_LATEST AS
@@ -254,13 +252,13 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 
 # DBTITLE 1,MHS102ServiceTypeReferredTo_LATEST (EIP)
  %sql
- --CQ : 20th Sep 2021 : #COPIED_EIP
+ --20th Sep 2021 : #COPIED_EIP
  /* ---------------------------------------------------------------------------------------------------------*/
  /* MHS102ServicetypeReferredTo_LATEST: This is a view used in a lot of EIP metrics breakdowns        
    This provides the latest ServTeamTypeReftoMH for the Uniq IDs between the reporting period dates from  
    MSH102ServiceTypeReferredTo
    
-   Sam Hollings - 2018-02-25                                                                                 */ 
+                                                                             */ 
  /* ---------------------------------------------------------------------------------------------------------*/
  -- NOTE: The select column IC_Use_Submission_Flag has been removed
  
@@ -284,7 +282,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
  /* EIP_MHS102ServicetypeReferredTo_LATEST: Extension of MHS102ServiceTypeReferredTo with additional filters 
    which are used across other EIP mterics
    
-   Sam Hollings - 2018-02-25                                                                                 */ 
+                                                                                */ 
  /* ---------------------------------------------------------------------------------------------------------*/
  -- NOTE: The select column IC_Use_Submission_Flag has been removed
  
@@ -316,8 +314,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
  /* ---------------------------------------------------------------------------------------------------------*/
  /* earliest_care_contact_dates_by_service_request_id: This view is used as sub query in many EIP metrics.
    It returns the earliest care contact dates for each service request ID.
-   
-   Sam Hollings - 2018-02-25                                                                                 */ 
+                                                                                  */ 
  /* ---------------------------------------------------------------------------------------------------------*/
  
  CREATE OR REPLACE GLOBAL TEMP VIEW earliest_care_contact_dates_by_service_request_id AS 
@@ -325,7 +322,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
              MIN(CareContDate) AS CareContDate
         FROM $db_source.MHS201CareContact AS a
       INNER JOIN $db_output.validcodes as vc
-             ON vc.table = 'mhs201carecontact' and vc.field = 'ConsMechanismMH' and vc.Measure = 'AWT' and vc.type = 'include' and a.ConsMechanismMH = vc.ValidValue
+             ON vc.tablename = 'mhs201carecontact' and vc.field = 'ConsMechanismMH' and vc.Measure = 'AWT' and vc.type = 'include' and a.ConsMechanismMH = vc.ValidValue
              and a.UniqMonthId >= vc.FirstMonth and (vc.LastMonth is null or a.UniqMonthId <= vc.LastMonth)
    LEFT JOIN global_temp.EIP_MHS101Referral_LATEST b
              ON a.UniqServReqID = b.UniqServReqID
@@ -348,7 +345,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
  /* earliest_care_assessment_dates_by_service_request_id: This view is used as sub query in many EIP metrics.
    It returns the earliest care care assessment date for each service request ID.
    
-   Sam Hollings - 2018-02-25                                                                                 */ 
+                                                                                   */ 
  /* ---------------------------------------------------------------------------------------------------------*/
  
  CREATE OR REPLACE GLOBAL TEMP VIEW earliest_care_assessment_dates_by_service_request_id AS 
@@ -374,7 +371,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
    It returns the earliest care care assessment date for each service request ID, however it is also joined on
    Provider as both occurnaces must have been in the same provider.
    
-   Sam Hollings - 2018-02-25                                                                                 */ 
+                                                                                  */ 
  /* ---------------------------------------------------------------------------------------------------------*/
  
  CREATE OR REPLACE GLOBAL TEMP VIEW earliest_care_assessment_dates_by_service_request_id_Prov AS 
@@ -400,7 +397,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
  /* earliest_care_assessment_dates_by_service_request_id_all_teams: This view is used as sub query in EIP64.
    It returns the earliest care care assessment date for each service request ID where the team type is not restricted to A14. .
    
-   Sam Hollings - 2018-02-25                                                                                 */ 
+                                                                                   */ 
  /* ---------------------------------------------------------------------------------------------------------*/
  
  CREATE OR REPLACE GLOBAL TEMP VIEW earliest_care_assessment_dates_by_service_request_id_any_team AS 
@@ -433,7 +430,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
  /* Distinct_Referral_UniqSerReqIDs - this is used in EIP63 and returns a distinct list of UniqServReqIDs 
  after joining the referral intermediate tables.
  
-   Sam Hollings - 2018-03-6                                                                           */ 
+                                                                            */ 
  /* ---------------------------------------------------------------------------------------------------------*/
  
  CREATE OR REPLACE GLOBAL TEMP VIEW Distinct_Referral_UniqServReqIDs AS
@@ -452,7 +449,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
  /* Distinct_Referral_UniqSerReqIDs - this is used in EIP63 and returns a distinct list of UniqServReqIDs 
  after joining the referral intermediate tables.
  
-   Sam Hollings - 2018-03-6                                                                           */ 
+                                                                             */ 
  /* ---------------------------------------------------------------------------------------------------------*/
  
  CREATE OR REPLACE GLOBAL TEMP VIEW Distinct_Referral_UniqServReqIDs_any_month AS
@@ -473,8 +470,8 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
    groupings.
    Old code description: FEP REFERRALS ON FEP PATHWAY IN TREATMENT AT END OF REPORTING PERIOD
    
-   Sam Hollings - 2018-02-25                    
-   Bhabani Sahoo - Added an extra column for Ethnicity in existing code dated 2021-01-25 */ 
+                     
+   -- Added an extra column for Ethnicity in existing code dated 2021-01-25 */ 
  /* ---------------------------------------------------------------------------------------------------------*/
  
  TRUNCATE TABLE $db_output.EIP01_common;
@@ -543,7 +540,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
    groupings.
    Old code description: FEP REFERRALS ON FEP PATHWAY IN TREATMENT AT END OF REPORTING PERIOD
    
-   Sam Hollings - 2018-02-25                                                                                 */ 
+                                                                                  */ 
  /* ---------------------------------------------------------------------------------------------------------*/
  
  TRUNCATE TABLE $db_output.EIP01_common_prov;
@@ -609,10 +606,10 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
    in the National and CCG breakdowns for all age groupings. The age groups are all calculated together to
    save effort 
    
-   Sam Hollings - 2018-02-25                                                                                 */ 
+                                                                                   */ 
  /* ---------------------------------------------------------------------------------------------------------*/
  
- -- GBT: 2020-12-12 changed rp_startdate to rp_startdate_quarterly as this is the parameter required for this query and explicit naming makes this more obvious.
+ -- 2020-12-12 changed rp_startdate to rp_startdate_quarterly as this is the parameter required for this query and explicit naming makes this more obvious.
  
  TRUNCATE TABLE $db_output.EIP23a_common;
  
@@ -680,10 +677,10 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
    its own prep table due to the use of earliest_care_assessment_dates_by_service_request_id_Prov. 
    The age groups are all calculated together to save effort.
    
-   Sam Hollings - 2018-02-25                                                                                 */ 
+                                                                                */ 
  /* ---------------------------------------------------------------------------------------------------------*/
  
- -- GBT: 2020-12-12 changed rp_startdate to rp_startdate_quarterly as this is the parameter required for this query and explicit naming makes this more obvious.
+ --  2020-12-12 changed rp_startdate to rp_startdate_quarterly as this is the parameter required for this query and explicit naming makes this more obvious.
  
  TRUNCATE table $db_output.EIP23a_common_Prov;
  
@@ -748,7 +745,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
    in the National and CCG breakdowns for all age groupings. The age groups are all calculated together to
    save effort.
    
-   Sam Hollings - 2018-02-25                                                                                 */ 
+                                                                                  */ 
  /* ---------------------------------------------------------------------------------------------------------*/
  
  TRUNCATE TABLE $db_output.EIP23d_common;
@@ -815,7 +812,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
    its own prep table due to the use of earliest_care_assessment_dates_by_service_request_id_Prov. 
    The age groups are all calculated together to save effort.
    
-   Sam Hollings - 2018-02-25                                                                                 */ 
+                                                                                   */ 
  /* ---------------------------------------------------------------------------------------------------------*/
  
  TRUNCATE TABLE $db_output.EIP23d_common_Prov;
@@ -878,10 +875,10 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
    earliest_care_assessment_dates_by_service_request_id. The age groups are all calculated together to
    save effort 
    
-   Sam Hollings - 2018-02-25                                                                                 */ 
+                                                                                   */ 
  /* ---------------------------------------------------------------------------------------------------------*/
  
- -- GBT: 2020-12-12 changed rp_startdate to rp_startdate_quarterly as this is the parameter required for this query and explicit naming makes this more obvious.
+ --  2020-12-12 changed rp_startdate to rp_startdate_quarterly as this is the parameter required for this query and explicit naming makes this more obvious.
  
  CREATE OR REPLACE GLOBAL TEMP VIEW EIP23g_common AS
       SELECT a.UniqServReqID,
@@ -921,10 +918,10 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
    in the National and CCG breakdowns for all age groupings. The age groups are all calculated together to
    save effort 
    
-   Sam Hollings - 2018-03-07                                                                                 */ 
+                                                                                   */ 
  /* ---------------------------------------------------------------------------------------------------------*/
  
- -- GBT: 2020-12-12 changed rp_startdate to rp_startdate_quarterly as this is the parameter required for this query and explicit naming makes this more obvious.
+ --  changed rp_startdate to rp_startdate_quarterly as this is the parameter required for this query and explicit naming makes this more obvious.
  
  CREATE OR REPLACE GLOBAL TEMP VIEW EIP23h_common AS
       SELECT a.UniqServReqID,
@@ -964,10 +961,10 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
    its own prep table due to the use of earliest_care_assessment_dates_by_service_request_id_Prov. 
    The age groups are all calculated together to save effort.
    
-   Sam Hollings - 2018-03-07                                                                                 */ 
+                                                                                   */ 
  /* ---------------------------------------------------------------------------------------------------------*/
  
- -- GBT: 2020-12-12 changed rp_startdate to rp_startdate_quarterly as this is the parameter required for this query and explicit naming makes this more obvious.
+ -- 2020-12-12 changed rp_startdate to rp_startdate_quarterly as this is the parameter required for this query and explicit naming makes this more obvious.
  
  CREATE OR REPLACE GLOBAL TEMP VIEW EIP23h_common_Prov AS
       SELECT a.UniqServReqID,
@@ -999,7 +996,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
  /* EIP32/ED32_common - this is used by both metrics simply by applying a different filter prior to aggregation.
    These metrics do not have age breakdowns */
    
- -- GBT: 2020-12-12 changed rp_startdate to rp_startdate_quarterly as this is the parameter required for this query and explicit naming makes this more obvious.  
+ -- 2020-12-12 changed rp_startdate to rp_startdate_quarterly as this is the parameter required for this query and explicit naming makes this more obvious.  
    
  TRUNCATE TABLE $db_output.EIP32_ED32_common;
  
@@ -1046,7 +1043,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
    earliest_care_assessment_dates_by_service_request_id. The age groups are all calculated together to
    save effort 
    
-   Sam Hollings - 2018-02-25                                                                                 */ 
+                                                                                 */ 
  /* ---------------------------------------------------------------------------------------------------------*/
  
  TRUNCATE TABLE $db_output.EIP63_common;
@@ -1102,7 +1099,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
  		MIN (CareContDate) AS CareContDate
  FROM	$db_source.MHS201CareContact AS A
          INNER JOIN $db_output.validcodes as vc
-             ON vc.table = 'mhs201carecontact' and vc.field = 'ConsMechanismMH' and vc.Measure = 'AWT' and vc.type = 'include' and A.ConsMechanismMH = vc.ValidValue
+             ON vc.tablename = 'mhs201carecontact' and vc.field = 'ConsMechanismMH' and vc.Measure = 'AWT' and vc.type = 'include' and A.ConsMechanismMH = vc.ValidValue
              and A.UniqMonthId >= vc.FirstMonth and (vc.LastMonth is null or A.UniqMonthId <= vc.LastMonth)
  		LEFT OUTER JOIN global_temp.EIP_MHS101Referral_LATEST AS B
  			ON A.UniqServReqID = B.UniqServReqID
@@ -1122,10 +1119,10 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
    earliest_care_assessment_dates_by_service_request_id_prov. The age groups are all calculated together to
    save effort.
      
-   Sam Hollings - 2018-03-19                                                                                */ 
+                                                                                  */ 
  /* ---------------------------------------------------------------------------------------------------------*/
  
- -- GBT: 2020-12-12 changed rp_startdate to rp_startdate_quarterly as this is the parameter required for this query and explicit naming makes this more obvious.
+ -- 2020-12-12 changed rp_startdate to rp_startdate_quarterly as this is the parameter required for this query and explicit naming makes this more obvious.
  
  TRUNCATE table $db_output.EIP64abc_common;
  

@@ -8,17 +8,17 @@ print("update_metadata", update_metadata)
 # COMMAND ----------
 
 # DBTITLE 1,create metadata table if not exist
-%sql
-CREATE TABLE IF NOT EXISTS $db_output.metadata(
-  
-  product string,
-  module string,
-  notebook_path string,
-  seq int,
-  stage string,
-  restart_root string
-)
-using DELTA;
+ %sql
+ CREATE TABLE IF NOT EXISTS $db_output.metadata(
+   
+   product string,
+   module string,
+   notebook_path string,
+   seq int,
+   stage string,
+   restart_root string
+ )
+ using DELTA;
 
 # COMMAND ----------
 
@@ -39,11 +39,19 @@ if update_metadata == 'true':
             ('RestrictiveInterventions', 'init_schemas', '03_RestrictiveInterventions/3_load_ref_data', 303, 'create_schema', null),
             ('RestrictiveInterventions', 'run_notebooks', '03_RestrictiveInterventions/00_Master/DeleteFromTarget', 304, 'transform', null),
           
-            ('CYP_ED_WaitingTimes', 'init_schemas', '04_CYP_ED_WaitingTimes/create_tables', 401, 'create_schema', null),
-            ('CYP_ED_WaitingTimes', 'run_notebooks', '04_CYP_ED_WaitingTimes/00_Master/DeletePrevRunRecords', 410, 'transform', null),
-            ('CYP_ED_WaitingTimes', 'run_notebooks', '04_CYP_ED_WaitingTimes/01_Prepare/LoadRefData', 411, 'transform', null),
-            ('CYP_ED_WaitingTimes', 'run_notebooks', '04_CYP_ED_WaitingTimes/01_Prepare/PrepViews', 412, 'transform', null),
-            ('CYP_ED_WaitingTimes', 'run_notebooks', '04_CYP_ED_WaitingTimes/02_Aggregate/01_CYP_ED_WT_Aggregate', 413, 'transform', null),
+            ('CYP_ED_WaitingTimes_preFY2324', 'init_schemas', '04_CYP_ED_WaitingTimes/create_tables', 401, 'create_schema', null),
+            ('CYP_ED_WaitingTimes_preFY2324', 'run_notebooks', '04_CYP_ED_WaitingTimes/00_Master/DeletePrevRunRecords', 410, 'transform', null),
+            ('CYP_ED_WaitingTimes_preFY2324', 'run_notebooks', '04_CYP_ED_WaitingTimes/01_Prepare/LoadRefData', 411, 'transform', null),
+            ('CYP_ED_WaitingTimes_preFY2324', 'run_notebooks', '04_CYP_ED_WaitingTimes/01_Prepare/PrepViews', 412, 'transform', null),
+            ('CYP_ED_WaitingTimes_preFY2324', 'run_notebooks', '04_CYP_ED_WaitingTimes/02_Aggregate/01_CYP_ED_WT_Aggregate', 413, 'transform', null),
+          
+            ('CYP_ED_WaitingTimes', 'run_notebooks', '04a_CYP_ED_WaitingTimes/00_Master/DeletePrevRunRecords', 460, 'transform', null),
+            ('CYP_ED_WaitingTimes', 'run_notebooks', '04a_CYP_ED_WaitingTimes/01_Prepare/LoadRefData', 461, 'transform', null),
+            ('CYP_ED_WaitingTimes', 'run_notebooks', '04a_CYP_ED_WaitingTimes/01_Prepare/PrepViews', 462, 'transform', null),
+            ('CYP_ED_WaitingTimes', 'run_notebooks', '04a_CYP_ED_WaitingTimes/02_Aggregate/01_CYP_ED_WT_Aggregate', 463, 'transform', null),
+            ('CYP_ED_WaitingTimes_12m', 'run_notebooks', '04a_CYP_ED_WaitingTimes/01_Prepare/LoadRefData', 464, 'transform', null),
+            ('CYP_ED_WaitingTimes_12m', 'run_notebooks', '04a_CYP_ED_WaitingTimes/01_Prepare/PrepViews', 465, 'transform', null),
+            ('CYP_ED_WaitingTimes_12m', 'run_notebooks', '04a_CYP_ED_WaitingTimes/02_Aggregate/01_CYP_ED_WT_Aggregate', 466, 'transform', null),
             
             ('MHA_Monthly', 'init_schemas', '05_MHA_Monthly/1_create_tables', 501, 'create_schema', null),
             ('MHA_Monthly', 'run_notebooks', '05_MHA_Monthly/00_Master/DeletePrevRunRecords', 502, 'transform', null),
@@ -73,9 +81,35 @@ if update_metadata == 'true':
   )
          
   print("metadata upload complete")
-           
+  
+
+          
+  # RestrictiveInterventions measures temporarily suspended in this codebase (until redevelopment for MHSDS v5.0 data) - October 2021
+#   ('RestrictiveInterventions', 'run_notebooks', '03_RestrictiveInterventions/01_Prepare/DeriveRaw', 305, 'transform', null),
+#             ('RestrictiveInterventions', 'run_notebooks', '03_RestrictiveInterventions/02_Aggregate/1.National/PeopleTotal', 306, 'transform', null),
+#             ('RestrictiveInterventions', 'run_notebooks', '03_RestrictiveInterventions/02_Aggregate/1.National/PeopleBreakdown', 307, 'transform', null),
+#             ('RestrictiveInterventions', 'run_notebooks', '03_RestrictiveInterventions/02_Aggregate/2.Provider/PeopleBreakdown', 308, 'transform', null),
+#             ('RestrictiveInterventions', 'run_notebooks', '03_RestrictiveInterventions/02_Aggregate/3.ProviderType/PeopleBreakdown', 309, 'transform', null),
+#             ('RestrictiveInterventions', 'run_notebooks', '03_RestrictiveInterventions/02_Aggregate/4.Suppress/PeopleSuppress', 310, 'transform', null),
+#             ('RestrictiveInterventions', 'run_notebooks', '03_RestrictiveInterventions/02_Aggregate/1.National/CountTotal', 311, 'transform', null),
+#             ('RestrictiveInterventions', 'run_notebooks', '03_RestrictiveInterventions/02_Aggregate/1.National/CountBreakdown', 312, 'transform', null),
+#             ('RestrictiveInterventions', 'run_notebooks', '03_RestrictiveInterventions/02_Aggregate/2.Provider/CountBreakdown', 313, 'transform', null),
+#             ('RestrictiveInterventions', 'run_notebooks', '03_RestrictiveInterventions/02_Aggregate/3.ProviderType/CountBreakdown', 314, 'transform', null),
+#             ('RestrictiveInterventions', 'run_notebooks', '03_RestrictiveInterventions/02_Aggregate/4.Suppress/CountSuppress', 315, 'transform', null),
+
+# CYP_Outcome_Measures excluded from run - these have never fully matched the analyst produced measures, haven't been updated for v5 and are causing delays in ICB updates
+# these measures are being run by Babbage as part of BBRB and are being integrated as part of menh_bbrb (due to a lack of communication and awareness) 
+# it makes sense to get these measures right in a single place, menh_bbrb is likely to be this place BUT these notebooks still exist here just in case.
+
+#             ('CYP_Outcome_Measures', 'run_notebooks', '06_CYP_Outcome_Measures/00_Master/DeletePrevRunRecords', 602, 'transform', null),
+#             ('CYP_Outcome_Measures', 'run_notebooks', '06_CYP_Outcome_Measures/01_Prepare/LoadRefData', 603, 'transform', null),
+#             ('CYP_Outcome_Measures', 'run_notebooks', '06_CYP_Outcome_Measures/01_Prepare/PrepViews', 604, 'transform', null),
+#             ('CYP_Outcome_Measures', 'run_notebooks', '06_CYP_Outcome_Measures/02_Aggregate/MHS92-94', 605, 'transform', null),
+#             ('CYP_Outcome_Measures', 'run_notebooks', '06_CYP_Outcome_Measures/02_Aggregate/MHS91', 606, 'transform', null),
+#             ('CYP_Outcome_Measures', 'run_notebooks', '06_CYP_Outcome_Measures/02_Aggregate/MHS95', 607, 'transform', null),
+            
 
 # COMMAND ----------
 
-%sql
-select * from $db_output.metadata
+ %sql
+ select * from $db_output.metadata order by seq

@@ -13,7 +13,7 @@
 
 # DBTITLE 1,1. List possible Main monthly metrics
  %sql
- --GBT reinstated this SQL version now that the need to restrict outputs for Provisional & Final has dropped
+ --reinstated this SQL version now that the need to restrict outputs for Provisional & Final has dropped
  --also Final is now Performance anyway!
  
  
@@ -84,7 +84,7 @@
 
 # DBTITLE 1,4. List possible CAP metrics
  %sql
- --GBT reinstated this SQL version now that the need to restrict outputs for Provisional & Final has dropped
+ --reinstated this SQL version now that the need to restrict outputs for Provisional & Final has dropped
  --also Final is now Performance anyway!
  
  CREATE OR REPLACE GLOBAL TEMP VIEW CaP_possible_metrics AS 
@@ -99,7 +99,7 @@
 
 # DBTITLE 1,5. List possible CYP monthly metrics
  %sql
- --GBT reinstated this SQL version now that the need to restrict outputs for Provisional & Final has dropped
+ --reinstated this SQL version now that the need to restrict outputs for Provisional & Final has dropped
  --also Final is now Performance anyway!
  
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW CYP_monthly_possible_metrics AS 
@@ -113,7 +113,7 @@
 
 # DBTITLE 1,7. List  possible ASCOF metrics
  %sql
- --GBT reinstated this SQL version now that the need to restrict outputs for Provisional & Final has dropped
+ --reinstated this SQL version now that the need to restrict outputs for Provisional & Final has dropped
  --also Final is now Performance anyway!
  
  CREATE OR REPLACE GLOBAL TEMP VIEW Ascof_possible_metrics AS 

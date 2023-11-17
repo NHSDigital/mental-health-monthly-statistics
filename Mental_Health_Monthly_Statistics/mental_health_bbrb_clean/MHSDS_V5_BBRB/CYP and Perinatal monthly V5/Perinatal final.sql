@@ -1,4 +1,10 @@
 -- Databricks notebook source
+%md
+### MHSDS V5.0 Changes
+#### Dec 15 2021 - Updated code (Cmd 4)for V5.0 change - ConsMediumUsed' will change to 'ConsMechanismMH', code '06' will change to '09' from Oct 2021 data
+
+-- COMMAND ----------
+
 -- DBTITLE 1,possible Gender field name change - tbc (additonal field added in V5 GenderIDCode)
 /*>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 IDENTIFY REFERRALS TO PERINATAL SERVICES
@@ -18,7 +24,8 @@ SELECT DISTINCT
    COALESCE(map.CCG21CDH, 'UNKNOWN') AS OrgIDSubICBRes,
    COALESCE(map.CCG21NM, 'UNKNOWN') AS SubICB_Name,
    m.LADistrictAuth,
-   COALESCE(m.EthnicCategory, 'UNKNOWN') AS EthnicCategory, 
+   COALESCE(m.EthnicCategory, 'UNKNOWN') AS EthnicCategory, -- updated 4/8/22
+   --m.EthnicityLow,
    CASE 
      WHEN m.NHSDEthnicity = 'A' THEN 'British'
      WHEN m.NHSDEthnicity = 'B' THEN 'Irish'
@@ -38,7 +45,7 @@ SELECT DISTINCT
      WHEN m.NHSDEthnicity = 'S' THEN 'Any Other Ethnic Group'
      WHEN m.NHSDEthnicity = 'Z' THEN 'Not Stated'
      WHEN m.NHSDEthnicity = '99' THEN 'Not Known'
-     ELSE 'UNKNOWN'
+     ELSE 'UNKNOWN' ---updated 4/8/22
      END AS EthnicityLow,
    m.EthnicityHigher,
    COALESCE(map.STP21CDH, 'UNKNOWN') AS ICB_Code,
@@ -58,16 +65,20 @@ INNER JOIN $db_source.MHS001MPI m
   AND CASE
         WHEN '$end_month_id' >= 1477 and m.GenderIDCode in ('2','3') THEN '1' -- Gender Identity Code is female or non-binary (including trans women)
         WHEN '$end_month_id' >= 1477 and m.GenderIDCode= '1' and m.GenderSameAtBirth = 'N' THEN '1' -- Gender identity code is Male but Gender is not same as birth
-        WHEN '$end_month_id' >= 1477 and (m.GenderIDCode is null OR m.GenderIDCode not in ('1','2','3')) and m.Gender = '2' THEN '1' -- Gender identity not recorded so Female Person Stated Gender
-        WHEN '$end_month_id' < 1477 and m.Gender = '2' THEN '1'
-        ELSE 0 
-        END = '1' 
+        WHEN '$end_month_id' >= 1477 and m.GenderIDCode is null and m.Gender = '2' THEN '1' -- Gender identity not recorded so Female Person Stated Gender
+        WHEN '$end_month_id' < 1477 and m.GenderIDCode = '2' THEN '1'
+        WHEN '$end_month_id' < 1477 and (m.GenderIDCode is null or m.GenderIDCode not IN ('1','2','3','4','X','Z')) and m.Gender = '2' THEN '1' 
+        ELSE '0' 
+        END = '1' -- updated added new gender field jan 2022
   AND (m.LADistrictAuth IS NULL OR m.LADistrictAuth LIKE ('E%') or ladistrictauth = '')
-  and m.uniqmonthid between '$end_month_id'-11 AND '$end_month_id' 
+  and m.uniqmonthid between '$end_month_id'-11 AND '$end_month_id' /*** 12/01 - Gender Codes updated in line with advice from NHSE, this code takes Gender identity first then Person stated Gender ***/
+--INNER JOIN $DB_Source.MHS001MPI ME
+  --ON R.uniqsubmissionid = ME.uniqsubmissionid and R.uniqmonthid = ME.uniqmonthid and R.orgidprov = ME.orgidprov AND ME.uniqmonthid = '$month_id'  AND R.Person_ID = ME.Person_ID
+
 LEFT JOIN $db_output.CCG_mapping_2021 map
    on CASE WHEN r.UniqMonthID <= 1467 then m.OrgIDCCGRes
            WHEN r.UniqMonthID  > 1467 then m.OrgIDSubICBLocResidence
-           ELSE 'ERROR' END = map.CCG_unmapped 
+           ELSE 'ERROR' END = map.CCG_unmapped --- added case when statement to account for SubICBs
 
 WHERE  r.UniqMonthID BETWEEN '$end_month_id'-11 AND '$end_month_id'   
     
@@ -101,10 +112,11 @@ FROM Refs r
 INNER JOIN $db_source.MHS201CareContact c 
        ON r.RecordNumber = c.RecordNumber 
        AND r.UniqServReqID = c.UniqServReqID 
-       AND c.AttendOrDNACode IN ('5','6') AND c.ConsMechanismMH IN ('01', '03') and c.UniqMonthid < '1459'   
+       AND c.AttendOrDNACode IN ('5','6') AND c.ConsMechanismMH IN ('01', '03') and c.UniqMonthid < '1459'   -- ConsMediumUsed to "ConsMechanismMH" for data before Oct 2021 and Code '03' to '11' /*** updated to v5 ***/
+----   AND c.AttendOrDNACode IN ('5','6') AND c.ConsMechanismMH IN ('01', '11') -- ConsMediumUsed to "ConsMechanismMH", and Code '03' to '11' /*** updated to v5 ***/
 
 UNION ALL
-
+---After October 2021 (dataset version change)
 SELECT
 r.UniqMonthID,
 r.Person_ID,
@@ -127,7 +139,7 @@ FROM Refs r
 INNER JOIN $db_source.MHS201CareContact c 
        ON r.RecordNumber = c.RecordNumber 
        AND r.UniqServReqID = c.UniqServReqID 
-       AND c.AttendOrDNACode IN ('5','6') AND c.ConsMechanismMH IN ('01', '11') and c.UniqMonthid >= '1459'  
+       AND c.AttendOrDNACode IN ('5','6') AND c.ConsMechanismMH IN ('01', '11') and c.UniqMonthid >= '1459'  -- ConsMediumUsed to "ConsMechanismMH" and Code '03' to '11' for data after Oct 2021 *** updated to v5 ***/
 
 -- COMMAND ----------
 
@@ -160,7 +172,7 @@ WHERE c.UniqMonthID BETWEEN '$end_month_id'-11 AND '$end_month_id'
 CREATE OR REPLACE  TEMPORARY VIEW RD_ORG_DAILY_LATEST AS
 SELECT DISTINCT ORG_CODE, 
                 NAME
-           FROM $ref_database.org_daily
+           FROM $reference_data.org_daily
           WHERE (BUSINESS_END_DATE >= add_months('$rp_enddate', 1) OR ISNULL(BUSINESS_END_DATE))
                 AND BUSINESS_START_DATE <= add_months('$rp_enddate', 1)	
                 AND ORG_TYPE_CODE NOT IN ('MP', 'IR', 'F', 'GO', 'CN');
@@ -176,13 +188,13 @@ r.UniqServReqID,
 r.OrgIDProv,
 o.NAME,
 r.OrgIDSubICBRes,
-o2.NAME as SubICB_Name, 
+o2.NAME as SubICB_Name, --Changed to pull out latest SubICB Name
 r.ICB_Code,
 ICB_Name,
 r.Region_Code,
 Region_Name,
 COALESCE(r.LADistrictAuth,'Unknown') AS LACode,
-r.EthnicCategory,  
+r.EthnicCategory,   -- coalesce these? ---
 r.EthnicityLow,
 r.EthnicityHigher,
 
@@ -300,9 +312,9 @@ SELECT
 '$rp_startdate_12m' AS REPORTING_PERIOD_START_DATE,
 '$rp_enddate' AS REPORTING_PERIOD_END_DATE,
 '$status' AS STATUS,
-'Sub ICB of Residence' AS Breakdown, 
+'Sub ICB of Residence' AS Breakdown, ---Changed to be consistent with other outputs 25/1/22 changed back to CCG of Residence as advised 27/07/22 added space 04/10/22
 h.CCG21CDH AS PRIMARY_LEVEL, 
-COALESCE(m.SubICB_Name, 'UNKNOWN') AS PRIMARY_LEVEL_DESCRIPTION, 
+COALESCE(m.SubICB_Name, 'UNKNOWN') AS PRIMARY_LEVEL_DESCRIPTION, --Changed to pull out latest SubICB Name
 'NONE' AS SECONDARY_LEVEL,
 'NONE' AS SECONDARY_LEVEL_DESCRIPTION,
 'MHS91' AS MEASURE_ID,
@@ -323,7 +335,7 @@ SELECT
 '$rp_startdate_12m' AS REPORTING_PERIOD_START_DATE,
 '$rp_enddate' AS REPORTING_PERIOD_END_DATE,
 '$status' AS STATUS,
-'ICB' AS Breakdown,
+'ICB of Residence' AS Breakdown,
  h.STP21CDH AS PRIMARY_LEVEL, 
  h.STP21NM AS LEVEL_ONE_DESCRIPTION, 
  'NONE' AS SECONDARY_LEVEL,
@@ -364,8 +376,8 @@ GROUP BY h.NHSER21CDH, h.NHSER21NM
 
 -- COMMAND ----------
 
---  %py
---  import json
---  dbutils.notebook.exit(json.dumps({
---    "status": "OK"
---  }))
+%py
+import json
+dbutils.notebook.exit(json.dumps({
+  "status": "OK"
+}))

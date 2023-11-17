@@ -1,7 +1,7 @@
 # Databricks notebook source
- %md
- 
- this notebook is named db_upgrade_3b as it is mostly making changes to tables created in db_upgrade_3
+%md
+
+this notebook is named db_upgrade_3b as it is mostly making changes to tables created in db_upgrade_3
 
 # COMMAND ----------
 

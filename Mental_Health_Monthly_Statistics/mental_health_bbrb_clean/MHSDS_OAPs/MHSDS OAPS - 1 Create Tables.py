@@ -1,4 +1,39 @@
 # Databricks notebook source
+# DBTITLE 1,Create Tables for OAPs Code
+# Create empty tables
+
+# COMMAND ----------
+
+# dbutils.widgets.dropdown("end_month_id", "1481", monthid)
+
+# COMMAND ----------
+
+# startchoices = [str(r[0]) for r in spark.sql("select distinct ReportingPeriodStartDate from $mhsds_database.mhs000header order by ReportingPeriodStartDate").collect()]
+# endchoices = [str(r[0]) for r in spark.sql("select distinct ReportingPeriodEndDate from $mhsds_database.mhs000header order by ReportingPeriodEndDate").collect()]
+# monthid = [str(r[0]) for r in spark.sql("select distinct Uniqmonthid from $mhsds_database.mhs000header order by Uniqmonthid").collect()]
+
+# dbutils.widgets.dropdown("rp_startdate", "2021-05-01", startchoices)
+# dbutils.widgets.dropdown("rp_enddate", "2021-05-31", endchoices)
+# dbutils.widgets.dropdown("rp_qtrstartdate", "2021-03-01", startchoices)
+# dbutils.widgets.dropdown("rp_12mstartdate", "2020-06-01", startchoices)
+# dbutils.widgets.dropdown("month_id", "1454", monthid)
+# dbutils.widgets.text("db_output","sharif_salah_100137")
+# dbutils.widgets.text("db_source","$db_source")
+# dbutils.widgets.text("status","Final")
+
+# COMMAND ----------
+
+# db_output  = dbutils.widgets.get("db_output")
+# db_source = dbutils.widgets.get("db_source")
+# month_id = dbutils.widgets.get("month_id")
+# rp_enddate = dbutils.widgets.get("rp_enddate")
+# rp_startdate = dbutils.widgets.get("rp_startdate")
+# rp_qtrstartdate = dbutils.widgets.get("rp_qtrstartdate")
+# rp_12mstartdate = dbutils.widgets.get("rp_12mstartdate")
+# status  = dbutils.widgets.get("status")
+
+# COMMAND ----------
+
  %sql
  DROP TABLE IF EXISTS $db_output.oaps_output;
  CREATE TABLE IF NOT EXISTS $db_output.oaps_output(
@@ -16,6 +51,41 @@
    metric_description string,
    metric_value string
  ) USING DELTA
+
+# COMMAND ----------
+
+ %sql
+ DROP TABLE IF EXISTS $db_output.oaps_level_values;
+ CREATE TABLE IF NOT EXISTS $db_output.oaps_level_values(
+   BREAKDOWN string,
+   PRIMARY_LEVEL string,
+   PRIMARY_LEVEL_DESCRIPTION string,
+   SECONDARY_LEVEL string,
+   SECONDARY_LEVEL_DESCRIPTION string
+ ) USING DELTA
+
+# COMMAND ----------
+
+ %sql
+ DROP TABLE IF EXISTS $db_output.oaps_csv_lookup;
+ CREATE TABLE IF NOT EXISTS $db_output.oaps_csv_lookup(
+   REPORTING_PERIOD_START string,
+   REPORTING_PERIOD_END string,
+   STATUS string,
+   BREAKDOWN string,
+   PRIMARY_LEVEL string,
+   PRIMARY_LEVEL_DESCRIPTION string,
+   SECONDARY_LEVEL string,
+   SECONDARY_LEVEL_DESCRIPTION string,
+   METRIC string,
+   METRIC_DESCRIPTION string
+ ) USING DELTA
+
+# COMMAND ----------
+
+# %sql
+# SELECT * FROM
+# $db_output.oaps_csv_lookup
 
 # COMMAND ----------
 
@@ -428,3 +498,6 @@
    NAME string
    )
  USING DELTA
+
+# COMMAND ----------
+

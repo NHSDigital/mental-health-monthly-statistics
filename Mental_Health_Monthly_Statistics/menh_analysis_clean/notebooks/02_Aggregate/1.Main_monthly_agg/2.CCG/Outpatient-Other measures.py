@@ -664,7 +664,7 @@
             
        FROM global_temp.MHS23abc_prep D
         INNER JOIN $db_output.validcodes as vc
-             ON vc.table = 'MHS102ServiceTypeReferredTo' and vc.field = 'ServTeamTypeRefToMH' and vc.Measure = 'crisis_resolution' and vc.type = 'include' and D.ServTeamTypeRefToMH = vc.ValidValue  
+             ON vc.tablename = 'MHS102ServiceTypeReferredTo' and vc.field = 'ServTeamTypeRefToMH' and vc.Measure = 'crisis_resolution' and vc.type = 'include' and D.ServTeamTypeRefToMH = vc.ValidValue  
               and '$month_id' >= vc.FirstMonth and (vc.LastMonth is null or '$month_id' <= vc.LastMonth)  
  --      WHERE ServTeamTypeRefToMH IN ('A02', 'A03') 
    GROUP BY IC_Rec_CCG, NAME;
@@ -694,7 +694,7 @@
 
 # DBTITLE 1,MHS23d CCG
   %sql
-   INSERT INTO $db_output.Main_monthly_unformatted_exp
+   INSERT INTO $db_output.Main_monthly_unformatted
    
       SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -705,7 +705,7 @@
              ,'NONE' AS SECONDARY_LEVEL
              ,'NONE' AS SECONDARY_LEVEL_DESCRIPTION
              ,'MHS23d' AS MEASURE_ID
-             ,try_cast (COALESCE (cast(COUNT (DISTINCT UniqServReqID) as INT), 0) AS STRING)	AS METRIC_VALUE
+             ,CAST(COALESCE (cast(COUNT (DISTINCT UniqServReqID) as INT), 0) AS STRING)	AS METRIC_VALUE
              
              ,'$db_source' AS SOURCE_DB
               
@@ -717,7 +717,7 @@
 
 # DBTITLE 1,MHS23d CCG Age Group
  %sql
-  INSERT INTO $db_output.Main_monthly_unformatted_exp
+  INSERT INTO $db_output.Main_monthly_unformatted
    
       SELECT '$rp_startdate' AS REPORTING_PERIOD_START
               ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -726,13 +726,13 @@
              ,IC_Rec_CCG AS PRIMARY_LEVEL
              ,NAME AS PRIMARY_LEVEL_DESCRIPTION
              ,AgeGroup AS SECONDARY_LEVEL
-            ,AgeGroup AS SECONDARY_LEVEL_DESCRIPTION
+            ,AgeGroupName AS SECONDARY_LEVEL_DESCRIPTION
             ,'MHS23d' AS MEASURE_ID
-            ,try_CAST (COALESCE (cast(COUNT (DISTINCT UniqServReqID) as INT), 0) AS STRING)	AS METRIC_VALUE
+            ,CAST(COALESCE (cast(COUNT (DISTINCT UniqServReqID) as INT), 0) AS STRING)	AS METRIC_VALUE
              ,'$db_source' AS SOURCE_DB
              
        FROM global_temp.MHS23d_prep
-  GROUP BY IC_Rec_CCG, NAME, AgeGroup;
+  GROUP BY IC_Rec_CCG, NAME, AgeGroup,AgeGroupName;
 
 # COMMAND ----------
 
@@ -786,6 +786,33 @@
 
 # COMMAND ----------
 
+ %sql
+ --/**MHS29a - CONTACTS WITH PERINATAL MENTAL HEALTH TEAM IN REPORTING PERIOD**/
+ 
+ INSERT INTO $db_output.Main_monthly_unformatted
+ 
+     SELECT '$rp_startdate' AS REPORTING_PERIOD_START
+             ,'$rp_enddate' AS REPORTING_PERIOD_END
+ 			,'$status' AS STATUS
+ 			,'CCG - GP Practice or Residence; Attendance' AS BREAKDOWN
+ 			,IC_Rec_CCG AS PRIMARY_LEVEL
+ 			,NAME AS PRIMARY_LEVEL_DESCRIPTION
+ 			,Attend_Code AS SECONDARY_LEVEL
+ 			,Attend_Name AS SECONDARY_LEVEL_DESCRIPTION
+ 			,'MHS29a' AS METRIC
+ 			,CAST (COALESCE (cast(COUNT (DISTINCT UniqCareContID) as INT), 0) AS STRING)	AS METRIC_VALUE
+             ,'$db_source' AS SOURCE_DB
+             
+ FROM		global_temp.MHS29abc_prep -- prep table in main monthly prep folder
+ WHERE		ServTeamTypeRefToMH = 'C02'
+         --    AND IC_Use_Submission_Flag = 'Y' -- needed to be correct in hue
+ GROUP BY	IC_Rec_CCG
+             ,NAME
+             ,Attend_Code
+             ,Attend_Name
+
+# COMMAND ----------
+
 # DBTITLE 1,MHS29b CCG
  %sql
  --/**MHS29b - CONTACTS WITH CRISIS RESOLUTION SERVICE OR HOME TREATMENT TEAM IN REPORTING PERIOD, CCG**/
@@ -806,7 +833,7 @@
              
  FROM		global_temp.MHS29abc_prep D -- prep table in main monthly prep folder
         INNER JOIN $db_output.validcodes as vc
-             ON vc.table = 'MHS102ServiceTypeReferredTo' and vc.field = 'ServTeamTypeRefToMH' and vc.Measure = 'crisis_resolution' and vc.type = 'include' and D.ServTeamTypeRefToMH = vc.ValidValue  
+             ON vc.tablename = 'MHS102ServiceTypeReferredTo' and vc.field = 'ServTeamTypeRefToMH' and vc.Measure = 'crisis_resolution' and vc.type = 'include' and D.ServTeamTypeRefToMH = vc.ValidValue  
               and '$month_id' >= vc.FirstMonth and (vc.LastMonth is null or '$month_id' <= vc.LastMonth)
  -- WHERE		ServTeamTypeRefToMH IN ('A02', 'A03')
         
@@ -844,7 +871,7 @@
  %sql
  --/**MHS29d - CONTACTS IN REPORTING PERIOD, CCG**/
   
- INSERT INTO $db_output.Main_monthly_unformatted_exp
+ INSERT INTO $db_output.Main_monthly_unformatted
   
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -855,7 +882,7 @@
              ,'NONE' AS SECONDARY_LEVEL
              ,'NONE' AS SECONDARY_LEVEL_DESCRIPTION
              ,'MHS29d' AS MEASURE_ID
-             ,try_CAST (COALESCE (cast(COUNT (DISTINCT UniqCareContID) as INT), 0) AS STRING)    AS METRIC_VALUE
+             ,CAST(COALESCE (cast(COUNT (DISTINCT UniqCareContID) as INT), 0) AS STRING)    AS METRIC_VALUE
              ,'$db_source' AS SOURCE_DB
              
  FROM        global_temp.MHS29d_prep 
@@ -867,7 +894,7 @@
 
  %sql
  --/**MHS29d - CONTACTS IN REPORTING PERIOD, CCG, Age Group**/
- INSERT INTO $db_output.Main_monthly_unformatted_exp
+ INSERT INTO $db_output.Main_monthly_unformatted
   
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -878,7 +905,7 @@
              ,AgeGroup AS SECONDARY_LEVEL
              ,AgeGroupName AS SECONDARY_LEVEL_DESCRIPTION
              ,'MHS29d' AS MEASURE_ID
-             ,try_CAST (COALESCE (cast(COUNT (DISTINCT UniqCareContID) as INT), 0) AS STRING)    AS METRIC_VALUE
+             ,CAST(COALESCE (cast(COUNT (DISTINCT UniqCareContID) as INT), 0) AS STRING)    AS METRIC_VALUE
              ,'$db_source' AS SOURCE_DB
              
  FROM      global_temp.MHS29d_prep 
@@ -892,7 +919,33 @@
  %sql
  --/**MHS29f - CONTACTS IN REPORTING PERIOD, CCG: Attendance**/
   
- INSERT INTO $db_output.Main_monthly_unformatted_exp
+ INSERT INTO $db_output.Main_monthly_unformatted
+  
+     SELECT '$rp_startdate' AS REPORTING_PERIOD_START
+             ,'$rp_enddate' AS REPORTING_PERIOD_END
+             ,'$status' AS STATUS
+             ,'CCG - GP Practice or Residence; Attendance' AS BREAKDOWN 
+             ,IC_REC_CCG AS PRIMARY_LEVEL
+             ,NAME AS PRIMARY_LEVEL_DESCRIPTION
+             ,Attend_Code AS SECONDARY_LEVEL
+             ,Attend_Name AS SECONDARY_LEVEL_DESCRIPTION
+             ,'MHS29d' AS MEASURE_ID
+             ,CAST(COALESCE (cast(COUNT (DISTINCT UniqCareContID) as INT), 0) AS STRING)    AS METRIC_VALUE
+             ,'$db_source' AS SOURCE_DB
+             
+ FROM        global_temp.MHS29d_prep -- prep table in main monthly prep folder
+ GROUP BY    
+             IC_REC_CCG 
+             ,NAME
+             ,Attend_Code
+             ,Attend_Name
+
+# COMMAND ----------
+
+ %sql
+ --/**MHS29f - CONTACTS IN REPORTING PERIOD, CCG: Attendance**/
+  
+ INSERT INTO $db_output.Main_monthly_unformatted
   
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -903,7 +956,7 @@
              ,Attend_Code AS SECONDARY_LEVEL
              ,Attend_Name AS SECONDARY_LEVEL_DESCRIPTION
              ,'MHS29f' AS MEASURE_ID
-             ,try_CAST (COALESCE (cast(COUNT (DISTINCT UniqCareContID) as INT), 0) AS STRING)    AS METRIC_VALUE
+             ,CAST(COALESCE (cast(COUNT (DISTINCT UniqCareContID) as INT), 0) AS STRING)    AS METRIC_VALUE
              ,'$db_source' AS SOURCE_DB
              
  FROM        global_temp.MHS29f_prep -- prep table in main monthly prep folder
@@ -966,6 +1019,33 @@
 
 # COMMAND ----------
 
+ %sql
+ --/**MHS30a - ATTENDED CONTACTS WITH PERINATAL MENTAL HEALTH TEAM IN REPORTING PERIOD, CCG**/
+ 
+ INSERT INTO $db_output.Main_monthly_unformatted
+ 
+     SELECT '$rp_startdate' AS REPORTING_PERIOD_START
+             ,'$rp_enddate' AS REPORTING_PERIOD_END
+ 			,'$status' AS STATUS
+ 			,'CCG - GP Practice or Residence; ConsMechanismMH' AS BREAKDOWN
+ 			,IC_Rec_CCG AS PRIMARY_LEVEL
+ 			,NAME AS PRIMARY_LEVEL_DESCRIPTION
+ 			,ConsMedUsed AS SECONDARY_LEVEL
+ 			,CMU AS SECONDARY_LEVEL_DESCRIPTION
+ 			,'MHS30a' AS METRIC
+ 			,CAST (COALESCE (cast(COUNT (DISTINCT UniqCareContID) as INT), 0) AS STRING)	AS METRIC_VALUE
+             ,'$db_source' AS SOURCE_DB
+             
+ FROM		global_temp.MHS29abc_prep -- prep table in main monthly prep folder
+ WHERE		ServTeamTypeRefToMH = 'C02'
+ 			AND AttendOrDNACode IN ('5', '6')
+ GROUP BY	IC_Rec_CCG
+             ,NAME
+             ,ConsMedUsed
+             ,CMU
+
+# COMMAND ----------
+
 # DBTITLE 1,MHS30b CCG
  %sql
  --/**MHS30b - ATTENDED CONTACTS WITH CRISIS RESOLUTION SERVICE OR HOME TREATMENT TEAM IN REPORTING PERIOD, CCG**/
@@ -986,7 +1066,7 @@
              
  FROM		global_temp.MHS29abc_prep D -- prep table in main monthly prep folder
  INNER JOIN $db_output.validcodes as vc
-             ON vc.table = 'MHS102ServiceTypeReferredTo' and vc.field = 'ServTeamTypeRefToMH' and vc.Measure = 'crisis_resolution' and vc.type = 'include' and D.ServTeamTypeRefToMH = vc.ValidValue  
+             ON vc.tablename = 'MHS102ServiceTypeReferredTo' and vc.field = 'ServTeamTypeRefToMH' and vc.Measure = 'crisis_resolution' and vc.type = 'include' and D.ServTeamTypeRefToMH = vc.ValidValue  
               and '$month_id' >= vc.FirstMonth and (vc.LastMonth is null or '$month_id' <= vc.LastMonth)
  WHERE		AttendOrDNACode IN ('5', '6')
              
@@ -1025,7 +1105,7 @@
  %sql
  --/**MHS30f - CONTACTS IN REPORTING PERIOD, CCG**/
   
- INSERT INTO $db_output.Main_monthly_unformatted_exp
+ INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
              ,'$status' AS STATUS
@@ -1048,7 +1128,7 @@
  %sql
  --/**MHS30f - CONTACTS IN REPORTING PERIOD, CCG, Age Group**/
   
- INSERT INTO $db_output.Main_monthly_unformatted_exp
+ INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
              ,'$status' AS STATUS
@@ -1073,7 +1153,7 @@
  %sql
  --/**MHS30f - CONTACTS IN REPORTING PERIOD, CCG, Consultant Mechanism**/
   
- INSERT INTO $db_output.Main_monthly_unformatted_exp 
+ INSERT INTO $db_output.Main_monthly_unformatted 
      SELECT 
              '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -1097,7 +1177,7 @@
 
 # DBTITLE 1,MHS30h Sub ICB; ConsMechanismMH
  %sql
- INSERT INTO $db_output.Main_monthly_unformatted_exp
+ INSERT INTO $db_output.Main_monthly_unformatted
   
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -1145,7 +1225,7 @@
 
 # DBTITLE 1,MHS32c Sub ICB
  %sql
- INSERT INTO $db_output.Main_monthly_unformatted_exp
+ INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
              ,'$status' AS STATUS
@@ -1165,7 +1245,7 @@
 
 # DBTITLE 1,MHS32c Sub ICB; Age Group
  %sql
- INSERT INTO $db_output.Main_monthly_unformatted_exp
+ INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
              ,'$status' AS STATUS
@@ -1185,7 +1265,7 @@
 
 # DBTITLE 1,MHS32d Sub ICB
  %sql
- INSERT INTO $db_output.Main_monthly_unformatted_exp
+ INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
              ,'$status' AS STATUS
@@ -1262,7 +1342,7 @@
 
 # DBTITLE 1,MHS57b Sub ICB
  %sql
- INSERT INTO $db_output.Main_monthly_unformatted_exp
+ INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
              ,'$status' AS STATUS
@@ -1282,7 +1362,7 @@
 
 # DBTITLE 1,MHS57b Sub ICB; Age Group
  %sql
- INSERT INTO $db_output.Main_monthly_unformatted_exp
+ INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
              ,'$status' AS STATUS
@@ -1290,20 +1370,20 @@
              ,IC_REC_CCG AS PRIMARY_LEVEL
              ,NAME AS PRIMARY_LEVEL_DESCRIPTION
              ,AgeGroup AS SECONDARY_LEVEL 
-             ,AgeGroup AS SECONDARY_LEVEL_DESCRIPTION 
+             ,AgeGroupName AS SECONDARY_LEVEL_DESCRIPTION 
              ,'MHS57b' AS MEASURE_ID 
              ,CAST(COALESCE(COUNT(DISTINCT(Person_ID)),0) AS STRING) AS MEASURE_VALUE
              ,'$db_source' AS SOURCE_DB            
  FROM        $db_output.tmp_mhmab_mhs57b_prep
  GROUP BY     IC_REC_CCG
              ,NAME
-             ,AgeGroup;
+             ,AgeGroup,AgeGroupName;
 
 # COMMAND ----------
 
 # DBTITLE 1,MHS57c Sub ICB
  %sql
- INSERT INTO $db_output.Main_monthly_unformatted_exp
+ INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
              ,'$status' AS STATUS
@@ -1341,298 +1421,3 @@
  FROM		global_temp.MHS58_prep
  GROUP BY    IC_Rec_CCG
              ,NAME
-
-# COMMAND ----------
-
-
-
-# COMMAND ----------
-
-# DBTITLE 1,CCR70
- %sql
- INSERT INTO $db_output.Main_monthly_unformatted
-     SELECT '$rp_startdate' AS REPORTING_PERIOD_START
-             ,'$rp_enddate' AS REPORTING_PERIOD_END
- 	       ,'$status' AS STATUS
- 	       ,'CCG - GP Practice or Residence' AS BREAKDOWN
- 	       ,IC_Rec_CCG AS PRIMARY_LEVEL
- 	       ,NAME AS PRIMARY_LEVEL_DESCRIPTION
- 	       ,'NONE' AS SECONDARY_LEVEL
- 	       ,'NONE' AS SECONDARY_LEVEL_DESCRIPTION
- 		   ,'CCR70' AS METRIC
- 		   ,COUNT(DISTINCT UniqServReqID) as METRIC_VALUE
-             ,'$db_source' AS SOURCE_DB
-             
-       FROM  global_temp.CCR7071_prep prep
-        
-        INNER JOIN $db_output.validcodes as vc
-         ON vc.table = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'CCR70_72' and vc.type = 'include' and prep.ClinRespPriorityType = vc.ValidValue 
-         and '$month_id' >= vc.FirstMonth and (vc.LastMonth is null or '$month_id' <= vc.LastMonth)
- 
- --        WHERE ClinRespPriorityType = '1'
-   GROUP BY IC_Rec_CCG, NAME;
-
-# COMMAND ----------
-
-# DBTITLE 1,CCR70a
- %sql
- INSERT INTO $db_output.Main_monthly_unformatted
-     SELECT '$rp_startdate' AS REPORTING_PERIOD_START
-            ,'$rp_enddate' AS REPORTING_PERIOD_END
- 	       ,'$status' AS STATUS
- 	       ,'CCG - GP Practice or Residence' AS BREAKDOWN
- 	       ,IC_Rec_CCG AS PRIMARY_LEVEL
- 	       ,NAME AS PRIMARY_LEVEL_DESCRIPTION
- 	       ,'NONE' AS SECONDARY_LEVEL
- 	       ,'NONE' AS SECONDARY_LEVEL_DESCRIPTION
- 		   ,'CCR70a' AS METRIC
-            ,COUNT(DISTINCT UniqServReqID) as METRIC_VALUE
-            ,'$db_source' AS SOURCE_DB
-            
-        FROM global_temp.CCR7071_prep prep
-        
-        INNER JOIN $db_output.validcodes as vc
-         ON vc.table = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'CCR70_72' and vc.type = 'include' and prep.ClinRespPriorityType = vc.ValidValue 
-         and '$month_id' >= vc.FirstMonth and (vc.LastMonth is null or '$month_id' <= vc.LastMonth)
- 
- --        WHERE ClinRespPriorityType = '1'
-             WHERE AGE_GROUP = '18 and over'
-    GROUP BY IC_Rec_CCG, NAME;
-
-# COMMAND ----------
-
-# DBTITLE 1,CCR70b
- %sql
- INSERT INTO $db_output.Main_monthly_unformatted
-     SELECT '$rp_startdate' AS REPORTING_PERIOD_START
-            ,'$rp_enddate' AS REPORTING_PERIOD_END
- 	       ,'$status' AS STATUS
- 	       ,'CCG - GP Practice or Residence' AS BREAKDOWN
- 	       ,IC_Rec_CCG AS PRIMARY_LEVEL
- 	       ,NAME AS PRIMARY_LEVEL_DESCRIPTION
- 	       ,'NONE' AS SECONDARY_LEVEL
- 	       ,'NONE' AS SECONDARY_LEVEL_DESCRIPTION
- 		   ,'CCR70b' AS METRIC
-            ,COUNT(DISTINCT UniqServReqID) as METRIC_VALUE
-            ,'$db_source' AS SOURCE_DB
-            
-        FROM global_temp.CCR7071_prep prep
-        
-        INNER JOIN $db_output.validcodes as vc
-         ON vc.table = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'CCR70_72' and vc.type = 'include' and prep.ClinRespPriorityType = vc.ValidValue 
-         and '$month_id' >= vc.FirstMonth and (vc.LastMonth is null or '$month_id' <= vc.LastMonth)
- 
- --         WHERE ClinRespPriorityType = '1'
-             WHERE AGE_GROUP = '0-17'
-    GROUP BY IC_Rec_CCG, NAME;  
-           
-
-# COMMAND ----------
-
-# DBTITLE 1,CCR71
- %sql
- INSERT INTO $db_output.Main_monthly_unformatted
-     SELECT '$rp_startdate' AS REPORTING_PERIOD_START
-            ,'$rp_enddate' AS REPORTING_PERIOD_END
- 	       ,'$status' AS STATUS
- 	       ,'CCG - GP Practice or Residence' AS BREAKDOWN
- 	       ,IC_Rec_CCG AS PRIMARY_LEVEL
- 	       ,NAME AS PRIMARY_LEVEL_DESCRIPTION
- 	       ,'NONE' AS SECONDARY_LEVEL
- 	       ,'NONE' AS SECONDARY_LEVEL_DESCRIPTION
- 		   ,'CCR71' AS METRIC
-            ,COUNT(DISTINCT UniqServReqID) as METRIC_VALUE
-            ,'$db_source' AS SOURCE_DB
-            
-        FROM global_temp.CCR7071_prep
-       WHERE ClinRespPriorityType = '2'
-    GROUP BY IC_Rec_CCG, NAME;
-
-# COMMAND ----------
-
-# DBTITLE 1,CCR71a
- %sql
- INSERT INTO $db_output.Main_monthly_unformatted
-     SELECT '$rp_startdate' AS REPORTING_PERIOD_START
-            ,'$rp_enddate' AS REPORTING_PERIOD_END
- 	       ,'$status' AS STATUS
- 	       ,'CCG - GP Practice or Residence' AS BREAKDOWN
- 	       ,IC_Rec_CCG AS PRIMARY_LEVEL
- 	       ,NAME AS PRIMARY_LEVEL_DESCRIPTION
- 	       ,'NONE' AS SECONDARY_LEVEL
- 	       ,'NONE' AS SECONDARY_LEVEL_DESCRIPTION
- 		   ,'CCR71a' AS METRIC
-            ,COUNT(DISTINCT UniqServReqID) as METRIC_VALUE
-            ,'$db_source' AS SOURCE_DB
-            
-        FROM global_temp.CCR7071_prep
-       WHERE ClinRespPriorityType = '2'
-             AND AGE_GROUP = '18 and over'
-    GROUP BY IC_Rec_CCG, NAME;
-
-# COMMAND ----------
-
-# DBTITLE 1,CCR71b
- %sql
- INSERT INTO $db_output.Main_monthly_unformatted
-     SELECT '$rp_startdate' AS REPORTING_PERIOD_START
-            ,'$rp_enddate' AS REPORTING_PERIOD_END
- 	       ,'$status' AS STATUS
- 	       ,'CCG - GP Practice or Residence' AS BREAKDOWN
- 	       ,IC_Rec_CCG AS PRIMARY_LEVEL
- 	       ,NAME AS PRIMARY_LEVEL_DESCRIPTION
- 	       ,'NONE' AS SECONDARY_LEVEL
- 	       ,'NONE' AS SECONDARY_LEVEL_DESCRIPTION
- 		   ,'CCR71b' AS METRIC
-            ,COUNT(DISTINCT UniqServReqID) as METRIC_VALUE
-            ,'$db_source' AS SOURCE_DB
-            
-        FROM global_temp.CCR7071_prep
-       WHERE ClinRespPriorityType = '2'
-             AND AGE_GROUP = '0-17'
-    GROUP BY IC_Rec_CCG, NAME;      
-
-# COMMAND ----------
-
-# DBTITLE 1,CCR72
- %sql
- INSERT INTO $db_output.Main_monthly_unformatted
-     SELECT '$rp_startdate' AS REPORTING_PERIOD_START
-            ,'$rp_enddate' AS REPORTING_PERIOD_END
- 	       ,'$status' AS STATUS
- 	       ,'CCG - GP Practice or Residence' AS BREAKDOWN
- 	       ,IC_Rec_CCG AS PRIMARY_LEVEL
- 	       ,NAME AS PRIMARY_LEVEL_DESCRIPTION
- 	       ,'NONE' AS SECONDARY_LEVEL
- 	       ,'NONE' AS SECONDARY_LEVEL_DESCRIPTION
- 		   ,'CCR72' AS METRIC
-            ,COUNT(DISTINCT UniqServReqID) as METRIC_VALUE
-            ,'$db_source' AS SOURCE_DB
-            
-        FROM global_temp.CCR7273_prep prep
-        
-        INNER JOIN $db_output.validcodes as vc
-         ON vc.table = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'CCR70_72' and vc.type = 'include' and prep.ClinRespPriorityType = vc.ValidValue 
-         and '$month_id' >= vc.FirstMonth and (vc.LastMonth is null or '$month_id' <= vc.LastMonth)
- 
- --           WHERE ClinRespPriorityType = '1'
-    GROUP BY IC_Rec_CCG, NAME;    
-
-# COMMAND ----------
-
-# DBTITLE 1,CCR72a
- %sql
- INSERT INTO $db_output.Main_monthly_unformatted
-     SELECT '$rp_startdate' AS REPORTING_PERIOD_START
-            ,'$rp_enddate' AS REPORTING_PERIOD_END
- 	       ,'$status' AS STATUS
- 	       ,'CCG - GP Practice or Residence' AS BREAKDOWN
- 	       ,IC_Rec_CCG AS PRIMARY_LEVEL
- 	       ,NAME AS PRIMARY_LEVEL_DESCRIPTION
- 	       ,'NONE' AS SECONDARY_LEVEL
- 	       ,'NONE' AS SECONDARY_LEVEL_DESCRIPTION
- 		   ,'CCR72a' AS METRIC
-            ,COUNT(DISTINCT UniqServReqID) as METRIC_VALUE
-            ,'$db_source' AS SOURCE_DB
-            
-       FROM global_temp.CCR7273_prep prep
-        
-        INNER JOIN $db_output.validcodes as vc
-         ON vc.table = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'CCR70_72' and vc.type = 'include' and prep.ClinRespPriorityType = vc.ValidValue 
-         and '$month_id' >= vc.FirstMonth and (vc.LastMonth is null or '$month_id' <= vc.LastMonth)
- 
- --           WHERE ClinRespPriorityType = '1'
-             WHERE AGE_GROUP = '18 and over'
-    GROUP BY IC_Rec_CCG, NAME;
-
-# COMMAND ----------
-
-# DBTITLE 1,CCR72b
- %sql
- INSERT INTO $db_output.Main_monthly_unformatted
-     SELECT '$rp_startdate' AS REPORTING_PERIOD_START
-            ,'$rp_enddate' AS REPORTING_PERIOD_END
- 	       ,'$status' AS STATUS
- 	       ,'CCG - GP Practice or Residence' AS BREAKDOWN
- 	       ,IC_Rec_CCG AS PRIMARY_LEVEL
- 	       ,NAME AS PRIMARY_LEVEL_DESCRIPTION
- 	       ,'NONE' AS SECONDARY_LEVEL
- 	       ,'NONE' AS SECONDARY_LEVEL_DESCRIPTION
- 		   ,'CCR72b' AS METRIC
-            ,COUNT(DISTINCT UniqServReqID) as METRIC_VALUE
-            ,'$db_source' AS SOURCE_DB
-            
-       FROM global_temp.CCR7273_prep prep
-        
-        INNER JOIN $db_output.validcodes as vc
-         ON vc.table = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'CCR70_72' and vc.type = 'include' and prep.ClinRespPriorityType = vc.ValidValue 
-         and '$month_id' >= vc.FirstMonth and (vc.LastMonth is null or '$month_id' <= vc.LastMonth)
- 
- --       WHERE ClinRespPriorityType = '1'
-             WHERE AGE_GROUP = '0-17'
-    GROUP BY IC_Rec_CCG, NAME;
-
-# COMMAND ----------
-
-# DBTITLE 1,CCR73
- %sql
- INSERT INTO $db_output.Main_monthly_unformatted
-     SELECT '$rp_startdate' AS REPORTING_PERIOD_START
-            ,'$rp_enddate' AS REPORTING_PERIOD_END
- 	       ,'$status' AS STATUS
- 	       ,'CCG - GP Practice or Residence' AS BREAKDOWN
- 	       ,IC_Rec_CCG AS PRIMARY_LEVEL
- 	       ,NAME AS PRIMARY_LEVEL_DESCRIPTION
- 	       ,'NONE' AS SECONDARY_LEVEL
- 	       ,'NONE' AS SECONDARY_LEVEL_DESCRIPTION
- 		   ,'CCR73' AS METRIC
-            ,COUNT(DISTINCT UniqServReqID) as METRIC_VALUE
-            ,'$db_source' AS SOURCE_DB
-            
-        FROM global_temp.CCR7273_prep
-       WHERE ClinRespPriorityType = '2'
-    GROUP BY IC_Rec_CCG, NAME;    
-
-# COMMAND ----------
-
-# DBTITLE 1,CCR73a
- %sql
- INSERT INTO $db_output.Main_monthly_unformatted
-     SELECT '$rp_startdate' AS REPORTING_PERIOD_START
-            ,'$rp_enddate' AS REPORTING_PERIOD_END
- 	       ,'$status' AS STATUS
- 	       ,'CCG - GP Practice or Residence' AS BREAKDOWN
- 	       ,IC_Rec_CCG AS PRIMARY_LEVEL
- 	       ,NAME AS PRIMARY_LEVEL_DESCRIPTION
- 	       ,'NONE' AS SECONDARY_LEVEL
- 	       ,'NONE' AS SECONDARY_LEVEL_DESCRIPTION
- 		   ,'CCR73a' AS METRIC
-            ,COUNT(DISTINCT UniqServReqID) as METRIC_VALUE
-            ,'$db_source' AS SOURCE_DB
-            
-        FROM global_temp.CCR7273_prep
-       WHERE ClinRespPriorityType = '2'
-             AND AGE_GROUP = '18 and over'
-    GROUP BY IC_Rec_CCG, NAME;    
-
-# COMMAND ----------
-
-# DBTITLE 1,CCR73b
- %sql
- INSERT INTO $db_output.Main_monthly_unformatted
-     SELECT '$rp_startdate' AS REPORTING_PERIOD_START
-            ,'$rp_enddate' AS REPORTING_PERIOD_END
- 	       ,'$status' AS STATUS
- 	       ,'CCG - GP Practice or Residence' AS BREAKDOWN
- 	       ,IC_Rec_CCG AS PRIMARY_LEVEL
- 	       ,NAME AS PRIMARY_LEVEL_DESCRIPTION
- 	       ,'NONE' AS SECONDARY_LEVEL
- 	       ,'NONE' AS SECONDARY_LEVEL_DESCRIPTION
- 		   ,'CCR73b' AS METRIC
-            ,COUNT(DISTINCT UniqServReqID) as METRIC_VALUE
-            ,'$db_source' AS SOURCE_DB
-            
-        FROM global_temp.CCR7273_prep
-       WHERE ClinRespPriorityType = '2'
-             AND AGE_GROUP = '0-17'
-    GROUP BY IC_Rec_CCG, NAME;     

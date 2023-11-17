@@ -4,27 +4,27 @@ print("72 hours create tables")
 db_output = dbutils.widgets.get("db_output")
 print(db_output)
 assert db_output
-$db_source = dbutils.widgets.get("$db_source")
-print($db_source)
-assert $db_source
+$mhsds_database = dbutils.widgets.get("$mhsds_database")
+print($mhsds_database)
+assert $mhsds_database
 
 
 # COMMAND ----------
 
 # DBTITLE 1,72hours_unrounded_stg
-%sql
-CREATE TABLE IF NOT EXISTS $db_output.72hours_unrounded_stg(
-  UniqMonthID int,
-  Status string,
-  ResponsibleProv string,
-  CCG string,
-  EligibleDischFlag int,
-  ElgibleDischFlag_Modified int,
-  FollowedUp3Days int,
-  SOURCE_DB string 
-)
-USING DELTA
-PARTITIONED BY (UniqMonthID)
+ %sql
+ CREATE TABLE IF NOT EXISTS $db_output.72hours_unrounded_stg(
+   UniqMonthID int,
+   Status string,
+   ResponsibleProv string,
+   CCG string,
+   EligibleDischFlag int,
+   ElgibleDischFlag_Modified int,
+   FollowedUp3Days int,
+   SOURCE_DB string 
+ )
+ USING DELTA
+ PARTITIONED BY (UniqMonthID)
 
 # COMMAND ----------
 
@@ -64,6 +64,6 @@ for table, column in tableColumn.items():
 # DBTITLE 1,Set SOURCE_DB to source database
 # update only needs doing once
 for table, column in tableColumn.items():
-  action = """Update {db_output}.{table} SET {column} = '{$db_source}' where {column} is null""".format(db_output=db_output,table=table,column=column,$db_source=$db_source)
+  action = """Update {db_output}.{table} SET {column} = '{$mhsds_database}' where {column} is null""".format(db_output=db_output,table=table,column=column,$mhsds_database=$mhsds_database)
   print(action)
   spark.sql(action)

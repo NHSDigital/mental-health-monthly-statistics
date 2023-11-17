@@ -111,7 +111,7 @@ INSERT INTO $db_output.ascof_metric_values VALUES
 
 -- COMMAND ----------
 
--- DBTITLE 1,Optimize and vacuum tables
+-- DBTITLE 1,Optimize and vaccum tables
 %python
 
 import os

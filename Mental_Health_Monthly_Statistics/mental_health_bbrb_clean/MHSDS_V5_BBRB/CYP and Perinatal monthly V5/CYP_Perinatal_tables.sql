@@ -1,10 +1,14 @@
 -- Databricks notebook source
---  %py
---  spark.conf.set("spark.sql.legacy.allowCreatingManagedTableUsingNonemptyLocation","true")
+%py
+spark.conf.set("spark.sql.legacy.allowCreatingManagedTableUsingNonemptyLocation","true")
 
 -- COMMAND ----------
 
-DROP TABLE IF EXISTS $db_output.CYP_OUTCOMES ;
+--DROP TABLE IF EXISTS $db_output.ASS_FINAL
+
+-- COMMAND ----------
+
+DROP TABLE IF EXISTS $db_output.CYP_OUTCOMES ; --- gvf
 CREATE TABLE IF NOT EXISTS $db_output.CYP_OUTCOMES
 
 (UniqMonthID bigint,
@@ -96,9 +100,9 @@ DROP TABLE IF EXISTS $db_output.ASSESSMENTS;
 CREATE TABLE IF NOT EXISTS $db_output.ASSESSMENTS
 
 (TYPE string,
-  UniqMonthID int,
+  UniqMonthID bigint,
   CodedAssToolType string,
-  PersScore int,
+  PersScore string,
   Der_AssToolCompDate date,
   RecordNumber string,
   Der_AssUniqID string,
@@ -244,8 +248,8 @@ TRUNCATE TABLE $db_output.Perinatal_M_Master
 
 -- COMMAND ----------
 
---  %py
---  import json
---  dbutils.notebook.exit(json.dumps({
---    "status": "OK"
---  }))
+%py
+import json
+dbutils.notebook.exit(json.dumps({
+  "status": "OK"
+}))

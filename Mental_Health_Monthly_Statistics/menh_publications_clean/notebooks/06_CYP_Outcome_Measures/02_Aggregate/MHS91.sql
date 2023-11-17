@@ -1,7 +1,7 @@
 -- Databricks notebook source
 %md
 
-# NB this notebook has not been fully updated for v5 
+# NB this notebook hasn't been fully updated for v5 
 ## perinatal measures are currently being produced within the BBRB code in LIVE - once everything else is stable for v5 this can be addressed - there was still an outstanding difference for MHS92.
 
 -- COMMAND ----------
@@ -16,9 +16,9 @@ assert db_output
 db_source=dbutils.widgets.get("db_source")
 print(db_source)
 assert db_source
-database=dbutils.widgets.get("database")
-print(database)
-assert database
+$reference_data=dbutils.widgets.get("$reference_data")
+print($reference_data)
+assert $reference_data
 status=dbutils.widgets.get("status")
 print(status)
 assert status

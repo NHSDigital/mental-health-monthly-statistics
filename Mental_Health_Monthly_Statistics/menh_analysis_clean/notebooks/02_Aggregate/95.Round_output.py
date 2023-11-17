@@ -78,6 +78,10 @@
        WHEN a.REPORTING_PERIOD_END > '2022-07-01' AND a.BREAKDOWN = 'CCG - GP Practice or Residence; Referral Source'  THEN 'Sub ICB - GP Practice or Residence; Referral Source'
        WHEN a.REPORTING_PERIOD_END > '2022-07-01' AND a.BREAKDOWN = 'CCG - GP Practice or Residence; Delayed discharge attributable to'  THEN 'Sub ICB - GP Practice or Residence; Delayed discharge attributable to'
        WHEN a.REPORTING_PERIOD_END > '2022-07-01' AND a.BREAKDOWN = 'CCG - GP Practice or Residence; Delayed discharge reason'  THEN 'Sub ICB - GP Practice or Residence; Delayed discharge reason'
+       WHEN a.REPORTING_PERIOD_END > '2022-07-01' AND a.BREAKDOWN = 'CCG - GP Practice or Residence; Age Group'  THEN 'Sub ICB - GP Practice or Residence; Age Group'
+       WHEN a.REPORTING_PERIOD_END > '2022-07-01' AND a.BREAKDOWN = 'CCG - GP Practice or Residence; Attendance'  THEN 'Sub ICB - GP Practice or Residence; Attendance'
+       WHEN a.REPORTING_PERIOD_END > '2022-07-01' AND a.BREAKDOWN = 'CCG - GP Practice or Residence; Bed Type'  THEN 'Sub ICB - GP Practice or Residence; Bed Type'
+       WHEN a.REPORTING_PERIOD_END > '2022-07-01' AND a.BREAKDOWN = 'STP - GP Practice or Residence'  THEN 'ICB - GP Practice or Residence'
        WHEN a.REPORTING_PERIOD_END > '2022-07-01' AND a.BREAKDOWN = 'STP'  THEN 'ICB'
        ELSE a.BREAKDOWN
        END AS BREAKDOWN,

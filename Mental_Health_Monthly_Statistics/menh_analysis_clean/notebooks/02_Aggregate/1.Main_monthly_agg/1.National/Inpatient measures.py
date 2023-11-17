@@ -20,6 +20,162 @@
 
 # COMMAND ----------
 
+ %sql
+ INSERT INTO $db_output.Main_monthly_unformatted
+     SELECT '$rp_startdate' AS REPORTING_PERIOD_START
+            ,'$rp_enddate' AS REPORTING_PERIOD_END
+            ,'$status' AS STATUS
+            ,'England; Accommodation Type' AS BREAKDOWN
+            ,'England' AS PRIMARY_LEVEL
+            ,'England' AS PRIMARY_LEVEL_DESCRIPTION
+            ,AccommodationType AS SECONDARY_LEVEL
+            ,AccommodationType_Desc AS SECONDARY_LEVEL_DESCRIPTION
+            ,'MHS07' AS MEASURE_ID
+            ,COUNT (DISTINCT Person_ID) AS MEASURE_VALUE
+            ,'$db_source' AS SOURCE_DB
+            
+      FROM  $db_output.tmp_mhmab_mhs07_prep
+  GROUP BY  AccommodationType, AccommodationType_Desc;
+
+# COMMAND ----------
+
+ %sql
+ INSERT INTO $db_output.Main_monthly_unformatted
+     SELECT '$rp_startdate' AS REPORTING_PERIOD_START
+            ,'$rp_enddate' AS REPORTING_PERIOD_END
+            ,'$status' AS STATUS
+            ,'England; Age' AS BREAKDOWN
+            ,'England' AS PRIMARY_LEVEL
+            ,'England' AS PRIMARY_LEVEL_DESCRIPTION
+            ,Age_Band AS SECONDARY_LEVEL
+            ,Age_Band AS SECONDARY_LEVEL_DESCRIPTION
+            ,'MHS07' AS MEASURE_ID
+            ,COUNT (DISTINCT Person_ID) AS MEASURE_VALUE
+            ,'$db_source' AS SOURCE_DB
+            
+      FROM  $db_output.tmp_mhmab_mhs07_prep
+  GROUP BY  Age_Band;
+
+# COMMAND ----------
+
+ %sql
+ INSERT INTO $db_output.Main_monthly_unformatted
+     SELECT '$rp_startdate' AS REPORTING_PERIOD_START
+            ,'$rp_enddate' AS REPORTING_PERIOD_END
+            ,'$status' AS STATUS
+            ,'England; Disability' AS BREAKDOWN
+            ,'England' AS PRIMARY_LEVEL
+            ,'England' AS PRIMARY_LEVEL_DESCRIPTION
+            ,DisabCode AS SECONDARY_LEVEL
+            ,DisabCode_Desc AS SECONDARY_LEVEL_DESCRIPTION
+            ,'MHS07' AS MEASURE_ID
+            ,COUNT (DISTINCT Person_ID) AS MEASURE_VALUE
+            ,'$db_source' AS SOURCE_DB
+            
+      FROM  $db_output.tmp_mhmab_mhs07_prep
+  GROUP BY  DisabCode, DisabCode_Desc;
+
+# COMMAND ----------
+
+ %sql
+ INSERT INTO $db_output.Main_monthly_unformatted
+     SELECT '$rp_startdate' AS REPORTING_PERIOD_START
+            ,'$rp_enddate' AS REPORTING_PERIOD_END
+            ,'$status' AS STATUS
+            ,'England; Employment Status' AS BREAKDOWN
+            ,'England' AS PRIMARY_LEVEL
+            ,'England' AS PRIMARY_LEVEL_DESCRIPTION
+            ,EmployStatus AS SECONDARY_LEVEL
+            ,EmployStatus_Desc AS SECONDARY_LEVEL_DESCRIPTION
+            ,'MHS07' AS MEASURE_ID
+            ,COUNT (DISTINCT Person_ID) AS MEASURE_VALUE
+            ,'$db_source' AS SOURCE_DB
+            
+      FROM  $db_output.tmp_mhmab_mhs07_prep
+  GROUP BY  EmployStatus, EmployStatus_Desc;
+
+# COMMAND ----------
+
+ %sql
+ INSERT INTO $db_output.Main_monthly_unformatted
+     SELECT '$rp_startdate' AS REPORTING_PERIOD_START
+            ,'$rp_enddate' AS REPORTING_PERIOD_END
+            ,'$status' AS STATUS
+            ,'England; Ethnicity' AS BREAKDOWN
+            ,'England' AS PRIMARY_LEVEL
+            ,'England' AS PRIMARY_LEVEL_DESCRIPTION
+            ,CASE WHEN LowerEthnicity = '-1' THEN 'UNKNOWN' ELSE LowerEthnicity END AS SECONDARY_LEVEL
+            ,LowerEthnicity_Desc AS SECONDARY_LEVEL_DESCRIPTION
+            ,'MHS07' AS MEASURE_ID
+            ,COUNT (DISTINCT Person_ID) AS MEASURE_VALUE
+            ,'$db_source' AS SOURCE_DB
+            
+      FROM  $db_output.tmp_mhmab_mhs07_prep
+  GROUP BY  LowerEthnicity, LowerEthnicity_Desc;
+
+# COMMAND ----------
+
+ %sql
+ INSERT INTO $db_output.Main_monthly_unformatted
+     SELECT '$rp_startdate' AS REPORTING_PERIOD_START
+            ,'$rp_enddate' AS REPORTING_PERIOD_END
+            ,'$status' AS STATUS
+            ,'England; Gender' AS BREAKDOWN
+            ,'England' AS PRIMARY_LEVEL
+            ,'England' AS PRIMARY_LEVEL_DESCRIPTION
+            ,Der_Gender AS SECONDARY_LEVEL
+            ,Der_GenderName AS SECONDARY_LEVEL_DESCRIPTION
+            ,'MHS07' AS MEASURE_ID
+            ,COUNT (DISTINCT Person_ID) AS MEASURE_VALUE
+            ,'$db_source' AS SOURCE_DB
+            
+      FROM  $db_output.tmp_mhmab_mhs07_prep
+  GROUP BY  Der_Gender, Der_GenderName;
+
+# COMMAND ----------
+
+ %sql
+ INSERT INTO $db_output.Main_monthly_unformatted
+     SELECT '$rp_startdate' AS REPORTING_PERIOD_START
+            ,'$rp_enddate' AS REPORTING_PERIOD_END
+            ,'$status' AS STATUS
+            ,'England; IMD Decile' AS BREAKDOWN
+            ,'England' AS PRIMARY_LEVEL
+            ,'England' AS PRIMARY_LEVEL_DESCRIPTION
+            ,IMD_Decile AS SECONDARY_LEVEL
+            ,IMD_Decile AS SECONDARY_LEVEL_DESCRIPTION
+            ,'MHS07' AS MEASURE_ID
+            ,COUNT (DISTINCT Person_ID) AS MEASURE_VALUE
+            ,'$db_source' AS SOURCE_DB
+            
+      FROM  $db_output.tmp_mhmab_mhs07_prep
+  GROUP BY  IMD_Decile;
+
+# COMMAND ----------
+
+ %sql
+ INSERT INTO $db_output.Main_monthly_unformatted
+     SELECT '$rp_startdate' AS REPORTING_PERIOD_START
+            ,'$rp_enddate' AS REPORTING_PERIOD_END
+            ,'$status' AS STATUS
+            ,'England; Sexual Orientation' AS BREAKDOWN
+            ,'England' AS PRIMARY_LEVEL
+            ,'England' AS PRIMARY_LEVEL_DESCRIPTION
+            ,Sex_Orient AS SECONDARY_LEVEL
+            ,Sex_Orient AS SECONDARY_LEVEL_DESCRIPTION
+            ,'MHS07' AS MEASURE_ID
+            ,COUNT (DISTINCT Person_ID) AS MEASURE_VALUE
+            ,'$db_source' AS SOURCE_DB
+            
+      FROM  $db_output.tmp_mhmab_mhs07_prep
+  GROUP BY  Sex_Orient;
+
+# COMMAND ----------
+
+
+
+# COMMAND ----------
+
 # DBTITLE 1,MHS07a National
  %sql
  
@@ -588,10 +744,60 @@
  			,CAST (IFNULL (cast(COUNT (UniqHospProvSpellID) as INT), 0) AS STRING)	AS METRIC_VALUE
              ,'$db_source' AS SOURCE_DB
              
-        FROM $db_source.MHS501HospProvSpell			
+        FROM $db_source.MHS501HospProvSpell
+        
        WHERE UniqMonthID = '$month_id'
              AND StartDateHospProvSpell >= '$rp_startdate' 
              AND StartDateHospProvSpell <= '$rp_enddate';
+
+# COMMAND ----------
+
+ %sql
+ INSERT INTO $db_output.Main_monthly_unformatted
+     SELECT '$rp_startdate' AS REPORTING_PERIOD_START
+             ,'$rp_enddate' AS REPORTING_PERIOD_END
+ 			,'$status'AS STATUS
+ 			,'England; Bed Type' AS BREAKDOWN
+ 			,'England' AS PRIMARY_LEVEL
+ 			,'England' AS PRIMARY_LEVEL_DESCRIPTION
+ 			,CASE WHEN HospitalBedTypeMH in ('10') THEN 'Adult Acute'
+                WHEN HospitalBedTypeMH in ('11') THEN 'Older Adult Acute'
+                WHEN HospitalBedTypeMH in ('12','13','14','15','16','17','18','19','20','21','22') THEN 'Adult Specialist'
+                WHEN HospitalBedTypeMH in ('23','24') THEN 'CYP Acute'
+                WHEN HospitalBedTypeMH in ('25','26','27','28','29','30','31','32','33','34') THEN 'CYP Specialist'
+                ELSE 'UNKNOWN'
+                END AS SECONDARY_LEVEL
+             ,CASE WHEN HospitalBedTypeMH in ('10') THEN 'Adult Acute'
+                WHEN HospitalBedTypeMH in ('11') THEN 'Older Adult Acute'
+                WHEN HospitalBedTypeMH in ('12','13','14','15','16','17','18','19','20','21','22') THEN 'Adult Specialist'
+                WHEN HospitalBedTypeMH in ('23','24') THEN 'CYP Acute'
+                WHEN HospitalBedTypeMH in ('25','26','27','28','29','30','31','32','33','34') THEN 'CYP Specialist'
+                ELSE 'UNKNOWN'
+                END AS SECONDARY_LEVEL_DESCRIPTION
+ 			,'MHS27a' AS METRIC
+ 			,CAST (IFNULL (cast(COUNT (a.UniqHospProvSpellID) as INT), 0) AS STRING)	AS METRIC_VALUE
+             ,'$db_source' AS SOURCE_DB
+             
+        FROM $db_source.MHS501HospProvSpell a
+         LEFT JOIN $db_source.MHS502WardStay b on a.UniqHospProvSpellID = b.UniqHospProvSpellID and a.StartDateHospProvSpell = b.StartDateWardStay and ((a.starttimehospprovspell = b.starttimewardstay) or a.starttimehospprovspell is null) and b.UniqMonthID = '$month_id'
+       WHERE a.UniqMonthID = '$month_id'
+             AND StartDateHospProvSpell >= '$rp_startdate' 
+             AND StartDateHospProvSpell <= '$rp_enddate'
+       GROUP BY 
+       CASE WHEN HospitalBedTypeMH in ('10') THEN 'Adult Acute'
+                WHEN HospitalBedTypeMH in ('11') THEN 'Older Adult Acute'
+                WHEN HospitalBedTypeMH in ('12','13','14','15','16','17','18','19','20','21','22') THEN 'Adult Specialist'
+                WHEN HospitalBedTypeMH in ('23','24') THEN 'CYP Acute'
+                WHEN HospitalBedTypeMH in ('25','26','27','28','29','30','31','32','33','34') THEN 'CYP Specialist'
+                ELSE 'UNKNOWN'
+                END
+             ,CASE WHEN HospitalBedTypeMH in ('10') THEN 'Adult Acute'
+                WHEN HospitalBedTypeMH in ('11') THEN 'Older Adult Acute'
+                WHEN HospitalBedTypeMH in ('12','13','14','15','16','17','18','19','20','21','22') THEN 'Adult Specialist'
+                WHEN HospitalBedTypeMH in ('23','24') THEN 'CYP Acute'
+                WHEN HospitalBedTypeMH in ('25','26','27','28','29','30','31','32','33','34') THEN 'CYP Specialist'
+                ELSE 'UNKNOWN'
+                END
 
 # COMMAND ----------
 

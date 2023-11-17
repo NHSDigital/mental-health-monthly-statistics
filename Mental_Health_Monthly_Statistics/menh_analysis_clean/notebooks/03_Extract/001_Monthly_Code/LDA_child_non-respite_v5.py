@@ -329,7 +329,7 @@
                WHEN ORG_TYPE_CODE = 'LA' THEN 'Local Authority'       
                WHEN ORG_TYPE_CODE = 'NN' THEN 'Non-NHS Organisation'                
                END AS ORG_TYPE_CODE                                                
- FROM   db_source.org_daily                
+ FROM   $reference_data.org_daily                
  WHERE  (BUSINESS_END_DATE >= '$rp_enddate' OR BUSINESS_END_DATE IS NULL)       
         AND BUSINESS_START_DATE <= '$rp_enddate'
         AND ORG_TYPE_CODE in ('CC','CF','LB','PT','CT','OU','NS','TR','HA','LA','PH','NN') 
@@ -356,23 +356,23 @@
              ,T.TCP_NAME
              ,O2.REL_TO_ORG_CODE as Region_code
              ,O4.NAME as Region_name
- from      db_source.ORG_DAILY O3 
- left join db_source.NHSE_CCG_TCP_V01 T 
+ from      $reference_data.ORG_DAILY O3 
+ left join $reference_data.NHSE_CCG_TCP_V01 T 
         on T.CCG_ODS_CODE = O3.org_code 
         and (DSS_RECORD_END_DATE is null or DSS_RECORD_END_DATE >= '$rp_startdate') 
         and DSS_RECORD_START_DATE <= '$rp_startdate'
- inner join db_source.ORG_RELATIONSHIP_DAILY O1 
+ inner join $reference_data.ORG_RELATIONSHIP_DAILY O1 
          on O1.REL_FROM_ORG_CODE = O3.ORG_CODE 
          and O1.REL_FROM_ORG_TYPE_CODE = 'CC' 
          and O1.REL_TYPE_CODE = 'CCCF' 
          and (O1.REL_IS_CURRENT = 1 or o1.REL_CLOSE_DATE >= '$rp_startdate') 
          and O1.REL_OPEN_DATE <= '$rp_startdate'
- inner join db_source.ORG_RELATIONSHIP_DAILY O2 
+ inner join $reference_data.ORG_RELATIONSHIP_DAILY O2 
          on O2.REL_FROM_ORG_CODE = O1.REL_TO_ORG_CODE 
          and O2.REL_TYPE_CODE = 'CFCE' 
          and (O2.REL_IS_CURRENT = 1 or O2.REL_CLOSE_DATE >= '$rp_startdate') 
          and O2.REL_OPEN_DATE <= '$rp_startdate'
- left join db_source.ORG_DAILY O4 
+ left join $reference_data.ORG_DAILY O4 
         on O4.ORG_CODE = O2.REL_TO_ORG_CODE 
         and O4.ORG_TYPE_CODE = 'CE' 
         and (O4.ORG_IS_CURRENT = 1 or O4.org_close_DATE >= '$rp_startdate') 
@@ -1917,7 +1917,7 @@
      WHEN DelayDischReason = 'D2' then 'Awaiting Care Home With Nursing placement or availability'                       
      WHEN DelayDischReason = 'E1' then 'Awaiting care package in own home'                     
      WHEN DelayDischReason = 'F2' then 'Awaiting community equipment, telecare and/or adaptations'                        
-     WHEN DelayDischReason = 'G2' then 'Patient or Family choice (reason not stated by patient or family)'                       
+     WHEN DelayDischReason = 'G2' then 'Patient or Family choice - (reason not stated by patient or family)'                       
      WHEN DelayDischReason = 'G3' then 'Patient or Family choice - non-acute (including community and mental health) NHS care'                      
      WHEN DelayDischReason = 'G4' then 'Patient or Family choice - Care Home Without Nursing placement'                    
      WHEN DelayDischReason = 'G5' then 'Patient or Family choice - Care Home With Nursing placement'                    
@@ -2021,7 +2021,7 @@
      WHEN DelayDischReason = 'D2' then 'Awaiting Care Home With Nursing placement or availability'                       
      WHEN DelayDischReason = 'E1' then 'Awaiting care package in own home'                     
      WHEN DelayDischReason = 'F2' then 'Awaiting community equipment, telecare and/or adaptations'                        
-     WHEN DelayDischReason = 'G2' then 'Patient or Family choice (reason not stated by patient or family)'                       
+     WHEN DelayDischReason = 'G2' then 'Patient or Family choice - (reason not stated by patient or family)'                       
      WHEN DelayDischReason = 'G3' then 'Patient or Family choice - non-acute (including community and mental health) NHS care'                      
      WHEN DelayDischReason = 'G4' then 'Patient or Family choice - Care Home Without Nursing placement'                    
      WHEN DelayDischReason = 'G5' then 'Patient or Family choice - Care Home With Nursing placement'                    
@@ -3014,7 +3014,8 @@
  %sql
  --this creates the monthly output data file
  
- CREATE OR REPLACE GLOBAL TEMPORARY VIEW lda_nonR AS
+ -- CREATE OR REPLACE GLOBAL TEMPORARY VIEW lda_nonR AS
+ INSERT OVERWRITE TABLE $db_output.lda_nonR
  
  Select 
  
@@ -3062,7 +3063,7 @@
  
  
  from $db_output.LDA_Counts l
- WHERE PRODUCT ='Monthly' 
+ WHERE PRODUCT ='nonRespite' -- This needs to be product = 'nonRespite'!!!!
  AND PeriodEnd = '$rp_enddate'
  AND SOURCE_DB = '$db_source'
  

@@ -1,6 +1,6 @@
 -- Databricks notebook source
---  %py
---  spark.conf.set("spark.sql.legacy.allowCreatingManagedTableUsingNonemptyLocation","true")
+%py
+spark.conf.set("spark.sql.legacy.allowCreatingManagedTableUsingNonemptyLocation","true")
 
 -- COMMAND ----------
 
@@ -92,7 +92,7 @@ SELECT DISTINCT ORG_CODE,
                 ORG_CLOSE_DATE, 
                 BUSINESS_START_DATE, 
                 BUSINESS_END_DATE
-           FROM $ref_database.org_daily
+           FROM $reference_data.org_daily
           WHERE (BUSINESS_END_DATE >= add_months('$RP_ENDDATE', 1) OR ISNULL(BUSINESS_END_DATE))
                 AND BUSINESS_START_DATE <= add_months('$RP_ENDDATE', 1)	
                 AND (ORG_CLOSE_DATE >= '$RP_ENDDATE' OR ISNULL(ORG_CLOSE_DATE))              
@@ -108,7 +108,7 @@ REL_TO_ORG_CODE,
 REL_OPEN_DATE,
 REL_CLOSE_DATE
 FROM 
-$ref_database.ORG_RELATIONSHIP_DAILY
+$reference_data.ORG_RELATIONSHIP_DAILY
 WHERE
 (REL_CLOSE_DATE >= '$RP_ENDDATE' OR ISNULL(REL_CLOSE_DATE))              
 AND REL_OPEN_DATE <= '$RP_ENDDATE'

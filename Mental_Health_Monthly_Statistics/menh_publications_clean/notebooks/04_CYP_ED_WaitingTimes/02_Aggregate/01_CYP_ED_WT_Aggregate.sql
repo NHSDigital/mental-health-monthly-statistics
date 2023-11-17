@@ -55,8 +55,6 @@ SELECT '$month_id' AS MONTH_ID
        ,COUNT(DISTINCT UniqServReqID) METRIC_VALUE
        ,SOURCE_DB
  FROM $db_output.CYP_ED_WT_STEP4  step4
- left join $db_output.Provider_list p
- on step4.OrgIDProv = p.org_code
  WHERE UniqMonthID = '$month_id' AND Status = '$status' and SOURCE_DB = '$db_source'
  group by step4.orgidprov, SOURCE_DB
 
@@ -90,7 +88,7 @@ SELECT '$month_id' AS MONTH_ID
        ,'$status' AS STATUS
        ,'$rp_startdate_quarterly' AS REPORTING_PERIOD_START
        ,'$rp_enddate' AS REPORTING_PERIOD_END
-       ,'STP' AS BREAKDOWN
+       ,'STP - GP Practice or Residence' AS BREAKDOWN
        ,COALESCE(stp.STP_CODE,NULL) AS PRIMARY_LEVEL
        ,'NONE' AS PRIMARY_LEVEL_DESCRIPTION
        ,'NONE' AS SECONDARY_LEVEL
@@ -126,7 +124,7 @@ select
 from $db_output.CYP_ED_WT_STEP4 as step4
 
 INNER JOIN $db_output.validcodes as vc
-ON vc.table = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED86_89' and vc.type = 'include' and step4.ClinRespPriorityType = vc.ValidValue 
+ON vc.tablename = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED86_89' and vc.type = 'include' and step4.ClinRespPriorityType = vc.ValidValue 
 and step4.SubmissionMonthID >= vc.FirstMonth and (vc.LastMonth is null or step4.SubmissionMonthID <= vc.LastMonth)
 
 where UniqMonthID = '$month_id' AND Status = '$status' and SOURCE_DB = '$db_source'
@@ -152,12 +150,8 @@ select
 from $db_output.CYP_ED_WT_STEP4  step4
 
 INNER JOIN $db_output.validcodes as vc
-ON vc.table = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED86_89' and vc.type = 'include' and step4.ClinRespPriorityType = vc.ValidValue 
+ON vc.tablename = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED86_89' and vc.type = 'include' and step4.ClinRespPriorityType = vc.ValidValue 
 and step4.SubmissionMonthID >= vc.FirstMonth and (vc.LastMonth is null or step4.SubmissionMonthID <= vc.LastMonth)
-
-
-left join $db_output.Provider_list p
-on step4.OrgIDProv = p.org_code
 
 where UniqMonthID = '$month_id' AND Status = '$status' and SOURCE_DB = '$db_source'
 group by step4.orgidprov,SOURCE_DB
@@ -182,7 +176,7 @@ select
 FROM $db_output.CYP_ED_WT_STEP4   step4
 
 INNER JOIN $db_output.validcodes as vc
-ON vc.table = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED86_89' and vc.type = 'include' and step4.ClinRespPriorityType = vc.ValidValue 
+ON vc.tablename = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED86_89' and vc.type = 'include' and step4.ClinRespPriorityType = vc.ValidValue 
 and step4.SubmissionMonthID >= vc.FirstMonth and (vc.LastMonth is null or step4.SubmissionMonthID <= vc.LastMonth)
 
 
@@ -201,7 +195,7 @@ select
        ,'$status' AS STATUS
        ,'$rp_startdate_quarterly' AS REPORTING_PERIOD_START
        ,'$rp_enddate' AS REPORTING_PERIOD_END
-       ,'STP' AS BREAKDOWN
+       ,'STP - GP Practice or Residence' AS BREAKDOWN
        ,COALESCE(stp.STP_CODE,NULL) AS PRIMARY_LEVEL
        ,'NONE' AS PRIMARY_LEVEL_DESCRIPTION
        ,'NONE' AS SECONDARY_LEVEL
@@ -212,7 +206,7 @@ select
 FROM $db_output.CYP_ED_WT_STEP4   step4
 
 INNER JOIN $db_output.validcodes as vc
-ON vc.table = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED86_89' and vc.type = 'include' and step4.ClinRespPriorityType = vc.ValidValue 
+ON vc.tablename = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED86_89' and vc.type = 'include' and step4.ClinRespPriorityType = vc.ValidValue 
 and step4.SubmissionMonthID >= vc.FirstMonth and (vc.LastMonth is null or step4.SubmissionMonthID <= vc.LastMonth)
 
 
@@ -246,7 +240,7 @@ select
 from $db_output.CYP_ED_WT_STEP4  step4
 
 INNER JOIN $db_output.validcodes as vc
-ON vc.table = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED86_89' and vc.type = 'include' and step4.ClinRespPriorityType = vc.ValidValue 
+ON vc.tablename = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED86_89' and vc.type = 'include' and step4.ClinRespPriorityType = vc.ValidValue 
 and step4.SubmissionMonthID >= vc.FirstMonth and (vc.LastMonth is null or step4.SubmissionMonthID <= vc.LastMonth)
 
 where UniqMonthID = '$month_id' AND Status = '$status' and SOURCE_DB = '$db_source'
@@ -306,11 +300,8 @@ select
 from $db_output.CYP_ED_WT_STEP4  step4
 
 INNER JOIN $db_output.validcodes as vc
-ON vc.table = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED86_89' and vc.type = 'include' and step4.ClinRespPriorityType = vc.ValidValue 
+ON vc.tablename = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED86_89' and vc.type = 'include' and step4.ClinRespPriorityType = vc.ValidValue 
 and step4.SubmissionMonthID >= vc.FirstMonth and (vc.LastMonth is null or step4.SubmissionMonthID <= vc.LastMonth)
-
-left join $db_output.Provider_list p
-on step4.OrgIDProv = p.org_code
 
 where UniqMonthID = '$month_id' AND Status = '$status' and SOURCE_DB = '$db_source'
 group by OrgIDProv,metric,SOURCE_DB
@@ -368,7 +359,7 @@ select
 from $db_output.CYP_ED_WT_STEP4  step4
 
 INNER JOIN $db_output.validcodes as vc
-ON vc.table = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED86_89' and vc.type = 'include' and step4.ClinRespPriorityType = vc.ValidValue 
+ON vc.tablename = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED86_89' and vc.type = 'include' and step4.ClinRespPriorityType = vc.ValidValue 
 and step4.SubmissionMonthID >= vc.FirstMonth and (vc.LastMonth is null or step4.SubmissionMonthID <= vc.LastMonth)
 
 
@@ -418,7 +409,7 @@ select
        ,'$status' AS STATUS
        ,'$rp_startdate_quarterly' AS REPORTING_PERIOD_START
        ,'$rp_enddate' AS REPORTING_PERIOD_END
-       ,'STP' AS BREAKDOWN
+       ,'STP - GP Practice or Residence' AS BREAKDOWN
        ,COALESCE(stp.STP_CODE,NULL) AS PRIMARY_LEVEL
        ,'NONE' AS PRIMARY_LEVEL_DESCRIPTION
        ,'NONE' AS SECONDARY_LEVEL
@@ -432,7 +423,7 @@ select
 from $db_output.CYP_ED_WT_STEP4  step4
 
 INNER JOIN $db_output.validcodes as vc
-ON vc.table = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED86_89' and vc.type = 'include' and step4.ClinRespPriorityType = vc.ValidValue 
+ON vc.tablename = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED86_89' and vc.type = 'include' and step4.ClinRespPriorityType = vc.ValidValue 
 and step4.SubmissionMonthID >= vc.FirstMonth and (vc.LastMonth is null or step4.SubmissionMonthID <= vc.LastMonth)
 
 
@@ -495,7 +486,7 @@ select
 from $db_output.CYP_ED_WT_STEP4  step4
 
 INNER JOIN $db_output.validcodes as vc
-ON vc.table = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED86_89' and vc.type = 'include' and step4.ClinRespPriorityType = vc.ValidValue 
+ON vc.tablename = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED86_89' and vc.type = 'include' and step4.ClinRespPriorityType = vc.ValidValue 
 and step4.SubmissionMonthID >= vc.FirstMonth and (vc.LastMonth is null or step4.SubmissionMonthID <= vc.LastMonth)
 
 where UniqMonthID = '$month_id' AND Status = '$status' and SOURCE_DB = '$db_source'
@@ -521,12 +512,8 @@ select
 from $db_output.CYP_ED_WT_STEP4  step4
 
 INNER JOIN $db_output.validcodes as vc
-ON vc.table = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED86_89' and vc.type = 'include' and step4.ClinRespPriorityType = vc.ValidValue 
+ON vc.tablename = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED86_89' and vc.type = 'include' and step4.ClinRespPriorityType = vc.ValidValue 
 and step4.SubmissionMonthID >= vc.FirstMonth and (vc.LastMonth is null or step4.SubmissionMonthID <= vc.LastMonth)
-
-
-left join $db_output.Provider_list p
-on step4.OrgIDProv = p.org_code
 
 where UniqMonthID = '$month_id' AND Status = '$status' and SOURCE_DB = '$db_source'
 group by OrgIDProv,metric,SOURCE_DB
@@ -551,7 +538,7 @@ select
 from $db_output.CYP_ED_WT_STEP4  step4
 
 INNER JOIN $db_output.validcodes as vc
-ON vc.table = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED86_89' and vc.type = 'include' and step4.ClinRespPriorityType = vc.ValidValue 
+ON vc.tablename = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED86_89' and vc.type = 'include' and step4.ClinRespPriorityType = vc.ValidValue 
 and step4.SubmissionMonthID >= vc.FirstMonth and (vc.LastMonth is null or step4.SubmissionMonthID <= vc.LastMonth)
 
 
@@ -570,7 +557,7 @@ select
        ,'$status' AS STATUS
        ,'$rp_startdate_quarterly' AS REPORTING_PERIOD_START
        ,'$rp_enddate' AS REPORTING_PERIOD_END
-       ,'STP' AS BREAKDOWN
+       ,'STP - GP Practice or Residence' AS BREAKDOWN
        ,COALESCE(stp.STP_CODE,NULL) AS PRIMARY_LEVEL
        ,'NONE' AS PRIMARY_LEVEL_DESCRIPTION
        ,'NONE' AS SECONDARY_LEVEL
@@ -581,7 +568,7 @@ select
 from $db_output.CYP_ED_WT_STEP4  step4
 
 INNER JOIN $db_output.validcodes as vc
-ON vc.table = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED86_89' and vc.type = 'include' and step4.ClinRespPriorityType = vc.ValidValue 
+ON vc.tablename = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED86_89' and vc.type = 'include' and step4.ClinRespPriorityType = vc.ValidValue 
 and step4.SubmissionMonthID >= vc.FirstMonth and (vc.LastMonth is null or step4.SubmissionMonthID <= vc.LastMonth)
 
 left join $db_output.MHS001_CCG_LATEST ccg
@@ -611,7 +598,7 @@ select
        ,SOURCE_DB
 from $db_output.CYP_ED_WT_STEP4 as step4
 INNER JOIN $db_output.validcodes as vc
-ON vc.table = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED87_90' and vc.type = 'include' and step4.ClinRespPriorityType = vc.ValidValue 
+ON vc.tablename = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED87_90' and vc.type = 'include' and step4.ClinRespPriorityType = vc.ValidValue 
 and step4.SubmissionMonthID >= vc.FirstMonth and (vc.LastMonth is null or step4.SubmissionMonthID <= vc.LastMonth)
 
 where  UniqMonthID = '$month_id' AND Status = '$status' and SOURCE_DB = '$db_source' 
@@ -636,10 +623,8 @@ select
        ,SOURCE_DB
 from $db_output.CYP_ED_WT_STEP4 step4
 INNER JOIN $db_output.validcodes as vc
-  ON vc.table = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED87_90' and vc.type = 'include' and step4.ClinRespPriorityType = vc.ValidValue 
+  ON vc.tablename = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED87_90' and vc.type = 'include' and step4.ClinRespPriorityType = vc.ValidValue 
   and step4.SubmissionMonthID >= vc.FirstMonth and (vc.LastMonth is null or step4.SubmissionMonthID <= vc.LastMonth)
-left join $db_output.Provider_list p
-on step4.OrgIDProv = p.org_code
 where UniqMonthID = '$month_id' AND Status = '$status' and SOURCE_DB = '$db_source'
 group by OrgIDProv,metric,SOURCE_DB
 
@@ -662,7 +647,7 @@ select
        ,SOURCE_DB
 from $db_output.CYP_ED_WT_STEP4 step4
 INNER JOIN $db_output.validcodes as vc
-ON vc.table = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED87_90' and vc.type = 'include' and step4.ClinRespPriorityType = vc.ValidValue and step4.SubmissionMonthID >= vc.FirstMonth and (vc.LastMonth is null or step4.SubmissionMonthID <= vc.LastMonth)
+ON vc.tablename = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED87_90' and vc.type = 'include' and step4.ClinRespPriorityType = vc.ValidValue and step4.SubmissionMonthID >= vc.FirstMonth and (vc.LastMonth is null or step4.SubmissionMonthID <= vc.LastMonth)
 left join $db_output.MHS001_CCG_LATEST ccg
 on step4.Person_ID = ccg.Person_ID
 where UniqMonthID = '$month_id' AND Status = '$status' and SOURCE_DB = '$db_source'
@@ -677,7 +662,7 @@ select
        ,'$status' AS STATUS
        ,'$rp_startdate_quarterly' AS REPORTING_PERIOD_START
        ,'$rp_enddate' AS REPORTING_PERIOD_END
-       ,'STP' AS BREAKDOWN
+       ,'STP - GP Practice or Residence' AS BREAKDOWN
        ,COALESCE(STP_CODE,NULL) AS PRIMARY_LEVEL
        ,'NONE' AS PRIMARY_LEVEL_DESCRIPTION
        ,'NONE' AS SECONDARY_LEVEL
@@ -687,7 +672,7 @@ select
        ,SOURCE_DB
 from $db_output.CYP_ED_WT_STEP4 step4
 INNER JOIN $db_output.validcodes as vc
-ON vc.table = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED87_90' and vc.type = 'include' and step4.ClinRespPriorityType = vc.ValidValue and step4.SubmissionMonthID >= vc.FirstMonth and (vc.LastMonth is null or step4.SubmissionMonthID <= vc.LastMonth)
+ON vc.tablename = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED87_90' and vc.type = 'include' and step4.ClinRespPriorityType = vc.ValidValue and step4.SubmissionMonthID >= vc.FirstMonth and (vc.LastMonth is null or step4.SubmissionMonthID <= vc.LastMonth)
 left join $db_output.MHS001_CCG_LATEST ccg
 on step4.Person_ID = ccg.Person_ID
 left join $db_output.STP_Region_mapping_post_2020 stp
@@ -717,7 +702,7 @@ select
        ,SOURCE_DB
 from $db_output.CYP_ED_WT_STEP4 step4
 INNER JOIN $db_output.validcodes as vc
-ON vc.table = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED87_90' and vc.type = 'include' and step4.ClinRespPriorityType = vc.ValidValue and step4.SubmissionMonthID >= vc.FirstMonth and (vc.LastMonth is null or step4.SubmissionMonthID <= vc.LastMonth)
+ON vc.tablename = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED87_90' and vc.type = 'include' and step4.ClinRespPriorityType = vc.ValidValue and step4.SubmissionMonthID >= vc.FirstMonth and (vc.LastMonth is null or step4.SubmissionMonthID <= vc.LastMonth)
 where UniqMonthID = '$month_id' AND Status = '$status' and SOURCE_DB = '$db_source'
 group by UniqServReqID,METRIC,SOURCE_DB
 
@@ -774,9 +759,7 @@ select
        ,SOURCE_DB
 from $db_output.CYP_ED_WT_STEP4 step4
 INNER JOIN $db_output.validcodes as vc
-ON vc.table = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED87_90' and vc.type = 'include' and step4.ClinRespPriorityType = vc.ValidValue and step4.SubmissionMonthID >= vc.FirstMonth and (vc.LastMonth is null or step4.SubmissionMonthID <= vc.LastMonth)
-left join $db_output.Provider_list p
-on step4.OrgIDProv = p.org_code
+ON vc.tablename = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED87_90' and vc.type = 'include' and step4.ClinRespPriorityType = vc.ValidValue and step4.SubmissionMonthID >= vc.FirstMonth and (vc.LastMonth is null or step4.SubmissionMonthID <= vc.LastMonth)
 where UniqMonthID = '$month_id'
 and Status = '$status'
  and SOURCE_DB = '$db_source'
@@ -835,7 +818,7 @@ select
        ,SOURCE_DB
 from $db_output.CYP_ED_WT_STEP4 step4
 INNER JOIN $db_output.validcodes as vc
-ON vc.table = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED87_90' and vc.type = 'include' and step4.ClinRespPriorityType = vc.ValidValue and step4.SubmissionMonthID >= vc.FirstMonth and (vc.LastMonth is null or step4.SubmissionMonthID <= vc.LastMonth)
+ON vc.tablename = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED87_90' and vc.type = 'include' and step4.ClinRespPriorityType = vc.ValidValue and step4.SubmissionMonthID >= vc.FirstMonth and (vc.LastMonth is null or step4.SubmissionMonthID <= vc.LastMonth)
 left join $db_output.MHS001_CCG_LATEST ccg
 on step4.Person_ID = ccg.Person_ID
 where UniqMonthID = '$month_id'
@@ -883,7 +866,7 @@ select
        ,'$status' AS STATUS
        ,'$rp_startdate_quarterly' AS REPORTING_PERIOD_START
        ,'$rp_enddate' AS REPORTING_PERIOD_END
-       ,'STP' AS BREAKDOWN
+       ,'STP - GP Practice or Residence' AS BREAKDOWN
        ,COALESCE(stp.STP_CODE,NULL) AS PRIMARY_LEVEL
        ,'NONE' AS PRIMARY_LEVEL_DESCRIPTION
        ,'NONE' AS SECONDARY_LEVEL
@@ -896,7 +879,7 @@ select
        ,SOURCE_DB
 from $db_output.CYP_ED_WT_STEP4 step4
 INNER JOIN $db_output.validcodes as vc
-ON vc.table = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED87_90' and vc.type = 'include' and step4.ClinRespPriorityType = vc.ValidValue and step4.SubmissionMonthID >= vc.FirstMonth and (vc.LastMonth is null or step4.SubmissionMonthID <= vc.LastMonth)
+ON vc.tablename = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED87_90' and vc.type = 'include' and step4.ClinRespPriorityType = vc.ValidValue and step4.SubmissionMonthID >= vc.FirstMonth and (vc.LastMonth is null or step4.SubmissionMonthID <= vc.LastMonth)
 left join $db_output.MHS001_CCG_LATEST ccg
 on step4.Person_ID = ccg.Person_ID
 left join $db_output.STP_Region_mapping_post_2020 stp
@@ -954,7 +937,7 @@ select
        ,SOURCE_DB
 from $db_output.CYP_ED_WT_STEP4 step4
 INNER JOIN $db_output.validcodes as vc
-ON vc.table = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED87_90' and vc.type = 'include' and step4.ClinRespPriorityType = vc.ValidValue and step4.SubmissionMonthID >= vc.FirstMonth and (vc.LastMonth is null or step4.SubmissionMonthID <= vc.LastMonth)
+ON vc.tablename = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED87_90' and vc.type = 'include' and step4.ClinRespPriorityType = vc.ValidValue and step4.SubmissionMonthID >= vc.FirstMonth and (vc.LastMonth is null or step4.SubmissionMonthID <= vc.LastMonth)
 where UniqMonthID = '$month_id' AND Status = '$status' and SOURCE_DB = '$db_source'
 group by SOURCE_DB
 
@@ -977,9 +960,7 @@ select
        ,SOURCE_DB
 from $db_output.CYP_ED_WT_STEP4 step4
 INNER JOIN $db_output.validcodes as vc
-ON vc.table = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED87_90' and vc.type = 'include' and step4.ClinRespPriorityType = vc.ValidValue and step4.SubmissionMonthID >= vc.FirstMonth and (vc.LastMonth is null or step4.SubmissionMonthID <= vc.LastMonth)
-left join $db_output.Provider_list p
-on step4.OrgIDProv = p.org_code
+ON vc.tablename = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED87_90' and vc.type = 'include' and step4.ClinRespPriorityType = vc.ValidValue and step4.SubmissionMonthID >= vc.FirstMonth and (vc.LastMonth is null or step4.SubmissionMonthID <= vc.LastMonth)
 where UniqMonthID = '$month_id' AND Status = '$status' and SOURCE_DB = '$db_source'
 group by step4.orgidprov,SOURCE_DB
 
@@ -1003,7 +984,7 @@ select
 from $db_output.CYP_ED_WT_STEP4 step4
 
 INNER JOIN $db_output.validcodes as vc
-ON vc.table = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED87_90' and vc.type = 'include' and step4.ClinRespPriorityType = vc.ValidValue and step4.SubmissionMonthID >= vc.FirstMonth and (vc.LastMonth is null or step4.SubmissionMonthID <= vc.LastMonth)
+ON vc.tablename = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED87_90' and vc.type = 'include' and step4.ClinRespPriorityType = vc.ValidValue and step4.SubmissionMonthID >= vc.FirstMonth and (vc.LastMonth is null or step4.SubmissionMonthID <= vc.LastMonth)
 
 left join $db_output.MHS001_CCG_LATEST ccg
 on step4.Person_ID = ccg.Person_ID
@@ -1020,7 +1001,7 @@ select
        ,'$status' AS STATUS
        ,'$rp_startdate_quarterly' AS REPORTING_PERIOD_START
        ,'$rp_enddate' AS REPORTING_PERIOD_END
-       ,'STP' AS BREAKDOWN
+       ,'STP - GP Practice or Residence' AS BREAKDOWN
        ,COALESCE(stp.STP_CODE,NULL) AS PRIMARY_LEVEL
        ,'NONE' AS PRIMARY_LEVEL_DESCRIPTION
        ,'NONE' AS SECONDARY_LEVEL
@@ -1030,7 +1011,7 @@ select
        ,SOURCE_DB
 from $db_output.CYP_ED_WT_STEP4 step4
 INNER JOIN $db_output.validcodes as vc
-ON vc.table = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED87_90' and vc.type = 'include' and step4.ClinRespPriorityType = vc.ValidValue and step4.SubmissionMonthID >= vc.FirstMonth and (vc.LastMonth is null or step4.SubmissionMonthID <= vc.LastMonth)
+ON vc.tablename = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED87_90' and vc.type = 'include' and step4.ClinRespPriorityType = vc.ValidValue and step4.SubmissionMonthID >= vc.FirstMonth and (vc.LastMonth is null or step4.SubmissionMonthID <= vc.LastMonth)
 left join $db_output.MHS001_CCG_LATEST ccg
 on step4.Person_ID = ccg.Person_ID
 left join $db_output.STP_Region_mapping_post_2020 stp
@@ -1077,8 +1058,6 @@ select
        ,count(distinct UniqServReqID) AS METRIC_VALUE
        ,SOURCE_DB
 from $db_output.CYP_ED_WT_STEP6 step6
-left join $db_output.Provider_list p
-on step6.OrgIDProv = p.org_code
 where UniqMonthID = '$month_id' AND Status = '$status' and SOURCE_DB = '$db_source'
 group by step6.orgidprov,SOURCE_DB
 
@@ -1114,7 +1093,7 @@ select
        ,'$status' AS STATUS
        ,'$rp_startdate_quarterly' AS REPORTING_PERIOD_START
        ,'$rp_enddate' AS REPORTING_PERIOD_END
-       ,'STP' AS BREAKDOWN
+       ,'STP - GP Practice or Residence' AS BREAKDOWN
        ,Coalesce(stp_code,NULL) AS PRIMARY_LEVEL
        ,'NONE' AS PRIMARY_LEVEL_DESCRIPTION
        ,'NONE' AS SECONDARY_LEVEL
@@ -1150,7 +1129,7 @@ select
 from $db_output.CYP_ED_WT_STEP6 step6 
 
 INNER JOIN $db_output.validcodes as vc
-ON vc.table = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED86_89' and vc.type = 'include' and step6.ClinRespPriorityType = vc.ValidValue 
+ON vc.tablename = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED86_89' and vc.type = 'include' and step6.ClinRespPriorityType = vc.ValidValue 
 and step6.SubmissionMonthID >= vc.FirstMonth and (vc.LastMonth is null or step6.SubmissionMonthID <= vc.LastMonth)
  
 where UniqMonthID = '$month_id' AND Status = '$status' and SOURCE_DB = '$db_source'
@@ -1176,11 +1155,9 @@ select
 from $db_output.CYP_ED_WT_STEP6  step6 
 
 INNER JOIN $db_output.validcodes as vc
-ON vc.table = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED86_89' and vc.type = 'include' and step6.ClinRespPriorityType = vc.ValidValue 
+ON vc.tablename = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED86_89' and vc.type = 'include' and step6.ClinRespPriorityType = vc.ValidValue 
 and step6.SubmissionMonthID >= vc.FirstMonth and (vc.LastMonth is null or step6.SubmissionMonthID <= vc.LastMonth)
 
-left join $db_output.Provider_list p
-on step6.OrgIDProv = p.org_code
 where UniqMonthID = '$month_id' AND Status = '$status' and SOURCE_DB = '$db_source'
 group by step6.orgidprov,SOURCE_DB
 
@@ -1204,7 +1181,7 @@ select
 from $db_output.CYP_ED_WT_STEP6  step6 
 
 INNER JOIN $db_output.validcodes as vc
-ON vc.table = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED86_89' and vc.type = 'include' and step6.ClinRespPriorityType = vc.ValidValue 
+ON vc.tablename = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED86_89' and vc.type = 'include' and step6.ClinRespPriorityType = vc.ValidValue 
 and step6.SubmissionMonthID >= vc.FirstMonth and (vc.LastMonth is null or step6.SubmissionMonthID <= vc.LastMonth)
 
 left join $db_output.MHS001_CCG_LATEST ccg
@@ -1221,7 +1198,7 @@ select
        ,'$status' AS STATUS
        ,'$rp_startdate_quarterly' AS REPORTING_PERIOD_START
        ,'$rp_enddate' AS REPORTING_PERIOD_END
-       ,'STP' AS BREAKDOWN
+       ,'STP - GP Practice or Residence' AS BREAKDOWN
        ,Coalesce(stp_code,NULL) AS PRIMARY_LEVEL
        ,'NONE' AS PRIMARY_LEVEL_DESCRIPTION
        ,'NONE' AS SECONDARY_LEVEL
@@ -1232,7 +1209,7 @@ select
 from $db_output.CYP_ED_WT_STEP6  step6 
 
 INNER JOIN $db_output.validcodes as vc
-ON vc.table = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED86_89' and vc.type = 'include' and step6.ClinRespPriorityType = vc.ValidValue 
+ON vc.tablename = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED86_89' and vc.type = 'include' and step6.ClinRespPriorityType = vc.ValidValue 
 and step6.SubmissionMonthID >= vc.FirstMonth and (vc.LastMonth is null or step6.SubmissionMonthID <= vc.LastMonth)
 left join $db_output.MHS001_CCG_LATEST ccg
 on step6.Person_ID = ccg.Person_ID
@@ -1264,7 +1241,7 @@ select
 from $db_output.CYP_ED_WT_STEP6  step6 
 
 INNER JOIN $db_output.validcodes as vc
-ON vc.table = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED86_89' and vc.type = 'include' and step6.ClinRespPriorityType = vc.ValidValue 
+ON vc.tablename = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED86_89' and vc.type = 'include' and step6.ClinRespPriorityType = vc.ValidValue 
 and step6.SubmissionMonthID >= vc.FirstMonth and (vc.LastMonth is null or step6.SubmissionMonthID <= vc.LastMonth)
  
 where UniqMonthID = '$month_id' AND Status = '$status' and SOURCE_DB = '$db_source'
@@ -1293,11 +1270,9 @@ select
 from $db_output.CYP_ED_WT_STEP6  step6 
 
 INNER JOIN $db_output.validcodes as vc
-ON vc.table = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED86_89' and vc.type = 'include' and step6.ClinRespPriorityType = vc.ValidValue 
+ON vc.tablename = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED86_89' and vc.type = 'include' and step6.ClinRespPriorityType = vc.ValidValue 
 and step6.SubmissionMonthID >= vc.FirstMonth and (vc.LastMonth is null or step6.SubmissionMonthID <= vc.LastMonth)
 
-left join $db_output.Provider_list p
-on step6.OrgIDProv = p.org_code
 where UniqMonthID = '$month_id' AND Status = '$status' and SOURCE_DB = '$db_source'
 group by step6.orgidprov,METRIC,SOURCE_DB
 
@@ -1324,7 +1299,7 @@ select
 from $db_output.CYP_ED_WT_STEP6  step6 
 
 INNER JOIN $db_output.validcodes as vc
-ON vc.table = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED86_89' and vc.type = 'include' and step6.ClinRespPriorityType = vc.ValidValue 
+ON vc.tablename = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED86_89' and vc.type = 'include' and step6.ClinRespPriorityType = vc.ValidValue 
 and step6.SubmissionMonthID >= vc.FirstMonth and (vc.LastMonth is null or step6.SubmissionMonthID <= vc.LastMonth)
 
 left join $db_output.MHS001_CCG_LATEST ccg
@@ -1341,7 +1316,7 @@ select
        ,'$status' AS STATUS
        ,'$rp_startdate_quarterly' AS REPORTING_PERIOD_START
        ,'$rp_enddate' AS REPORTING_PERIOD_END
-       ,'STP' AS BREAKDOWN
+       ,'STP - GP Practice or Residence' AS BREAKDOWN
        ,Coalesce(stp_code,NULL) AS PRIMARY_LEVEL
        ,'NONE' AS PRIMARY_LEVEL_DESCRIPTION
        ,'NONE' AS SECONDARY_LEVEL
@@ -1355,7 +1330,7 @@ select
 from $db_output.CYP_ED_WT_STEP6  step6 
 
 INNER JOIN $db_output.validcodes as vc
-ON vc.table = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED86_89' and vc.type = 'include' and step6.ClinRespPriorityType = vc.ValidValue 
+ON vc.tablename = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED86_89' and vc.type = 'include' and step6.ClinRespPriorityType = vc.ValidValue 
 and step6.SubmissionMonthID >= vc.FirstMonth and (vc.LastMonth is null or step6.SubmissionMonthID <= vc.LastMonth)
 
 left join $db_output.MHS001_CCG_LATEST ccg
@@ -1384,7 +1359,7 @@ select
        ,SOURCE_DB
 from $db_output.CYP_ED_WT_STEP6 step6
 INNER JOIN $db_output.validcodes as vc
-ON vc.table = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED87_90' and vc.type = 'include' and step6.ClinRespPriorityType = vc.ValidValue and step6.SubmissionMonthID >= vc.FirstMonth and (vc.LastMonth is null or step6.SubmissionMonthID <= vc.LastMonth)
+ON vc.tablename = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED87_90' and vc.type = 'include' and step6.ClinRespPriorityType = vc.ValidValue and step6.SubmissionMonthID >= vc.FirstMonth and (vc.LastMonth is null or step6.SubmissionMonthID <= vc.LastMonth)
 where UniqMonthID = '$month_id' AND Status = '$status' and SOURCE_DB = '$db_source'
 group by SOURCE_DB
 
@@ -1407,9 +1382,8 @@ select
        ,SOURCE_DB
 from $db_output.CYP_ED_WT_STEP6 step6
 INNER JOIN $db_output.validcodes as vc
-ON vc.table = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED87_90' and vc.type = 'include' and step6.ClinRespPriorityType = vc.ValidValue and step6.SubmissionMonthID >= vc.FirstMonth and (vc.LastMonth is null or step6.SubmissionMonthID <= vc.LastMonth)
-left join $db_output.Provider_list p
-on step6.OrgIDProv = p.org_code
+ON vc.tablename = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED87_90' and vc.type = 'include' and step6.ClinRespPriorityType = vc.ValidValue and step6.SubmissionMonthID >= vc.FirstMonth and (vc.LastMonth is null or step6.SubmissionMonthID <= vc.LastMonth)
+
 where UniqMonthID = '$month_id' AND Status = '$status' and SOURCE_DB = '$db_source'
 and ClinRespPriorityType = 3
 group by step6.orgidprov,SOURCE_DB
@@ -1433,7 +1407,7 @@ select
        ,SOURCE_DB
 from $db_output.CYP_ED_WT_STEP6 step6
 INNER JOIN $db_output.validcodes as vc
-ON vc.table = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED87_90' and vc.type = 'include' and step6.ClinRespPriorityType = vc.ValidValue and step6.SubmissionMonthID >= vc.FirstMonth and (vc.LastMonth is null or step6.SubmissionMonthID <= vc.LastMonth)
+ON vc.tablename = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED87_90' and vc.type = 'include' and step6.ClinRespPriorityType = vc.ValidValue and step6.SubmissionMonthID >= vc.FirstMonth and (vc.LastMonth is null or step6.SubmissionMonthID <= vc.LastMonth)
 left join $db_output.MHS001_CCG_LATEST ccg
 on step6.Person_ID = ccg.Person_ID
 where UniqMonthID = '$month_id' AND Status = '$status' and SOURCE_DB = '$db_source'
@@ -1448,7 +1422,7 @@ select
        ,'$status' AS STATUS
        ,'$rp_startdate_quarterly' AS REPORTING_PERIOD_START
        ,'$rp_enddate' AS REPORTING_PERIOD_END
-       ,'STP' AS BREAKDOWN
+       ,'STP - GP Practice or Residence' AS BREAKDOWN
        ,Coalesce(stp_code,NULL) AS PRIMARY_LEVEL
        ,'NONE' AS PRIMARY_LEVEL_DESCRIPTION
        ,'NONE' AS SECONDARY_LEVEL
@@ -1458,7 +1432,7 @@ select
        ,SOURCE_DB
 from $db_output.CYP_ED_WT_STEP6 step6
 INNER JOIN $db_output.validcodes as vc
-ON vc.table = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED87_90' and vc.type = 'include' and step6.ClinRespPriorityType = vc.ValidValue and step6.SubmissionMonthID >= vc.FirstMonth and (vc.LastMonth is null or step6.SubmissionMonthID <= vc.LastMonth)
+ON vc.tablename = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED87_90' and vc.type = 'include' and step6.ClinRespPriorityType = vc.ValidValue and step6.SubmissionMonthID >= vc.FirstMonth and (vc.LastMonth is null or step6.SubmissionMonthID <= vc.LastMonth)
 left join $db_output.MHS001_CCG_LATEST ccg
 on step6.Person_ID = ccg.Person_ID
 left join $db_output.STP_Region_mapping_post_2020 stp
@@ -1488,7 +1462,7 @@ select
        ,SOURCE_DB
 from $db_output.CYP_ED_WT_STEP6 step6
 INNER JOIN $db_output.validcodes as vc
-ON vc.table = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED87_90' and vc.type = 'include' and step6.ClinRespPriorityType = vc.ValidValue and step6.SubmissionMonthID >= vc.FirstMonth and (vc.LastMonth is null or step6.SubmissionMonthID <= vc.LastMonth)
+ON vc.tablename = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED87_90' and vc.type = 'include' and step6.ClinRespPriorityType = vc.ValidValue and step6.SubmissionMonthID >= vc.FirstMonth and (vc.LastMonth is null or step6.SubmissionMonthID <= vc.LastMonth)
 where UniqMonthID = '$month_id' AND Status = '$status' and SOURCE_DB = '$db_source'
 group by METRIC,SOURCE_DB
 
@@ -1514,9 +1488,7 @@ select
        ,SOURCE_DB
 from $db_output.CYP_ED_WT_STEP6 step6
 INNER JOIN $db_output.validcodes as vc
-ON vc.table = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED87_90' and vc.type = 'include' and step6.ClinRespPriorityType = vc.ValidValue and step6.SubmissionMonthID >= vc.FirstMonth and (vc.LastMonth is null or step6.SubmissionMonthID <= vc.LastMonth)
-left join $db_output.Provider_list p
-on step6.OrgIDProv = p.org_code
+ON vc.tablename = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED87_90' and vc.type = 'include' and step6.ClinRespPriorityType = vc.ValidValue and step6.SubmissionMonthID >= vc.FirstMonth and (vc.LastMonth is null or step6.SubmissionMonthID <= vc.LastMonth)
 where UniqMonthID = '$month_id' AND Status = '$status' and SOURCE_DB = '$db_source'
 group by step6.orgidprov,METRIC,SOURCE_DB
 
@@ -1542,7 +1514,7 @@ select
        ,SOURCE_DB
 from $db_output.CYP_ED_WT_STEP6 step6
 INNER JOIN $db_output.validcodes as vc
-ON vc.table = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED87_90' and vc.type = 'include' and step6.ClinRespPriorityType = vc.ValidValue and step6.SubmissionMonthID >= vc.FirstMonth and (vc.LastMonth is null or step6.SubmissionMonthID <= vc.LastMonth)
+ON vc.tablename = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED87_90' and vc.type = 'include' and step6.ClinRespPriorityType = vc.ValidValue and step6.SubmissionMonthID >= vc.FirstMonth and (vc.LastMonth is null or step6.SubmissionMonthID <= vc.LastMonth)
 left join $db_output.MHS001_CCG_LATEST ccg
 on step6.Person_ID = ccg.Person_ID
 where UniqMonthID = '$month_id' AND Status = '$status' and SOURCE_DB = '$db_source'
@@ -1557,7 +1529,7 @@ select
        ,'$status' AS STATUS
        ,'$rp_startdate_quarterly' AS REPORTING_PERIOD_START
        ,'$rp_enddate' AS REPORTING_PERIOD_END
-       ,'STP' AS BREAKDOWN
+       ,'STP - GP Practice or Residence' AS BREAKDOWN
        ,Coalesce(stp_code,NULL) AS PRIMARY_LEVEL
        ,'NONE' AS PRIMARY_LEVEL_DESCRIPTION
        ,'NONE' AS SECONDARY_LEVEL
@@ -1570,7 +1542,7 @@ select
        ,SOURCE_DB
 from $db_output.CYP_ED_WT_STEP6 step6
 INNER JOIN $db_output.validcodes as vc
-ON vc.table = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED87_90' and vc.type = 'include' and step6.ClinRespPriorityType = vc.ValidValue and step6.SubmissionMonthID >= vc.FirstMonth and (vc.LastMonth is null or step6.SubmissionMonthID <= vc.LastMonth)
+ON vc.tablename = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'ED87_90' and vc.type = 'include' and step6.ClinRespPriorityType = vc.ValidValue and step6.SubmissionMonthID >= vc.FirstMonth and (vc.LastMonth is null or step6.SubmissionMonthID <= vc.LastMonth)
 left join $db_output.MHS001_CCG_LATEST ccg
 on step6.Person_ID = ccg.Person_ID
 left join $db_output.STP_Region_mapping_post_2020 stp

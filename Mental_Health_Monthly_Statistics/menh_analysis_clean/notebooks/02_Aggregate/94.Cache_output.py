@@ -7,7 +7,7 @@
 
 # DBTITLE 1,1. Cache Main Monthly
  %sql
- --GBT reinstated this SQL version now that the need to restrict outputs for Provisional & Final has dropped
+ --reinstated this SQL version now that the need to restrict outputs for Provisional & Final has dropped
  --also Final is now Performance anyway!
  
  INSERT INTO $db_output.all_products_cached 
@@ -98,7 +98,7 @@
 
 # DBTITLE 1,4.Cache CAP
  %sql
- --GBT reinstated this SQL version now that the need to restrict outputs for Provisional & Final has dropped
+ --reinstated this SQL version now that the need to restrict outputs for Provisional & Final has dropped
  --also Final is now Performance anyway!
  
  INSERT INTO $db_output.all_products_cached 
@@ -122,7 +122,7 @@
 
 # DBTITLE 1,5.Cache CYP monthly
  %sql
- --GBT reinstated this SQL version now that the need to restrict outputs for Provisional & Final has dropped
+ --reinstated this SQL version now that the need to restrict outputs for Provisional & Final has dropped
  --also Final is now Performance anyway!
  
  INSERT INTO $db_output.all_products_cached 

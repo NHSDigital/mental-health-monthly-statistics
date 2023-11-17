@@ -3,6 +3,7 @@
  
  #Master Notebook for MHSDS Monthly Extract
  
+ WARNING: This will DROP and then CREATE the MHSDS Analytics database once again. Please first check with matt.mercer@nhs.net or thomas.erker1@nhs.net whether this is safe to do before doing this!
  
  This note book will run the other note books to create the MHSDS Monthly Extract.
  The following stages will be run in order:
@@ -83,13 +84,6 @@ status = "Final"
 params_final = {'rp_enddate' : str(end_date_final), 'rp_startdate' : str(start_date_final), 'month_id' : str(month_id_final), 'status' : status, "current_env" : current_env, 'db' : db}
 params_final_3 = {'rp_enddate' : str(end_date_final), 'rp_startdate' : str(start_date_final_3), 'month_id' : str(month_id_final), 'status' : status, "current_env" : current_env, 'db' : db}
 
-# Debugging
-params = {'current_env': 'ref', 'month_id': '1418', 'db': 'temp_menh_analysis1', 'dbm': '$db_source', 'status': 'Provisional', 'rp_enddate': '2018-05-31', 'rp_startdate': '2018-05-01'}
-
-print(params)
-print(params_3)
-print(params_final)
-print(params_final_3)
 
 
 # COMMAND ----------

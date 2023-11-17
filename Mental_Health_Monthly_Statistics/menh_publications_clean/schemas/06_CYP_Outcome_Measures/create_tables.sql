@@ -8,9 +8,9 @@ CREATE WIDGET TEXT db_output DEFAULT "menh_publications";
 db_output=dbutils.widgets.get("db_output")
 print(db_output)
 assert db_output
-$db_source=dbutils.widgets.get("$db_source")
-print($db_source)
-assert $db_source
+$mhsds_database=dbutils.widgets.get("$mhsds_database")
+print($mhsds_database)
+assert $mhsds_database
 
 -- COMMAND ----------
 
@@ -90,6 +90,8 @@ USING DELTA;
 
 -- COMMAND ----------
 
+-- DROP TABLE IF EXISTS $db_output.closed_refs;
+
 CREATE TABLE IF NOT EXISTS $db_output.closed_refs
 (
 UNIQMONTHID long,
@@ -105,6 +107,8 @@ REF_LENGTH int
 USING DELTA
 
 -- COMMAND ----------
+
+-- DROP TABLE IF EXISTS $db_output.cont_final;
 
 CREATE TABLE IF NOT EXISTS $db_output.cont_final
 (
@@ -123,7 +127,7 @@ USING DELTA
 
 -- COMMAND ----------
 
-DROP TABLE IF EXISTS $db_output.assessments;
+-- DROP TABLE IF EXISTS $db_output.assessments;
 
 CREATE TABLE IF NOT EXISTS $db_output.assessments
 (
@@ -146,7 +150,7 @@ USING DELTA
 -- COMMAND ----------
 
 -- table is truncated during run so DROP is fine
-DROP TABLE IF EXISTS $db_output.ass_final;
+-- DROP TABLE IF EXISTS $db_output.ass_final;
 
 CREATE TABLE IF NOT EXISTS $db_output.ass_final
 (
@@ -179,6 +183,8 @@ USING DELTA
 
 -- COMMAND ----------
 
+-- DROP TABLE IF EXISTS $db_output.cyp_outcomes;
+
 CREATE TABLE IF NOT EXISTS $db_output.cyp_outcomes
 (
 UniqMonthID long, 
@@ -203,6 +209,8 @@ USING DELTA
 
 
 -- COMMAND ----------
+
+-- DROP TABLE IF EXISTS $db_output.cyp_outcomes_output;
 
 CREATE TABLE IF NOT EXISTS $db_output.cyp_outcomes_output
 (

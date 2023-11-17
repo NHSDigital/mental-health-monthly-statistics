@@ -8,7 +8,7 @@
 
 # COMMAND ----------
 
-dbutils.widgets.text("db_souce","db_souce","db_souce")
+dbutils.widgets.text("$reference_data","$reference_data","$reference_data")
 
 # COMMAND ----------
 
@@ -48,6 +48,8 @@ dbutils.widgets.text("db_souce","db_souce","db_souce")
  - MH26_ranking
  - AMH59_prep
  - AMH59_prep_prov
+ 
+ The following have been moved to only run for data prior to April 2023:
  - CCR7071_prep
  - CCR7071_prep_prov
  - CCR7273_prep
@@ -1231,7 +1233,6 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 
 # DBTITLE 1,MHS23d_prep
  %sql
- --Copied from Main_monthly_prep_TJ
  CREATE OR REPLACE GLOBAL TEMP VIEW MHS23d_prep AS
        SELECT 
        MPI.NAME
@@ -1246,7 +1247,11 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
              ,CASE WHEN MPI.AgeRepPeriodEnd BETWEEN 0 AND 17 THEN 'Under 18'
                    WHEN MPI.AgeRepPeriodEnd BETWEEN 18 AND 64 THEN '18-64'
                    WHEN MPI.AgeRepPeriodEnd > 64 THEN '65+'
-                   ELSE 'UNKNOWN' END as AgeGroup              
+                   ELSE 'UNKNOWN' END as AgeGroup
+               ,CASE WHEN MPI.AgeRepPeriodEnd BETWEEN 0 AND 17 THEN 'People aged under 18'
+                             WHEN MPI.AgeRepPeriodEnd BETWEEN 18 AND 64 THEN 'People aged 18 to 64'
+                             WHEN MPI.AgeRepPeriodEnd > 64 THEN 'People aged 65 or over'
+                             ELSE 'UNKNOWN' END as AgeGroupName
              ,SERV.ServTeamTypeRefToMH
  
   FROM $db_output.MHS101Referral_open_end_rp    AS REF  
@@ -1274,6 +1279,10 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
                    WHEN MPI.AgeRepPeriodEnd BETWEEN 18 AND 64 THEN '18-64'
                     WHEN MPI.AgeRepPeriodEnd > 64 THEN '65+'
                     ELSE 'UNKNOWN' END as AgeGroup 
+                            ,CASE WHEN MPI.AgeRepPeriodEnd BETWEEN 0 AND 17 THEN 'People aged under 18'
+                             WHEN MPI.AgeRepPeriodEnd BETWEEN 18 AND 64 THEN 'People aged 18 to 64'
+                             WHEN MPI.AgeRepPeriodEnd > 64 THEN 'People aged 65 or over'
+                             ELSE 'UNKNOWN' END as AgeGroupName
         FROM $db_output.MHS101Referral_open_end_rp   AS REF    
    INNER JOIN $db_source.MHS001MPI    AS MPI
               ON REF.Person_ID = MPI.Person_ID
@@ -1284,101 +1293,6 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
    WHERE      SERV.ServTeamTypeRefToMH in ('A05','A06','A08','A09','A12','A13','A16','C10')    
   
   --OPTIMIZE $db_output.tmp_MHMAB_MHS23d_prep_prov 
-
-# COMMAND ----------
-
-# DBTITLE 1,MHS01_prep
-
-
-# COMMAND ----------
-
-# DBTITLE 1,MHS07_prep
-
-
-# COMMAND ----------
-
-# DBTITLE 1,MHS29 Prep - National/CCG/Provider
- %sql
- CREATE OR REPLACE GLOBAL TEMP VIEW MHS29_prep AS
- SELECT                CC.UniqCareContID
-                       ,CCG.NAME
-                       ,CCG.IC_REC_CCG
-                       ,CC.OrgIDProv
-                       ,CC.AttendOrDNACode
-                       ,CC.Person_ID
-                       ,CC.UniqServReqID
-                       ,CC.ConsMechanismMH
-                       ,CC.CareContCancelDate
-                       ,CC.CareContDate
-                       ,CASE WHEN CC.AttendOrDNACode = 2 THEN 'Appointment cancelled by, or on behalf of the patient'
-                             WHEN CC.AttendOrDNACode = 3 THEN 'Did not attend, no advance warning given'
-                             WHEN CC.AttendOrDNACode = 4 THEN 'Appointment cancelled or postponed by the health care provider'
-                             WHEN CC.AttendOrDNACode = 7 THEN 'Patient arrived late and could not be seen'
-                             ELSE 'N/A'
-                             END AS DNA_Reason
-                       ,CASE WHEN CC.ConsMechanismMH IS NULL THEN 'Missing'
-                             ELSE COALESCE(CM.Code, 'Invalid')
-                             END AS ConsMedUsed
-                       ,CASE WHEN CC.ConsMechanismMH IS NULL THEN 'Missing'
-                             ELSE COALESCE(CM.Description, 'Invalid')
-                             END AS CMU
- FROM                  $db_source.MHS201CareContact AS CC
- INNER JOIN            global_temp.CCG AS CCG 
-                       ON CC.Person_ID = CCG.Person_ID
- LEFT JOIN             $db_output.ConsMechanismMH_dim as CM
-                       ON CC.ConsMechanismMH = CM.Code
-                       and CC.UniqMonthID >= CM.FirstMonth and (CM.LastMonth is null or CC.UniqMonthID <= CM.LastMonth)
- WHERE		   		  CC.UniqMonthID = '$month_id' 
- 					  AND (CareContDate >= '$rp_startdate' AND CareContDate <= '$rp_enddate')
-
-# COMMAND ----------
-
-# DBTITLE 1,MHS29abc Prep - National and CCG
- %sql
- 
- CREATE OR REPLACE GLOBAL TEMP VIEW MHS29abc_prep AS
- SELECT                CC.UniqCareContID
-                       ,SRV.ServTeamTypeRefToMH
-                       ,MPI.PatMRecInRP
-                       ,CCG.NAME
- 					  ,CCG.IC_Rec_CCG
-                       ,CC.attendordnacode
-                       ,CC.person_id
- FROM                  $db_source.MHS201CareContact AS CC
- INNER JOIN            $db_source.MHS102ServiceTypeReferredTo AS SRV
-                       ON CC.UniqServReqID = SRV.UniqServReqID
-                       AND CC.UniqCareProfTeamID = SRV.UniqCareProfTeamID
-                       AND SRV.UniqMonthID = '$month_id' 
- INNER JOIN            $db_source.MHS001MPI AS MPI
-                       ON CC.Person_ID = MPI.Person_ID
-                       AND MPI.UniqMonthID = '$month_id'
- INNER JOIN            global_temp.CCG AS CCG 
-                       ON MPI.Person_ID = CCG.Person_ID
- WHERE		   		  CC.UniqMonthID = '$month_id' 
- 					  AND (CareContDate >= '$rp_startdate' AND CareContDate <= '$rp_enddate')
-
-# COMMAND ----------
-
-# DBTITLE 1,MHS29abc Prep - Provider
- %sql
- 
- CREATE OR REPLACE GLOBAL TEMP VIEW MHS29abc_prov_prep AS
- SELECT                CC.UniqCareContID
-                       ,SRV.ServTeamTypeRefToMH
-                       ,CC.attendordnacode
-                       ,CC.OrgIDProv
- FROM                  $db_source.MHS201CareContact AS CC
- INNER JOIN            $db_source.MHS102ServiceTypeReferredTo AS SRV
-                       ON CC.UniqServReqID = SRV.UniqServReqID
-                       AND CC.UniqCareProfTeamID = SRV.UniqCareProfTeamID
-                       AND SRV.UniqMonthID = '$month_id' 
- WHERE		   		  CC.UniqMonthID = '$month_id' 
- 					  AND (CareContDate >= '$rp_startdate' AND CareContDate <= '$rp_enddate')
-
-# COMMAND ----------
-
- %md
- - Main_monthly_prep/global_temp.CC001_prep-> Main_monthly_prep/(MHS29d_prep + MHS29f_prep) -> Outpatient_Measures(MHS29d breakdowns + MHS29fbreakdowns)
 
 # COMMAND ----------
 
@@ -1404,10 +1318,146 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
                        ,CC.CareContCancelDate
                        ,CC.OrgIDProv
  FROM $db_source.MHS201CareContact AS CC
- LEFT JOIN (SELECT * from $db_source.datadictionarycodes WHERE ItemName = 'ATTENDED_OR_DID_NOT_ATTEND') dss_corp_ATT
+ LEFT JOIN (SELECT * from $reference_data.datadictionarycodes WHERE ItemName = 'ATTENDANCE_STATUS') dss_corp_ATT
   ON CC.AttendOrDNACode = dss_corp_ATT.PrimaryCode
- LEFT JOIN (SELECT * from $db_source.datadictionarycodes WHERE ItemName = 'CONSULTATION_MEDIUM_USED') dss_corp_CONS
+ LEFT JOIN (SELECT * from $reference_data.datadictionarycodes WHERE ItemName = 'CONSULTATION_MEDIUM_USED') dss_corp_CONS --CONSULTATION_MECHANISM???
  ON CC.ConsMechanismMH = dss_corp_CONS.PrimaryCode
+ WHERE
+ UniqMonthID = '$month_id'
+
+# COMMAND ----------
+
+# DBTITLE 1,MHS29 Prep - National/CCG/Provider
+ %sql
+ CREATE OR REPLACE GLOBAL TEMP VIEW MHS29_prep AS
+ SELECT                CC.UniqCareContID
+                       ,CCG.NAME
+                       ,CCG.IC_REC_CCG
+                       ,CC.OrgIDProv
+                       ,CC.AttendOrDNACode
+                       ,CC.Person_ID
+                       ,CC.UniqServReqID
+                       ,CC.ConsMechanismMH
+                       ,CC.CareContCancelDate
+                       ,CC.CareContDate
+                       ,CASE WHEN CC.AttendOrDNACode = 2 THEN 'Appointment cancelled by, or on behalf of the patient'
+                             WHEN CC.AttendOrDNACode = 3 THEN 'Did not attend, no advance warning given'
+                             WHEN CC.AttendOrDNACode = 4 THEN 'Appointment cancelled or postponed by the health care provider'
+                             WHEN CC.AttendOrDNACode = 7 THEN 'Patient arrived late and could not be seen'
+                             ELSE 'N/A'
+                             END AS DNA_Reason
+                       ,CASE WHEN dss_corp_ATT.PrimaryCode IS NOT NULL THEN CC.AttendOrDNACode
+                      WHEN CC.AttendOrDNACode IS NULL THEN 'UNKNOWN'
+                      WHEN CC.AttendOrDNACode IS NOT NULL AND dss_corp_ATT.PrimaryCode IS NULL THEN 'Invalid' END AS Attend_Code 
+                       ,CASE WHEN dss_corp_ATT.PrimaryCode IS NOT NULL THEN dss_corp_ATT.Description ELSE 'Invalid' END AS Attend_Name
+                       ,CASE WHEN CC.ConsMechanismMH IS NULL THEN 'Missing'
+                             ELSE COALESCE(CM.Level, 'Invalid')
+                             END AS ConsMedUsed
+                       ,CASE WHEN CC.ConsMechanismMH IS NULL THEN 'Missing'
+                             ELSE COALESCE(CM.Level_Description, 'Invalid')
+                             END AS CMU
+ FROM                  $db_source.MHS201CareContact AS CC
+ INNER JOIN            global_temp.CCG AS CCG 
+                       ON CC.Person_ID = CCG.Person_ID
+ LEFT JOIN             $db_output.ConsMechanismMH as CM
+                       ON CC.ConsMechanismMH = CM.Level                    
+ LEFT JOIN (SELECT * from $reference_data.datadictionarycodes WHERE ItemName = 'ATTENDANCE_STATUS') dss_corp_ATT
+  ON CC.AttendOrDNACode = dss_corp_ATT.PrimaryCode
+ 
+ WHERE		   		  CC.UniqMonthID = '$month_id' 
+ 					  AND (CareContDate >= '$rp_startdate' AND CareContDate <= '$rp_enddate')
+
+# COMMAND ----------
+
+# DBTITLE 1,MHS29abc Prep - National and CCG
+ %sql
+ 
+ CREATE OR REPLACE GLOBAL TEMP VIEW MHS29abc_prep AS
+ SELECT                CC.UniqCareContID
+                       ,SRV.ServTeamTypeRefToMH
+                       ,MPI.PatMRecInRP
+                       ,CCG.NAME
+ 					  ,CCG.IC_Rec_CCG
+                       ,CC.attendordnacode
+                       ,CASE WHEN CC.AttendOrDNACode = 2 THEN 'Appointment cancelled by, or on behalf of the patient'
+                             WHEN CC.AttendOrDNACode = 3 THEN 'Did not attend, no advance warning given'
+                             WHEN CC.AttendOrDNACode = 4 THEN 'Appointment cancelled or postponed by the health care provider'
+                             WHEN CC.AttendOrDNACode = 7 THEN 'Patient arrived late and could not be seen'
+                             ELSE 'N/A'
+                             END AS DNA_Reason
+                       ,CASE WHEN CC.ATT_PrimaryCode IS NOT NULL THEN CC.AttendOrDNACode
+                      WHEN CC.AttendOrDNACode IS NULL THEN 'UNKNOWN'
+                      WHEN CC.AttendOrDNACode IS NOT NULL AND CC.ATT_PrimaryCode IS NULL THEN 'Invalid' END AS Attend_Code 
+                       ,CASE WHEN CC.ATT_PrimaryCode IS NOT NULL THEN CC.ATT_Desc ELSE 'Invalid' END AS Attend_Name
+                       ,CASE 
+                             WHEN CC.ConsMechanismMH IS NULL THEN 'Missing'
+                             WHEN CC.ConsMechanismMH NOT IN ('01','02','04','05','09','10','11','12','13','98') THEN 'Invalid'
+                             ELSE CC.ConsMechanismMH
+                             END AS ConsMedUsed 
+                  -------------------------------------------------------------------------------------------------------------            
+                   
+                      ,CASE 
+                            WHEN CC.ConsMechanismMH IS NULL THEN 'Missing' 
+                            WHEN CC.ConsMechanismMH NOT IN ('01','02','04','05','09','10','11','12','13','98') THEN 'Invalid'
+                            WHEN CC.CONSMECH_PrimaryCode IS NOT NULL THEN CC.CONSMECH_Desc 
+                            END AS CMU
+                       ,CC.person_id
+ FROM                  global_temp.CC001_Prep AS CC
+ LEFT JOIN            $db_source.MHS102ServiceTypeReferredTo AS SRV
+                       ON CC.UniqServReqID = SRV.UniqServReqID
+                       AND CC.UniqCareProfTeamID = SRV.UniqCareProfTeamID
+                       AND SRV.UniqMonthID = '$month_id' 
+ LEFT JOIN            $db_source.MHS001MPI AS MPI
+                       ON CC.Person_ID = MPI.Person_ID
+                       AND MPI.UniqMonthID = '$month_id'
+ LEFT JOIN            global_temp.CCG AS CCG 
+                       ON MPI.Person_ID = CCG.Person_ID
+ WHERE		   		  CC.UniqMonthID = '$month_id' 
+ 					  AND (CareContDate >= '$rp_startdate' AND CareContDate <= '$rp_enddate')
+
+# COMMAND ----------
+
+# DBTITLE 1,MHS29abc Prep - Provider
+ %sql
+ 
+ CREATE OR REPLACE GLOBAL TEMP VIEW MHS29abc_prov_prep AS
+ SELECT                CC.UniqCareContID
+                       ,SRV.ServTeamTypeRefToMH
+                       ,CC.attendordnacode
+                       ,CASE WHEN CC.AttendOrDNACode = 2 THEN 'Appointment cancelled by, or on behalf of the patient'
+                             WHEN CC.AttendOrDNACode = 3 THEN 'Did not attend, no advance warning given'
+                             WHEN CC.AttendOrDNACode = 4 THEN 'Appointment cancelled or postponed by the health care provider'
+                             WHEN CC.AttendOrDNACode = 7 THEN 'Patient arrived late and could not be seen'
+                             ELSE 'N/A'
+                             END AS DNA_Reason
+                       ,CASE WHEN CC.ATT_PrimaryCode IS NOT NULL THEN CC.AttendOrDNACode
+                      WHEN CC.AttendOrDNACode IS NULL THEN 'UNKNOWN'
+                      WHEN CC.AttendOrDNACode IS NOT NULL AND CC.ATT_PrimaryCode IS NULL THEN 'Invalid' END AS Attend_Code 
+                       ,CASE WHEN CC.ATT_PrimaryCode IS NOT NULL THEN CC.ATT_Desc ELSE 'Invalid' END AS Attend_Name
+                       ,CASE WHEN CC.ConsMechanismMH IS NULL THEN 'Missing'
+                             WHEN CC.ConsMechanismMH NOT IN ('01','02','04','05','09','10','11','12','13','98') THEN 'Invalid'
+                             ELSE CC.ConsMechanismMH
+                             END AS ConsMedUsed 
+                  -------------------------------------------------------------------------------------------------------------            
+                   
+                      ,CASE 
+                            WHEN CC.ConsMechanismMH IS NULL THEN 'Missing' 
+                            WHEN CC.ConsMechanismMH NOT IN ('01','02','04','05','09','10','11','12','13','98') THEN 'Invalid'
+                            WHEN CC.CONSMECH_PrimaryCode IS NOT NULL THEN CC.CONSMECH_Desc 
+                            END AS CMU
+                       ,CC.OrgIDProv
+ FROM                  global_temp.CC001_Prep AS CC
+ INNER JOIN            $db_source.MHS102ServiceTypeReferredTo AS SRV
+                       ON CC.UniqServReqID = SRV.UniqServReqID
+                       AND CC.UniqCareProfTeamID = SRV.UniqCareProfTeamID
+                       AND SRV.UniqMonthID = '$month_id' 
+ WHERE		   		  CC.UniqMonthID = '$month_id' 
+ 					  AND (CareContDate >= '$rp_startdate' AND CareContDate <= '$rp_enddate')
+
+# COMMAND ----------
+
+ %md
+ - Main_monthly_prep/global_temp.CC001_prep-> Main_monthly_prep/(MHS29d_prep + MHS29f_prep) -> Outpatient_Measures(MHS29d breakdowns + MHS29fbreakdowns)
 
 # COMMAND ----------
 
@@ -1429,26 +1479,26 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
                        ,CC.CareContDate
                        ,CASE WHEN CC.AttendOrDNACode IN ('2','3','4','7') THEN CC.ATT_Desc ELSE 'N/A' END AS DNA_Reason
                 -------------------------------------------------------------------------------------------------------------      
-                      ,CASE WHEN CC.ConsMechanismMH IS NULL THEN 'UNKNOWN'
+                      ,CASE WHEN CC.ConsMechanismMH IS NULL THEN 'Missing'
                              WHEN CC.ConsMechanismMH NOT IN ('01','02','04','05','09','10','11','12','13','98') THEN 'Invalid'
                              ELSE CC.ConsMechanismMH
                              END AS ConsMedUsed 
                   -------------------------------------------------------------------------------------------------------------            
                    
-                      ,CASE WHEN CC.ConsMechanismMH IS NULL THEN 'UNKNOWN' 
+                      ,CASE WHEN CC.ConsMechanismMH IS NULL THEN 'Missing' 
                       WHEN CC.CONSMECH_PrimaryCode IS NOT NULL THEN CC.CONSMECH_Desc 
                       WHEN CC.ConsMechanismMH IS NOT NULL AND CC.CONSMECH_PrimaryCode IS NULL THEN 'Invalid' END AS CMU
                     -------------------------------------------------------------------------------------------------------------      
                    ,CASE WHEN MPI.AgeRepPeriodEnd BETWEEN 0 AND 17 THEN 'Under 18'
                              WHEN MPI.AgeRepPeriodEnd BETWEEN 18 AND 64 THEN '18-64'
                              WHEN MPI.AgeRepPeriodEnd > 64 THEN '65+'
-                             ELSE 'UNKNOWN' END as AgeGroup       
+                             ELSE 'UNKNOWN' END as AgeGroup        
                    ,CASE WHEN MPI.AgeRepPeriodEnd BETWEEN 0 AND 17 THEN 'People aged under 18'
                              WHEN MPI.AgeRepPeriodEnd BETWEEN 18 AND 64 THEN 'People aged 18 to 64'
                              WHEN MPI.AgeRepPeriodEnd > 64 THEN 'People aged 65 or over'
-                             ELSE 'UNKNOWN' END as AgeGroupName       
+                             ELSE 'UNKNOWN' END as AgeGroupName         
              ,CASE WHEN CC.ATT_PrimaryCode IS NOT NULL THEN CC.AttendOrDNACode
-                      WHEN CC.AttendOrDNACode IS NULL THEN 'UNKOWN'
+                      WHEN CC.AttendOrDNACode IS NULL THEN 'UNKNOWN'
                       WHEN CC.AttendOrDNACode IS NOT NULL AND CC.ATT_PrimaryCode IS NULL THEN 'Invalid' END AS Attend_Code 
          -------------------------------------------------------------------------------------------------------------                     
             ,CASE WHEN CC.ATT_PrimaryCode IS NOT NULL THEN CC.ATT_Desc ELSE 'Invalid' END AS Attend_Name
@@ -1456,21 +1506,21 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
   
   FROM      global_temp.CC001_prep AS CC
   
-  INNER JOIN $db_source.MHS101Referral AS REF
+  LEFT JOIN $db_source.MHS101Referral AS REF
              ON CC.Person_ID = REF.Person_ID 
             AND REF.UNIQSERVREQID = CC.UNIQSERVREQID
   
-  INNER JOIN $db_output.tmp_MHMAB_MHS001MPI_latest_month_data AS MPI
+  LEFT JOIN $db_output.tmp_MHMAB_MHS001MPI_latest_month_data AS MPI
              ON MPI.Person_ID = CC.Person_ID
              
-  INNER JOIN global_temp.MHS102ServiceTypeReferredTo as SERV
+  LEFT JOIN global_temp.MHS102ServiceTypeReferredTo as SERV
   --$db_source.MHS102SERVICETYPEREFERREDTO  AS SERV
              ON REF.UNIQSERVREQID = SERV.UNIQSERVREQID
              AND CC.UniqCareProfTeamID = SERV.UniqCareProfTeamID 
             AND REF.PERSON_ID = SERV.PERSON_ID
             AND SERV.UNIQMONTHID = '$month_id'
             
-  INNER JOIN global_temp.CCG AS CCG 
+  LEFT JOIN global_temp.CCG AS CCG 
              ON CC.Person_ID = CCG.Person_ID
   WHERE      CC.UniqMonthID = '$month_id' 
             AND (CareContDate >= '$rp_startdate' AND CareContDate <= '$rp_enddate')
@@ -1493,12 +1543,12 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
                        ,CC.CareContCancelDate
                        ,CC.CareContDate
                        ,CASE WHEN CC.AttendOrDNACode IN ('2','3','4','7') THEN CC.ATT_Desc ELSE 'N/A' END AS DNA_Reason
-                       ,CASE WHEN CC.ConsMechanismMH IS NULL THEN 'UNKNOWN'
+                       ,CASE WHEN CC.ConsMechanismMH IS NULL THEN 'Missing'
                              WHEN CC.ConsMechanismMH NOT IN ('01','02','04','05','09','10','11','12','13','98') THEN 'Invalid'
                              ELSE CC.ConsMechanismMH
                              END AS ConsMedUsed
                              
-                      ,CASE WHEN CC.ConsMechanismMH IS NULL THEN 'UNKNOWN' 
+                      ,CASE WHEN CC.ConsMechanismMH IS NULL THEN 'Missing' 
                       WHEN CC.CONSMECH_PrimaryCode IS NOT NULL THEN CC.CONSMECH_Desc 
                       WHEN CC.ConsMechanismMH IS NOT NULL AND CC.CONSMECH_PrimaryCode IS NULL THEN 'Invalid' END AS CMU
                        
@@ -1509,7 +1559,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
                              ELSE 'UNKNOWN' END as AgeGroup       
                  ----------------------------------------------------------------------------------------------------------------   
                        ,CASE WHEN CC.ATT_PrimaryCode IS NOT NULL THEN CC.AttendOrDNACode
-                      WHEN CC.AttendOrDNACode IS NULL THEN 'UNKOWN'
+                      WHEN CC.AttendOrDNACode IS NULL THEN 'UNKNOWN'
                       WHEN CC.AttendOrDNACode IS NOT NULL AND CC.ATT_PrimaryCode IS NULL THEN 'Invalid' END AS Attend_Code 
                        ,CASE WHEN CC.ATT_PrimaryCode IS NOT NULL THEN CC.ATT_Desc ELSE 'Invalid' END AS Attend_Name
  
@@ -1537,7 +1587,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
              ON CC.Person_ID = CCG.Person_ID
   WHERE      CC.UniqMonthID = '$month_id' 
             AND (CareContDate >= '$rp_startdate' AND CareContDate <= '$rp_enddate')
-            AND SERV.ServTeamTypeRefToMH in ('A05','A06','A08','A09','A12','A13','A16','C10');
+            AND SERV.ServTeamTypeRefToMH in ('A05','A06','A08','A09','A12','A13','A16','C10')
  ------------------------------------------------------------------------------------------------------Old
  -- FROM       global_temp.CC001_prep AS CC
  --  INNER JOIN global_temp.CCG AS CCG 
@@ -1573,7 +1623,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
  --                      WHEN CC.ConsMechanismMH IS NOT NULL AND CC.CONSMECH_PrimaryCode IS NULL THEN 'Invalid' END AS CMU
                        
  --                       ,CASE WHEN CC.ATT_PrimaryCode IS NOT NULL THEN CC.AttendOrDNACode
- --                      WHEN CC.AttendOrDNACode IS NULL THEN 'UNKOWN'
+ --                      WHEN CC.AttendOrDNACode IS NULL THEN 'UNKNOWN'
  --                      WHEN CC.AttendOrDNACode IS NOT NULL AND CC.ATT_PrimaryCode IS NULL THEN 'Invalid' END AS Attend_Code 
  --                       ,CASE WHEN CC.ATT_PrimaryCode IS NOT NULL THEN CC.ATT_Desc ELSE 'Invalid' END AS Attend_Name
  
@@ -1607,11 +1657,11 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
                              WHEN CC.AttendOrDNACode = 7 THEN 'Patient arrived late and could not be seen'
                              ELSE 'N/A'
                              END AS DNA_Reason
-                       ,CASE WHEN CC.ConsMechanismMH IS NULL THEN 'UNKNOWN'
+                       ,CASE WHEN CC.ConsMechanismMH IS NULL THEN 'Missing'
                              WHEN CC.ConsMechanismMH NOT IN ('01','02','04','05','09','10','11','12','13','98') THEN 'Invalid'
                              ELSE CC.ConsMechanismMH
                              END AS ConsMedUsed
-                       ,CASE WHEN CC.ConsMechanismMH IS NULL THEN 'UNKNOWN'
+                       ,CASE WHEN CC.ConsMechanismMH IS NULL THEN 'Missing'
                              WHEN CC.ConsMechanismMH = '01' THEN 'Face to face communication'
                              WHEN CC.ConsMechanismMH = '02' THEN 'Telephone'
                              WHEN CC.ConsMechanismMH = '04' THEN 'Talk type for a person unable to speak'
@@ -1708,101 +1758,3 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
               WHERE WRD.AMHServiceWSEndRP_temp= true 
                     --AND BedTypeAdultEndRP = 2 --Official derivation - using analyst version
                     AND Bed_Type = 2
-
-# COMMAND ----------
-
-# DBTITLE 1,CCR70/CCR71 Intermediate National/CCG
- %sql
- 
- CREATE OR REPLACE GLOBAL TEMP VIEW CCR7071_prep AS
-              SELECT MPI.IC_Rec_CCG 
-                     ,MPI.NAME
-                     ,REF.ClinRespPriorityType
-                     ,CASE WHEN REF.AgeServReferRecDate BETWEEN 0 and 17 THEN '0-17'
-                           WHEN REF.AgeServReferRecDate >=18 THEN '18 and over' 
-                           END AS AGE_GROUP
-                      ,REF.UniqServReqID
-                 FROM $db_output.MHS001MPI_latest_month_data AS MPI
-           INNER JOIN $db_source.MHS101Referral AS REF 
-                      ON MPI.Person_ID = REF.Person_ID
-                      AND REF.UniqMonthID = '$month_id' 
-           INNER JOIN $db_source.MHS102ServiceTypeReferredTo AS REFTO
-                      ON REF.UniqServReqID = REFTO.UniqServReqID 
-                      AND REFTO.UniqMonthID = '$month_id' 
-                      
-           INNER JOIN $db_output.validcodes as vc
-                      ON vc.table = 'MHS102ServiceTypeReferredTo' and vc.field = 'ServTeamTypeRefToMH' and vc.Measure = 'CCR7071_prep' and vc.type = 'include' and REFTO.ServTeamTypeRefToMH = vc.ValidValue 
-                       and $month_id >= vc.FirstMonth and (vc.LastMonth is null or $month_id <= vc.LastMonth)
-                       
-                WHERE REF.ReferralRequestReceivedDate BETWEEN '$rp_startdate'  AND '$rp_enddate'
- --                      AND REFTO.ServTeamTypeRefToMH IN ('A02','A03');
-
-# COMMAND ----------
-
-# DBTITLE 1,CCR70/CCR71 Intermediate Provider
- %sql
- 
- CREATE OR REPLACE GLOBAL TEMP VIEW CCR7071_prep_prov AS
-              SELECT REF.OrgIDProv
-                     ,REF.ClinRespPriorityType
-                     ,CASE WHEN REF.AgeServReferRecDate BETWEEN 0 and 17 THEN '0-17'
-                           WHEN REF.AgeServReferRecDate >=18 THEN '18 and over' 
-                           END AS AGE_GROUP
-                      ,REF.UniqServReqID
-                 FROM $db_source.MHS101Referral AS REF 
-           
-           INNER JOIN $db_source.MHS102ServiceTypeReferredTo AS REFTO
-                      ON REF.UniqServReqID = REFTO.UniqServReqID 
-                      AND REFTO.UniqMonthID = '$month_id' 
-                      AND REF.OrgIDProv = REFTO.OrgIDProv
-                      
-          INNER JOIN $db_output.validcodes as vc
-                      ON vc.table = 'MHS102ServiceTypeReferredTo' and vc.field = 'ServTeamTypeRefToMH' and vc.Measure = 'CCR7071_prep' and vc.type = 'include' and REFTO.ServTeamTypeRefToMH = vc.ValidValue 
-                       and $month_id >= vc.FirstMonth and (vc.LastMonth is null or $month_id <= vc.LastMonth)
-                       
-                WHERE REF.ReferralRequestReceivedDate BETWEEN '$rp_startdate'  AND '$rp_enddate'
- --                      AND REFTO.ServTeamTypeRefToMH IN ('A02','A03')
-                      AND REF.UniqMonthID = '$month_id' ;
-                      
-
-# COMMAND ----------
-
-# DBTITLE 1,CCR72/CCR73 Intermediate National/CCG
- %sql
- 
- CREATE OR REPLACE GLOBAL TEMP VIEW CCR7273_prep AS
-              SELECT CCR.IC_Rec_CCG 
-                     ,CCR.NAME
-                     ,CCR.ClinRespPriorityType
-                     ,CCR.AGE_GROUP
-                     ,CCR.UniqServReqID
-                 FROM global_temp.CCR7071_prep AS CCR
-           INNER JOIN $db_source.MHS201CareContact CON 
-                      ON CCR.UniqServReqID = CON.UniqServReqID 
-                      AND CON.UniqMonthID = '$month_id'
- 
-                WHERE CON.CareContDate BETWEEN '$rp_startdate' AND '$rp_enddate'
-                      AND CON.AttendOrDNACode in ('5','6')
-                      AND CON.ConsMechanismMH = '01';                  
-
-# COMMAND ----------
-
-# DBTITLE 1,CCR72/CCR73 Intermediate Provider
- %sql
- 
- CREATE OR REPLACE GLOBAL TEMP VIEW CCR7273_prep_prov AS 
-              SELECT CCR.OrgIDProv
-                     ,CCR.ClinRespPriorityType
-                     ,CCR.AGE_GROUP
-                     ,CCR.UniqServReqID
-                 FROM global_temp.CCR7071_prep_prov AS CCR
-           INNER JOIN $db_source.MHS201CareContact CON 
-                      ON CCR.UniqServReqID = CON.UniqServReqID 
-                      AND CON.UniqMonthID = '$month_id'
-                      AND CCR.OrgIDProv = CON.OrgIDProv 
-                WHERE CON.CareContDate BETWEEN '$rp_startdate' AND '$rp_enddate'
-                      AND CON.AttendOrDNACode in ('5','6')
-                      AND CON.ConsMechanismMH = '01';      
-
-# COMMAND ----------
-

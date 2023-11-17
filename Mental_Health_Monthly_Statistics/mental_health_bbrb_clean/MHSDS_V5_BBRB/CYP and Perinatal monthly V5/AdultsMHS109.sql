@@ -1,14 +1,14 @@
 -- Databricks notebook source
---  %md
---  ### MHSDS V5.0 Changes
---  #### AM: Dec 16 2021 - Updated code (Cmd 5)for V5.0 change - ConsMediumUsed' will change to 'ConsMechanismMH', code '06' will change to '09' from Oct 2021 data
+%md
+### MHSDS V5.0 Changes
+#### Dec 16 2021 - Updated code (Cmd 5)for V5.0 change - ConsMediumUsed' will change to 'ConsMechanismMH', code '06' will change to '09' from Oct 2021 data
 
 -- COMMAND ----------
 
 CREATE OR REPLACE  TEMPORARY VIEW RD_CCG_LATEST AS
 SELECT DISTINCT ORG_CODE,
                 NAME
-           FROM $ref_database.org_daily
+           FROM $reference_data.org_daily
           WHERE (BUSINESS_END_DATE >= add_months('$rp_enddate', 1) OR ISNULL(BUSINESS_END_DATE))
                 AND BUSINESS_START_DATE <= add_months('$rp_enddate', 1)	
                 AND ORG_TYPE_CODE = 'CC'
@@ -22,7 +22,7 @@ SELECT DISTINCT ORG_CODE,
 CREATE OR REPLACE  TEMPORARY VIEW RD_ORG_DAILY_LATEST AS
 SELECT DISTINCT ORG_CODE, 
                 NAME
-           FROM $ref_database.org_daily
+           FROM $reference_data.org_daily
           WHERE (BUSINESS_END_DATE >= add_months('$rp_enddate', 1) OR ISNULL(BUSINESS_END_DATE))
                 AND BUSINESS_START_DATE <= add_months('$rp_enddate', 1)	
                 AND ORG_TYPE_CODE NOT IN ('MP', 'IR', 'F', 'GO', 'CN');
@@ -41,10 +41,11 @@ SELECT
       END AS Person_ID,
 	r.RecordNumber,
 	r.UniqServReqID,
-    Case when r.OrgIDProv = 'DFC' then r.OrgIDComm -- to correctly allocate commissioner to Kooth
+	--CASE WHEN r.OrgIDProv = 'DFC' THEN r.OrgIDComm ELSE m.OrgIDCCGRes END AS Der_OrgComm, -- to correctly allocate commissioner to Kooth
+    Case when r.OrgIDProv = 'DFC' then r.OrgIDComm
          when (r.UniqMonthID <= 1467 and r.OrgIDProv <> "DFC") then m.OrgIDCCGRes -- Case When added to add CCG/SubICB derivation according to month
          when (r.UniqMonthID > 1467 and r.OrgIDProv <> "DFC") then m.OrgIDSubICBLocResidence
-    else "ERROR" end as Der_OrgComm, 
+    else "ERROR" end as Der_OrgComm, ---changed from ERROR to UNKNOWN
 	m.LADistrictAuth,
 	r.AgeServReferRecDate,
 	m.AgeRepPeriodEnd
@@ -80,8 +81,12 @@ LEFT JOIN $db_source.MHS001MPI m ON c.RecordNumber = m.RecordNumber
 WHERE 
   (
     ( c.AttendOrDNACode IN ('5', '6') and ((c.ConsMechanismMH NOT IN ('05', '06') and c.UniqMonthID < '1459') or (c.ConsMechanismMH IN ('01', '02', '04', '11') and c.UniqMonthID >= '1459')))   
+-------/*** ConsMediumUsed' will change to 'ConsMechanismMH', code '06' will change to '09' from Oct 2021 data /*** updated to v5 ***/
     or 
-    ( ((c.ConsMechanismMH IN ('05', '06') and c.UniqMonthID < '1459') or (c.ConsMechanismMH IN ('05', '09', '10', '13') and c.UniqMonthID >= '1459')) and c.OrgIdProv = 'DFC')
+    ( ((c.ConsMechanismMH IN ('05', '06') and c.UniqMonthID < '1459') or (c.ConsMechanismMH IN ('05', '09', '10', '13') and c.UniqMonthID >= '1459')) and c.OrgIdProv = 'DFC')            ---/*** change from Oct2021: v5 change **/
+   )
+--c.AttendOrDNACode IN ('5','6') AND c.ConsMechanismMH NOT IN ('05','09') OR (c.OrgIDProv = 'DFC' AND c.ConsMechanismMH IN ('05','09')) 
+-------/*** ConsMediumUsed' will change to 'ConsMechanismMH', code '06' will change to '09' from Oct 2021 data V5.0 /*** updated to v5 ***/
 UNION ALL
 
 SELECT
@@ -111,6 +116,7 @@ SELECT
 	r.UniqServReqID,
 	COALESCE(a.AgeCareContDate,r.AgeRepPeriodEnd) AS Der_ContAge,
 	a.Der_ContactDate--,
+--	ROW_NUMBER() OVER (PARTITION BY a.Person_ID, a.UniqServReqID ORDER BY a.Der_ContactDate ASC) AS Der_ContactOrder
 
 FROM Comb109 a
 
@@ -154,6 +160,7 @@ FROM Act109 as A
 LEFT JOIN $db_output.CCG_MAPPING_2021 C on a.Der_OrgComm = C.CCG_UNMAPPED
 LEFT JOIN RD_ORG_DAILY_LATEST o on a.OrgIDProv = o.ORG_CODE
 
+--WHERE a.Der_ContactOrder = 1
 
 -- COMMAND ----------
 
@@ -220,7 +227,7 @@ SELECT
 '$rp_startdate_12m' AS REPORTING_PERIOD_START_DATE,
 '$rp_enddate' AS REPORTING_PERIOD_END_DATE,
 '$status' AS STATUS,
-'Sub ICB of Residence' AS BREAKDOWN, -- amended from 'CCG of Residence' to 'CCG of Residence' for consistency 
+'Sub ICB of Residence' AS BREAKDOWN, -- amended from 'CCG of Residence' to 'CCG of Residence' for consistency HL 25/01/22, addes space 4/10/22
 ccg21CDH AS PRIMARY_LEVEL,
 ccg21nm AS PRIMARY_LEVEL_DESCRIPTION,
 'NONE' AS SECONDARY_LEVEL,
@@ -246,7 +253,7 @@ SELECT
 '$rp_startdate_12m' AS REPORTING_PERIOD_START_DATE,
 '$rp_enddate' AS REPORTING_PERIOD_END_DATE,
 '$status' AS STATUS,
-'Sub ICB; Provider' AS BREAKDOWN, -- added space 4/10/22
+'Sub ICB of Residence; Provider' AS BREAKDOWN, -- added space 4/10/22
 SubICB_Code AS PRIMARY_LEVEL,
 SubICB_Name AS PRIMARY_LEVEL_DESCRIPTION,
 OrgIDProv AS SECONDARY_LEVEL,
@@ -274,7 +281,7 @@ SELECT
 '$rp_startdate_12m' AS REPORTING_PERIOD_START_DATE,
 '$rp_enddate' AS REPORTING_PERIOD_END_DATE,
 '$status' AS STATUS,
-'ICB' AS BREAKDOWN,
+'ICB of Residence' AS BREAKDOWN,
 STP21CDH AS PRIMARY_LEVEL,
 STP21nm AS PRIMARY_LEVEL_DESCRIPTION,
 'NONE' AS SECONDARY_LEVEL,
@@ -323,8 +330,8 @@ OPTIMIZE $db_output.CYP_PERI_monthly
 
 -- COMMAND ----------
 
---  %py
---  import json
---  dbutils.notebook.exit(json.dumps({
---    "status": "OK"
---  }))
+%py
+import json
+dbutils.notebook.exit(json.dumps({
+  "status": "OK"
+}))

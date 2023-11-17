@@ -1,7 +1,7 @@
 -- Databricks notebook source
---  %md
---  
---  #### SUPPRESS AND ROUND
+%md
+
+#### SUPPRESS AND ROUND
 
 -- COMMAND ----------
 
@@ -87,9 +87,9 @@ SubNational
 
 -- COMMAND ----------
 
---  %md 
---  
---  #### Format output
+%md 
+
+#### Format output
 
 -- COMMAND ----------
 
@@ -101,7 +101,7 @@ DISTINCT
 ORG_CODE,
 NAME
 
-FROM $ref_database.org_daily
+FROM $reference_data.org_daily
 
 WHERE 
 ORG_TYPE_CODE = 'CC'
@@ -126,7 +126,7 @@ SELECT
 CREATE OR REPLACE TEMPORARY VIEW RD_ORG_DAILY_LATEST AS
 SELECT DISTINCT ORG_CODE, 
                 NAME
-           FROM $ref_database.org_daily
+           FROM $reference_data.org_daily
           WHERE (BUSINESS_END_DATE >= add_months('$RP_ENDDATE', 1) OR ISNULL(BUSINESS_END_DATE))
                 AND BUSINESS_START_DATE <= add_months('$RP_ENDDATE', 1)	
                 AND ORG_TYPE_CODE NOT IN ('MP', 'IR', 'F', 'GO', 'CN');

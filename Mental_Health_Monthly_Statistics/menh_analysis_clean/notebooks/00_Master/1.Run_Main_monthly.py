@@ -1,4 +1,4 @@
-## Databricks notebook source
+# Databricks notebook source
 # DBTITLE 1,Get widget variables
 db_output = dbutils.widgets.get("db_output")
 db_source  = dbutils.widgets.get("db_source")
@@ -6,9 +6,9 @@ month_id = dbutils.widgets.get("month_id")
 rp_enddate = dbutils.widgets.get("rp_enddate")
 rp_startdate = dbutils.widgets.get("rp_startdate")
 status = dbutils.widgets.get("status")
-database = dbutils.widgets.get("database")
+$reference_data= dbutils.widgets.get("corporate_ref")
 
-params = {'db_output': db_output, 'db_source': db_source, 'month_id': month_id, 'rp_enddate': rp_enddate, 'rp_startdate': rp_startdate, 'status': status, 'database' : database}
+params = {'db_output': db_output, 'db_source': db_source, 'month_id': month_id, 'rp_enddate': rp_enddate, 'rp_startdate': rp_startdate, 'status': status, 'reference_data' : corporate_ref}
 
 print(params)
 

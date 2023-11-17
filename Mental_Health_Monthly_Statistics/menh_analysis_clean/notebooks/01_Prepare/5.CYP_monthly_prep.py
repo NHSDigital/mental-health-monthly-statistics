@@ -86,7 +86,7 @@
        INNER JOIN $db_source.MHS101Referral AS REF
              ON MPI.Person_ID = REF.Person_ID
        LEFT JOIN $db_output.validcodes as vc
-             ON vc.table = 'mhs101referral' 
+             ON vc.tablename = 'mhs101referral' 
              and vc.field = 'SourceOfReferralMH' 
              and vc.Measure = 'MHS32' 
              and vc.type = 'include' 
@@ -118,7 +118,7 @@
                  END AS Referral_Description 
         FROM $db_source.MHS101Referral AS REF
         LEFT JOIN $db_output.validcodes as vc
-             ON vc.table = 'mhs101referral' and vc.field = 'SourceOfReferralMH' and vc.Measure = 'MHS32' and vc.type = 'include' and REF.SourceOfReferralMH = vc.ValidValue
+             ON vc.tablename = 'mhs101referral' and vc.field = 'SourceOfReferralMH' and vc.Measure = 'MHS32' and vc.type = 'include' and REF.SourceOfReferralMH = vc.ValidValue
              and '$month_id' >= vc.FirstMonth and (vc.LastMonth is null or '$month_id' <= vc.LastMonth)
        LEFT JOIN $db_output.referral_dim as rd
              ON LEFT(vc.ValidValue, 1) = rd.Referral_Source
@@ -335,7 +335,7 @@
  SELECT a.uniqcarecontid
         ,a.uniqservreqid
         ,a.carecontdate
-        ,row_number() over (partition by a.uniqservreqid order by a.carecontdate asc, a.MHS201UniqID asc) as rn  --Azeez
+        ,row_number() over (partition by a.uniqservreqid order by a.carecontdate asc, a.MHS201UniqID asc) as rn  --new method
       --,row_number() over (partition by a.uniqservreqid order by a.carecontdate asc, a.uniqcarecontid asc) as rn  -- Old code
  FROM $db_source.MHS201carecontact as a
  INNER JOIN $db_source.MHS101referral as b
@@ -415,6 +415,3 @@
                ,'987501000000101','987511000000104','987521000000105','987531000000107','987541000000103'
                ,'987191000000101','987201000000104','987211000000102','987221000000108','987231000000105'
                ,'987241000000101')  ;
-
-# COMMAND ----------
-

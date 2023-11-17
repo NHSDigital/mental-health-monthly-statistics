@@ -1,55 +1,67 @@
 -- Databricks notebook source
---  %py
---  
---  import os
---  
---  dbutils.widgets.text("MONTH_ID", "$MONTH_ID", "MONTH_ID")
---  MONTH_ID = dbutils.widgets.get("MONTH_ID")
---  
---  dbutils.widgets.text("MSDS_15", "$MSDS_15", "MSDS_15")
---  MSDS_15 = dbutils.widgets.get("MSDS_15")
---  
---  dbutils.widgets.text("MSDS_2", "$MSDS_2", "MSDS_2")
---  MSDS_2 = dbutils.widgets.get("MSDS_2")
---  
---  dbutils.widgets.text("MHSDS", "$MHSDS", "MHSDS")
---  MHSDS = dbutils.widgets.get("MHSDS")
---  
---  dbutils.widgets.text("RP_STARTDATE", "$RP_STARTDATE", "RP_STARTDATE")
---  RP_STARTDATE = dbutils.widgets.get("RP_STARTDATE")
---  
---  dbutils.widgets.text("RP_ENDDATE", "$RP_ENDDATE", "RP_ENDDATE")
---  RP_ENDDATE = dbutils.widgets.get("RP_ENDDATE")
---  
---  dbutils.widgets.text("personal_db", "$personal_db", "personal_db")
---  personal_db = dbutils.widgets.get("personal_db")
---  
---  dbutils.widgets.text("prev_months", "$prev_months", "prev_months")
---  prev_months = dbutils.widgets.get("prev_months")
---  
---  dbutils.widgets.text("FY_START", "$FY_START", "FY_START")
---  FY_START = dbutils.widgets.get("FY_START")
---  
---  params = {'MONTH_ID': str(MONTH_ID), 'MSDS_15': str(MSDS_15), 'MSDS_2': str(MSDS_2), 'MHSDS': str(MHSDS), 'RP_STARTDATE': str(RP_STARTDATE), 'RP_ENDDATE': str(RP_ENDDATE), 'personal_db': str(personal_db), 'prev_months': str(prev_months), 'FY_START': str(FY_START)}
---  
---  print(params)
+-- CREATE WIDGET TEXT MONTH_ID DEFAULT "1449";
+-- CREATE WIDGET TEXT MSDS_15 DEFAULT "$mat15_database";
+-- CREATE WIDGET TEXT MSDS_2 DEFAULT "mat_pre_clear";
+-- CREATE WIDGET TEXT MHSDS DEFAULT "$mhsds_database";
+-- CREATE WIDGET TEXT RP_STARTDATE DEFAULT "2020-01-01";
+-- CREATE WIDGET TEXT RP_ENDDATE DEFAULT "2020-12-31";
+-- CREATE WIDGET TEXT personal_db DEFAULT "$user_id";
+-- CREATE WIDGET TEXT prev_months DEFAULT "12";
+--CREATE WIDGET TEXT FY_START DEFAULT "2020-04-01";
 
 -- COMMAND ----------
 
---  %py
---  spark.conf.set("spark.sql.legacy.allowCreatingManagedTableUsingNonemptyLocation","true")
+%py
+
+import os
+
+dbutils.widgets.text("MONTH_ID", "$MONTH_ID", "MONTH_ID")
+MONTH_ID = dbutils.widgets.get("MONTH_ID")
+
+dbutils.widgets.text("MSDS_15", "$MSDS_15", "MSDS_15")
+MSDS_15 = dbutils.widgets.get("MSDS_15")
+
+dbutils.widgets.text("MSDS_2", "$MSDS_2", "MSDS_2")
+MSDS_2 = dbutils.widgets.get("MSDS_2")
+
+dbutils.widgets.text("MHSDS", "$MHSDS", "MHSDS")
+MHSDS = dbutils.widgets.get("MHSDS")
+
+dbutils.widgets.text("RP_STARTDATE", "$RP_STARTDATE", "RP_STARTDATE")
+RP_STARTDATE = dbutils.widgets.get("RP_STARTDATE")
+
+dbutils.widgets.text("RP_ENDDATE", "$RP_ENDDATE", "RP_ENDDATE")
+RP_ENDDATE = dbutils.widgets.get("RP_ENDDATE")
+
+dbutils.widgets.text("personal_db", "$personal_db", "personal_db")
+personal_db = dbutils.widgets.get("personal_db")
+
+dbutils.widgets.text("prev_months", "$prev_months", "prev_months")
+prev_months = dbutils.widgets.get("prev_months")
+
+dbutils.widgets.text("FY_START", "$FY_START", "FY_START")
+FY_START = dbutils.widgets.get("FY_START")
+
+params = {'MONTH_ID': str(MONTH_ID), 'MSDS_15': str(MSDS_15), 'MSDS_2': str(MSDS_2), 'MHSDS': str(MHSDS), 'RP_STARTDATE': str(RP_STARTDATE), 'RP_ENDDATE': str(RP_ENDDATE), 'personal_db': str(personal_db), 'prev_months': str(prev_months), 'FY_START': str(FY_START)}
+
+print(params)
 
 -- COMMAND ----------
 
---  %py
---  
---  dbutils.notebook.run('Perinatal_Table', 0, params)
+%py
+spark.conf.set("spark.sql.legacy.allowCreatingManagedTableUsingNonemptyLocation","true")
 
 -- COMMAND ----------
 
---  %py
---  
---  dbutils.notebook.run('Perinatal_Prep_v4', 0, params)
+%py
+
+dbutils.notebook.run('Perinatal_Table', 0, params)
+
+-- COMMAND ----------
+
+%py
+
+dbutils.notebook.run('Perinatal_Prep_v4', 0, params)
 
 -- COMMAND ----------
 
@@ -57,27 +69,27 @@ TRUNCATE TABLE $personal_db.Perinatal
 
 -- COMMAND ----------
 
---  %py
---  
---  dbutils.notebook.run('Table_1_measures_and_breakdowns', 0, params)
+%py
+
+dbutils.notebook.run('Table_1_measures_and_breakdowns', 0, params)
 
 -- COMMAND ----------
 
---  %py
---  
---  dbutils.notebook.run('Table_2_measures_and_breakdowns', 0, params)
+%py
+
+dbutils.notebook.run('Table_2_measures_and_breakdowns', 0, params)
 
 -- COMMAND ----------
 
---  %py
---  
---  dbutils.notebook.run('Table_3_measures_and_breakdowns', 0, params)
+%py
+
+dbutils.notebook.run('Table_3_measures_and_breakdowns', 0, params)
 
 -- COMMAND ----------
 
---  %py
---  
---  dbutils.notebook.run('Table_4_measures_and_breakdowns', 0, params)
+%py
+
+dbutils.notebook.run('Table_4_measures_and_breakdowns', 0, params)
 
 -- COMMAND ----------
 
@@ -89,9 +101,9 @@ SELECT * FROM $personal_db.Perinatal
 
 -- COMMAND ----------
 
---  %py
---  
---  dbutils.notebook.run('Perinatal_output', 0, params)
+%py
+
+dbutils.notebook.run('Perinatal_output', 0, params)
 
 -- COMMAND ----------
 
@@ -146,10 +158,10 @@ select * from $personal_db.perinatal_sup
 
 -- COMMAND ----------
 
---  %py
---  import json
---  dbutils.notebook.exit(json.dumps({
---    "status": "OK",
---    "unsuppressed_table": "Perinatal",
---    "suppressed_table": "perinatal_sup"
---  }))
+%py
+import json
+dbutils.notebook.exit(json.dumps({
+  "status": "OK",
+  "unsuppressed_table": "Perinatal",
+  "suppressed_table": "perinatal_sup"
+}))

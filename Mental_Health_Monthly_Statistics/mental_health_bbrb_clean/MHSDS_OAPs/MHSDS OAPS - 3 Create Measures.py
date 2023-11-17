@@ -1,4 +1,23 @@
 # Databricks notebook source
+# Prep tables build
+
+# COMMAND ----------
+
+# startchoices = [str(r[0]) for r in spark.sql("select distinct ReportingPeriodStartDate from $mhsds_database.mhs000header order by ReportingPeriodStartDate").collect()]
+# endchoices = [str(r[0]) for r in spark.sql("select distinct ReportingPeriodEndDate from $mhsds_database.mhs000header order by ReportingPeriodEndDate").collect()]
+# monthid = [str(r[0]) for r in spark.sql("select distinct Uniqmonthid from $mhsds_database.mhs000header order by Uniqmonthid").collect()]
+
+# dbutils.widgets.dropdown("rp_startdate", "2021-05-01", startchoices)
+# dbutils.widgets.dropdown("rp_enddate", "2021-05-31", endchoices)
+# dbutils.widgets.dropdown("rp_qtrstartdate", "2021-03-01", startchoices)
+# dbutils.widgets.dropdown("rp_12mstartdate", "2020-06-01", startchoices)
+# dbutils.widgets.dropdown("month_id", "1454", monthid)
+# dbutils.widgets.text("db_output","$user_id")
+# dbutils.widgets.text("db_source","$db_source")
+# dbutils.widgets.text("status","Final")
+
+# COMMAND ----------
+
 db_output  = dbutils.widgets.get("db_output")
 db_source = dbutils.widgets.get("db_source")
 start_month_id = dbutils.widgets.get("start_month_id")

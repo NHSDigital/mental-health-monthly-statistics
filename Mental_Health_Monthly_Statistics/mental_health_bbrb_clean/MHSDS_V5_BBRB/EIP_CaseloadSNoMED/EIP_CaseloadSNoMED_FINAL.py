@@ -8,7 +8,7 @@
  *Your database name*
  
  **db_source:**
- *MHSDS data source*
+ *$reference_data*
  
  **end_month_id (previously "month_id"):**
  this is the month you are reporting, eg 1462 (Jan 2022)
@@ -47,17 +47,23 @@
 
 # COMMAND ----------
 
+ %sql
+ -- # dbutils.widgets.removeAll()
+ select distinct UniqMonthID, ReportingPeriodStartDate, ReportingPeriodEndDate from $reference_data.mhs000header order by 1
+
+# COMMAND ----------
+
 # DBTITLE 1,Widgets and explanations of each one
-startchoices = [str(r[0]) for r in spark.sql("select distinct ReportingPeriodStartDate from $db_source.mhs000header order by ReportingPeriodStartDate").collect()]
-endchoices = [str(r[0]) for r in spark.sql("select distinct ReportingPeriodEndDate from $db_source.mhs000header order by ReportingPeriodEndDate").collect()]
-monthid = [str(r[0]) for r in spark.sql("select distinct Uniqmonthid from $db_source.mhs000header order by Uniqmonthid").collect()]
+startchoices = [str(r[0]) for r in spark.sql("select distinct ReportingPeriodStartDate from $reference_data.mhs000header order by ReportingPeriodStartDate").collect()]
+endchoices = [str(r[0]) for r in spark.sql("select distinct ReportingPeriodEndDate from $reference_data.mhs000header order by ReportingPeriodEndDate").collect()]
+monthid = [str(r[0]) for r in spark.sql("select distinct Uniqmonthid from $reference_data.mhs000header order by Uniqmonthid").collect()]
 
 dbutils.widgets.dropdown("rp_startdate_1m", "2020-04-01", startchoices)
 dbutils.widgets.dropdown("rp_enddate", "2021-03-31", endchoices)
 dbutils.widgets.dropdown("end_month_id", "1452", monthid)
 dbutils.widgets.text("status","Provisional")
-dbutils.widgets.text("db_output","")
-dbutils.widgets.text("db_source","")
+dbutils.widgets.text("db_output","$user_id")
+dbutils.widgets.text("db_source","$reference_data")
 db_output  = dbutils.widgets.get("db_output")
 db_source = dbutils.widgets.get("db_source")
 end_month_id = dbutils.widgets.get("end_month_id")
@@ -78,6 +84,18 @@ dbutils.notebook.run('Create_SNoMED_FSN_Ref', 0, params)
 
 # COMMAND ----------
 
+ %sql
+ ---Fully Specified Name SNOMED REF data
+ ---select * from $db_output.SCT_Concepts_FSN limit 3
+
+# COMMAND ----------
+
+ %sql
+ ---Preferred Term SNOMED REF data
+ ---select * from $db_output.SCT_Concepts_PrefTerm limit 3
+
+# COMMAND ----------
+
 # DBTITLE 1,Org daily Prep
  %sql
  DROP TABLE IF EXISTS $db_output.EIP_ORG_DAILY1;
@@ -89,7 +107,7 @@ dbutils.notebook.run('Create_SNoMED_FSN_Ref', 0, params)
                  ORG_CLOSE_DATE, 
                  BUSINESS_START_DATE, 
                  BUSINESS_END_DATE
-            FROM $ref_database.org_daily
+            FROM $reference_data.org_daily
            WHERE (BUSINESS_END_DATE >= add_months('$rp_enddate', 1) OR ISNULL(BUSINESS_END_DATE))
                  AND BUSINESS_START_DATE <= add_months('$rp_enddate', 1)	
                  AND (ORG_CLOSE_DATE >= '$rp_enddate' OR ISNULL(ORG_CLOSE_DATE))              
@@ -107,7 +125,7 @@ dbutils.notebook.run('Create_SNoMED_FSN_Ref', 0, params)
  REL_OPEN_DATE,commis
  REL_CLOSE_DATE
  FROM 
- $ref_database.org_relationship_daily
+ $reference_data.org_relationship_daily
  WHERE
  (REL_CLOSE_DATE >= '$rp_enddate' OR ISNULL(REL_CLOSE_DATE))              
  AND REL_OPEN_DATE <= '$rp_enddate'
@@ -143,7 +161,7 @@ dbutils.notebook.run('Create_SNoMED_FSN_Ref', 0, params)
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW RD_CCG_LATEST AS
  SELECT DISTINCT ORG_CODE,
                  NAME
-            FROM $ref_database.org_daily
+            FROM $reference_data.org_daily
            WHERE (BUSINESS_END_DATE >= add_months('$rp_enddate', 1) OR ISNULL(BUSINESS_END_DATE))
                  AND BUSINESS_START_DATE <= add_months('$rp_enddate', 1)	
                  AND ORG_TYPE_CODE = 'CC'
@@ -211,7 +229,7 @@ dbutils.notebook.run('Create_SNoMED_FSN_Ref', 0, params)
  	c.ClinContDurOfCareCont AS Der_ContactDuration,
  	c.ConsType,
  	c.CareContSubj,
- 	c.ConsMechanismMH, 
+ 	c.ConsMechanismMH, /*** v5 ConsMediumUsed replaced by ConsMechanismMH, code list change  GF ***/
  	c.SiteIDOfTreat,
  	c.AttendOrDNACode,
  	c.EarliestReasonOfferDate,
@@ -224,7 +242,7 @@ dbutils.notebook.run('Create_SNoMED_FSN_Ref', 0, params)
  	c.TimeReferAndCareContact,
  	c.UniqCareProfTeamID AS Der_UniqCareProfTeamID,
  	c.PlaceOfSafetyInd,
- 	CASE WHEN c.OrgIDProv = 'DFC' THEN '1' ELSE c.Person_ID END AS Der_PersonID, 
+ 	CASE WHEN c.OrgIDProv = 'DFC' THEN '1' ELSE c.Person_ID END AS Der_PersonID, -- derivation added to better reflect anonymous services where personID may change every month
  	'NULL' AS Der_ContactOrder,
  	'NULL' AS Der_FYContactOrder,
  	'NULL' AS Der_DirectContactOrder,
@@ -254,7 +272,7 @@ dbutils.notebook.run('Create_SNoMED_FSN_Ref', 0, params)
  	i.DurationIndirectAct AS Der_ContactDuration,
  	'NULL' AS ConsType,
  	'NULL' AS CareContSubj,
- 	'NULL' AS ConsMechanismMH,     
+ 	'NULL' AS ConsMechanismMH,      /*** v5 ConsMediumUsed replaced by ConsMechanismMH, code list change  ***/
  	'NULL' AS SiteIDOfTreat,
  	'NULL' AS AttendOrDNACode,
  	'NULL' AS EarliestReasonOfferDate,
@@ -267,7 +285,7 @@ dbutils.notebook.run('Create_SNoMED_FSN_Ref', 0, params)
  	'NULL' AS TimeReferAndCareContact,
  	i.OrgIDProv + i.CareProfTeamLocalId AS Der_UniqCareProfTeamID,
  	'NULL' AS PlaceOfSafetyInd,
- 	CASE WHEN i.OrgIDProv = 'DFC' THEN '1' ELSE i.Person_ID END AS Der_PersonID, 
+ 	CASE WHEN i.OrgIDProv = 'DFC' THEN '1' ELSE i.Person_ID END AS Der_PersonID, -- derivation added to better reflect anonymous services where personID may change every month
  	'NULL' AS Der_ContactOrder,
  	'NULL' AS Der_FYContactOrder,
  	'NULL' AS Der_DirectContactOrder,
@@ -338,10 +356,10 @@ dbutils.notebook.run('Create_SNoMED_FSN_Ref', 0, params)
                        i.IndirectActDate AS Der_ContactDate,
                        'null' as UniqCareActID,
                        i.MHS204UniqID as Der_InterventionUniqID,
-                       i.CodeIndActProcAndProcStatus as CodeProcAndProcStatus,  /*** CodeProcAndProcStatus renamed to CodeIndActProcAndProcStatus ***/
+                       i.CodeIndActProcAndProcStatus as CodeProcAndProcStatus,  /*** CodeProcAndProcStatus renamed to CodeIndActProcAndProcStatus GF ***/
                        --gets first snomed code in list where CodeIndActProcAndProcStatus contains a ":"
                        CASE WHEN position(':' in i.CodeIndActProcAndProcStatus) > 0 THEN LEFT(i.CodeIndActProcAndProcStatus, position (':' in i.CodeIndActProcAndProcStatus)-1) 
-                            ELSE i.CodeIndActProcAndProcStatus /*** CodeProcAndProcStatus 4 occurrences renamed to CodeIndActProcAndProcStatus ***/
+                            ELSE i.CodeIndActProcAndProcStatus /*** CodeProcAndProcStatus 4 occurrences renamed to CodeIndActProcAndProcStatus GF ***/
                             END AS Der_SNoMEDProcCode,
                        NULL AS CodeObs
  FROM                  $db_source.mhs204indirectactivity i
@@ -399,7 +417,7 @@ dbutils.notebook.run('Create_SNoMED_FSN_Ref', 0, params)
                      c.Der_SNoMEDProcCode,
                      c.CodeObs,
                      COALESCE(c.Der_SNoMEDProcTerm, c.Der_SNoMEDObsTerm) as Der_SNoMEDTerm,               
-                     CASE WHEN c.Der_SNoMEDProcCode IN 
+                     CASE WHEN c.Der_SNoMEDProcCode IN ---Checked this list against EIP Recording and Reporting Document from Jan 2019
                                 --CBTp
  	('718026005', -- 'Cognitive behavioural therapy for psychosis'
  	'1097161000000100', -- 'Referral for cognitive behavioural therapy for psychosis'
@@ -481,7 +499,7 @@ dbutils.notebook.run('Create_SNoMED_FSN_Ref', 0, params)
  	WHEN COALESCE(c.Der_SNoMEDProcCode,c.CodeObs) IS NOT NULL THEN 'Other' 
  	END AS Intervention_type
  FROM              $db_output.EIP_Refs_v2 r
- INNER JOIN        global_temp.EIP_Interventions_v2 c ON r.recordnumber = c.recordnumber
+ INNER JOIN        global_temp.EIP_Interventions_v2 c ON r.recordnumber = c.recordnumber --FLAG
                    ---joining on record number so will be also bringing in activity for the person in the month which may not be associated with EIP referral
                   AND COALESCE(c.Der_SNoMEDProcTerm, c.Der_SNoMEDObsTerm) IS NOT NULL 
                   AND c.Der_ContactDate BETWEEN r.ReferralRequestReceivedDate AND COALESCE(r.ServDischDate, '$rp_enddate') AND r.ServDischDate IS NULL AND r.ReferRejectionDate IS NULL

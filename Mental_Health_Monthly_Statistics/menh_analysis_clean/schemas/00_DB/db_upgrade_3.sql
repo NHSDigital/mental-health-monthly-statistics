@@ -1,14 +1,14 @@
 -- Databricks notebook source
---  %md
---  
---  The following tables are created in this notebook:
---  - Main_monthly_unformatted
---  - awt_unformatted
---  - CYP_2nd_contact_unformatted
---  - CAP_unformatted
---  - CYP_monthly_unformatted
---  - Ascof_unformatted
---  - all_products_cached
+%md
+
+The following tables are created in this notebook:
+- Main_monthly_unformatted
+- awt_unformatted
+- CYP_2nd_contact_unformatted
+- CAP_unformatted
+- CYP_monthly_unformatted
+- Ascof_unformatted
+- all_products_cached
 
 -- COMMAND ----------
 

@@ -60,24 +60,6 @@
 
 # COMMAND ----------
 
-# DBTITLE 1,RD_CCG_LATEST - original - commented out - didn't take into account successor orgs - retained for info
-# %sql
-# TRUNCATE TABLE $db_output.RD_CCG_LATEST;
-
-# INSERT INTO TABLE $db_output.RD_CCG_LATEST
-# SELECT DISTINCT ORG_CODE,
-#                 NAME
-#            FROM $db_source.org_daily
-#           WHERE (BUSINESS_END_DATE >= add_months('$rp_enddate', 1) OR ISNULL(BUSINESS_END_DATE))
-#                 AND BUSINESS_START_DATE <= add_months('$rp_enddate', 1)	
-#                 AND ORG_TYPE_CODE = 'CC'
-#                 AND (ORG_CLOSE_DATE >= '$rp_enddate' OR ISNULL(ORG_CLOSE_DATE))
-#                 AND ORG_OPEN_DATE <= '$rp_enddate'
-#                 AND NAME NOT LIKE '%HUB'
-#                 AND NAME NOT LIKE '%NATIONAL%';
-
-# COMMAND ----------
-
 # DBTITLE 1,RD_CCG_LATEST - *new - phase 1* using ODSAPI tables AND org_daily
  %sql
  
@@ -88,10 +70,10 @@
  (SELECT DISTINCT od.ORG_CODE as original_ORG_CODE,
                  od.NAME as original_NAME,
                  COALESCE(odssd.TargetOrganisationID, od.ORG_CODE) as ORG_CODE
-         FROM $db_source.org_daily od
+         FROM $reference_data.org_daily od
  
           
-         LEFT JOIN $db.source.ODSAPISuccessorDetails as odssd
+         LEFT JOIN $reference_data.ODSAPISuccessorDetails as odssd
          ON od.ORG_CODE = odssd.OrganisationID and odssd.Type = 'Successor' and odssd.StartDate <= '$rp_enddate'
          
             WHERE (od.BUSINESS_END_DATE >= add_months('$rp_enddate', 1) OR ISNULL(od.BUSINESS_END_DATE))
@@ -113,7 +95,7 @@
              row_number() over (partition by ORG_CODE order by case when ORG_CLOSE_DATE is null then 1 else 0 end desc, case when BUSINESS_END_DATE is null then 1 else 0 end desc, ORG_CLOSE_DATE desc) as RN,
              ORG_CODE,
              NAME
-             FROM $db_source.org_daily
+             FROM $reference_data.org_daily
                      
              WHERE ORG_OPEN_DATE <= '$rp_enddate'
              ) od1
@@ -124,7 +106,7 @@
 
 # COMMAND ----------
 
-# DBTITLE 1,RD_CCG_LATEST - *new* using only ODSAPI tables - DO NOT DELETE - ready for correction in db_source tables
+# DBTITLE 1,RD_CCG_LATEST - *new* using only ODSAPI tables - DO NOT DELETE - ready for correction in $reference_datatables
 # %sql
 
 # --    the code below can be used to replace the cell above once the issue with missing '13T' has been resolved - see DMS001-1132
@@ -137,12 +119,12 @@
 #                 Name as original_NAME,
 #                 COALESCE(odssd.TargetOrganisationID, rd.OrganisationID) as ORG_CODE
                 
-#         FROM $db_source.ODSAPIRoleDetails rd
+#         FROM $reference_data.ODSAPIRoleDetails rd
         
-#         LEFT JOIN $db_source.ODSAPIOrganisationDetails od
+#         LEFT JOIN $reference_data.ODSAPIOrganisationDetails od
 #         ON rd.OrganisationID = od.OrganisationID and rd.DateType = od.DateType
         
-#         LEFT JOIN $db_source.ODSAPISuccessorDetails as odssd
+#         LEFT JOIN $reference_data.ODSAPISuccessorDetails as odssd
 #         ON rd.OrganisationID = odssd.OrganisationID and odssd.Type = 'Successor' and odssd.StartDate <= '$rp_enddate'
         
 #         WHERE rd.RoleId = 'RO98'
@@ -164,8 +146,8 @@
 #             rd.OrganisationId as ORG_CODE,
 #             Name as NAME
 
-#         FROM $db_source.ODSAPIRoleDetails rd
-#         LEFT JOIN $db_source.ODSAPIOrganisationDetails od
+#         FROM $reference_data.ODSAPIRoleDetails rd
+#         LEFT JOIN $reference_data.ODSAPIOrganisationDetails od
 #         ON rd.OrganisationID = od.OrganisationID and rd.DateType = od.DateType
         
 #         WHERE rd.RoleId = 'RO98'
@@ -276,7 +258,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW RD_ORG_DAILY_LATEST AS
  SELECT DISTINCT ORG_CODE, 
                  NAME
-            FROM $db_sourse.org_daily
+            FROM $reference_data.org_daily
            WHERE (BUSINESS_END_DATE >= add_months('$rp_enddate', 1) OR ISNULL(BUSINESS_END_DATE))
                  AND BUSINESS_START_DATE <= add_months('$rp_enddate', 1)	
                  AND ORG_TYPE_CODE NOT IN ('MP', 'IR', 'F', 'GO', 'CN');
@@ -510,7 +492,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
              AND (ReferRejectionDate IS NULL OR ReferRejectionDate > '$rp_enddate'))
   
    LEFT JOIN $db_output.validcodes as vc
-             ON vc.table = 'MHS102ServiceTypeReferredTo' and vc.field = 'ServTeamTypeRefToMH' and vc.Measure = 'referral_list' and vc.type = 'include' and E.ServTeamTypeRefToMH = vc.ValidValue 
+             ON vc.tablename = 'MHS102ServiceTypeReferredTo' and vc.field = 'ServTeamTypeRefToMH' and vc.Measure = 'referral_list' and vc.type = 'include' and E.ServTeamTypeRefToMH = vc.ValidValue 
               and '$month_id' >= vc.FirstMonth and (vc.LastMonth is null or '$month_id' <= vc.LastMonth)
               
    LEFT JOIN global_temp.TEAMTYPE AS Z 
@@ -710,11 +692,6 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 
 # COMMAND ----------
 
- %sql
- DESCRIBE $db_source.MHS102ServiceTypeReferredTo
-
-# COMMAND ----------
-
 # DBTITLE 1,MHS502WardStay_open_end_rp
  %sql
  
@@ -799,18 +776,6 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 
 # COMMAND ----------
 
- %sql
- SELECT 
- RIGHT(global_temp.Accomodation_Latest.AccommodationType,2) AS AccommodationType
- ,dictionary_accom.PrimaryCode as Accomodation_code
- ,dictionary_accom.Description as Accomodation_Desc
- from global_temp.Accomodation_Latest
- LEFT JOIN (SELECT * FROM $db_source.datadictionarycodes WHERE ItemName = 'ACCOMMODATION_TYPE') dictionary_accom
- ON 
- RIGHT(global_temp.Accomodation_Latest.AccommodationType,2) = dictionary_accom.PrimaryCode
-
-# COMMAND ----------
-
 # DBTITLE 1,Employment_Latest
  %sql
  
@@ -824,70 +789,6 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
              AND EmployStatus IS NOT NULL
              AND UniqMonthID <= '$month_id'
    ORDER BY  Person_ID
-
-# COMMAND ----------
-
-# DBTITLE 1,DELETE LATER--The Columns that appear for Employment_Latest
-# %sql 
-# --EmployStatus from Employment_Latest
-# SELECT 
-# EmployStatus AS EmploymentType
-# ,dss_emp.PrimaryCode AS Employment_Code
-# ,dss_emp.Description as Emplyment_Desc
-# FROM global_temp.Employment_Latest
-# LEFT JOIN (SELECT * FROM $db_source.datadictionarycodes WHERE ItemName = 'EMPLOYMENT_STATUS') dss_emp
-# ON Employment_Latest.EmployStatus = dss_emp.PrimaryCode;
-
-# --Select DISTINCT EmployStatus 
-# --from Employment_Latest
-# --ORDER BY EmployStatus
-# --WHERE EmployStatus NOT IN ('01','02','03','04','05','06','07','08','ZZ')---RETURNS NO RESULTS.Therefore within Employment_Latest View, there are no codes under the column EmployStatus that are not the valid list 
-
-
-# COMMAND ----------
-
-# DBTITLE 1,DELETE LATER-What JOINS may work for Ethnicty breadowns?
-# %sql
-# --ETHNIC_CATEGORY_CODE
-# --Whilst the code 99 appears in the $db_source.MHS001MPI.NHSDEthnicity it doesn't appear in the dss_corop data base as it identifies it as NULL. This is consistent with the CASE WHEN which dictates 99 to be 'NOT KNOWN' code.
-# SELECT 
-# $db_source.MHS001MPI.NHSDEthnicity
-# ,dss_ethnic.PrimaryCode as Ethnicity_Code
-# ,dss_ethnic.Description as Ethnicity_Desc
-# FROM $db_source.MHS001MPI  
-# LEFT JOIN (SELECT * FROM $db_source.datadictionarycodes WHERE ItemName = 'ETHNIC_CATEGORY_CODE') dss_ethnic
-# ON $db_source.MHS001MPI.NHSDEthnicity = dss_ethnic.PrimaryCode
-# LIMIT 10
-# --WHERE $db_source.MHS001MPI.NHSDEthnicity = 99
-
-# COMMAND ----------
-
-# DBTITLE 1,DELETE LATER-What Joins may work for Disability Breakdowns?
-# %sql
-# SELECT 
-# $db_source.MHS007DisabilityType.Disabcode as DisabilityType
-# ,dss_disab.PrimaryCode as Disability_Code
-# ,dss_disab.Description as Disability_Desc
-# FROM $db_source.MHS007DisabilityType
-# LEFT JOIN (SELECT * FROM $db_source.datadictionarycodes WHERE ItemName = 'DISABILITY_CODE') dss_disab
-# ON $db_source.MHS007DisabilityType.Disabcode = dss_disab.PrimaryCode
-# --WHERE dss_disab.PrimaryCode IS NULL
-
-# COMMAND ----------
-
-# DBTITLE 1,DELETE LATER-JUST TESTING MHS001SOC PREP
-# %sql
-# SELECT 
-# PERSON_ID
-# ,ORGIDPROV
-# ,SocPerCircumstance
-# ,SocPerCircumstanceRecTimestamp
-# ,dense_rank() OVER (PARTITION BY Person_ID ORDER BY uniqmonthid desc, SocPerCircumstanceRecTimestamp DESC, CASE WHEN SocPerCircumstance in ('699042003','440583007') THEN 2 else 1 end asc) AS RANK
-# ,dense_rank() OVER (PARTITION BY Person_ID, OrgIDProv ORDER BY uniqmonthid desc, SocPerCircumstanceRecTimestamp DESC) AS PROV_RANK
-# FROM $db_source.MHS011SocPerCircumstances A
-
-
-
 
 # COMMAND ----------
 
@@ -905,11 +806,11 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
  ,dense_rank() OVER (PARTITION BY Person_ID ORDER BY uniqmonthid desc, SocPerCircumstanceRecTimestamp DESC, CASE WHEN SocPerCircumstance in ('699042003','440583007') THEN 2 else 1 end asc) AS RANK
  ,dense_rank() OVER (PARTITION BY Person_ID, OrgIDProv ORDER BY uniqmonthid desc, SocPerCircumstanceRecTimestamp DESC) AS PROV_RANK
  FROM $db_source.MHS011SocPerCircumstances A
- INNER JOIN $db_source.SNOMED_SCT2_REFSET_FULL  B ON a.SocPerCircumstance = ReferencedComponentID and ACTIVE = '1' AND REFSETID = '999003081000000103' 
+ INNER JOIN $reference_data.SNOMED_SCT2_REFSET_FULL  B ON a.SocPerCircumstance = ReferencedComponentID and ACTIVE = '1' AND REFSETID = '999003081000000103' 
  INNER JOIN 
  (SELECT REFERENCEDCOMPONENTID
  ,MAX(EFFECTIVETIME) AS EFFECTIVETIME 
- FROM $db_source.SNOMED_SCT2_REFSET_FULL 
+ FROM $reference_data.SNOMED_SCT2_REFSET_FULL 
  WHERE REFSETID = '999003081000000103' 
  GROUP BY REFERENCEDCOMPONENTID) C 
  ON B.EFFECTIVETIME = C.EFFECTIVETIME
@@ -920,47 +821,47 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
  %sql
  CREATE OR REPLACE TEMP VIEW MPI001_prep AS
  SELECT 
-             $db_source.MHS001MPI.AgeDeath 
-            ,$db_source.MHS001MPI.AgeRepPeriodEnd
-            ,$db_source.MHS001MPI.AgeRepPeriodStart            
-            , $db_source.MHS001MPI.County 
-            , $db_source.MHS001MPI.DefaultPostcode 
-            , $db_source.MHS001MPI.ElectoralWard 
-            , $db_source.MHS001MPI.EthnicCategory 
-            , $db_source.MHS001MPI.Gender
-            , $db_source.MHS001MPI.GenderIDCode      
-            , $db_source.MHS001MPI.IMDQuart 
-            , $db_source.MHS001MPI.LADistrictAuth 
-            , $db_source.MHS001MPI.LDAFlag 
+             source_mpi.AgeDeath 
+            ,source_mpi.AgeRepPeriodEnd
+            ,source_mpi.AgeRepPeriodStart            
+            , source_mpi.County 
+            , source_mpi.DefaultPostcode 
+            , source_mpi.ElectoralWard 
+            , source_mpi.EthnicCategory 
+            , source_mpi.Gender
+            , source_mpi.GenderIDCode      
+            , source_mpi.IMDQuart 
+            , source_mpi.LADistrictAuth 
+            , source_mpi.LDAFlag 
             ,"" AS LSOA 
-            ,$db_source.MHS001MPI.LSOA2011 
-            , $db_source.MHS001MPI.LanguageCodePreferred 
-            , $db_source.MHS001MPI.LocalPatientId 
-            , $db_source.MHS001MPI.MHS001UniqID 
-            , $db_source.MHS001MPI.MPSConfidence 
-            , $db_source.MHS001MPI.MaritalStatus 
-            , $db_source.MHS001MPI.NHSDEthnicity
-            , $db_source.MHS001MPI.NHSNumber 
-            , $db_source.MHS001MPI.NHSNumberStatus 
-            , $db_source.MHS001MPI.OrgIDCCGRes 
-            , $db_source.MHS001MPI.OrgIDEduEstab 
-            , $db_source.MHS001MPI.OrgIDLocalPatientId 
-            , $db_source.MHS001MPI.OrgIDProv 
-            , $db_source.MHS001MPI.OrgIDResidenceResp 
-            , $db_source.MHS001MPI.PatMRecInRP 
-            , $db_source.MHS001MPI.Person_ID 
-            , $db_source.MHS001MPI.PostcodeDistrict 
-            , $db_source.MHS001MPI.RecordEndDate 
-            , $db_source.MHS001MPI.RecordNumber 
-            , $db_source.MHS001MPI.RecordStartDate 
-            , $db_source.MHS001MPI.RowNumber 
-            , $db_source.MHS001MPI.UniqMonthID 
-            , $db_source.MHS001MPI.UniqSubmissionID  
+            ,source_mpi.LSOA2011 
+            , source_mpi.LanguageCodePreferred 
+            , source_mpi.LocalPatientId 
+            , source_mpi.MHS001UniqID 
+            , source_mpi.MPSConfidence 
+            , source_mpi.MaritalStatus 
+            , source_mpi.NHSDEthnicity
+            , source_mpi.NHSNumber 
+            , source_mpi.NHSNumberStatus 
+            , source_mpi.OrgIDCCGRes 
+            , source_mpi.OrgIDEduEstab 
+            , source_mpi.OrgIDLocalPatientId 
+            , source_mpi.OrgIDProv 
+            , source_mpi.OrgIDResidenceResp 
+            , source_mpi.PatMRecInRP 
+            , source_mpi.Person_ID 
+            , source_mpi.PostcodeDistrict 
+            , source_mpi.RecordEndDate 
+            , source_mpi.RecordNumber 
+            , source_mpi.RecordStartDate 
+            , source_mpi.RowNumber 
+            , source_mpi.UniqMonthID 
+            , source_mpi.UniqSubmissionID  
        ,dss_ethnic.PrimaryCode as Ethnicity_Code
        ,dss_ethnic.Description as Ethnicity_Desc
-      FROM $db_source.MHS001MPI  
-      LEFT JOIN (SELECT PrimaryCode, Description FROM $db_source.datadictionarycodes WHERE ItemName = 'ETHNIC_CATEGORY_CODE') dss_ethnic
-      ON $db_source.MHS001MPI.NHSDEthnicity = dss_ethnic.PrimaryCode
+      FROM $db_source.MHS001MPI source_mpi 
+      LEFT JOIN (SELECT PrimaryCode, Description FROM $reference_data.datadictionarycodes WHERE ItemName = 'ETHNIC_CATEGORY_CODE') dss_ethnic
+      ON source_mpi.NHSDEthnicity = dss_ethnic.PrimaryCode
 
 # COMMAND ----------
 
@@ -976,7 +877,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
       ,dictionary_accom.PrimaryCode as Accomodation_Code
       ,dictionary_accom.Description as Accomodation_Desc
        From global_temp.Accomodation_Latest
-       LEFT JOIN (SELECT * FROM $db_source.datadictionarycodes WHERE ItemName = 'ACCOMMODATION_TYPE') dictionary_accom
+       LEFT JOIN (SELECT * FROM $reference_data.datadictionarycodes WHERE ItemName = 'ACCOMMODATION_TYPE') dictionary_accom
        ON RIGHT(global_temp.Accomodation_Latest.AccommodationType,2) = dictionary_accom.PrimaryCode
        --)
 
@@ -993,7 +894,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
               ,dss_emp.PrimaryCode AS Employment_Code
               ,dss_emp.Description as Employment_Desc
               FROM global_temp.Employment_Latest
-              LEFT JOIN (SELECT * FROM $db_source.datadictionarycodes WHERE ItemName = 'EMPLOYMENT_STATUS') dss_emp
+              LEFT JOIN (SELECT * FROM $reference_data.datadictionarycodes WHERE ItemName = 'EMPLOYMENT_STATUS') dss_emp
               ON Employment_Latest.EmployStatus = dss_emp.PrimaryCode
   --            ) 
  --select * from EMP
@@ -1011,15 +912,10 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
       ,dss_disab.PrimaryCode as Disability_Code
       ,dss_disab.Description as Disability_Desc
         FROM $db_source.MHS007DisabilityType
-            LEFT JOIN (SELECT * FROM $db_source.datadictionarycodes WHERE ItemName = 'DISABILITY_CODE') dss_disab
+            LEFT JOIN (SELECT * FROM $reference_data.datadictionarycodes WHERE ItemName = 'DISABILITY_CODE') dss_disab
                    ON $db_source.MHS007DisabilityType.Disabcode = dss_disab.PrimaryCode
                    --)
  --SELECT * FROM DIS
-
-# COMMAND ----------
-
- %sql
- SELECT * FROM $db_source.datadictionarycodes WHERE ItemName LIKE '%SEXUAL_ORIENTATION%'
 
 # COMMAND ----------
 
@@ -1031,7 +927,6 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 
 # DBTITLE 1, $db_output.tmp_mhmab_mhs001mpi_latest_month_data
  %sql
- 
  
  INSERT INTO $db_output.tmp_mhmab_mhs001mpi_latest_month_data (
  SELECT 
@@ -1068,7 +963,32 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
             ,MPI.GenderIDCode
             ,CASE WHEN MPI.GenderIDCode IN ('1','2','3','4') THEN MPI.GenderIDCode
                   WHEN MPI.Gender IN ('1','2','9') THEN MPI.Gender
-                  ELSE 'UNKNOWN' END AS Der_Gender 
+                  ELSE 'UNKNOWN' END AS Der_Gender
+            ,CASE 
+              WHEN 
+                CASE 
+                  WHEN MPI.GenderIDCode IN ('1','2','3','4') THEN MPI.GenderIDCode
+                  WHEN MPI.Gender IN ('1','2','9') THEN MPI.Gender
+                  ELSE 'UNKNOWN' END IN ('3','4') 
+                THEN DD_GENDERID.Description
+              WHEN 
+                CASE 
+                  WHEN MPI.GenderIDCode IN ('1','2','3','4') THEN MPI.GenderIDCode
+                  WHEN MPI.Gender IN ('1','2','9') THEN MPI.Gender
+                  ELSE 'UNKNOWN' END = '9' 
+                THEN DD_GENDER.Description
+              WHEN 
+               CASE 
+                  WHEN MPI.GenderIDCode IN ('1','2','3','4') THEN MPI.GenderIDCode
+                  WHEN MPI.Gender IN ('1','2','9') THEN MPI.Gender
+                  ELSE 'UNKNOWN' END = '1' 
+               THEN 'Male'
+              WHEN CASE 
+                  WHEN MPI.GenderIDCode IN ('1','2','3','4') THEN MPI.GenderIDCode
+                  WHEN MPI.Gender IN ('1','2','9') THEN MPI.Gender
+                  ELSE 'UNKNOWN' END = '2' 
+               THEN 'Female'
+            ELSE 'UNKNOWN' END AS Der_GenderName
             ,MPI.IMDQuart 
             ,MPI.LADistrictAuth 
             ,MPI.LDAFlag 
@@ -1112,17 +1032,17 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
                  WHEN IMD.DECI_IMD = 1 THEN '01 Most deprived'
                  ELSE 'UNKNOWN' 
                  END AS IMD_Decile      
-      --won't be in DD but likely to be in another db_source table - searc
+      --won't be in DD but likely to be in another $reference_datatable - searc
       -----------------------------------------------------------------------------------------------------------------------------------
        ,CASE WHEN ACC.Accomodation_Code IS NULL AND ACC.AccommodationType IS NOT NULL then 'UNKNOWN' ELSE ACC.AccommodationType END AS AccommodationType 
-       ,CASE WHEN ACC.Accomodation_Desc IS NULL AND ACC.AccommodationType IS NOT NULL THEN 'UNKOWN' ELSE ACC.Accomodation_Desc END AS AccommodationType_Desc 
+       ,CASE WHEN ACC.Accomodation_Desc IS NULL AND ACC.AccommodationType IS NOT NULL THEN 'UNKNOWN' ELSE ACC.Accomodation_Desc END AS AccommodationType_Desc 
         -----------------------------------------------------------------------------------------------------------------------------------
-      ,CASE WHEN EMP.Employment_Code IS NULL AND EMP.EmploymentType IS NOT NULL THEN 'UNKOWN' ELSE EMP.EmploymentType END AS EmployStatus
+      ,CASE WHEN EMP.Employment_Code IS NULL AND EMP.EmploymentType IS NOT NULL THEN 'UNKNOWN' ELSE EMP.EmploymentType END AS EmployStatus
      ---------------------------------------------------------------------------------------------------------------------------------------
-       ,CASE WHEN EMP.Employment_Desc IS NULL AND EMP.EmploymentType IS NOT NULL THEN 'UNKOWN' ELSE EMP.Employment_Desc END AS EmployStatus_Desc
+       ,CASE WHEN EMP.Employment_Desc IS NULL AND EMP.EmploymentType IS NOT NULL THEN 'UNKNOWN' ELSE EMP.Employment_Desc END AS EmployStatus_Desc
     ---------------------------------------------------------------------------------------------------------------------------------------
        ,CASE WHEN DIS.Disability_Code IS NULL AND DIS.DisabCode IS NOT NULL THEN 'UNKNOWN' ELSE DIS.DisabCode END AS DisabCode           
-        ,CASE WHEN DIS.Disability_Desc is NULL AND DIS.DisabCode IS NOT NULL THEN 'UNKOWN' ELSE DIS.Disability_Desc END as DisabCode_Desc
+        ,CASE WHEN DIS.Disability_Desc is NULL AND DIS.DisabCode IS NOT NULL THEN 'UNKNOWN' ELSE DIS.Disability_Desc END as DisabCode_Desc
     ---------------------------------------------------------------------------------------------------------------------------------------
             ,CASE WHEN SOC.SocPerCircumstance = '765288000' THEN 'Asexual (not sexually attracted to either gender)'
                   WHEN SOC.SocPerCircumstance = '20430005' THEN 'Heterosexual or Straight'
@@ -1140,7 +1060,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
  ON MPI.Person_ID = CCG.Person_ID
  
  --Second Join
- LEFT JOIN $db_source.ENGLISH_INDICES_OF_DEP_V02 IMD 
+ LEFT JOIN $reference_data.ENGLISH_INDICES_OF_DEP_V02 IMD 
  on MPI.LSOA2011 = IMD.LSOA_CODE_2011 
  and IMD.imd_year = '2019'
  -----------------------------------------------------------------------------------------------------------------------------     
@@ -1170,7 +1090,9 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
  
  LEFT JOIN global_temp.tmp_mhmab_mhs011socpercircircumstance_latest_month_data SOC 
    on MPI.Person_ID = SOC.Person_ID and MPI.PatMRecInRP = TRUE and SOC.RANK = 1
- 
+   
+ LEFT JOIN $reference_data.datadictionarycodes AS DD_GENDERID ON MPI.GenderIDCode = DD_GENDERID.PrimaryCode AND DD_GENDERID.ItemName = 'GENDER_IDENTITY_CODE'  
+ LEFT JOIN $reference_data.datadictionarycodes AS DD_GENDER ON MPI.Gender = DD_GENDER.PrimaryCode AND DD_GENDER.ItemName = 'PERSON_STATED_GENDER_CODE'
  --WHERE MPI.UniqMonthID = '$end_month_id'
  WHERE MPI.UniqMonthID = '$month_id'
  AND MPI.PatMRecInRP = true   
@@ -1594,84 +1516,6 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 
 # COMMAND ----------
 
-# DBTITLE 1,ref_list_in_rp - commented out
- %sql
- 
- --       CREATE OR REPLACE GLOBAL TEMPORARY VIEW ref_list_in_rp AS
- --            SELECT CASE WHEN WRDRP.LD = 'Y'
- --						THEN 'Y'
- --				     	WHEN ServTeamTypeRefToMH IN ('E01', 'E02', 'E03', 'B02', 'C01')
- --						THEN 'Y'
- --						ELSE NULL
- --					END AS LD
- --                  ,CASE	WHEN WRDRP.CAMHS = 'Y'
- --						THEN 'Y'
- --                        WHEN CAMHSTier IN ('1', '2', '3', '4','9')
- --						THEN 'Y'
- --                        WHEN ServTeamTypeRefToMH in ('C05', 'C06', 'C07','C09')
- --						THEN 'Y'
- --						ELSE NULL
- --					END	AS CAMHS
- --                  ,CASE	WHEN WRDRP.MH = 'Y'
- --						THEN 'Y'
- --                        WHEN ReasonOAT IN ('10','11','12','13','14','15')
- --						THEN 'Y'
- --                        WHEN CAMHSTier IN ('1', '2', '3', '4','9')
- --						THEN NULL
- --                        WHEN ServTeamTypeRefToMH IN ('A01', 'A02', 'A03', 'A04', 'A05', 'A06', 'A07', 'A08', 'A09', 'A10', 'A11', 'A12', 'A13', 'A14', 'A15', 'A16', 'A17', 'A18', 'B01', 'C02', 'C03', 'C04', 'C08', 'D01',                                                          'D02', 'D03', 'D04', 'Z01', 'Z02')
- --						THEN 'Y'
- --                        WHEN ServTeamTypeRefToMH IN ('E01', 'E02', 'E03', 'B02', 'C01', 'C05', 'C06', 'C07','C09')
- --						THEN NULL
- --						ELSE 'Y'
- --					END	AS MH
- --                   ,REF.UniqServReqID
- --
- --                FROM $db_source.MHS101Referral AS REF
- --          INNER JOIN $db_output.MHS001MPI_latest_month_data AS MPI
- --                     ON MPI.Person_ID = REF.Person_ID  
- --          INNER JOIN $db_source.MHS501HospProvSpell AS HOSP 
- --                     ON HOSP.UniqServReqID = REF.UniqServReqID 
- --                     AND HOSP.UniqMonthID = '$month_id' 
- --          INNER JOIN $db_source.MHS502WardStay AS WRD
- --                     ON HOSP.UniqHospProvSpellID = WRD.UniqHospProvSpellID 
- --                     AND WRD.UniqMonthID = '$month_id' 
- --          INNER JOIN global_temp.ward_list_in_rp AS WRDRP 
- --                     ON WRD.UniqWardStayID = WRDRP.UniqWardStayID
- --          INNER JOIN $db_source.MHS102ServiceTypeReferredTo SRV 
- --                     ON REF.UniqServReqID = SRV.UniqServReqID 
- --                     AND SRV.UniqMonthID = '$month_id' 
- --              WHERE (ReferralRequestReceivedDate >= '$rp_startdate' and ReferralRequestReceivedDate  <= '$rp_enddate') 
- --                    AND REF.UniqMonthID = '$month_id' 
-
-# COMMAND ----------
-
-# DBTITLE 1,ref_cats_in_rp - commented out
-#%sql
-
-#--CREATE OR REPLACE GLOBAL TEMPORARY VIEW ref_cats_in_rp AS 
-#--SELECT DISTINCT	UniqServReqID
- #--       ,MIN (LD) AS LD
- #--       ,MIN (CAMHS) AS CAMHS
- #--       ,MIN (MH) AS MH
-# --  FROM global_temp.ref_list_in_rp
-#--GROUP BY UniqServReqID;
-
-# COMMAND ----------
-
-# DBTITLE 1,MHS101Referral_service_area_RPstart - commented out
- %sql
- 
- --    CREATE GLOBAL TEMPORARY VIEW MHS101Referral_service_area_RPstart AS
- --         SELECT REF.*
- --                ,CATS.CAMHS
- --                ,CATS.LD
- --                ,CATS.MH
- --           FROM $db_source.MHS101Referral AS REF
- --     INNER JOIN ref_cats_in_rp AS CATS on REF.UniqServReqID = CATS.UniqServReqID
- --          WHERE REF.UniqMonthID = '$month_id';
-
-# COMMAND ----------
-
 # DBTITLE 1,ward_type_list_RPstart - for testing - can use derivation
  %sql
  
@@ -1812,7 +1656,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
             and e.UniqMonthID = '$month_id'
             
   LEFT JOIN $db_output.validcodes as vc
-  ON vc.table = 'MHS102ServiceTypeReferredTo' and vc.field = 'ServTeamTypeRefToMH' and vc.Measure = 'referral_list' and vc.type = 'include' and e.ServTeamTypeRefToMH = vc.ValidValue
+  ON vc.tablename = 'MHS102ServiceTypeReferredTo' and vc.field = 'ServTeamTypeRefToMH' and vc.Measure = 'referral_list' and vc.type = 'include' and e.ServTeamTypeRefToMH = vc.ValidValue
    and '$month_id' >= vc.FirstMonth and (vc.LastMonth is null or '$month_id' <= vc.LastMonth)          
            
   LEFT JOIN global_temp.TEAMTYPE AS Z 
@@ -1888,8 +1732,8 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
              WHEN a.ENTITY_CODE in ('E07')  THEN b.GEOGRAPHY_NAME
              ELSE a.GEOGRAPHY_NAME END as CASSR_description
                
- FROM  $db_source.ONS_CHD_GEO_LISTINGS as a
-       INNER JOIN $db_source.ONS_CHD_GEO_LISTINGS as b
+ FROM  $reference_data.ONS_CHD_GEO_LISTINGS as a
+       INNER JOIN $reference_data.ONS_CHD_GEO_LISTINGS as b
          ON b.GEOGRAPHY_CODE = a.PARENT_GEOGRAPHY_CODE
          AND a.ENTITY_CODE IN ('E06', 'E07', 'E08', 'E09','W04')
  
@@ -1913,8 +1757,8 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
  SELECT case when a.GEOGRAPHY_CODE = "W04000869" THEN "UNKNOWN" ELSE a.GEOGRAPHY_CODE END as LADistrictAuth
        ,case when a.GEOGRAPHY_CODE = "W04000869" THEN "UNKNOWN" ELSE a.GEOGRAPHY_NAME END as LADistrictAuthName
  	
- FROM  $db_source.ONS_CHD_GEO_LISTINGS as a
-       INNER JOIN $db_source.ONS_CHD_GEO_LISTINGS as b
+ FROM  $reference_data.ONS_CHD_GEO_LISTINGS as a
+       INNER JOIN $reference_data.ONS_CHD_GEO_LISTINGS as b
          ON b.GEOGRAPHY_CODE = a.PARENT_GEOGRAPHY_CODE
          AND a.ENTITY_CODE IN ('E06','E07','E08','E09','W04','E10','E11')
  
@@ -1925,55 +1769,6 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
        AND (a.GEOGRAPHY_CODE LIKE "E%" OR B.GEOGRAPHY_CODE LIKE "E%" OR a.GEOGRAPHY_CODE = "W04000869")
  
  ORDER BY a.GEOGRAPHY_NAME
-
-# COMMAND ----------
-
-# DBTITLE 1,DelayedDischDim - Interim table until ref table exists - moved from main_monthly_prep as needed earlier
- %sql
- Truncate table $db_output.delayeddischdim;
- INSERT INTO $db_output.delayeddischdim VALUES
-  ('att','04','NHS, excluding housing', 1429, null),
-  ('att','05','Social Care, excluding housing', 1429, null),
-  ('att','06','Both (NHS and Social Care), excluding housing', 1429, null),
-  ('att','07','Housing (including supported/specialist housing)', 1429, null),
-  
-  ('att','UNKNOWN','UNKNOWN', 1429, null),
-  ('reason','UNKNOWN','UNKNOWN', 1429, null),
-  
-  ('reason','A2','Awaiting care coordinator allocation', 1429, null),
-  ('reason','B1','Awaiting public funding', 1429, null),
-  ('reason','C1','Awaiting further non-acute (including community and mental health) NHS care (including intermediate care, rehabilitation services etc)', 1429, null),
-  ('reason','D1','Awaiting Care Home Without Nursing placement or availability', 1429, null),
-  ('reason','D2','Awaiting Care Home With Nursing placement or availability', 1429, null),
-  ('reason','E1','Awaiting care package in own home', 1429, null),
-  ('reason','F2','Awaiting community equipment, telecare and/or adaptations', 1429, null),
-  ('reason','G2','Patient or Family choice (reason not stated by patient or family)', 1429, null),
-  ('reason','G3','Patient or Family choice - Non-acute (including community and mental health) NHS care (including intermediate care, rehabilitation services etc)', 1429, null),
-  ('reason','G4','Patient or Family choice - Care Home Without Nursing placement', 1429, null),
-  ('reason','G5','Patient or Family choice - Care Home With Nursing placement', 1429, null),
-  ('reason','G6','Patient or Family choice - Care package in own home', 1429, null),
-  ('reason','G7','Patient or Family choice - Community equipment, telecare and/or adaptations', 1429, null),
-  ('reason','G8','Patient or Family Choice - general needs housing/private landlord acceptance as patient NOT covered by Housing Act/Care Act', 1429, null),
-  ('reason','G9','Patient or Family choice - Supported accommodation', 1429, null),
-  ('reason','G10','Patient or Family choice - Emergency accommodation from the Local Authority under the Housing Act', 1429, null),
-  ('reason','G11','Patient or Family choice - Child or young person awaiting social care or family placement', 1429, null),
-  ('reason','G12','Patient or Family choice - Ministry of Justice agreement/permission of proposed placement', 1429, null),
-  ('reason','H1','Disputes', 1429, null),
-  ('reason','I2','Housing - Awaiting availability of general needs housing/private landlord accommodation acceptance as patient NOT covered by Housing Act and/or Care Act', 1429, null),
-  ('reason','I3','Housing - Single homeless patients or asylum seekers NOT covered by Care Act', 1429, null),
-  ('reason','J2','Housing - Awaiting supported accommodation', 1429, null),
-  ('reason','K2','Housing - Awaiting emergency accommodation from the Local Authority under the Housing Act', 1429, null),
-  ('reason','L1','Child or young person awaiting social care or family placement', 1429, null),
-  ('reason','M1','Awaiting Ministry of Justice agreement/permission of proposed placement', 1429, null),
-  ('reason','N1','Awaiting outcome of legal requirements (mental capacity/mental health legislation)', 1429, null),
-  ('reason','P1','Awaiting residential special school or college placement or availability', 1459, null),
-  ('reason','Q1','Lack of local education support', 1459, null),
-  ('reason','R1','Public safety concern unrelated to clinical treatment need (care team)', 1459, null),
-  ('reason','R2','Public safety concern unrelated to clinical treatment need (Ministry of Justice)', 1459, null),
-  ('reason','S1','No lawful community care package available', 1459, null),
-  ('reason','T1','Lack of health care service provision', 1459, null),
-  ('reason','T2','Lack of social care support', 1459, null),
-  ('reason','98','No reason given', 1459, null)
 
 # COMMAND ----------
 
@@ -2025,8 +1820,8 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
  LEFT JOIN   $db_source.mhs001mpi mpi on mhs504.person_id = mpi.person_id
              and mhs504.uniqmonthid = mpi.uniqmonthid
              and MPI.PatMRecInRP = true
- LEFT JOIN   $db_source.ONS_CHD_GEO_EQUIVALENTS geo on mhs504.OrgIDRespLADelayDisch = geo.dh_geography_code and (geo.DATE_OF_TERMINATION IS NULL or geo.DATE_OF_TERMINATION > '$rp_enddate') and geo.ENTITY_CODE IN ('E06','E07','E08','E09','E10','E11')
- LEFT JOIN   $db_source.ONS_CHD_GEO_EQUIVALENTS mpigeo on mpi.ladistrictauth = mpigeo.geography_code and (mpigeo.DATE_OF_TERMINATION IS NULL or mpigeo.DATE_OF_TERMINATION > '$rp_enddate') and mpigeo.ENTITY_CODE IN ('E06','E07','E08','E09','E10','E11')
+ LEFT JOIN   $reference_data.ONS_CHD_GEO_EQUIVALENTS geo on mhs504.OrgIDRespLADelayDisch = geo.dh_geography_code and (geo.DATE_OF_TERMINATION IS NULL or geo.DATE_OF_TERMINATION > '$rp_enddate') and geo.ENTITY_CODE IN ('E06','E07','E08','E09','E10','E11')
+ LEFT JOIN   $reference_data.ONS_CHD_GEO_EQUIVALENTS mpigeo on mpi.ladistrictauth = mpigeo.geography_code and (mpigeo.DATE_OF_TERMINATION IS NULL or mpigeo.DATE_OF_TERMINATION > '$rp_enddate') and mpigeo.ENTITY_CODE IN ('E06','E07','E08','E09','E10','E11')
  WHERE       mhs504.uniqmonthid = '$month_id'
  AND         MHS504UniqID not in (select distinct MHS504UniqID from $db_source.mhs504delayeddischarge where uniqmonthid = '$month_id' and StartDateDelayDisch = EndDateDelayDisch)
  GROUP BY    mhs504.orgidprov
@@ -2072,7 +1867,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
                  ORG_CLOSE_DATE, 
                  BUSINESS_START_DATE, 
                  BUSINESS_END_DATE
-            FROM $db_source.org_daily
+            FROM $reference_data.org_daily
            WHERE (BUSINESS_END_DATE >= add_months('$rp_enddate', 1) OR ISNULL(BUSINESS_END_DATE))
                  AND BUSINESS_START_DATE <= add_months('$rp_enddate', 1)	
                --  AND ORG_TYPE_CODE = 'ST'
@@ -2095,7 +1890,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
  REL_OPEN_DATE,
  REL_CLOSE_DATE
  FROM 
- $db_source.ORG_RELATIONSHIP_DAILY
+ $reference_data.ORG_RELATIONSHIP_DAILY
  WHERE
  (REL_CLOSE_DATE >= '$rp_enddate' OR ISNULL(REL_CLOSE_DATE))              
  AND REL_OPEN_DATE <= '$rp_enddate';
@@ -2103,52 +1898,18 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 # COMMAND ----------
 
  %sql
- TRUNCATE TABLE $db_output.tmp_mhmab_rd_ccg_latest;
- 
- INSERT INTO $db_output.tmp_mhmab_rd_ccg_latest
- SELECT DISTINCT ORG_CODE,
-                 NAME
-            FROM $db_source.org_daily
-           WHERE (BUSINESS_END_DATE >= add_months('$rp_enddate', 1) OR ISNULL(BUSINESS_END_DATE))
-                 AND BUSINESS_START_DATE <= add_months('$rp_enddate', 1)    
-                 AND ORG_TYPE_CODE = 'CC'
-                 AND (ORG_CLOSE_DATE >= '$rp_enddate' OR ISNULL(ORG_CLOSE_DATE))
-                 AND ORG_OPEN_DATE <= '$rp_enddate'
-                 AND NAME NOT LIKE '%HUB'
-                 AND NAME NOT LIKE '%NATIONAL%';
-               
- OPTIMIZE $db_output.tmp_mhmab_rd_ccg_latest;
-
-# COMMAND ----------
-
- %sql
- TRUNCATE TABLE $db_output.tmp_mhmab_ccg;
- 
- INSERT INTO $db_output.tmp_mhmab_ccg
-     SELECT a.Person_ID,
-            CASE WHEN b.ORG_CODE IS null THEN 'UNKNOWN' ELSE b.ORG_CODE END AS IC_REC_GP_RES,
-            CASE WHEN b.NAME IS null THEN 'UNKNOWN' ELSE b.NAME END AS NAME
-       FROM global_temp.CCG_PREP a
-  LEFT JOIN $db_output.tmp_MHMAB_RD_CCG_LATEST b 
-            ON IC_Rec_CCG = b.ORG_CODE;
-            
- OPTIMIZE $db_output.tmp_mhmab_ccg;
-
-# COMMAND ----------
-
- %sql
  TRUNCATE TABLE $db_output.tmp_mhmab_mhs30f_prep;
  INSERT INTO $db_output.tmp_mhmab_mhs30f_prep
  SELECT
-   CC.UniqCareContID, CCG.NAME, CCG.IC_REC_GP_RES, CC.OrgIDProv, CC.AttendOrDNACode, CC.Person_ID, CC.UniqServReqID, CC.ConsMechanismMH, CC.CareContCancelDate, CC.CareContDate,
+   CC.UniqCareContID, CCG.NAME, CCG.IC_Rec_CCG, CC.OrgIDProv, CC.AttendOrDNACode, CC.Person_ID, CC.UniqServReqID, CC.ConsMechanismMH, CC.CareContCancelDate, CC.CareContDate,
        CASE 
          WHEN CC.AttendOrDNACode = 2 THEN 'Appointment cancelled by, or on behalf of the patient'
          WHEN CC.AttendOrDNACode = 3 THEN 'Did not attend, no advance warning given'
          WHEN CC.AttendOrDNACode = 4 THEN 'Appointment cancelled or postponed by the health care provider'
          WHEN CC.AttendOrDNACode = 7 THEN 'Patient arrived late and could not be seen'
        ELSE 'N/A' END AS DNA_Reason,
-      COALESCE(CMU_DIM.Code,'INVALID') ConsMedUsed,
-      COALESCE(CMU_DIM.Description,'INVALID') as CMU,
+      CASE WHEN ConsMechanismMH IS NULL THEN 'Missing' ELSE COALESCE(CMU_DIM.Code,'Invalid') END AS ConsMedUsed,
+      CASE WHEN ConsMechanismMH IS NULL THEN 'Missing' ELSE COALESCE(CMU_DIM.Description,'Invalid') END as CMU,
      CASE 
        WHEN MPI.AgeRepPeriodEnd BETWEEN 0 AND 17 THEN 'Under 18'
        WHEN MPI.AgeRepPeriodEnd BETWEEN 18 AND 64 THEN '18-64'
@@ -2163,8 +1924,8 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
  INNER JOIN $db_source.MHS101Referral AS REF ON CC.Person_ID = REF.Person_ID AND REF.UNIQSERVREQID = CC.UNIQSERVREQID
  INNER JOIN $db_output.tmp_MHMAB_MHS001MPI_latest_month_data AS MPI ON MPI.Person_ID = CC.Person_ID 
  INNER JOIN $db_source.MHS102SERVICETYPEREFERREDTO  AS SERV ON REF.UNIQSERVREQID = SERV.UNIQSERVREQID AND CC.UniqCareProfTeamID = SERV.UniqCareProfTeamID AND REF.PERSON_ID = SERV.PERSON_ID AND SERV.UNIQMONTHID = '$month_id'
- INNER JOIN $db_output.tmp_MHMAB_CCG AS CCG ON CC.Person_ID = CCG.Person_ID
- INNER JOIN $db_output.ConsMechanismMH_dim as CMU_DIM ON CC.ConsMechanismMH = CMU_DIM.Code and CC.UniqMonthID >= CMU_DIM.FirstMonth and CC.UniqMonthID <= coalesce(LastMonth,9999)
+ INNER JOIN global_temp.CCG AS CCG ON CC.Person_ID = CCG.Person_ID
+ LEFT JOIN $db_output.ConsMechanismMH_dim as CMU_DIM ON CC.ConsMechanismMH = CMU_DIM.Code and CC.UniqMonthID >= CMU_DIM.FirstMonth and CC.UniqMonthID <= coalesce(LastMonth,9999)
  INNER JOIN $db_output.validcodes as vc on SERV.ServTeamTypeRefToMH = vc.ValidValue and vc.Measure = 'CAMHS' and '$month_id' >= vc.FirstMonth and (vc.LastMonth is null or '$month_id' <= vc.LastMonth)
  WHERE CC.UniqMonthID = '$month_id' AND (CareContDate >= '$rp_startdate' AND CareContDate <= '$rp_enddate');
  
@@ -2176,15 +1937,15 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
  TRUNCATE TABLE $db_output.tmp_mhmab_mhs30f_prep_prov;
  INSERT INTO $db_output.tmp_mhmab_mhs30f_prep_prov
  SELECT
-   CC.UniqCareContID, CCG.NAME, CCG.IC_REC_GP_RES, CC.OrgIDProv, CC.AttendOrDNACode, CC.Person_ID, CC.UniqServReqID, CC.ConsMechanismMH, CC.CareContCancelDate, CC.CareContDate,
+   CC.UniqCareContID, CCG.NAME, CCG.IC_Rec_CCG, CC.OrgIDProv, CC.AttendOrDNACode, CC.Person_ID, CC.UniqServReqID, CC.ConsMechanismMH, CC.CareContCancelDate, CC.CareContDate,
    CASE 
      WHEN CC.AttendOrDNACode = 2 THEN 'Appointment cancelled by, or on behalf of the patient'
      WHEN CC.AttendOrDNACode = 3 THEN 'Did not attend, no advance warning given'
      WHEN CC.AttendOrDNACode = 4 THEN 'Appointment cancelled or postponed by the health care provider'
      WHEN CC.AttendOrDNACode = 7 THEN 'Patient arrived late and could not be seen'
     ELSE 'N/A' END AS DNA_Reason,
-   COALESCE(CMU_DIM.Code,'INVALID') ConsMedUsed,
-   COALESCE(CMU_DIM.Description,'INVALID') as CMU,
+   CASE WHEN ConsMechanismMH IS NULL THEN 'Missing' ELSE COALESCE(CMU_DIM.Code,'Invalid') END AS ConsMedUsed,
+   CASE WHEN ConsMechanismMH IS NULL THEN 'Missing' ELSE COALESCE(CMU_DIM.Description,'Invalid') END as CMU,
   CASE 
     WHEN MPI.AgeRepPeriodEnd BETWEEN 0 AND 17 THEN 'Under 18'
     WHEN MPI.AgeRepPeriodEnd BETWEEN 18 AND 64 THEN '18-64'
@@ -2199,8 +1960,8 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
   INNER JOIN $db_source.MHS101Referral AS REF ON CC.Person_ID = REF.Person_ID AND REF.UNIQSERVREQID = CC.UNIQSERVREQID 
   INNER JOIN $db_source.MHS001MPI AS MPI ON MPI.Person_ID = CC.Person_ID AND CC.OrgIDPRov = MPI.OrgIDProv AND MPI.UniqMonthID = CC.UniqMonthID
   INNER JOIN $db_source.MHS102SERVICETYPEREFERREDTO AS SERV ON REF.UNIQSERVREQID = SERV.UNIQSERVREQID AND CC.UniqCareProfTeamID = SERV.UniqCareProfTeamID AND REF.PERSON_ID = SERV.PERSON_ID AND SERV.UNIQMONTHID = '$month_id'
-  INNER JOIN $db_output.tmp_MHMAB_CCG AS CCG ON CC.Person_ID = CCG.Person_ID
-  INNER JOIN $db_output.ConsMechanismMH_dim as CMU_DIM ON CC.ConsMechanismMH = CMU_DIM.Code and CC.UniqMonthID >= CMU_DIM.FirstMonth and CC.UniqMonthID <= coalesce(LastMonth,9999)
+  INNER JOIN global_temp.CCG  AS CCG ON CC.Person_ID = CCG.Person_ID
+  LEFT JOIN $db_output.ConsMechanismMH_dim as CMU_DIM ON CC.ConsMechanismMH = CMU_DIM.Code and CC.UniqMonthID >= CMU_DIM.FirstMonth and CC.UniqMonthID <= coalesce(LastMonth,9999)
   INNER JOIN $db_output.validcodes as vc on SERV.ServTeamTypeRefToMH = vc.ValidValue and vc.Measure = 'CAMHS' and '$month_id' >= vc.FirstMonth and (vc.LastMonth is null or '$month_id' <= vc.LastMonth)
   WHERE CC.UniqMonthID = '$month_id' AND (CareContDate >= '$rp_startdate' AND CareContDate <= '$rp_enddate');
   
@@ -2212,14 +1973,15 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
  TRUNCATE TABLE $db_output.tmp_mhmab_mhs30h_prep;
  INSERT INTO $db_output.tmp_mhmab_mhs30h_prep
  SELECT
- CC.UniqCareContID, CCG.NAME, CCG.IC_REC_GP_RES, CC.OrgIDProv, CC.AttendOrDNACode, CC.Person_ID, CC.UniqServReqID, CC.ConsMechanismMH, CC.CareContCancelDate, CC.CareContDate,
+ CC.UniqCareContID, CCG.NAME, CCG.IC_Rec_CCG, CC.OrgIDProv, CC.AttendOrDNACode, CC.Person_ID, CC.UniqServReqID, CC.ConsMechanismMH, CC.CareContCancelDate, CC.CareContDate,
  CASE 
    WHEN CC.AttendOrDNACode = 2 THEN 'Appointment cancelled by, or on behalf of the patient'
    WHEN CC.AttendOrDNACode = 3 THEN 'Did not attend, no advance warning given'
    WHEN CC.AttendOrDNACode = 4 THEN 'Appointment cancelled or postponed by the health care provider'
    WHEN CC.AttendOrDNACode = 7 THEN 'Patient arrived late and could not be seen'
  ELSE 'N/A' END AS DNA_Reason,
- COALESCE(CMU_DIM.Code,'INVALID') AS ConsMedUsed, COALESCE(CMU_DIM.Description,'INVALID') as CMU,
+ CASE WHEN ConsMechanismMH IS NULL THEN 'Missing' ELSE COALESCE(CMU_DIM.Code,'Invalid') END AS ConsMedUsed, 
+ CASE WHEN ConsMechanismMH IS NULL THEN 'Missing' ELSE COALESCE(CMU_DIM.Description,'Invalid') END AS CMU,
  CASE 
    WHEN MPI.AgeRepPeriodEnd BETWEEN 0 AND 17 THEN 'Under 18'
    WHEN MPI.AgeRepPeriodEnd BETWEEN 18 AND 64 THEN '18-64'
@@ -2235,8 +1997,8 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
  INNER JOIN $db_output.tmp_MHMAB_MHS001MPI_latest_month_data AS MPI ON MPI.Person_ID = CC.Person_ID 
  INNER JOIN $db_source.MHS102SERVICETYPEREFERREDTO AS SERV ON REF.UNIQSERVREQID = SERV.UNIQSERVREQID
  AND REF.PERSON_ID = SERV.PERSON_ID AND SERV.UNIQMONTHID = '$month_id'
- INNER JOIN $db_output.tmp_MHMAB_CCG AS CCG ON CC.Person_ID = CCG.Person_ID
- INNER JOIN $db_output.ConsMechanismMH_dim as CMU_DIM ON CC.ConsMechanismMH = CMU_DIM.Code 
+ INNER JOIN global_temp.CCG AS CCG ON CC.Person_ID = CCG.Person_ID
+ LEFT JOIN $db_output.ConsMechanismMH_dim as CMU_DIM ON CC.ConsMechanismMH = CMU_DIM.Code 
  and CC.UniqMonthID >= CMU_DIM.FirstMonth and CC.UniqMonthID <= coalesce(LastMonth,9999)
  WHERE CC.UniqMonthID = '$month_id' AND (CareContDate >= '$rp_startdate' AND CareContDate <= '$rp_enddate');
  
@@ -2248,7 +2010,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
  TRUNCATE TABLE $db_output.tmp_MHMAB_MHS30h_prep_prov;
  INSERT INTO $db_output.tmp_MHMAB_MHS30h_prep_prov
  SELECT
- CC.UniqCareContID, CCG.NAME, CCG.IC_REC_GP_RES, CC.OrgIDProv, CC.AttendOrDNACode, CC.Person_ID, CC.UniqServReqID, 
+ CC.UniqCareContID, CCG.NAME, CCG.IC_Rec_CCG, CC.OrgIDProv, CC.AttendOrDNACode, CC.Person_ID, CC.UniqServReqID, 
  CC.ConsMechanismMH,CC.CareContCancelDate, CC.CareContDate,
  CASE 
    WHEN CC.AttendOrDNACode = 2 THEN 'Appointment cancelled by, or on behalf of the patient'
@@ -2256,7 +2018,8 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
    WHEN CC.AttendOrDNACode = 4 THEN 'Appointment cancelled or postponed by the health care provider'
    WHEN CC.AttendOrDNACode = 7 THEN 'Patient arrived late and could not be seen'
  ELSE 'N/A' END AS DNA_Reason,
- COALESCE(CMU_DIM.Code,'INVALID') AS ConsMedUsed, COALESCE(CMU_DIM.Description,'INVALID') as CMU,
+ CASE WHEN ConsMechanismMH IS NULL THEN 'Missing' ELSE COALESCE(CMU_DIM.Code,'Invalid') END AS ConsMedUsed, 
+ CASE WHEN ConsMechanismMH IS NULL THEN 'Missing' ELSE COALESCE(CMU_DIM.Description,'Invalid') END AS CMU,
  CASE 
    WHEN MPI.AgeRepPeriodEnd BETWEEN 0 AND 17 THEN 'Under 18'
    WHEN MPI.AgeRepPeriodEnd BETWEEN 18 AND 64 THEN '18-64'
@@ -2273,8 +2036,8 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
  AND CC.OrgIDPRov = MPI.OrgIDProv AND MPI.UniqMonthID = CC.UniqMonthID
  INNER JOIN $db_source.MHS102SERVICETYPEREFERREDTO AS SERV
  ON REF.UNIQSERVREQID = SERV.UNIQSERVREQID AND REF.PERSON_ID = SERV.PERSON_ID AND SERV.UNIQMONTHID = '$month_id'
- INNER JOIN $db_output.tmp_mhmab_ccg AS CCG ON CC.Person_ID = CCG.Person_ID
- INNER JOIN $db_output.ConsMechanismMH_dim as CMU_DIM ON CC.ConsMechanismMH = CMU_DIM.Code 
+ INNER JOIN global_temp.CCG AS CCG ON CC.Person_ID = CCG.Person_ID
+ LEFT JOIN $db_output.ConsMechanismMH_dim as CMU_DIM ON CC.ConsMechanismMH = CMU_DIM.Code 
  and CC.UniqMonthID >= CMU_DIM.FirstMonth and CC.UniqMonthID <= coalesce(LastMonth,9999)
  WHERE CC.UniqMonthID = '$month_id' AND (CareContDate >= '$rp_startdate' AND CareContDate <= '$rp_enddate');
  
@@ -2315,7 +2078,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
                  WHEN REF.SourceOfReferralMH IN ('H1','H2') THEN 'Acute Secondary Care' 
                  WHEN REF.SourceOfReferralMH IN ('I1','I2') THEN 'Other Mental Health NHS Trust' 
                  WHEN REF.SourceOfReferralMH IN ('M1','M2','M3','M4','M5','M6','M7','M9') THEN 'Other' 
-                 WHEN REF.SourceOfReferralMH = 'N3' THEN 'Improving access to psychological  therapies' 
+                 WHEN REF.SourceOfReferralMH = 'N3' THEN 'Improving access to psychological therapies' 
                  WHEN REF.SourceOfReferralMH = 'P1' THEN 'Internal' 
                  WHEN REF.SourceOfReferralMH = 'Q1' THEN 'Drop In Service' 
                  WHEN REF.SourceOfReferralMH IS NULL THEN 'Missing' 
@@ -2351,6 +2114,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
             ,REF.Person_ID
             ,COALESCE(MPI.Age_Band, "UNKNOWN") as Age_Band
             ,COALESCE(MPI.Der_Gender, "UNKNOWN") as Der_Gender
+            ,COALESCE(MPI.Der_GenderName, "UNKNOWN") as Der_GenderName
             ,COALESCE(MPI.LowerEthnicity, "UNKNOWN") as LowerEthnicity
             ,COALESCE(MPI.LowerEthnicity_Desc, "UNKNOWN") as LowerEthnicity_Desc
             ,COALESCE(MPI.IMD_Decile, "UNKNOWN") as IMD_Decile
@@ -2371,6 +2135,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 # COMMAND ----------
 
  %sql
+ TRUNCATE TABLE $db_output.tmp_mhmab_mhs32c_prep_prov;
  INSERT INTO $db_output.tmp_mhmab_mhs32c_prep_prov
  SELECT 
  REF.UniqServReqID,REF.SourceOfReferralMH,REF.OrgIDProv,
@@ -2653,6 +2418,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
             ,REF.Person_ID
             ,COALESCE(MPI.Age_Band, "UNKNOWN") as Age_Band
             ,COALESCE(MPI.Der_Gender, "UNKNOWN") as Der_Gender
+            ,COALESCE(MPI.Der_GenderName, "UNKNOWN") as Der_GenderName
             ,COALESCE(MPI.LowerEthnicity, "UNKNOWN") as LowerEthnicity
             ,COALESCE(MPI.LowerEthnicity_Desc, "UNKNOWN") as LowerEthnicity_Desc
             ,COALESCE(MPI.IMD_Decile, "UNKNOWN") as IMD_Decile
@@ -2670,3 +2436,29 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 
 # COMMAND ----------
 
+ %sql
+ TRUNCATE TABLE $db_output.tmp_mhmab_mhs07_prep;
+  
+ INSERT INTO $db_output.tmp_mhmab_mhs07_prep
+ SELECT      REF.UniqServReqID 
+            ,REF.Person_ID
+            ,HSP.UniqHospProvSpellID
+            ,COALESCE(MPI.Age_Band, "UNKNOWN") as Age_Band
+            ,COALESCE(MPI.Der_Gender, "UNKNOWN") as Der_Gender
+            ,COALESCE(MPI.Der_GenderName, "UNKNOWN") as Der_GenderName
+            ,COALESCE(MPI.LowerEthnicity, "UNKNOWN") as LowerEthnicity
+            ,COALESCE(MPI.LowerEthnicity_Desc, "UNKNOWN") as LowerEthnicity_Desc
+            ,COALESCE(MPI.IMD_Decile, "UNKNOWN") as IMD_Decile
+            ,COALESCE(MPI.AccommodationType, "UNKNOWN") as AccommodationType
+            ,COALESCE(MPI.AccommodationType_Desc, "UNKNOWN") as AccommodationType_Desc
+            ,COALESCE(MPI.EmployStatus, "UNKNOWN") as EmployStatus
+            ,COALESCE(MPI.EmployStatus_Desc, "UNKNOWN") as EmployStatus_Desc
+            ,COALESCE(MPI.DisabCode, "UNKNOWN") as DisabCode
+            ,COALESCE(MPI.DisabCode_Desc, "UNKNOWN") as DisabCode_Desc
+            ,COALESCE(MPI.Sex_Orient, "UNKNOWN") as Sex_Orient
+ FROM $db_output.tmp_MHMAB_mhs001mpi_latest_month_data AS MPI
+ INNER JOIN $db_output.mhs101referral_open_end_rp AS REF
+             ON MPI.Person_ID = REF.Person_ID 
+             AND MPI.PatMRecInRP = TRUE
+ INNER JOIN global_temp.MHS501HospProvSpell_open_end_rp AS HSP
+             ON REF.UniqServReqID = HSP.UniqServReqID;

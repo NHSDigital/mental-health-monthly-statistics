@@ -1,11 +1,17 @@
 -- Databricks notebook source
+%md
+### MHSDS V5.0 Changes
+#### AM: Dec 15 2021 - Updated code (Cmd 6)for V5.0 change - ConsMediumUsed' will change to 'ConsMechanismMH', code '06' will change to '09' from Oct 2021 data
+
+-- COMMAND ----------
+
 -- DBTITLE 1,'UNIQHOSPPROVSPELLNUM' will change to 'UniqHospProvSpellID'
 CREATE OR REPLACE TEMP VIEW INPATIENTS AS 
 
 SELECT 
 PERSON_ID,
 UNIQSERVREQID,
-UniqHospProvSpellID 
+UniqHospProvSpellID -- UniqHospProvSpellID V5 /*** updated to v5 ***/
 FROM
 $db_source.MHS501HOSPPROVSPELL 
 WHERE
@@ -31,10 +37,11 @@ $db_source.MHS101REFERRAL A
 LEFT JOIN INPATIENTS B ON A.PERSON_ID = B.PERSON_ID AND A.UNIQSERVREQID = B.UNIQSERVREQID
 INNER JOIN $db_source.MHS001MPI M ON A.RECORDNUMBER = M.RECORDNUMBER
 WHERE
-A.AgeServReferRecDate  BETWEEN 0 AND 17 
+A.AgeServReferRecDate  BETWEEN 0 AND 17 -- PREVIOUSLY <18
 and A.UniqMonthID = '$end_month_id'
-and a.ServDischDate is not null 
-and B.UniqHospProvSpellID is null 
+--and A.SERVDISCHDATE between '$rp_startdate_1m' and '$rp_enddate' --NHSE Use DischDate is not null
+and a.ServDischDate is not null -- NHSE Version
+and B.UniqHospProvSpellID is null -- will change to 'UniqHospProvSpellID' HL /*** updated to v5 ***/
 AND (m.LADistrictAuth LIKE 'E%' OR m.LADistrictAuth IS NULL OR m.LADistrictAuth = '')
 
 -- COMMAND ----------
@@ -60,11 +67,12 @@ FROM
 WHERE
   (
     ( c.AttendOrDNACode IN ('5', '6') and ((c.ConsMechanismMH NOT IN ('05', '06') and c.UniqMonthID < '1459') or (c.ConsMechanismMH IN ('01', '02', '04', '11') and c.UniqMonthID >= '1459')))   
+-------/*** ConsMediumUsed' will change to 'ConsMechanismMH', code '06' will change to '09' from Oct 2021 data /*** updated to v5 **/
     or 
-    ( ((c.ConsMechanismMH IN ('05', '06') and c.UniqMonthID < '1459') or (c.ConsMechanismMH IN ('05', '09', '10', '13') and c.UniqMonthID >= '1459')) and OrgIdProv = 'DFC') 
+    ( ((c.ConsMechanismMH IN ('05', '06') and c.UniqMonthID < '1459') or (c.ConsMechanismMH IN ('05', '09', '10', '13') and c.UniqMonthID >= '1459')) and OrgIdProv = 'DFC')            ---/*** change from Oct2021: v5 change **/
    )
   and CareContDate <= '$rp_enddate'
-  and carecontdate >= '$financial_yr_start'
+  and carecontdate >= '$financial_year_start'
 UNION ALL
 SELECT
   'INDIRECT' AS CONT_TYPE,
@@ -79,7 +87,7 @@ FROM
   $db_source.MHS204IndirectActivity i
 WHERE
   IndirectActDate <= '$rp_enddate'
-  and indirectactdate >= '$financial_yr_start'
+  and indirectactdate >= '$financial_year_start'
 
 -- COMMAND ----------
 
@@ -119,6 +127,7 @@ FROM
   LEFT JOIN $db_source.MHS201CARECONTACT C ON a.RecordNumber = c.RecordNumber
   AND a.UniqServReqID = c.UniqServReqID
   AND a.UniqCareContID = c.UniqCareContID
+  --INNER JOIN $db_output.CLOSED_REFS cr on cr.Person_ID = c.Person_ID and cr.UniqServReqID = c.UniqServReqID
 WHERE
   A.UNIQMONTHID <= '$end_month_id'
 
@@ -132,7 +141,7 @@ SELECT
   r.UniqMonthID,
   r.CodedAssToolType,
   r.PersScore,
-  COALESCE(r.AssToolCompTimeStamp,r.AssToolCompDate) AS Der_AssToolCompDate, 
+  COALESCE(r.AssToolCompTimeStamp,r.AssToolCompDate) AS Der_AssToolCompDate, -- will change to AssToolCompTimeStamp HL /*** updated to v5 GF ***/ CHANGED TO COALESCE(r.AssToolCompTimeStamp,r.AssToolCompDate) TO COVER PRE V5 DATA
   r.RecordNumber,
   r.MHS606UniqID AS Der_AssUniqID,
   r.OrgIDProv,
@@ -143,6 +152,7 @@ SELECT
   NULL AS UniqCareActID
 FROM
   $db_source.MHS606CodedScoreAssessmentRefer r
+  --INNER JOIN $db_output.CLOSED_REFS cr on cr.Person_ID = r.Person_ID and cr.UniqServReqID = r.UniqServReqID
 WHERE
   r.UNIQMONTHID <= '$end_month_id'
 
@@ -157,7 +167,8 @@ SELECT
   c.UniqMonthID,
   a.CodedAssToolType,
   a.PersScore,
- c.AssToolCompDate AS Der_AssToolCompDate, 
+ -- c.AssToolCompTimestamp AS Der_AssToolCompDate, -- no change in 801 tbl but change in 606 /*** AssToolCompDate replaced by AssToolCompTimestamp  for v5 ***/
+ c.AssToolCompDate AS Der_AssToolCompDate, -- changed back to AssToolCompDate as "AssToolCompTimestamp" does not exist in 801
  c.RecordNumber,
   a.MHS802UniqID AS Der_AssUniqID,
   a.OrgIDProv,
@@ -171,9 +182,10 @@ FROM
   LEFT JOIN $db_source.MHS801ClusterTool c ON c.UniqClustID = a.UniqClustID
   AND c.RecordNumber = a.RecordNumber
   LEFT JOIN $db_source.MHS101Referral r ON r.RecordNumber = c.RecordNumber
- AND c.AssToolCompDate BETWEEN r.ReferralRequestReceivedDate 
+  --AND c.AssToolCompTimestamp BETWEEN r.ReferralRequestReceivedDate
+ AND c.AssToolCompDate BETWEEN r.ReferralRequestReceivedDate -- changed back to AssToolCompDate 17/12/21
  AND COALESCE(r.ServDischDate, '$rp_enddate')
-
+  --INNER JOIN $db_output.CLOSED_REFS cr on cr.Person_ID = r.Person_ID and cr.UniqServReqID = r.UniqServReqID
 WHERE
   a.UniqMonthID <= '$end_month_id'
 
@@ -344,7 +356,7 @@ r.OrgIDProv
 CREATE OR REPLACE  TEMPORARY VIEW RD_ORG_DAILY_LATEST AS
 SELECT DISTINCT ORG_CODE, 
                 NAME
-           FROM $ref_database.org_daily
+           FROM $reference_data.org_daily
           WHERE (BUSINESS_END_DATE >= add_months('$rp_enddate', 1) OR ISNULL(BUSINESS_END_DATE))
                 AND BUSINESS_START_DATE <= add_months('$rp_enddate', 1)	
                 AND ORG_TYPE_CODE NOT IN ('MP', 'IR', 'F', 'GO', 'CN');
@@ -451,8 +463,8 @@ LEFT JOIN RD_ORG_DAILY_LATEST b ON A.ORGID = B.ORG_CODE
 
 -- COMMAND ----------
 
---  %py
---  import json
---  dbutils.notebook.exit(json.dumps({
---    "status": "OK"
---  }))
+%py
+import json
+dbutils.notebook.exit(json.dumps({
+  "status": "OK"
+}))

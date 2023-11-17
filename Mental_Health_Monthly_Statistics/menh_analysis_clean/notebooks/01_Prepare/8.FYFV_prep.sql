@@ -1,7 +1,6 @@
 -- Databricks notebook source
---  
---  %py
---  #dbutils.widgets.removeAll()
+%py
+#dbutils.widgets.removeAll()
 
 -- COMMAND ----------
 
@@ -18,44 +17,44 @@
 -- COMMAND ----------
 
 -- DBTITLE 1,Get widget variables
---  %py
---  db_output = dbutils.widgets.get("db_output")
---  db_source  = dbutils.widgets.get("db_source")
---  month_id = dbutils.widgets.get("month_id")
---  rp_enddate = dbutils.widgets.get("rp_enddate")
---  rp_startdate = dbutils.widgets.get("rp_startdate")
---  status = dbutils.widgets.get("status")
---  rp_startdate_quarterly = dbutils.widgets.get("rp_startdate_quarterly")
---  
---  params = {'db_output': db_output, 'db_source': db_source, 'month_id': month_id, 'rp_enddate': rp_enddate, 'rp_startdate': rp_startdate, 'rp_startdate_quarterly': rp_startdate_quarterly, 'status': status}
---  
---  print(params)
+%py
+db_output = dbutils.widgets.get("db_output")
+db_source  = dbutils.widgets.get("db_source")
+month_id = dbutils.widgets.get("month_id")
+rp_enddate = dbutils.widgets.get("rp_enddate")
+rp_startdate = dbutils.widgets.get("rp_startdate")
+status = dbutils.widgets.get("status")
+rp_startdate_quarterly = dbutils.widgets.get("rp_startdate_quarterly")
+
+params = {'db_output': db_output, 'db_source': db_source, 'month_id': month_id, 'rp_enddate': rp_enddate, 'rp_startdate': rp_startdate, 'rp_startdate_quarterly': rp_startdate_quarterly, 'status': status}
+
+print(params)
 
 -- COMMAND ----------
 
 -- DBTITLE 1,Calculate remaining dates from current month widget value
---  %py
---  
---  # GBT: I've moved the creation of these parameters into the notebook above as I *think* that parameters created in python code can't be used by SQL code in the same notebook...
---  
---  
---  # from datetime import datetime
---  # from dateutil.relativedelta import relativedelta
---  
---  # params['month_id_1'] = int(params['month_id']) - 2
---  # params['month_id_2'] = int(params['month_id']) - 1
---  
---  # params['rp_startdate_m1'] = rp_startdate_quarterly
---  # params['rp_startdate_m2'] = (datetime.strptime(params['rp_startdate_quarterly'], '%Y-%m-%d') + relativedelta(months=1)).strftime('%Y-%m-%d')
---  
---  # params['rp_enddate_m1'] = (datetime.strptime(params['rp_startdate_quarterly'], '%Y-%m-%d') + relativedelta(months=1,days=-1)).strftime('%Y-%m-%d')
---  # params['rp_enddate_m2'] = (datetime.strptime(params['rp_startdate_quarterly'], '%Y-%m-%d') + relativedelta(months=2,days=-1)).strftime('%Y-%m-%d')
---  
---  # print(params)
+%py
+
+# Moved the creation of these parameters into the notebook above as I *think* that parameters created in python code can't be used by SQL code in the same notebook...
+
+
+# from datetime import datetime
+# from dateutil.relativedelta import relativedelta
+
+# params['month_id_1'] = int(params['month_id']) - 2
+# params['month_id_2'] = int(params['month_id']) - 1
+
+# params['rp_startdate_m1'] = rp_startdate_quarterly
+# params['rp_startdate_m2'] = (datetime.strptime(params['rp_startdate_quarterly'], '%Y-%m-%d') + relativedelta(months=1)).strftime('%Y-%m-%d')
+
+# params['rp_enddate_m1'] = (datetime.strptime(params['rp_startdate_quarterly'], '%Y-%m-%d') + relativedelta(months=1,days=-1)).strftime('%Y-%m-%d')
+# params['rp_enddate_m2'] = (datetime.strptime(params['rp_startdate_quarterly'], '%Y-%m-%d') + relativedelta(months=2,days=-1)).strftime('%Y-%m-%d')
+
+# print(params)
 
 -- COMMAND ----------
 
--- GBT comments
+-- comments
 -- need to generate rp_startdate_m1 and rp_startdate_m2 from rp_startdate...
 -- also enddates and month_ids
 -- status is NO LONGER always Final for this code
@@ -63,8 +62,8 @@
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP CCG Methodology Prep update 
---NP 15 feb 2021 : copied to common objects in menh_publications\notebooks\common_objects\02_load_common_ref_data
--- GBT: 07-07-2022 : this table is needed by the cell below (used in FYFV_prep) - with the move of EIP/AWT measures to menh_publications this has been moved to this FYFV_prep notebook
+--15 feb 2021 : copied to common objects in menh_publications\notebooks\common_objects\02_load_common_ref_data
+--07-07-2022 : this table is needed by the cell below (used in FYFV_prep) - with the move of EIP/AWT measures to menh_publications this has been moved to this FYFV_prep notebook
 
 CREATE OR REPLACE GLOBAL TEMP VIEW CCG_prep_EIP AS
 SElECT DISTINCT    a.Person_ID
@@ -79,24 +78,28 @@ LEFT JOIN          $db_source.MHS002GP b
 		           and b.EndDateGMPRegistration is null
 LEFT JOIN          $db_output.RD_CCG_LATEST c on a.OrgIDCCGRes = c.original_ORG_CODE
 LEFT JOIN          $db_output.RD_CCG_LATEST e on b.OrgIDCCGGPPractice = e.original_ORG_CODE
-WHERE              (e.ORG_CODE is not null or c.ORG_CODE is not null)
+LEFT JOIN          $db_output.RD_CCG_LATEST c1 on a.OrgIDSubICBLocResidence = c1.original_ORG_CODE
+LEFT JOIN          $db_output.RD_CCG_LATEST e1 on b.OrgIDSubICBLocGP = e1.original_ORG_CODE
+WHERE              (e.ORG_CODE is not null or c.ORG_CODE is not null or e1.ORG_CODE is not null or c1.ORG_CODE is not null)
                    and a.uniqmonthid between '$month_id' - 2 AND '$month_id'
 GROUP BY           a.Person_ID
 
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP CCG Methodology update
---NP 15 feb 2021 : copied to common objects in menh_publications\notebooks\common_objects\02_load_common_ref_data
--- GBT: 07-07-2022 : this table is needed by FYFV_prep - with the move of EIP/AWT measures to menh_publications this has been moved to FYFV_prep notebook
+--15 feb 2021 : copied to common objects in menh_publications\notebooks\common_objects\02_load_common_ref_data
+--07-07-2022 : this table is needed by FYFV_prep - with the move of EIP/AWT measures to menh_publications this has been moved to FYFV_prep notebook
 -- uses global_temp.CCG_prep_EIP
 
 TRUNCATE TABLE $db_output.MHS001_CCG_LATEST;
 
 INSERT INTO TABLE $db_output.MHS001_CCG_LATEST
 select distinct    a.Person_ID,
-				   CASE WHEN b.OrgIDCCGGPPractice IS NOT NULL and e.ORG_CODE is not null THEN b.OrgIDCCGGPPractice
-					    WHEN A.OrgIDCCGRes IS NOT NULL and c.ORG_CODE is not null THEN A.OrgIDCCGRes
-						ELSE 'UNKNOWN' END AS IC_Rec_CCG		
+				   CASE WHEN b.UniqMonthID <= 1467 AND b.OrgIDCCGGPPractice IS NOT NULL and e.ORG_CODE is not null THEN b.OrgIDCCGGPPractice
+					    WHEN b.UniqMonthID > 1467 AND b.OrgIDSubICBLocGP IS NOT NULL and e1.ORG_CODE is not null THEN b.OrgIDSubICBLocGP
+					    WHEN a.UniqMonthID <= 1467 AND A.OrgIDCCGRes IS NOT NULL and c.ORG_CODE is not null THEN A.OrgIDCCGRes
+                        WHEN a.UniqMonthID > 1467 AND A.OrgIDSubICBLocResidence IS NOT NULL and c1.ORG_CODE is not null THEN A.OrgIDSubICBLocResidence
+						ELSE 'UNKNOWN' END AS IC_Rec_CCG			
 FROM               $db_source.mhs001MPI a
 LEFT JOIN          $db_source.MHS002GP b 
                    on a.Person_ID = b.Person_ID 
@@ -108,26 +111,28 @@ LEFT JOIN          $db_source.MHS002GP b
 INNER JOIN         global_temp.CCG_prep_EIP ccg on a.recordnumber = ccg.recordnumber
 LEFT JOIN          $db_output.RD_CCG_LATEST c on a.OrgIDCCGRes = c.original_ORG_CODE
 LEFT JOIN          $db_output.RD_CCG_LATEST e on b.OrgIDCCGGPPractice = e.original_ORG_CODE
-WHERE              (e.ORG_CODE is not null or c.ORG_CODE is not null)
+LEFT JOIN          $db_output.RD_CCG_LATEST c1 on a.OrgIDSubICBLocResidence = c1.original_ORG_CODE
+LEFT JOIN          $db_output.RD_CCG_LATEST e1 on b.OrgIDSubICBLocGP = e1.original_ORG_CODE
+WHERE              (e.ORG_CODE is not null or c.ORG_CODE is not null or e1.ORG_CODE is not null or c1.ORG_CODE is not null)
                    and a.uniqmonthid between '$month_id' - 2 AND '$month_id'
 
 -- COMMAND ----------
 
---  %py
---  
---  import os
---  
---  db_output = dbutils.widgets.get("db_output")
---  
---  if os.environ['env'] == 'prod':
---    spark.sql('OPTIMIZE {db_output}.{table}'.format(db_output=db_output, table='MHS001_CCG_LATEST'))
---  
---  spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output, table='MHS001_CCG_LATEST'))
+%py
+
+import os
+
+db_output = dbutils.widgets.get("db_output")
+
+if os.environ['env'] == 'prod':
+  spark.sql('OPTIMIZE {db_output}.{table}'.format(db_output=db_output, table='MHS001_CCG_LATEST'))
+
+spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output, table='MHS001_CCG_LATEST'))
 
 -- COMMAND ----------
 
---  %md
---  Table 1 Prep
+%md
+Table 1 Prep
 
 -- COMMAND ----------
 
@@ -153,16 +158,16 @@ INSERT INTO TABLE $db_output.AMH03e_prep
 
 -- COMMAND ----------
 
---  %python
---  
---  import os
---  
---  db_output = dbutils.widgets.get("db_output")
---  
---  if os.environ['env'] == 'prod':
---    spark.sql('OPTIMIZE {db_output}.{table}'.format(db_output=db_output, table='AMH03e_prep'))
---  
---  spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output, table='AMH03e_prep'))
+%python
+
+import os
+
+db_output = dbutils.widgets.get("db_output")
+
+if os.environ['env'] == 'prod':
+  spark.sql('OPTIMIZE {db_output}.{table}'.format(db_output=db_output, table='AMH03e_prep'))
+
+spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output, table='AMH03e_prep'))
 
 -- COMMAND ----------
 
@@ -188,16 +193,16 @@ INNER JOIN global_temp.Accomodation_latest AS ACC
 
 -- COMMAND ----------
 
---  %python
---  
---  import os
---  
---  db_output = dbutils.widgets.get("db_output")
---  
---  if os.environ['env'] == 'prod':
---    spark.sql('OPTIMIZE {db_output}.{table}'.format(db_output=db_output, table='AMH13e_14e_prep'))
---  
---  spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output, table='AMH13e_14e_prep'))
+%python
+
+import os
+
+db_output = dbutils.widgets.get("db_output")
+
+if os.environ['env'] == 'prod':
+  spark.sql('OPTIMIZE {db_output}.{table}'.format(db_output=db_output, table='AMH13e_14e_prep'))
+
+spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output, table='AMH13e_14e_prep'))
 
 -- COMMAND ----------
 
@@ -230,27 +235,24 @@ LEFT JOIN $db_output.STP_Region_mapping_post_2020 AS stp
 
 -- COMMAND ----------
 
---  %python
---  
---  import os
---  
---  db_output = dbutils.widgets.get("db_output")
---  
---  if os.environ['env'] == 'prod':
---    spark.sql('OPTIMIZE {db_output}.{table}'.format(db_output=db_output, table='AMH16e_17e_prep'))
---  
---  spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output, table='AMH16e_17e_prep'))
+%python
+
+import os
+
+db_output = dbutils.widgets.get("db_output")
+
+if os.environ['env'] == 'prod':
+  spark.sql('OPTIMIZE {db_output}.{table}'.format(db_output=db_output, table='AMH16e_17e_prep'))
+
+spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output, table='AMH16e_17e_prep'))
 
 -- COMMAND ----------
 
---  %md
---  
---  Table 2 Prep
+%md
+
+Table 2 Prep
 
 -- COMMAND ----------
-
--- GBT: updated following the advice of David Fisher - 2nd contact date should be used to determine quarter not first contact date...
--- change made is to exclude the CASE statement
 
 CREATE OR REPLACE GLOBAL TEMPORARY VIEW ContPer_Quarterly AS
     SELECT s.Person_ID,
@@ -264,12 +266,7 @@ CREATE OR REPLACE GLOBAL TEMPORARY VIEW ContPer_Quarterly AS
            s.RN1,
            f.ContDate AS ContDate2,
            f.AgeCareContDate AS AgeCareContDate2   
-          -- s.UniqMonthID -- Removed this column as it give same column name exception in spark 3
---            CASE WHEN MONTH(f.contDate) BETWEEN 4 AND 6 AND f.UniqMonthID BETWEEN '$month_id'-2 and '$month_id' THEN 'Q1'
---                 WHEN MONTH(f.contDate) BETWEEN 7 AND 9 AND f.UniqMonthID BETWEEN '$month_id'-2 and '$month_id' THEN 'Q2'
---                 WHEN MONTH(f.contDate) BETWEEN 10 AND 12 AND f.UniqMonthID BETWEEN '$month_id'-2 and '$month_id' THEN 'Q3'
---                 WHEN MONTH(f.contDate) BETWEEN 1 AND 3 AND f.UniqMonthID BETWEEN '$month_id'-2 and '$month_id' THEN 'Q4' 
---                 END AS Qtr
+
            FROM global_temp.FirstPersQtr s
 INNER JOIN global_temp.first_contacts f 
            ON ((f.UniqServReqID = s.UniqServReqID AND f.Person_ID = s.Person_ID) 
@@ -281,9 +278,9 @@ INNER JOIN global_temp.first_contacts f
 TRUNCATE TABLE $db_output.CYPFinal_2nd_contact_Quarterly;
 
 -- NB The CASE statement at the end of this code doesn't need to be BETWEEN as this code is only ever run every quarter - could be =
---GBT currently rp_startdate is set to rp_startdate_quarterly...
+-- currently rp_startdate is set to rp_startdate_quarterly...
 
--- GBT: updated following the advice of David Fisher - 2nd contact date should be used to determine quarter not first contact date...
+-- updated following the advice of analysts - 2nd contact date should be used to determine quarter not first contact date...
 -- change made is to change the WHERE statement
 
 INSERT INTO TABLE $db_output.CYPFinal_2nd_contact_Quarterly
@@ -296,35 +293,29 @@ INSERT INTO TABLE $db_output.CYPFinal_2nd_contact_Quarterly
             c.ContDate,
             c.AgeCareContDate,
             c.RN1,
---          c.Qtr,
             c.ContDate2,
             c.AgeCareContDate2
        FROM global_temp.ContPer_Quarterly c
        WHERE UniqMonthID BETWEEN ('$month_id_1') AND '$month_id'
-       
---       WHERE Qtr= CASE WHEN MONTH('$rp_startdate') BETWEEN 4 AND 6 THEN 'Q1'
---                       WHEN MONTH('$rp_startdate') BETWEEN 7 AND 9 THEN 'Q2'
---                       WHEN MONTH('$rp_startdate') BETWEEN 10 AND 12 THEN 'Q3'
---                       WHEN MONTH('$rp_startdate') BETWEEN 1 AND 3 THEN 'Q4'
---                       END
+
 
 -- COMMAND ----------
 
---  %python
---  
---  import os
---  
---  db_output = dbutils.widgets.get("db_output")
---  
---  if os.environ['env'] == 'prod':
---    spark.sql('OPTIMIZE {db_output}.{table}'.format(db_output=db_output, table='CYPFinal_2nd_contact_Quarterly'))
---  
---  spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output, table='CYPFinal_2nd_contact_Quarterly'))
+%python
+
+import os
+
+db_output = dbutils.widgets.get("db_output")
+
+if os.environ['env'] == 'prod':
+  spark.sql('OPTIMIZE {db_output}.{table}'.format(db_output=db_output, table='CYPFinal_2nd_contact_Quarterly'))
+
+spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output, table='CYPFinal_2nd_contact_Quarterly'))
 
 -- COMMAND ----------
 
---  %md
---  Table 3 Prep
+%md
+Table 3 Prep
 
 -- COMMAND ----------
 

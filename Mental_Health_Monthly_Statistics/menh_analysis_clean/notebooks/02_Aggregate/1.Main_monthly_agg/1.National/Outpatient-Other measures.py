@@ -48,7 +48,7 @@
 
 # DBTITLE 1,MHS01 National
  %sql
- INSERT INTO $db_output.Main_monthly_unformatted--_exp
+ INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START,
              '$rp_enddate' AS REPORTING_PERIOD_END,
             '$status' AS STATUS,
@@ -67,15 +67,15 @@
 
 # DBTITLE 1,MHS01 National; Accommodation Type
  %sql
- INSERT INTO $db_output.Main_monthly_unformatted_exp
+ INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
             ,'$rp_enddate' AS REPORTING_PERIOD_END
             ,'$status' AS STATUS
             ,'England; Accommodation Type' AS BREAKDOWN
-            ,AccommodationType AS PRIMARY_LEVEL
-            ,AccommodationType_Desc AS PRIMARY_LEVEL_DESCRIPTION
-            ,'NONE' AS SECONDARY_LEVEL
-            ,'NONE' AS SECONDARY_LEVEL_DESCRIPTION
+            ,'England' AS PRIMARY_LEVEL
+            ,'England' AS PRIMARY_LEVEL_DESCRIPTION
+            ,AccommodationType AS SECONDARY_LEVEL
+            ,AccommodationType_Desc AS SECONDARY_LEVEL_DESCRIPTION
             ,'MHS01' AS MEASURE_ID
             ,COUNT (DISTINCT Person_ID) AS MEASURE_VALUE
             ,'$db_source' AS SOURCE_DB           
@@ -86,15 +86,15 @@
 
 # DBTITLE 1,MHS01 National; Age Band
  %sql
- INSERT INTO $db_output.Main_monthly_unformatted_exp
+ INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
             ,'$rp_enddate' AS REPORTING_PERIOD_END
             ,'$status' AS STATUS
-            ,'England; Age Group' AS BREAKDOWN
-            ,Age_Band AS PRIMARY_LEVEL
-            ,Age_Band AS PRIMARY_LEVEL_DESCRIPTION
-            ,'NONE' AS SECONDARY_LEVEL
-            ,'NONE' AS SECONDARY_LEVEL_DESCRIPTION
+            ,'England; Age' AS BREAKDOWN
+            ,'England' AS PRIMARY_LEVEL
+            ,'England' AS PRIMARY_LEVEL_DESCRIPTION
+            ,Age_Band AS SECONDARY_LEVEL
+            ,Age_Band AS SECONDARY_LEVEL_DESCRIPTION
             ,'MHS01' AS MEASURE_ID
             ,COUNT (DISTINCT Person_ID) AS MEASURE_VALUE
             ,'$db_source' AS SOURCE_DB           
@@ -105,15 +105,15 @@
 
 # DBTITLE 1,MHS01 National; Disability Code
  %sql
- INSERT INTO $db_output.Main_monthly_unformatted_exp
+ INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
             ,'$rp_enddate' AS REPORTING_PERIOD_END
             ,'$status' AS STATUS
             ,'England; Disability' AS BREAKDOWN
-            ,DisabCode AS PRIMARY_LEVEL
-            ,DisabCode_Desc AS PRIMARY_LEVEL_DESCRIPTION
-            ,'NONE' AS SECONDARY_LEVEL
-            ,'NONE' AS SECONDARY_LEVEL_DESCRIPTION
+            ,'England' AS PRIMARY_LEVEL
+            ,'England' AS PRIMARY_LEVEL_DESCRIPTION
+            ,DisabCode AS SECONDARY_LEVEL
+            ,DisabCode_Desc AS SECONDARY_LEVEL_DESCRIPTION
             ,'MHS01' AS MEASURE_ID
             ,COUNT (DISTINCT Person_ID) AS MEASURE_VALUE
             ,'$db_source' AS SOURCE_DB           
@@ -124,15 +124,15 @@
 
 # DBTITLE 1,MHS01 National; Employment Status
  %sql
- INSERT INTO $db_output.Main_monthly_unformatted_exp
+ INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
             ,'$rp_enddate' AS REPORTING_PERIOD_END
             ,'$status' AS STATUS
             ,'England; Employment Status' AS BREAKDOWN
-            ,EmployStatus AS PRIMARY_LEVEL
-            ,EmployStatus_Desc AS PRIMARY_LEVEL_DESCRIPTION
-            ,'NONE' AS SECONDARY_LEVEL
-            ,'NONE' AS SECONDARY_LEVEL_DESCRIPTION
+            ,'England' AS PRIMARY_LEVEL
+            ,'England' AS PRIMARY_LEVEL_DESCRIPTION
+            ,EmployStatus AS SECONDARY_LEVEL
+            ,EmployStatus_Desc AS SECONDARY_LEVEL_DESCRIPTION
             ,'MHS01' AS MEASURE_ID
             ,COUNT (DISTINCT Person_ID) AS MEASURE_VALUE
             ,'$db_source' AS SOURCE_DB           
@@ -143,53 +143,53 @@
 
 # DBTITLE 1,MHS01 National; Lower Ethnicity
  %sql
- INSERT INTO $db_output.Main_monthly_unformatted_exp
+ INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
             ,'$rp_enddate' AS REPORTING_PERIOD_END
             ,'$status' AS STATUS
             ,'England; Ethnicity' AS BREAKDOWN
-            ,LowerEthnicity AS PRIMARY_LEVEL
-            ,LowerEthnicity_Desc AS PRIMARY_LEVEL_DESCRIPTION
-            ,'NONE' AS SECONDARY_LEVEL
-            ,'NONE' AS SECONDARY_LEVEL_DESCRIPTION
+            ,'England' AS PRIMARY_LEVEL
+            ,'England' AS PRIMARY_LEVEL_DESCRIPTION
+            ,CASE WHEN LowerEthnicity = '-1' THEN 'UNKNOWN' ELSE LowerEthnicity END AS SECONDARY_LEVEL
+            ,LowerEthnicity_Desc AS SECONDARY_LEVEL_DESCRIPTION
             ,'MHS01' AS MEASURE_ID
             ,COUNT (DISTINCT Person_ID) AS MEASURE_VALUE
             ,'$db_source' AS SOURCE_DB          
       FROM  $db_output.tmp_mhmab_mhs01_prep
-  GROUP BY  LowerEthnicity, LowerEthnicity_Desc;
+  GROUP BY  CASE WHEN LowerEthnicity = '-1' THEN 'UNKNOWN' ELSE LowerEthnicity END, LowerEthnicity_Desc;
 
 # COMMAND ----------
 
 # DBTITLE 1,MHS01 National; Der Gender
  %sql
- INSERT INTO $db_output.Main_monthly_unformatted_exp
+ INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
             ,'$rp_enddate' AS REPORTING_PERIOD_END
             ,'$status' AS STATUS
             ,'England; Gender' AS BREAKDOWN
-            ,Der_Gender AS PRIMARY_LEVEL
-            ,Der_Gender AS PRIMARY_LEVEL_DESCRIPTION
-            ,'NONE' AS SECONDARY_LEVEL
-            ,'NONE' AS SECONDARY_LEVEL_DESCRIPTION
+            ,'England' AS PRIMARY_LEVEL
+            ,'England' AS PRIMARY_LEVEL_DESCRIPTION
+            ,Der_Gender AS SECONDARY_LEVEL
+            ,Der_GenderName AS SECONDARY_LEVEL_DESCRIPTION
             ,'MHS01' AS MEASURE_ID
             ,COUNT (DISTINCT Person_ID) AS MEASURE_VALUE
             ,'$db_source' AS SOURCE_DB           
       FROM  $db_output.tmp_mhmab_mhs01_prep
-  GROUP BY  Der_Gender;
+  GROUP BY  Der_Gender,Der_GenderName;
 
 # COMMAND ----------
 
 # DBTITLE 1,National; IMD Decile
  %sql
- INSERT INTO $db_output.Main_monthly_unformatted_exp
+ INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
             ,'$rp_enddate' AS REPORTING_PERIOD_END
             ,'$status' AS STATUS
             ,'England; IMD Decile' AS BREAKDOWN
-            ,IMD_Decile AS PRIMARY_LEVEL
-            ,IMD_Decile AS PRIMARY_LEVEL_DESCRIPTION
-            ,'NONE' AS SECONDARY_LEVEL
-            ,'NONE' AS SECONDARY_LEVEL_DESCRIPTION
+            ,'England' AS PRIMARY_LEVEL
+            ,'England' AS PRIMARY_LEVEL_DESCRIPTION
+            ,IMD_Decile AS SECONDARY_LEVEL
+            ,IMD_Decile AS SECONDARY_LEVEL_DESCRIPTION
             ,'MHS01' AS MEASURE_ID
             ,COUNT (DISTINCT Person_ID) AS MEASURE_VALUE
             ,'$db_source' AS SOURCE_DB           
@@ -200,15 +200,15 @@
 
 # DBTITLE 1,MHS01 National; Sexual Orientation
  %sql
- INSERT INTO $db_output.Main_monthly_unformatted_exp
+ INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
             ,'$rp_enddate' AS REPORTING_PERIOD_END
             ,'$status' AS STATUS
             ,'England; Sexual Orientation' AS BREAKDOWN
-            ,Sex_Orient AS PRIMARY_LEVEL
-            ,Sex_Orient AS PRIMARY_LEVEL_DESCRIPTION
-            ,'NONE' AS SECONDARY_LEVEL
-            ,'NONE' AS SECONDARY_LEVEL_DESCRIPTION
+            ,'England' AS PRIMARY_LEVEL
+            ,'England' AS PRIMARY_LEVEL_DESCRIPTION
+            ,Sex_Orient AS SECONDARY_LEVEL
+            ,Sex_Orient AS SECONDARY_LEVEL_DESCRIPTION
             ,'MHS01' AS MEASURE_ID
             ,COUNT (DISTINCT Person_ID) AS MEASURE_VALUE
             ,'$db_source' AS SOURCE_DB          
@@ -586,12 +586,12 @@
  	        ,'NONE' AS SECONDARY_LEVEL
  	        ,'NONE' AS SECONDARY_LEVEL_DESCRIPTION
  	        ,'MHS23b' AS METRIC
-             ,try_CAST (COALESCE (cast(COUNT (DISTINCT UniqServReqID) as INT), 0) AS STRING)	AS METRIC_VALUE
+             ,CAST(COALESCE (cast(COUNT (DISTINCT UniqServReqID) as INT), 0) AS STRING)	AS METRIC_VALUE
              ,'$db_source' AS SOURCE_DB
              
          FROM global_temp.MHS23abc_prep D
          INNER JOIN $db_output.validcodes as vc
-             ON vc.table = 'MHS102ServiceTypeReferredTo' and vc.field = 'ServTeamTypeRefToMH' and vc.Measure = 'crisis_resolution' and vc.type = 'include' and D.ServTeamTypeRefToMH = vc.ValidValue  
+             ON vc.tablename = 'MHS102ServiceTypeReferredTo' and vc.field = 'ServTeamTypeRefToMH' and vc.Measure = 'crisis_resolution' and vc.type = 'include' and D.ServTeamTypeRefToMH = vc.ValidValue  
               and '$month_id' >= vc.FirstMonth and (vc.LastMonth is null or '$month_id' <= vc.LastMonth)
          WHERE ServTeamTypeRefToMH IN ('A02', 'A03');
 
@@ -609,7 +609,7 @@
  	        ,'NONE' AS SECONDARY_LEVEL
  	        ,'NONE' AS SECONDARY_LEVEL_DESCRIPTION
  	        ,'MHS23c' AS METRIC
-             ,try_CAST (COALESCE (cast(COUNT (DISTINCT UniqServReqID) as INT), 0) AS STRING)	AS METRIC_VALUE
+             ,CAST(COALESCE (cast(COUNT (DISTINCT UniqServReqID) as INT), 0) AS STRING)	AS METRIC_VALUE
              ,'$db_source' AS SOURCE_DB
              
          FROM global_temp.MHS23abc_prep
@@ -619,7 +619,7 @@
 
 # DBTITLE 1,MHS23d National 
   %sql
-  INSERT INTO $db_output.Main_monthly_unformatted_exp
+  INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
              ,'$status' AS STATUS
@@ -629,7 +629,7 @@
              ,'NONE' AS SECONDARY_LEVEL
              ,'NONE' AS SECONDARY_LEVEL_DESCRIPTION
              ,'MHS23d' AS MEASURE_ID
-             ,try_CAST (COALESCE (cast(COUNT (DISTINCT UniqServReqID) as INT), 0) AS STRING)	AS METRIC_VALUE
+             ,CAST(COALESCE (cast(COUNT (DISTINCT UniqServReqID) as INT), 0) AS STRING)	AS METRIC_VALUE
              
              ,'$db_source' AS SOURCE_DB            
         FROM global_temp.MHS23d_prep ; 
@@ -639,7 +639,7 @@
 # DBTITLE 1,MHS23d National -Grouped by Age Group
  
  %sql
- INSERT INTO $db_output.Main_monthly_unformatted_exp
+ INSERT INTO $db_output.Main_monthly_unformatted
     
   SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -648,13 +648,13 @@
              ,'England' AS PRIMARY_LEVEL
              ,'England' AS PRIMARY_LEVEL_DESCRIPTION
              ,AgeGroup AS SECONDARY_LEVEL
-             ,AgeGroup AS SECONDARY_LEVEL_DESCRIPTION
+             ,AgeGroupName AS SECONDARY_LEVEL_DESCRIPTION
              ,'MHS23d' AS MEASURE_ID
-             ,try_CAST (COALESCE (cast(COUNT (DISTINCT UniqServReqID) as INT), 0) AS STRING)	AS METRIC_VALUE
+             ,CAST(COALESCE (cast(COUNT (DISTINCT UniqServReqID) as INT), 0) AS STRING)	AS METRIC_VALUE
              ,'$db_source' AS SOURCE_DB
              
         FROM global_temp.MHS23d_prep
-    GROUP BY AgeGroup;
+    GROUP BY AgeGroup,AgeGroupName;
 
 # COMMAND ----------
 
@@ -676,6 +676,202 @@
              ,CAST (COALESCE (cast(COUNT (DISTINCT UniqCareContID) as INT), 0) AS STRING)	AS METRIC_VALUE
              ,'$db_source' AS SOURCE_DB           
  FROM		global_temp.MHS29_prep -- prep table in main monthly prep folder
+
+# COMMAND ----------
+
+ %sql
+ --MHS29 - CONTACTS IN REPORTING PERIOD**/
+ 
+ INSERT INTO $db_output.Main_monthly_unformatted
+ 
+     SELECT '$rp_startdate' AS REPORTING_PERIOD_START
+             ,'$rp_enddate' AS REPORTING_PERIOD_END
+ 			,'$status' AS STATUS
+ 			,'England; Accommodation Type' AS BREAKDOWN
+            ,'England' AS PRIMARY_LEVEL
+            ,'England' AS PRIMARY_LEVEL_DESCRIPTION
+ 			,COALESCE(AccommodationType, 'UNKNOWN') AS SECONDARY_LEVEL
+ 			,COALESCE(AccommodationType_Desc,'UNKNOWN')  AS SECONDARY_LEVEL_DESCRIPTION
+ 			,'MHS29' AS METRIC
+             ,CAST (COALESCE (cast(COUNT (DISTINCT UniqCareContID) as INT), 0) AS STRING)	AS METRIC_VALUE
+             ,'$db_source' AS SOURCE_DB           
+ FROM		global_temp.MHS29_prep A
+             LEFT JOIN $db_output.tmp_mhmab_mhs001mpi_latest_month_data B on a.Person_ID = b.Person_ID -- prep table in main monthly prep folder
+ 
+ GROUP BY 
+ COALESCE(AccommodationType,'UNKNOWN'),
+ COALESCE(AccommodationType_Desc,'UNKNOWN')
+
+# COMMAND ----------
+
+ %sql
+ --MHS29 - CONTACTS IN REPORTING PERIOD**/
+ 
+ INSERT INTO $db_output.Main_monthly_unformatted
+ 
+     SELECT '$rp_startdate' AS REPORTING_PERIOD_START
+             ,'$rp_enddate' AS REPORTING_PERIOD_END
+ 			,'$status' AS STATUS
+ 			,'England; Age' AS BREAKDOWN
+            ,'England' AS PRIMARY_LEVEL
+            ,'England' AS PRIMARY_LEVEL_DESCRIPTION
+ 			,COALESCE(Age_Band,'UNKNOWN') AS SECONDARY_LEVEL
+ 			,COALESCE(Age_Band,'UNKNOWN') AS SECONDARY_LEVEL_DESCRIPTION
+ 			,'MHS29' AS METRIC
+             ,CAST (COALESCE (cast(COUNT (DISTINCT UniqCareContID) as INT), 0) AS STRING)	AS METRIC_VALUE
+             ,'$db_source' AS SOURCE_DB           
+ FROM		global_temp.MHS29_prep A
+             LEFT JOIN $db_output.tmp_mhmab_mhs001mpi_latest_month_data B on a.Person_ID = b.Person_ID -- prep table in main monthly prep folder
+             
+ GROUP BY 
+ COALESCE(Age_Band,'UNKNOWN')
+
+# COMMAND ----------
+
+ %sql
+ --MHS29 - CONTACTS IN REPORTING PERIOD**/
+ 
+ INSERT INTO $db_output.Main_monthly_unformatted
+ 
+     SELECT '$rp_startdate' AS REPORTING_PERIOD_START
+             ,'$rp_enddate' AS REPORTING_PERIOD_END
+ 			,'$status' AS STATUS
+ 			,'England; Disability' AS BREAKDOWN
+            ,'England' AS PRIMARY_LEVEL
+            ,'England' AS PRIMARY_LEVEL_DESCRIPTION
+ 			,COALESCE(DisabCode,'UNKNOWN') AS SECONDARY_LEVEL
+ 			,COALESCE(DisabCode_Desc,'UNKNOWN') AS SECONDARY_LEVEL_DESCRIPTION
+ 			,'MHS29' AS METRIC
+             ,CAST (COALESCE (cast(COUNT (DISTINCT UniqCareContID) as INT), 0) AS STRING)	AS METRIC_VALUE
+             ,'$db_source' AS SOURCE_DB           
+ FROM		global_temp.MHS29_prep A
+             LEFT JOIN $db_output.tmp_mhmab_mhs001mpi_latest_month_data B on a.Person_ID = b.Person_ID -- prep table in main monthly prep folder
+             
+ GROUP BY 
+ COALESCE(DisabCode,'UNKNOWN'),
+ COALESCE(DisabCode_Desc,'UNKNOWN')
+
+# COMMAND ----------
+
+ %sql
+ --MHS29 - CONTACTS IN REPORTING PERIOD**/
+ 
+ INSERT INTO $db_output.Main_monthly_unformatted
+ 
+     SELECT '$rp_startdate' AS REPORTING_PERIOD_START
+             ,'$rp_enddate' AS REPORTING_PERIOD_END
+ 			,'$status' AS STATUS
+ 			,'England; Employment Status' AS BREAKDOWN
+            ,'England' AS PRIMARY_LEVEL
+            ,'England' AS PRIMARY_LEVEL_DESCRIPTION
+ 			,COALESCE(EmployStatus,'UNKNOWN') AS SECONDARY_LEVEL
+ 			,COALESCE(EmployStatus_Desc, 'UNKNOWN') AS SECONDARY_LEVEL_DESCRIPTION
+ 			,'MHS29' AS METRIC
+             ,CAST (COALESCE (cast(COUNT (DISTINCT UniqCareContID) as INT), 0) AS STRING)	AS METRIC_VALUE
+             ,'$db_source' AS SOURCE_DB           
+ FROM		global_temp.MHS29_prep A
+             LEFT JOIN $db_output.tmp_mhmab_mhs001mpi_latest_month_data B on a.Person_ID = b.Person_ID -- prep table in main monthly prep folder
+             
+ GROUP BY 
+ COALESCE(EmployStatus,'UNKNOWN')
+ ,COALESCE(EmployStatus_Desc, 'UNKNOWN')
+
+# COMMAND ----------
+
+ %sql
+ --MHS29 - CONTACTS IN REPORTING PERIOD**/
+ 
+ INSERT INTO $db_output.Main_monthly_unformatted
+ 
+     SELECT '$rp_startdate' AS REPORTING_PERIOD_START
+             ,'$rp_enddate' AS REPORTING_PERIOD_END
+ 			,'$status' AS STATUS
+ 			,'England; Ethnicity' AS BREAKDOWN
+            ,'England' AS PRIMARY_LEVEL
+            ,'England' AS PRIMARY_LEVEL_DESCRIPTION
+ 			,COALESCE(CASE WHEN LowerEthnicity = '-1' THEN 'UNKNOWN' ELSE LowerEthnicity END,'UNKNOWN') AS SECONDARY_LEVEL
+ 			,COALESCE(LowerEthnicity_Desc,'UNKNOWN') AS SECONDARY_LEVEL_DESCRIPTION
+ 			,'MHS29' AS METRIC
+             ,CAST (COALESCE (cast(COUNT (DISTINCT UniqCareContID) as INT), 0) AS STRING)	AS METRIC_VALUE
+             ,'$db_source' AS SOURCE_DB           
+ FROM		global_temp.MHS29_prep A
+             LEFT JOIN $db_output.tmp_mhmab_mhs001mpi_latest_month_data B on a.Person_ID = b.Person_ID -- prep table in main monthly prep folder
+             
+ GROUP BY 
+ COALESCE(CASE WHEN LowerEthnicity = '-1' THEN 'UNKNOWN' ELSE LowerEthnicity END,'UNKNOWN'), 
+ COALESCE(LowerEthnicity_Desc,'UNKNOWN')
+
+# COMMAND ----------
+
+ %sql
+ --MHS29 - CONTACTS IN REPORTING PERIOD**/
+ 
+ INSERT INTO $db_output.Main_monthly_unformatted
+ 
+     SELECT '$rp_startdate' AS REPORTING_PERIOD_START
+             ,'$rp_enddate' AS REPORTING_PERIOD_END
+ 			,'$status' AS STATUS
+ 			,'England; Gender' AS BREAKDOWN
+            ,'England' AS PRIMARY_LEVEL
+            ,'England' AS PRIMARY_LEVEL_DESCRIPTION
+ 			,Der_Gender AS SECONDARY_LEVEL
+ 			,Der_GenderName AS SECONDARY_LEVEL_DESCRIPTION
+ 			,'MHS29' AS METRIC
+             ,CAST (COALESCE (cast(COUNT (DISTINCT UniqCareContID) as INT), 0) AS STRING)	AS METRIC_VALUE
+             ,'$db_source' AS SOURCE_DB           
+ FROM		global_temp.MHS29_prep A
+             LEFT JOIN $db_output.tmp_mhmab_mhs001mpi_latest_month_data B on a.Person_ID = b.Person_ID -- prep table in main monthly prep folder
+             
+ GROUP BY 
+ Der_Gender, Der_GenderName
+
+# COMMAND ----------
+
+ %sql
+ --MHS29 - CONTACTS IN REPORTING PERIOD**/
+ 
+ INSERT INTO $db_output.Main_monthly_unformatted
+ 
+     SELECT '$rp_startdate' AS REPORTING_PERIOD_START
+             ,'$rp_enddate' AS REPORTING_PERIOD_END
+ 			,'$status' AS STATUS
+ 			,'England; IMD Decile' AS BREAKDOWN
+            ,'England' AS PRIMARY_LEVEL
+            ,'England' AS PRIMARY_LEVEL_DESCRIPTION
+ 			,IMD_Decile AS SECONDARY_LEVEL
+ 			,IMD_Decile AS SECONDARY_LEVEL_DESCRIPTION
+ 			,'MHS29' AS METRIC
+             ,CAST (COALESCE (cast(COUNT (DISTINCT UniqCareContID) as INT), 0) AS STRING)	AS METRIC_VALUE
+             ,'$db_source' AS SOURCE_DB           
+ FROM		global_temp.MHS29_prep A
+             LEFT JOIN $db_output.tmp_mhmab_mhs001mpi_latest_month_data B on a.Person_ID = b.Person_ID -- prep table in main monthly prep folder
+             
+ GROUP BY 
+ IMD_Decile
+
+# COMMAND ----------
+
+ %sql
+ --MHS29 - CONTACTS IN REPORTING PERIOD**/
+ 
+ INSERT INTO $db_output.Main_monthly_unformatted
+ 
+     SELECT '$rp_startdate' AS REPORTING_PERIOD_START
+             ,'$rp_enddate' AS REPORTING_PERIOD_END
+ 			,'$status' AS STATUS
+ 			,'England; Sexual Orientation' AS BREAKDOWN
+            ,'England' AS PRIMARY_LEVEL
+            ,'England' AS PRIMARY_LEVEL_DESCRIPTION
+ 			,COALESCE(Sex_Orient,'UNKNOWN') AS SECONDARY_LEVEL
+ 			,COALESCE(Sex_Orient,'UNKNOWN') AS SECONDARY_LEVEL_DESCRIPTION
+ 			,'MHS29' AS METRIC
+             ,CAST (COALESCE (cast(COUNT (DISTINCT UniqCareContID) as INT), 0) AS STRING)	AS METRIC_VALUE
+             ,'$db_source' AS SOURCE_DB           
+ FROM		global_temp.MHS29_prep A
+             LEFT JOIN $db_output.tmp_mhmab_mhs001mpi_latest_month_data B on a.Person_ID = b.Person_ID -- prep table in main monthly prep folder
+             
+ GROUP BY 
+ COALESCE(Sex_Orient,'UNKNOWN')
 
 # COMMAND ----------
 
@@ -702,6 +898,32 @@
 
 # COMMAND ----------
 
+ %sql
+ --/**MHS29a - CONTACTS WITH PERINATAL MENTAL HEALTH TEAM IN REPORTING PERIOD**/
+ 
+ INSERT INTO $db_output.Main_monthly_unformatted
+ 
+     SELECT '$rp_startdate' AS REPORTING_PERIOD_START
+             ,'$rp_enddate' AS REPORTING_PERIOD_END
+ 			,'$status' AS STATUS
+ 			,'England; Attendance' AS BREAKDOWN
+ 			,'England' AS PRIMARY_LEVEL
+ 			,'England' AS PRIMARY_LEVEL_DESCRIPTION
+ 			,Attend_Code AS SECONDARY_LEVEL
+ 			,Attend_Name AS SECONDARY_LEVEL_DESCRIPTION
+ 			,'MHS29a' AS METRIC
+ 			,CAST (COALESCE (cast(COUNT (DISTINCT UniqCareContID) as INT), 0) AS STRING)	AS METRIC_VALUE
+             ,'$db_source' AS SOURCE_DB
+             
+ FROM		global_temp.MHS29abc_prep -- prep table in main monthly prep folder
+ WHERE		ServTeamTypeRefToMH = 'C02'
+ 
+ GROUP BY 
+ Attend_Code,
+ Attend_Name
+
+# COMMAND ----------
+
 # DBTITLE 1,MHS29b National
  %sql
  --/**MHS29b - CONTACTS WITH CRISIS RESOLUTION SERVICE OR HOME TREATMENT TEAM IN REPORTING PERIOD**/
@@ -722,7 +944,7 @@
              
  FROM		global_temp.MHS29abc_prep D -- prep table in main monthly prep folder
  INNER JOIN $db_output.validcodes as vc
-             ON vc.table = 'MHS102ServiceTypeReferredTo' and vc.field = 'ServTeamTypeRefToMH' and vc.Measure = 'crisis_resolution' and vc.type = 'include' and D.ServTeamTypeRefToMH = vc.ValidValue  
+             ON vc.tablename = 'MHS102ServiceTypeReferredTo' and vc.field = 'ServTeamTypeRefToMH' and vc.Measure = 'crisis_resolution' and vc.type = 'include' and D.ServTeamTypeRefToMH = vc.ValidValue  
               and '$month_id' >= vc.FirstMonth and (vc.LastMonth is null or '$month_id' <= vc.LastMonth)
  -- WHERE		ServTeamTypeRefToMH IN ('A02', 'A03')
 
@@ -753,7 +975,7 @@
  %sql
  --MHS29d - CONTACTS IN REPORTING PERIOD, National**/
   
- INSERT INTO $db_output.Main_monthly_unformatted_exp
+ INSERT INTO $db_output.Main_monthly_unformatted
   
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -764,7 +986,7 @@
              ,'NONE' AS SECONDARY_LEVEL
              ,'NONE' AS SECONDARY_LEVEL_DESCRIPTION
              ,'MHS29d' AS MEASURE_ID
-             ,try_CAST (COALESCE (cast(COUNT (DISTINCT UniqCareContID) as INT), 0) AS STRING)    AS METRIC_VALUE
+             ,CAST(COALESCE (cast(COUNT (DISTINCT UniqCareContID) as INT), 0) AS STRING)    AS METRIC_VALUE
              ,'$db_source' AS SOURCE_DB
              
  FROM        global_temp.MHS29d_prep -- prep table in main monthly prep folder
@@ -774,7 +996,7 @@
  %sql
  --MHS29d - CONTACTS IN REPORTING PERIOD, National, Age Group**/
   
- INSERT INTO $db_output.Main_monthly_unformatted_exp
+ INSERT INTO $db_output.Main_monthly_unformatted
   
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -785,7 +1007,7 @@
              ,AgeGroup AS SECONDARY_LEVEL
              ,AgeGroupName AS SECONDARY_LEVEL_DESCRIPTION
              ,'MHS29d' AS MEASURE_ID
-             ,try_CAST (COALESCE (cast(COUNT (DISTINCT UniqCareContID) as INT), 0) AS STRING) AS METRIC_VALUE
+             ,CAST(COALESCE (cast(COUNT (DISTINCT UniqCareContID) as INT), 0) AS STRING) AS METRIC_VALUE
              ,'$db_source' AS SOURCE_DB
              
  FROM        global_temp.MHS29d_prep -- prep table in main monthly prep folder
@@ -794,8 +1016,29 @@
 # COMMAND ----------
 
  %sql
+ --MHS29d National Attendance --only breakdown needed at the national level for MHS29d
+ INSERT INTO $db_output.Main_monthly_unformatted
+  
+     SELECT '$rp_startdate' AS REPORTING_PERIOD_START
+             ,'$rp_enddate' AS REPORTING_PERIOD_END
+             ,'$status' AS STATUS
+             ,'England; Attendance' AS BREAKDOWN
+             ,'England' AS PRIMARY_LEVEL
+             ,'England' AS PRIMARY_LEVEL_DESCRIPTION
+             ,Attend_Code AS SECONDARY_LEVEL
+             ,Attend_Name AS SECONDARY_LEVEL_DESCRIPTION
+             ,'MHS29d' AS MEASURE_ID
+             ,CAST(COALESCE (cast(COUNT (DISTINCT UniqCareContID) as INT), 0) AS STRING)    AS METRIC_VALUE
+             ,'$db_source' AS SOURCE_DB
+             
+ FROM       global_temp.MHS29d_prep -- prep table in main monthly prep folder
+ GROUP BY    Attend_Code, Attend_Name
+
+# COMMAND ----------
+
+ %sql
  --MHS29f National Attendance --only breakdown needed at the national level for MHS29f
- INSERT INTO $db_output.Main_monthly_unformatted_exp
+ INSERT INTO $db_output.Main_monthly_unformatted
   
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -806,7 +1049,7 @@
              ,Attend_Code AS SECONDARY_LEVEL
              ,Attend_Name AS SECONDARY_LEVEL_DESCRIPTION
              ,'MHS29f' AS MEASURE_ID
-             ,try_CAST (COALESCE (cast(COUNT (DISTINCT UniqCareContID) as INT), 0) AS STRING)    AS METRIC_VALUE
+             ,CAST(COALESCE (cast(COUNT (DISTINCT UniqCareContID) as INT), 0) AS STRING)    AS METRIC_VALUE
              ,'$db_source' AS SOURCE_DB
              
  FROM       global_temp.MHS29f_prep -- prep table in main monthly prep folder
@@ -861,6 +1104,32 @@
 
 # COMMAND ----------
 
+ %sql
+ --/**MHS30a - ATTENDED CONTACTS WITH PERINATAL MENTAL HEALTH TEAM IN REPORTING PERIOD**/
+ 
+ INSERT INTO $db_output.Main_monthly_unformatted
+ 
+     SELECT '$rp_startdate' AS REPORTING_PERIOD_START
+             ,'$rp_enddate' AS REPORTING_PERIOD_END
+ 			,'$status' AS STATUS
+ 			,'England; ConsMechanismMH' AS BREAKDOWN
+ 			,'England' AS PRIMARY_LEVEL
+ 			,'England' AS PRIMARY_LEVEL_DESCRIPTION
+ 			,ConsMedUsed AS SECONDARY_LEVEL
+ 			,CMU AS SECONDARY_LEVEL_DESCRIPTION
+ 			,'MHS30a' AS METRIC
+ 			,CAST (COALESCE (cast(COUNT (DISTINCT UniqCareContID) as INT), 0) AS STRING)	AS METRIC_VALUE
+             ,'$db_source' AS SOURCE_DB
+             
+ FROM		global_temp.MHS29abc_prep -- prep table in main monthly prep folder
+ WHERE		AttendOrDNACode IN ('5', '6')
+ 			AND ServTeamTypeRefToMH = 'C02'
+             
+ GROUP BY 
+ ConsMedUsed, CMU
+
+# COMMAND ----------
+
 # DBTITLE 1,MHS30b National
  %sql
  
@@ -882,7 +1151,7 @@
              
  FROM		global_temp.MHS29abc_prep D -- prep table in main monthly prep folder
  INNER JOIN $db_output.validcodes as vc
-             ON vc.table = 'MHS102ServiceTypeReferredTo' and vc.field = 'ServTeamTypeRefToMH' and vc.Measure = 'crisis_resolution' and vc.type = 'include' and D.ServTeamTypeRefToMH = vc.ValidValue  
+             ON vc.tablename = 'MHS102ServiceTypeReferredTo' and vc.field = 'ServTeamTypeRefToMH' and vc.Measure = 'crisis_resolution' and vc.type = 'include' and D.ServTeamTypeRefToMH = vc.ValidValue  
               and '$month_id' >= vc.FirstMonth and (vc.LastMonth is null or '$month_id' <= vc.LastMonth)
  WHERE		AttendOrDNACode IN ('5', '6')
  -- 			AND ServTeamTypeRefToMH IN ('A02', 'A03')
@@ -916,7 +1185,7 @@
 # DBTITLE 1,MHS30f National
  %sql
  --MHS30f - CONTACTS IN REPORTING PERIOD, National**/
- INSERT INTO $db_output.Main_monthly_unformatted_exp  
+ INSERT INTO $db_output.Main_monthly_unformatted  
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
              ,'$status' AS STATUS
@@ -936,7 +1205,7 @@
 # DBTITLE 1,MHS30f National; Age Band
  %sql
  --MHS30f - CONTACTS IN REPORTING PERIOD, National; Age Band**/
- INSERT INTO $db_output.Main_monthly_unformatted_exp
+ INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
              ,'$status' AS STATUS
@@ -957,7 +1226,7 @@
 # DBTITLE 1,MHS30f National; ConsMechanismMH
  %sql
  --MHS30f - CONTACTS IN REPORTING PERIOD, National, CMU **/
- INSERT INTO $db_output.Main_monthly_unformatted_exp
+ INSERT INTO $db_output.Main_monthly_unformatted
      SELECT 
              '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -979,7 +1248,7 @@
 # DBTITLE 1,MHS30h National; ConsMechanismMH
  %sql
   
- INSERT INTO $db_output.Main_monthly_unformatted_exp
+ INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
              ,'$status' AS STATUS
@@ -1021,15 +1290,15 @@
 
 # DBTITLE 1,MHS32 National; Accommodation Type
  %sql
- INSERT INTO $db_output.Main_monthly_unformatted_exp
+ INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
             ,'$rp_enddate' AS REPORTING_PERIOD_END
             ,'$status' AS STATUS
             ,'England; Accommodation Type' AS BREAKDOWN
-            ,AccommodationType AS PRIMARY_LEVEL
-            ,AccommodationType_Desc AS PRIMARY_LEVEL_DESCRIPTION
-            ,'NONE' AS SECONDARY_LEVEL
-            ,'NONE' AS SECONDARY_LEVEL_DESCRIPTION
+            ,'England' AS PRIMARY_LEVEL
+            ,'England' AS PRIMARY_LEVEL_DESCRIPTION
+            ,AccommodationType AS SECONDARY_LEVEL
+            ,AccommodationType_Desc AS SECONDARY_LEVEL_DESCRIPTION
             ,'MHS32' AS MEASURE_ID
             ,COUNT (DISTINCT UniqServReqID) AS MEASURE_VALUE
             ,'$db_source' AS SOURCE_DB
@@ -1041,15 +1310,15 @@
 
 # DBTITLE 1,MHS32 National; Age Band
  %sql
- INSERT INTO $db_output.Main_monthly_unformatted_exp
+ INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
             ,'$rp_enddate' AS REPORTING_PERIOD_END
             ,'$status' AS STATUS
             ,'England; Age' AS BREAKDOWN
-            ,Age_Band AS PRIMARY_LEVEL
-            ,Age_Band AS PRIMARY_LEVEL_DESCRIPTION
-            ,'NONE' AS SECONDARY_LEVEL
-            ,'NONE' AS SECONDARY_LEVEL_DESCRIPTION
+            ,'England' AS PRIMARY_LEVEL
+            ,'England' AS PRIMARY_LEVEL_DESCRIPTION
+            ,Age_Band AS SECONDARY_LEVEL
+            ,Age_Band AS SECONDARY_LEVEL_DESCRIPTION
             ,'MHS32' AS MEASURE_ID
             ,COUNT (DISTINCT UniqServReqID) AS MEASURE_VALUE
             ,'$db_source' AS SOURCE_DB
@@ -1061,15 +1330,15 @@
 
 # DBTITLE 1,MHS32 National; Disability
  %sql
- INSERT INTO $db_output.Main_monthly_unformatted_exp
+ INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
             ,'$rp_enddate' AS REPORTING_PERIOD_END
             ,'$status' AS STATUS
             ,'England; Disability' AS BREAKDOWN
-            ,DisabCode AS PRIMARY_LEVEL
-            ,DisabCode_Desc AS PRIMARY_LEVEL_DESCRIPTION
-            ,'NONE' AS SECONDARY_LEVEL
-            ,'NONE' AS SECONDARY_LEVEL_DESCRIPTION
+            ,'England' AS PRIMARY_LEVEL
+            ,'England' AS PRIMARY_LEVEL_DESCRIPTION
+            ,DisabCode AS SECONDARY_LEVEL
+            ,DisabCode_Desc AS SECONDARY_LEVEL_DESCRIPTION
             ,'MHS32' AS MEASURE_ID
             ,COUNT(DISTINCT(UniqServReqID)) AS MEASURE_VALUE
             ,'$db_source' AS SOURCE_DB           
@@ -1080,15 +1349,15 @@
 
 # DBTITLE 1,MHS32 National; Employment Status
  %sql
- INSERT INTO $db_output.Main_monthly_unformatted_exp
+ INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
             ,'$rp_enddate' AS REPORTING_PERIOD_END
             ,'$status' AS STATUS
             ,'England; Employment Status' AS BREAKDOWN
-            ,EmployStatus AS PRIMARY_LEVEL
-            ,EmployStatus_Desc AS PRIMARY_LEVEL_DESCRIPTION
-            ,'NONE' AS SECONDARY_LEVEL
-            ,'NONE' AS SECONDARY_LEVEL_DESCRIPTION
+            ,'England' AS PRIMARY_LEVEL
+            ,'England' AS PRIMARY_LEVEL_DESCRIPTION
+            ,EmployStatus AS SECONDARY_LEVEL
+            ,EmployStatus_Desc AS SECONDARY_LEVEL_DESCRIPTION
             ,'MHS32' AS MEASURE_ID
             ,COUNT (DISTINCT UniqServReqID) AS MEASURE_VALUE
             ,'$db_source' AS SOURCE_DB
@@ -1100,55 +1369,55 @@
 
 # DBTITLE 1,MHS32 National; Lower Ethnicity
  %sql
- INSERT INTO $db_output.Main_monthly_unformatted_exp
+ INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
             ,'$rp_enddate' AS REPORTING_PERIOD_END
             ,'$status' AS STATUS
             ,'England; Ethnicity' AS BREAKDOWN
-            ,LowerEthnicity AS PRIMARY_LEVEL
-            ,LowerEthnicity_Desc AS PRIMARY_LEVEL_DESCRIPTION
-            ,'NONE' AS SECONDARY_LEVEL
-            ,'NONE' AS SECONDARY_LEVEL_DESCRIPTION
+            ,'England' AS PRIMARY_LEVEL
+            ,'England' AS PRIMARY_LEVEL_DESCRIPTION
+            ,CASE WHEN LowerEthnicity = '-1' THEN 'UNKNOWN' ELSE LowerEthnicity END AS SECONDARY_LEVEL
+            ,LowerEthnicity_Desc AS SECONDARY_LEVEL_DESCRIPTION
             ,'MHS32' AS MEASURE_ID
             ,COUNT (DISTINCT UniqServReqID) AS MEASURE_VALUE
             ,'$db_source' AS SOURCE_DB
             
       FROM  $db_output.tmp_mhmab_mhs32_prep
-  GROUP BY  LowerEthnicity, LowerEthnicity_Desc
+  GROUP BY  CASE WHEN LowerEthnicity = '-1' THEN 'UNKNOWN' ELSE LowerEthnicity END, LowerEthnicity_Desc
 
 # COMMAND ----------
 
 # DBTITLE 1,MHS32 National; Der_Gender
  %sql
- INSERT INTO $db_output.Main_monthly_unformatted_exp
+ INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
             ,'$rp_enddate' AS REPORTING_PERIOD_END
             ,'$status' AS STATUS
             ,'England; Gender' AS BREAKDOWN
-            ,Der_Gender AS PRIMARY_LEVEL
-            ,Der_Gender AS PRIMARY_LEVEL_DESCRIPTION
-            ,'NONE' AS SECONDARY_LEVEL
-            ,'NONE' AS SECONDARY_LEVEL_DESCRIPTION
+            ,'England' AS PRIMARY_LEVEL
+            ,'England' AS PRIMARY_LEVEL_DESCRIPTION
+            ,Der_Gender AS SECONDARY_LEVEL
+            ,Der_GenderName AS SECONDARY_LEVEL_DESCRIPTION
             ,'MHS32' AS MEASURE_ID
             ,COUNT (DISTINCT UniqServReqID) AS MEASURE_VALUE
             ,'$db_source' AS SOURCE_DB
             
       FROM  $db_output.tmp_mhmab_mhs32_prep
-  GROUP BY  Der_Gender
+  GROUP BY  Der_Gender,Der_GenderName;
 
 # COMMAND ----------
 
 # DBTITLE 1,MHS32 National; IMD Decile
  %sql
- INSERT INTO $db_output.Main_monthly_unformatted_exp
+ INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
             ,'$rp_enddate' AS REPORTING_PERIOD_END
             ,'$status' AS STATUS
             ,'England; IMD Decile' AS BREAKDOWN
-            ,IMD_Decile AS PRIMARY_LEVEL
-            ,IMD_Decile AS PRIMARY_LEVEL_DESCRIPTION
-            ,'NONE' AS SECONDARY_LEVEL
-            ,'NONE' AS SECONDARY_LEVEL_DESCRIPTION
+            ,'England' AS PRIMARY_LEVEL
+            ,'England' AS PRIMARY_LEVEL_DESCRIPTION
+            ,IMD_Decile AS SECONDARY_LEVEL
+            ,IMD_Decile AS SECONDARY_LEVEL_DESCRIPTION
             ,'MHS32' AS MEASURE_ID
             ,COUNT (DISTINCT UniqServReqID) AS MEASURE_VALUE
             ,'$db_source' AS SOURCE_DB
@@ -1160,15 +1429,15 @@
 
 # DBTITLE 1,MHS32 National; Sexual Orientation
  %sql
- INSERT INTO $db_output.Main_monthly_unformatted_exp
+ INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
             ,'$rp_enddate' AS REPORTING_PERIOD_END
             ,'$status' AS STATUS
             ,'England; Sexual Orientation' AS BREAKDOWN
-            ,Sex_Orient AS PRIMARY_LEVEL
-            ,Sex_Orient AS PRIMARY_LEVEL_DESCRIPTION
-            ,'NONE' AS SECONDARY_LEVEL
-            ,'NONE' AS SECONDARY_LEVEL_DESCRIPTION
+            ,'England' AS PRIMARY_LEVEL
+            ,'England' AS PRIMARY_LEVEL_DESCRIPTION
+            ,Sex_Orient AS SECONDARY_LEVEL
+            ,Sex_Orient AS SECONDARY_LEVEL_DESCRIPTION
             ,'MHS32' AS MEASURE_ID
             ,COUNT (DISTINCT UniqServReqID) AS MEASURE_VALUE
             ,'$db_source' AS SOURCE_DB
@@ -1180,7 +1449,7 @@
 
 # DBTITLE 1,MHS32c National
  %sql
- INSERT INTO $db_output.Main_monthly_unformatted_exp
+ INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
             ,'$rp_enddate' AS REPORTING_PERIOD_END
             ,'$status' AS STATUS
@@ -1199,7 +1468,7 @@
 
 # DBTITLE 1,MHS32c National; Age Group
  %sql
- INSERT INTO $db_output.Main_monthly_unformatted_exp
+ INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
             ,'$rp_enddate' AS REPORTING_PERIOD_END
             ,'$status' AS STATUS
@@ -1219,7 +1488,7 @@
 
 # DBTITLE 1,MHS32d National
  %sql
- INSERT INTO $db_output.Main_monthly_unformatted_exp
+ INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
             ,'$rp_enddate' AS REPORTING_PERIOD_END
             ,'$status' AS STATUS
@@ -1290,7 +1559,7 @@
 
 # DBTITLE 1,MHS57b National
  %sql
- INSERT INTO $db_output.Main_monthly_unformatted_exp
+ INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
              ,'$status' AS STATUS
@@ -1308,7 +1577,7 @@
 
 # DBTITLE 1,MHS57b National; Age Group
  %sql
- INSERT INTO $db_output.Main_monthly_unformatted_exp
+ INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
              ,'$status' AS STATUS
@@ -1327,7 +1596,7 @@
 
 # DBTITLE 1,MHS57c National
  %sql
- INSERT INTO $db_output.Main_monthly_unformatted_exp
+ INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
              ,'$status' AS STATUS
@@ -1361,275 +1630,3 @@
              ,'$db_source' AS SOURCE_DB
              
  FROM		global_temp.MHS58_prep -- prep table in main monthly prep folder
-
-# COMMAND ----------
-
-# DBTITLE 1,CCR70 National
- %sql
- INSERT INTO $db_output.Main_monthly_unformatted
-     SELECT '$rp_startdate' AS REPORTING_PERIOD_START
-             ,'$rp_enddate' AS REPORTING_PERIOD_END
- 			,'$status' AS STATUS
- 			,'England' AS BREAKDOWN
- 			,'England' AS PRIMARY_LEVEL
- 			,'England' AS PRIMARY_LEVEL_DESCRIPTION
- 			,'NONE'	AS SECONDARY_LEVEL
- 			,'NONE'	AS SECONDARY_LEVEL_DESCRIPTION
- 			,'CCR70' AS METRIC
-             ,COUNT(DISTINCT UniqServReqID) as METRIC_VALUE
-             ,'$db_source' AS SOURCE_DB
-             
-        FROM global_temp.CCR7071_prep prep
-        
-        INNER JOIN $db_output.validcodes as vc
-         ON vc.table = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'CCR70_72' and vc.type = 'include' and prep.ClinRespPriorityType = vc.ValidValue 
-         and '$month_id' >= vc.FirstMonth and (vc.LastMonth is null or '$month_id' <= vc.LastMonth)
-
-# COMMAND ----------
-
-# DBTITLE 1,CCR70a National
- %sql
- INSERT INTO $db_output.Main_monthly_unformatted
-     SELECT '$rp_startdate' AS REPORTING_PERIOD_START
-             ,'$rp_enddate' AS REPORTING_PERIOD_END
- 			,'$status' AS STATUS
- 			,'England' AS BREAKDOWN
- 			,'England' AS PRIMARY_LEVEL
- 			,'England' AS PRIMARY_LEVEL_DESCRIPTION
- 			,'NONE'	AS SECONDARY_LEVEL
- 			,'NONE'	AS SECONDARY_LEVEL_DESCRIPTION
- 			,'CCR70a' AS METRIC
-             ,COUNT(DISTINCT UniqServReqID) as METRIC_VALUE
-             ,'$db_source' AS SOURCE_DB
-             
-        FROM global_temp.CCR7071_prep prep
-        
-        INNER JOIN $db_output.validcodes as vc
-         ON vc.table = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'CCR70_72' and vc.type = 'include' and prep.ClinRespPriorityType = vc.ValidValue 
-         and '$month_id' >= vc.FirstMonth and (vc.LastMonth is null or '$month_id' <= vc.LastMonth)
- 
- --       WHERE ClinRespPriorityType = '1'
-             WHERE AGE_GROUP = '18 and over';
-
-# COMMAND ----------
-
-# DBTITLE 1,CCR70b National
- %sql
- INSERT INTO $db_output.Main_monthly_unformatted
-     SELECT '$rp_startdate' AS REPORTING_PERIOD_START
-             ,'$rp_enddate' AS REPORTING_PERIOD_END
- 			,'$status' AS STATUS
- 			,'England' AS BREAKDOWN
- 			,'England' AS PRIMARY_LEVEL
- 			,'England' AS PRIMARY_LEVEL_DESCRIPTION
- 			,'NONE'	AS SECONDARY_LEVEL
- 			,'NONE'	AS SECONDARY_LEVEL_DESCRIPTION
- 			,'CCR70b' AS METRIC
-             ,COUNT(DISTINCT UniqServReqID) as METRIC_VALUE
-             ,'$db_source' AS SOURCE_DB
-             
-        FROM global_temp.CCR7071_prep prep
-        
-        INNER JOIN $db_output.validcodes as vc
-         ON vc.table = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'CCR70_72' and vc.type = 'include' and prep.ClinRespPriorityType = vc.ValidValue 
-         and '$month_id' >= vc.FirstMonth and (vc.LastMonth is null or '$month_id' <= vc.LastMonth)
- 
-             WHERE AGE_GROUP = '0-17';
-
-# COMMAND ----------
-
-# DBTITLE 1,CCR71 National
- %sql
- INSERT INTO $db_output.Main_monthly_unformatted
-     SELECT '$rp_startdate' AS REPORTING_PERIOD_START
-             ,'$rp_enddate' AS REPORTING_PERIOD_END
- 			,'$status' AS STATUS
- 			,'England' AS BREAKDOWN
- 			,'England' AS PRIMARY_LEVEL
- 			,'England' AS PRIMARY_LEVEL_DESCRIPTION
- 			,'NONE'	AS SECONDARY_LEVEL
- 			,'NONE'	AS SECONDARY_LEVEL_DESCRIPTION
- 			,'CCR71' AS METRIC
-             ,COUNT(DISTINCT UniqServReqID) as METRIC_VALUE
-             ,'$db_source' AS SOURCE_DB
-             
-        FROM global_temp.CCR7071_prep
-       WHERE ClinRespPriorityType = '2';
-
-# COMMAND ----------
-
-# DBTITLE 1,CCR71a National
- %sql
- INSERT INTO $db_output.Main_monthly_unformatted
-     SELECT '$rp_startdate' AS REPORTING_PERIOD_START
-             ,'$rp_enddate' AS REPORTING_PERIOD_END
- 			,'$status' AS STATUS
- 			,'England' AS BREAKDOWN
- 			,'England' AS PRIMARY_LEVEL
- 			,'England' AS PRIMARY_LEVEL_DESCRIPTION
- 			,'NONE'	AS SECONDARY_LEVEL
- 			,'NONE'	AS SECONDARY_LEVEL_DESCRIPTION
- 			,'CCR71a' AS METRIC
-             ,COUNT(DISTINCT UniqServReqID) as METRIC_VALUE
-             ,'$db_source' AS SOURCE_DB
-             
-        FROM global_temp.CCR7071_prep
-       WHERE ClinRespPriorityType = '2'
-             AND AGE_GROUP = '18 and over';
-             
-
-# COMMAND ----------
-
-# DBTITLE 1,CCR71b National
- %sql
- INSERT INTO $db_output.Main_monthly_unformatted
-     SELECT '$rp_startdate' AS REPORTING_PERIOD_START
-             ,'$rp_enddate' AS REPORTING_PERIOD_END
- 			,'$status' AS STATUS
- 			,'England' AS BREAKDOWN
- 			,'England' AS PRIMARY_LEVEL
- 			,'England' AS PRIMARY_LEVEL_DESCRIPTION
- 			,'NONE'	AS SECONDARY_LEVEL
- 			,'NONE'	AS SECONDARY_LEVEL_DESCRIPTION
- 			,'CCR71b' AS METRIC
-             ,COUNT(DISTINCT UniqServReqID) as METRIC_VALUE
-             ,'$db_source' AS SOURCE_DB
-             
-        FROM global_temp.CCR7071_prep
-       WHERE ClinRespPriorityType = '2'
-             AND AGE_GROUP = '0-17';
-
-# COMMAND ----------
-
-# DBTITLE 1,CCR72 National
- %sql
- INSERT INTO $db_output.Main_monthly_unformatted
-     SELECT '$rp_startdate' AS REPORTING_PERIOD_START
-             ,'$rp_enddate' AS REPORTING_PERIOD_END
- 			,'$status' AS STATUS
- 			,'England' AS BREAKDOWN
- 			,'England' AS PRIMARY_LEVEL
- 			,'England' AS PRIMARY_LEVEL_DESCRIPTION
- 			,'NONE'	AS SECONDARY_LEVEL
- 			,'NONE'	AS SECONDARY_LEVEL_DESCRIPTION
- 			,'CCR72' AS METRIC
-             ,COUNT(DISTINCT UniqServReqID) as METRIC_VALUE
-             ,'$db_source' AS SOURCE_DB
-             
-        FROM global_temp.CCR7273_prep prep
-        
-        INNER JOIN $db_output.validcodes as vc
-         ON vc.table = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'CCR70_72' and vc.type = 'include' and prep.ClinRespPriorityType = vc.ValidValue 
-         and '$month_id' >= vc.FirstMonth and (vc.LastMonth is null or '$month_id' <= vc.LastMonth)
-
-# COMMAND ----------
-
-# DBTITLE 1,CCR72a National
- %sql
- INSERT INTO $db_output.Main_monthly_unformatted
-     SELECT '$rp_startdate' AS REPORTING_PERIOD_START
-             ,'$rp_enddate' AS REPORTING_PERIOD_END
- 			,'$status' AS STATUS
- 			,'England' AS BREAKDOWN
- 			,'England' AS PRIMARY_LEVEL
- 			,'England' AS PRIMARY_LEVEL_DESCRIPTION
- 			,'NONE'	AS SECONDARY_LEVEL
- 			,'NONE'	AS SECONDARY_LEVEL_DESCRIPTION
- 			,'CCR72a' AS METRIC
-             ,COUNT(DISTINCT UniqServReqID) as METRIC_VALUE
-             ,'$db_source' AS SOURCE_DB
-             
-        FROM global_temp.CCR7273_prep prep
-        
-        INNER JOIN $db_output.validcodes as vc
-         ON vc.table = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'CCR70_72' and vc.type = 'include' and prep.ClinRespPriorityType = vc.ValidValue 
-         and '$month_id' >= vc.FirstMonth and (vc.LastMonth is null or '$month_id' <= vc.LastMonth)
- 
-             WHERE AGE_GROUP = '18 and over';
-
-# COMMAND ----------
-
-# DBTITLE 1,CCR72b National
- %sql
- INSERT INTO $db_output.Main_monthly_unformatted
-     SELECT '$rp_startdate' AS REPORTING_PERIOD_START
-             ,'$rp_enddate' AS REPORTING_PERIOD_END
- 			,'$status' AS STATUS
- 			,'England' AS BREAKDOWN
- 			,'England' AS PRIMARY_LEVEL
- 			,'England' AS PRIMARY_LEVEL_DESCRIPTION
- 			,'NONE'	AS SECONDARY_LEVEL
- 			,'NONE'	AS SECONDARY_LEVEL_DESCRIPTION
- 			,'CCR72b' AS METRIC
-             ,COUNT(DISTINCT UniqServReqID) as METRIC_VALUE
-             ,'$db_source' AS SOURCE_DB
-             
-        FROM global_temp.CCR7273_prep prep
-        
-        INNER JOIN $db_output.validcodes as vc
-         ON vc.table = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'CCR70_72' and vc.type = 'include' and prep.ClinRespPriorityType = vc.ValidValue 
-         and '$month_id' >= vc.FirstMonth and (vc.LastMonth is null or '$month_id' <= vc.LastMonth)
- 
-             WHERE AGE_GROUP = '0-17';
-
-# COMMAND ----------
-
-# DBTITLE 1,CCR73 National
- %sql
- INSERT INTO $db_output.Main_monthly_unformatted
-     SELECT '$rp_startdate' AS REPORTING_PERIOD_START
-             ,'$rp_enddate' AS REPORTING_PERIOD_END
- 			,'$status' AS STATUS
- 			,'England' AS BREAKDOWN
- 			,'England' AS PRIMARY_LEVEL
- 			,'England' AS PRIMARY_LEVEL_DESCRIPTION
- 			,'NONE'	AS SECONDARY_LEVEL
- 			,'NONE'	AS SECONDARY_LEVEL_DESCRIPTION
- 			,'CCR73' AS METRIC
-             ,COUNT(DISTINCT UniqServReqID) as METRIC_VALUE
-             ,'$db_source' AS SOURCE_DB
-             
-        FROM global_temp.CCR7273_prep
-       WHERE ClinRespPriorityType = '2';
-
-# COMMAND ----------
-
-# DBTITLE 1,CCR73a National
- %sql
- INSERT INTO $db_output.Main_monthly_unformatted
-     SELECT '$rp_startdate' AS REPORTING_PERIOD_START
-             ,'$rp_enddate' AS REPORTING_PERIOD_END
- 			,'$status' AS STATUS
- 			,'England' AS BREAKDOWN
- 			,'England' AS PRIMARY_LEVEL
- 			,'England' AS PRIMARY_LEVEL_DESCRIPTION
- 			,'NONE'	AS SECONDARY_LEVEL
- 			,'NONE'	AS SECONDARY_LEVEL_DESCRIPTION
- 			,'CCR73a' AS METRIC
-             ,COUNT(DISTINCT UniqServReqID) as METRIC_VALUE
-             ,'$db_source' AS SOURCE_DB
-             
-        FROM global_temp.CCR7273_prep
-       WHERE ClinRespPriorityType = '2'
-             AND AGE_GROUP = '18 and over';
-
-# COMMAND ----------
-
-# DBTITLE 1,CCR73b National
- %sql
- INSERT INTO $db_output.Main_monthly_unformatted
-     SELECT '$rp_startdate' AS REPORTING_PERIOD_START
-             ,'$rp_enddate' AS REPORTING_PERIOD_END
- 			,'$status' AS STATUS
- 			,'England' AS BREAKDOWN
- 			,'England' AS PRIMARY_LEVEL
- 			,'England' AS PRIMARY_LEVEL_DESCRIPTION
- 			,'NONE'	AS SECONDARY_LEVEL
- 			,'NONE'	AS SECONDARY_LEVEL_DESCRIPTION
- 			,'CCR73b' AS METRIC
-             ,COUNT(DISTINCT UniqServReqID) as METRIC_VALUE
-             ,'$db_source' AS SOURCE_DB
-             
-        FROM global_temp.CCR7273_prep
-       WHERE ClinRespPriorityType = '2'
-             AND AGE_GROUP = '0-17';
