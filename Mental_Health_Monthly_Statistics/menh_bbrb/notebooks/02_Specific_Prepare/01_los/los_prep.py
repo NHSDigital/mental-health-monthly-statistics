@@ -1,5 +1,5 @@
 # Databricks notebook source
-# dbutils.widgets.text("db_output", "sharif_salah_101019")
+# dbutils.widgets.text("db_output", "personal_db")
 # db_output = dbutils.widgets.get("db_output")
 # dbutils.widgets.text("db_source", "testdata_menh_bbrb_mhsds_v5_database")
 # db_source = dbutils.widgets.get("db_source")
