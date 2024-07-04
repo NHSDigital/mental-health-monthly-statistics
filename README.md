@@ -20,120 +20,15 @@ Other Mental Health related publications and dashboards can be found at the Ment
 
 ## Folder structure
 
-The repository is structured as follows:
+The repository is structured with three main folders. These are as follows: 
 
-```bash
-│   README.md
-│
-└───mental-health-monthly-statistics
-    ▒▒▒▒Mental_Health_Monthly_Statistics
-        ▒▒▒▒menh_analysis_clean
-        ▒   ▒▒▒▒notebooks
-        ▒   ▒   ▒▒▒▒00_Master
-        ▒   ▒   ▒▒▒▒01_Prepare
-        ▒   ▒   ▒▒▒▒02_Aggregate
-        ▒   ▒   ▒   ▒▒▒▒1.Main_monthly_agg
-        ▒   ▒   ▒   ▒   ▒▒▒▒1.National
-        ▒   ▒   ▒   ▒   ▒▒▒▒2.CCG
-        ▒   ▒   ▒   ▒   ▒▒▒▒3.Provider
-        ▒   ▒   ▒   ▒   ▒▒▒▒4.LA-CASSR
-        ▒   ▒   ▒   ▒▒▒▒5.CYP_monthly_agg
-        ▒   ▒   ▒       ▒▒▒▒1.National
-        ▒   ▒   ▒       ▒▒▒▒2.CCG
-        ▒   ▒   ▒       ▒▒▒▒3.Provider
-        ▒   ▒   ▒▒▒▒03_Extract
-        ▒   ▒   ▒   ▒▒▒▒001_Monthly_Code
-        ▒   ▒   ▒▒▒▒v4_code_DO_NOT_DELETE
-        ▒   ▒       ▒▒▒▒notebooks
-        ▒   ▒           ▒▒▒▒00_Master
-        ▒   ▒           ▒▒▒▒01_Prepare
-        ▒   ▒           ▒▒▒▒02_Aggregate
-        ▒   ▒               ▒▒▒▒1.Main_monthly_agg
-        ▒   ▒               ▒   ▒▒▒▒1.National
-        ▒   ▒               ▒   ▒▒▒▒2.CCG
-        ▒   ▒               ▒   ▒▒▒▒3.Provider
-        ▒   ▒               ▒   ▒▒▒▒4.LA-CASSR
-        ▒   ▒               ▒▒▒▒5.CYP_monthly_agg
-        ▒   ▒                   ▒▒▒▒1.National
-        ▒   ▒                   ▒▒▒▒2.CCG
-        ▒   ▒                   ▒▒▒▒3.Provider
-        ▒   ▒▒▒▒schemas
-        ▒       ▒▒▒▒00_DB
-        ▒       ▒▒▒▒99_update_testdata_db
-        ▒▒▒▒menh_publications_clean
-        ▒   ▒▒▒▒notebooks
-        ▒   ▒   ▒▒▒▒00_common_objects
-        ▒   ▒   ▒▒▒▒02_72HOURS
-        ▒   ▒   ▒   ▒▒▒▒00_Master
-        ▒   ▒   ▒   ▒▒▒▒01_Prepare
-        ▒   ▒   ▒   ▒▒▒▒02_Aggregate
-        ▒   ▒   ▒▒▒▒03_RestrictiveInterventions
-        ▒   ▒   ▒   ▒▒▒▒00_Master
-        ▒   ▒   ▒   ▒▒▒▒01_Prepare
-        ▒   ▒   ▒   ▒▒▒▒02_Aggregate
-        ▒   ▒   ▒   ▒   ▒▒▒▒1.National
-        ▒   ▒   ▒   ▒   ▒▒▒▒2.Provider
-        ▒   ▒   ▒   ▒   ▒▒▒▒3.ProviderType
-        ▒   ▒   ▒   ▒   ▒▒▒▒4.Suppress
-        ▒   ▒   ▒   ▒▒▒▒03_Extract
-        ▒   ▒   ▒▒▒▒04a_CYP_ED_WaitingTimes
-        ▒   ▒   ▒   ▒▒▒▒00_Master
-        ▒   ▒   ▒   ▒▒▒▒01_Prepare
-        ▒   ▒   ▒   ▒▒▒▒02_Aggregate
-        ▒   ▒   ▒▒▒▒04_CYP_ED_WaitingTimes
-        ▒   ▒   ▒   ▒▒▒▒00_Master
-        ▒   ▒   ▒   ▒▒▒▒01_Prepare
-        ▒   ▒   ▒   ▒▒▒▒02_Aggregate
-        ▒   ▒   ▒▒▒▒05_MHA_Monthly
-        ▒   ▒   ▒   ▒▒▒▒00_Master
-        ▒   ▒   ▒   ▒▒▒▒01_Prepare
-        ▒   ▒   ▒   ▒▒▒▒02_Aggregate
-        ▒   ▒   ▒▒▒▒06_CYP_Outcome_Measures
-        ▒   ▒   ▒   ▒▒▒▒00_Master
-        ▒   ▒   ▒   ▒▒▒▒01_Prepare
-        ▒   ▒   ▒   ▒▒▒▒02_Aggregate
-        ▒   ▒   ▒▒▒▒07_EIP
-        ▒   ▒   ▒   ▒▒▒▒00_Master
-        ▒   ▒   ▒   ▒▒▒▒01_Prepare
-        ▒   ▒   ▒   ▒▒▒▒02_Aggregate
-        ▒   ▒   ▒▒▒▒08_ASCOF
-        ▒   ▒   ▒   ▒▒▒▒00_Master
-        ▒   ▒   ▒   ▒▒▒▒01_Prepare
-        ▒   ▒   ▒   ▒▒▒▒02_Aggregate
-        ▒   ▒   ▒▒▒▒99_Extract
-        ▒   ▒▒▒▒schemas
-        ▒       ▒▒▒▒00_create_common_objects
-        ▒       ▒▒▒▒02_72HOURS
-        ▒       ▒▒▒▒03_RestrictiveInterventions
-        ▒       ▒▒▒▒04_CYP_ED_WaitingTimes
-        ▒       ▒▒▒▒05_MHA_Monthly
-        ▒       ▒▒▒▒06_CYP_Outcome_Measures
-        ▒       ▒▒▒▒07_EIP
-        ▒       ▒▒▒▒08_ASCOF
-        ▒▒▒▒mental_health_bbrb_clean
-            ▒▒▒▒MHSDS_OAPs
-            ▒▒▒▒MHSDS_V5_BBRB
-                ▒▒▒▒CMH_v5
-                ▒   ▒▒▒▒CMH NHS D Code
-                ▒       ▒▒▒▒CMH_Agg
-                ▒       ▒▒▒▒CMH_Prep
-                ▒▒▒▒CYP and Perinatal monthly V5
-                ▒   ▒▒▒▒Archive
-                ▒▒▒▒EIP_CaseloadSNoMED
-                ▒▒▒▒menh_bbrb_measures
-                ▒   ▒▒▒▒Prep
-                ▒▒▒▒Perinatal Qtr V5
-                ▒   ▒▒▒▒1920 versions
-                ▒   ▒   ▒▒▒▒Version 2 for publishing
-                ▒   ▒▒▒▒21_22 version V5
-                ▒▒▒▒Restraints_v5_Apr2022_onwards
-                    ▒▒▒▒Restraints_Published_CSV_Build
-                    ▒▒▒▒Restraints_Suppression
+- The menh_analysis pipeline contains most high level measures such as MHS01, People in contact with mental health services. 
 
+- Menh_publications contains metrics such as EIP, 72 hour follow ups and numbers of detentions under the Mental Health Act. 
 
-```
-
-The menh_analysis pipeline contains most high level measures such as MHS01, People in contact with mental health services. Menh_publications contains metrics such as EIP, 72 hour follow ups and numbers of detentions under the Mental Health Act. The mental_health_bbrb code contains newer metrics such as Children and Young Peoples Access, Perinatal Access and Children and Young Peoples Outcomes.
+- The menh_bbrb code contains newer metrics such as Children and Young Peoples Access, Perinatal Access and Children and Young Peoples Outcomes. This folder also contains the methodology used to create the OAPS data.
+  
+- The menh_dq code contains the code used to create the coverage and VODIM files that form part of the publication.
 
 
 ## Installation and running
