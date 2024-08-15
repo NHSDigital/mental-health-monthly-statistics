@@ -6,6 +6,10 @@ mhsds_run_folder_master = "./02_Specific_Prepare/"
 los_run_folder = "01_los/"
 los_prep_notebook = "los_prep"
  
+#4-week waits (community mental health and children and young people)
+four_ww_run_folder = "02_4w_waits/"
+four_ww_prep_notebook = "4w_waits_prep"
+ 
 #community mental health acute admissions and access
 cmh_run_folder = "03_cmh/"
 cmh_prep_notebook = "cmh_prep"
@@ -35,6 +39,8 @@ oaps_prep_notebook = "oaps_prep"
 run_params = { 
 ###ADULT LOS###
   "01_los_run_filepath": mhsds_run_folder_master + los_run_folder + los_prep_notebook,
+###4W WAITS###
+  "02_4w_waits_run_filepath": mhsds_run_folder_master + four_ww_run_folder + four_ww_prep_notebook,
 ###COMMUNITY MENTAL HEALTH ACUTE ADMISSIONS AND ACCESS
   "03_cmh_run_filepath": mhsds_run_folder_master + cmh_run_folder + cmh_prep_notebook,
 ###CYP PERINATAL

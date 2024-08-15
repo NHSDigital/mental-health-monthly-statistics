@@ -18,6 +18,10 @@ dbutils.notebook.run('01_create_los_tables', 0, params)
 
 # COMMAND ----------
 
+dbutils.notebook.run('02_create_4w_waits_tables', 0, params)
+
+# COMMAND ----------
+
 dbutils.notebook.run('03_create_cmh_tables', 0, params)
 
 # COMMAND ----------

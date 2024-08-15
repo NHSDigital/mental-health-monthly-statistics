@@ -9,7 +9,7 @@ Code is left here for easy copying to other notebooks!  or for cases where widge
 dbutils.widgets.removeAll() above can be run to annihilate the existing widgets and then run these to create new ones'''
 
 # dbutils.widgets.text("db", "menh_bbrb", "Target database")
-# dbutils.widgets.text("mhsds_v5_database", "testdata_menh_bbrb_mhsds_v5_database", "Input database")
+# dbutils.widgets.text("$mhsds_database", "testdata_menh_bbrb_$mhsds_database", "Input database")
 # dbutils.widgets.text("status", "Performance", "status")
 # dbutils.widgets.text("reference_data", "reference_data", "reference_data")
 # dbutils.widgets.text(name='rp_startdate', defaultValue='2021-10-01', label='Reporting period start date')
@@ -59,17 +59,17 @@ import json
 db_output = dbutils.widgets.get("db")
 assert db_output
 
-# the parameter name of any source database(s) for a cp project is the same as the database name, i.e. the mhsds_v5_database parameter is named mhsds_v5_database!
+# the parameter name of any source database(s) for a cp project is the same as the database name, i.e. the $mhsds_database parameter is named $mhsds_database!
 # here this is renamed to the standard db_source for familiarity/consistency with other projects
 try:
-  db_source = dbutils.widgets.get("mhsds_v5_database")
+  db_source = dbutils.widgets.get("$mhsds_database")
 except:
-  print('mhsds_v5_database is not defined')
+  print('$mhsds_database is not defined')
   
 try:
-  db_source = dbutils.widgets.get("mhsds_v6_database")
+  db_source = dbutils.widgets.get("$mhsds_database")
 except:
-  print('mhsds_v6_database is not defined')
+  print('$mhsds_database is not defined')
 
 ###dbutils.widgets.text("reference_data","reference_data","Source Ref Database")
 reference_data = dbutils.widgets.get("reference_data")

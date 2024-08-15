@@ -1,7 +1,7 @@
 # Databricks notebook source
-# dbutils.widgets.text("db_output", "personal_db")
+# dbutils.widgets.text("db_output", "")
 # db_output = dbutils.widgets.get("db_output")
-# dbutils.widgets.text("db_source", "testdata_menh_bbrb_mhsds_v5_database")
+# dbutils.widgets.text("db_source", "testdata_menh_bbrb_$mhsds_database")
 # db_source = dbutils.widgets.get("db_source")
 # dbutils.widgets.text("end_month_id", "1459")
 # end_month_id = dbutils.widgets.get("end_month_id")
