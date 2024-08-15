@@ -4,7 +4,7 @@ print(db)
 assert db
 
 # only needed for the addition of SOURCE_DB column to existing tables - no longer needed
-# commenting out as the new source db is menh_v5_pre_clear anyway (so if needed would need to change)
+# commenting out as the new source db is $mhsds_database anyway (so if needed would need to change)
 
 # mhsds_database = dbutils.widgets.get("mhsds_database")
 # print(mhsds_database)

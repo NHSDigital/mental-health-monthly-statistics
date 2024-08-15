@@ -72,7 +72,7 @@
  %sql
  /************************************************
   
- 
+ The extract counts differ from the below hardcoded values and an analyst must verify that we agree with these numbers!
   
  should we parameterise:
   

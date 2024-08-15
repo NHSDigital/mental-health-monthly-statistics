@@ -526,7 +526,45 @@ def produce_fy_access_filter_agg_df(
                          aggregation_field, breakdown, status, measure_id, measure_name, column_order)
  
   return agg_df 
- 
+
+def produce_date_filter_agg_df(
+  db_output: str,  
+  db_source: str,
+  table_name: str,
+  filter_clause: Column,
+  rp_startdate: str, 
+  rp_enddate: str, 
+  primary_level: Column, 
+  primary_level_desc: Column, 
+  secondary_level: Column, 
+  secondary_level_desc: Column,
+  aggregation_field: str,    
+  breakdown: str,
+  status: str,
+  measure_id: str, 
+  numerator_id: str,  
+  denominator_id: str,
+  measure_name: str,
+  column_order: list
+) -> df:
+    """  This function produces the aggregation output dataframe from a defined preparation table
+    for all measures and breakdowns according to the mhsds_measure_metadata dictionary 
+    """  
+    prep_df = spark.table(f"{db_output}.{table_name}")
+    
+    prep_filter_df = (
+      prep_df
+      .filter(
+      (F.col("ReportingPeriodEndDate") == rp_enddate)
+      )
+    )
+        
+    agg_df = create_agg_df(prep_filter_df, db_source, rp_startdate, rp_enddate, 
+                           primary_level, primary_level_desc, secondary_level, secondary_level_desc,
+                           aggregation_field, breakdown, status, measure_id, measure_name, column_order)
+    
+    return agg_df
+  
 def get_numerator_df(df: df, numerator_id: str, breakdown: str, status: str, db_source: str, rp_enddate: str) -> df:
   numerator_df = (
     df
