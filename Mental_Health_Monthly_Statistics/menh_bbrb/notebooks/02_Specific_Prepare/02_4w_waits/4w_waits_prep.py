@@ -92,6 +92,32 @@
 # COMMAND ----------
 
  %sql
+ ---GROUP INTO SPELLS 
+ INSERT OVERWRITE TABLE $db_output.cmh_4ww_groups 
+ SELECT 
+ Person_ID,
+ OrgIDProv,
+ Inc_Group, ---Inc Group separates out multiple spells
+ CONCAT(Person_ID, OrgIDProv, Inc_Group) AS SpellID, 
+ MIN(Der_Date) AS StartDate, ---Earliest Date will be start of spell
+ MAX(Der_Date) AS EndDate, ---Latest Date will be end of spell
+ DATE_ADD(MAX(Der_Date), -5) AS Der_EndDate ---Take back 5 days which were added previously
+  
+ FROM 
+ (
+   SELECT 
+   * 
+   ,SUM(CASE WHEN Cumf_Inc = 0 THEN 1 ELSE 0 END) OVER (PARTITION BY Person_ID, OrgIDProv ORDER BY Der_Date DESC) AS Inc_Group
+   ---The Inc_Group field separates out person-provider combinations that have ended (Cumf_Inc = 0) assigns them as 1 and then partitions
+   --- i.e. a first spells rows will be assigned as 1 and each time that person-provider combination has a new spell Inc_Group will be +1, 
+   FROM $db_output.cmh_4ww_cumf
+ ) x 
+  
+ GROUP BY Person_ID, OrgIDProv, Inc_Group
+
+# COMMAND ----------
+
+ %sql
  ---RANK CONTACTS TO GET SECOND CONTACT WITHIN SPELL
  INSERT OVERWRITE TABLE $db_output.cmh_4ww_spell_rank
  SELECT
