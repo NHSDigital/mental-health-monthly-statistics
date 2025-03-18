@@ -2,7 +2,7 @@
 # DBTITLE 1,ACC33
  %sql
  /**ACC33 - PEOPLE ASSIGNED TO A CARE CLUSTER BY CLUSTER AT END OF REPORTING PERIOD - FINAL**/
- 
+
  INSERT INTO $db_output.CAP_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
          ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -21,7 +21,7 @@
 # DBTITLE 1,ACC36
  %sql
  /**ACC36 - PEOPLE ASSIGNED TO A CARE CLUSTER WITHIN CLUSTER REVIEW PERIOD BY CLUSTER AT END OF REPORTING PERIOD - FINAL**/
- 
+
  INSERT INTO $db_output.CAP_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -40,7 +40,7 @@
 # DBTITLE 1,ACC37
  %sql
  /**ACC37 - PROPORTION OF PEOPLE ASSIGNED TO A CARE CLUSTER WITHIN CLUSTER REVIEW PERIOD BY CLUSTER AT END OF REPORTING PERIOD**/
- 
+
  INSERT INTO $db_output.CAP_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
          ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -60,12 +60,13 @@
          AND ACC33.CLUSTER = ACC36.CLUSTER 
          AND ACC33.BREAKDOWN = ACC36.BREAKDOWN
 
+
 # COMMAND ----------
 
 # DBTITLE 1,ACC33 - Provider
  %sql
  /**ACC33 - PEOPLE ASSIGNED TO A CARE CLUSTER BY CLUSTER AT END OF REPORTING PERIOD, PROVIDER - FINAL**/
- 
+
  INSERT INTO $db_output.CAP_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
          ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -84,7 +85,7 @@
 # DBTITLE 1,ACC36 - Provider
  %sql
  /**ACC36 - PEOPLE ASSIGNED TO A CARE CLUSTER WITHIN CLUSTER REVIEW PERIOD BY CLUSTER AT END OF REPORTING PERIOD, PROVIDER - FINAL**/
- 
+
  INSERT INTO $db_output.CAP_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
          ,'$rp_enddate' AS REPORTING_PERIOD_END 
@@ -103,7 +104,7 @@
 # DBTITLE 1,ACC37 - Provider
  %sql
  /**ACC37 - PROPORTION OF PEOPLE ASSIGNED TO A CARE CLUSTER WITHIN CLUSTER REVIEW PERIOD BY CLUSTER AT END OF REPORTING PERIOD, PROVIDER - FINAL**/
- 
+
  INSERT INTO $db_output.CAP_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
          ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -129,7 +130,7 @@
 # DBTITLE 1,ACC33 - CCG
  %sql
  /**ACC33 - PEOPLE ASSIGNED TO A CARE CLUSTER BY CLUSTER AT END OF REPORTING PERIOD, CCG - FINAL**/
- 
+
  INSERT INTO $db_output.CAP_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
          ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -148,7 +149,7 @@
 # DBTITLE 1,ACC36 - CCG
  %sql
  /**ACC36 - PEOPLE ASSIGNED TO A CARE CLUSTER WITHIN CLUSTER REVIEW PERIOD BY CLUSTER AT END OF REPORTING PERIOD, CCG - FINAL**/
- 
+
  INSERT INTO $db_output.CAP_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
          ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -167,7 +168,7 @@
 # DBTITLE 1,ACC37 - CCG
  %sql
  /**ACC37 - PROPORTION OF PEOPLE ASSIGNED TO A CARE CLUSTER WITHIN CLUSTER REVIEW PERIOD BY CLUSTER AT END OF REPORTING PERIOD, CCG**/
- 
+
  INSERT INTO $db_output.CAP_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
          ,'$rp_enddate' AS REPORTING_PERIOD_END 
@@ -192,7 +193,7 @@
 # DBTITLE 1,ACC02
  %sql
  /**ACC02 - People on CPA at the end of the Reporting Period - FINAL**/
- 
+
  INSERT INTO $db_output.CAP_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
          ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -211,7 +212,7 @@
 # DBTITLE 1,ACC02 - Provider
  %sql
  /**ACC02 - People on CPA at the end of the Reporting Period, PROVIDER - INTERMEDIATE**/
- 
+
  INSERT INTO $db_output.CAP_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
          ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -230,7 +231,7 @@
 # DBTITLE 1,ACC02 - CCG
  %sql
  /**ACC02 - People on CPA at the end of the Reporting Period, CCG - INTERMEDIATE**/
- 
+
  INSERT INTO $db_output.CAP_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -249,7 +250,7 @@
 # DBTITLE 1,ACC54
  %sql
  /**ACC54 - People at the end of the RP in settled accommodation - FINAL**/
- 
+
  INSERT INTO $db_output.CAP_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -268,7 +269,7 @@
 # DBTITLE 1,ACC54 - Provider
  %sql
  /**ACC54 - People at the end of the RP in settled accommodation, PROVIDER - FINAL**/
- 
+
  INSERT INTO $db_output.CAP_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
          ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -287,7 +288,7 @@
 # DBTITLE 1,ACC54 - CCG
  %sql
  /**ACC54 - People at the end of the RP in settled accommodation, CCG - FINAL**/
- 
+
  INSERT INTO $db_output.CAP_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
          ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -306,7 +307,7 @@
 # DBTITLE 1,ACC53
  %sql
  /**ACC53 - Proportion of people at the end of the Reporting Period who are on CPA, ENGLAND - FINAL**/
- 
+
  INSERT INTO $db_output.CAP_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -331,7 +332,7 @@
 # DBTITLE 1,ACC53 - Provider
  %sql
  /**ACC53 - Proportion of people at the end of the Reporting Period who are on CPA, PROVIDER - FINAL**/
- 
+
  INSERT INTO $db_output.CAP_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -356,7 +357,7 @@
 # DBTITLE 1,ACC53 - CCG
  %sql
  /**ACC62 - Proportion of people at the end of the Reporting Period who are on CPA, ENGLAND - FINAL**/
- 
+
  --CREATE OR REPLACE GLOBAL TEMP VIEW ACC53_ccg_v AS -- removed 20/8/19 and replaced with insert into statement (believe this was done in error in the first place)
  INSERT INTO $db_output.CAP_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
@@ -382,7 +383,7 @@
 # DBTITLE 1,ACC62
  %sql
  /**ACC62 - Proportion of people at the end of the Reporting Period who are on CPA, ENGLAND - FINAL**/
- 
+
  INSERT INTO $db_output.CAP_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -407,7 +408,7 @@
 # DBTITLE 1,ACC62 - CCG
  %sql
  /**ACC62 - Proportion of people at the end of the Reporting Period who are on CPA, CCG - FINAL**/
- 
+
  INSERT INTO $db_output.CAP_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -432,7 +433,7 @@
 # DBTITLE 1,ACC62 - Provider
  %sql
  /**ACC62 - Proportion of people at the end of the Reporting Period who are on CPA, PROVIDER - FINAL**/
- 
+
  INSERT INTO $db_output.CAP_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END

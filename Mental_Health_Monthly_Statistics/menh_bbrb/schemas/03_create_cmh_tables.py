@@ -121,6 +121,7 @@
  Person_ID string,
  NotWhiteBritish int,
  WhiteBritish int,
+ UpperEthnicity string,
  OrgIDProv string,
  Provider_Name string,
  CCG_Code string,
@@ -166,7 +167,7 @@
 # COMMAND ----------
 
  %sql
- -- DROP TABLE IF EXISTS $db_output.cmh_agg;
+ DROP TABLE IF EXISTS $db_output.cmh_agg;
  CREATE TABLE IF NOT EXISTS $db_output.cmh_agg 
  (
  ReportingPeriodStartDate date,
@@ -179,6 +180,7 @@
  STP_Code string,
  STP_Name string,
  WNW_Ethnicity string,
+ UpperEthnicity string,
  Admissions int,
  Contact int,
  NoContact int

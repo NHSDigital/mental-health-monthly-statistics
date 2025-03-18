@@ -34,6 +34,14 @@ uec_prep_notebook = "uec_prep"
 oaps_run_folder = "08_oaps/"
 oaps_prep_notebook = "oaps_prep"
 
+#mental health currencies
+mhc_run_folder = "09_mhc/"
+pres_comp_notebook = "pres_comp_prep"
+
+#mha measures
+mha_run_folder = "10_mha/"
+mha_prep_notebook = "mha_prep"
+
 # COMMAND ----------
 
 run_params = { 
@@ -53,4 +61,8 @@ run_params = {
   "07_uec_filepath": mhsds_run_folder_master + uec_run_folder + uec_prep_notebook,
 ###OUT OF AREA PLACEMENTS
   "08_oaps_filepath": mhsds_run_folder_master + oaps_run_folder + oaps_prep_notebook,
+### MENTAL HEALTH CURRENCIES
+  "09_mhc_filepath": mhsds_run_folder_master + mhc_run_folder + pres_comp_notebook,
+### MHA MEASURES
+  "10_mha_filepath": mhsds_run_folder_master + mha_run_folder + mha_prep_notebook 
 }

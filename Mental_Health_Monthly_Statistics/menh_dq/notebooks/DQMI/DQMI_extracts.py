@@ -18,7 +18,7 @@ assert MonthPeriod
  %sql
  --First table checks which providers have submitted in a given month based against a list of those that have submitted in the previous months.
  DELETE FROM $db_output.DQMI_Coverage WHERE Month_ID = '$month_id' AND Status = '$status' and SOURCE_DB = '$dbm';
- 
+
  INSERT INTO $db_output.DQMI_Coverage
  SELECT 	'$month_id' AS Month_ID,
  		'$MonthPeriod' AS Period, 
@@ -62,12 +62,12 @@ assert MonthPeriod
  --Default numerator is the number of records where the field of interest had a default code submitted.
  --Finally, valid Denominator is the number of records where the field of interest wasn't left blank.
  DELETE FROM $db_output.DQMI_Monthly_Data WHERE Month_ID = '$month_id' AND Status = '$status' and SOURCE_DB = '$dbm';
- 
+
  with Denominator as
  (select * from $db_output.dq_inventory where MeasureTypeId = 1 and uniqMonthId = '$month_id' and DimensiontypeID = 3 and SOURCE_DB = '$dbm'),
  Numeratory as
  (select * from $db_output.dq_inventory where MeasureTypeId = 2 and uniqMonthId = '$month_id' and DimensiontypeID = 3 and SOURCE_DB = '$dbm')
- 
+
  INSERT INTO $db_output.DQMI_Monthly_Data 
  SELECT 
      '$month_id' AS Month_ID,
@@ -93,7 +93,7 @@ assert MonthPeriod
  LEFT JOIN Numeratory d ON v.MeasureId = d.MeasureId AND v.OrgIdProv = d.OrgIdProv AND d.MetricTypeId = 3 --AND d.UniqMonthId = v.UniqMonthId
  LEFT JOIN Numeratory i ON v.MeasureId = i.MeasureId AND v.OrgIdProv = i.OrgIdProv AND i.MetricTypeId = 4 --AND i.UniqMonthId = v.UniqMonthId
  LEFT JOIN Numeratory m ON v.MeasureId = m.MeasureId AND v.OrgIdProv = m.OrgIdProv AND m.MetricTypeId = 5 --AND m.UniqMonthId = v.UniqMonthId
- 
+
  LEFT JOIN
  (SELECT Org_Code, NAME,ORG_CLOSE_DATE, BUSINESS_END_DATE, ROW_NUMBER() OVER (PARTITION BY Org_Code ORDER BY IFNULL(Business_End_Date,CURRENT_DATE()) DESC, IFNULL(Org_Close_Date, CURRENT_DATE()) DESC) AS RN
  FROM $reference_data.org_daily) n ON v.OrgIDProv = n.ORG_CODE AND n.RN = 1 AND (n.BUSINESS_END_DATE IS NULL OR n.BUSINESS_END_DATE >='$rp_enddate') AND (n.ORG_CLOSE_DATE IS NULL OR n.ORG_CLOSE_DATE >='$rp_enddate')
@@ -108,12 +108,12 @@ assert MonthPeriod
 # DBTITLE 1,Extract the time Dimensions - Integrity measures
  %sql
  DELETE FROM $db_output.DQMI_Integrity WHERE Month_ID = '$month_id' AND Status = '$status' and SOURCE_DB = '$dbm';
- 
+
  WITH Numerator AS
  (SELECT OrgIdProv,MeasureId,value FROM $db_output.dq_vw_Inventory_rollup WHERE MeasureTypeName = 'Numerator' AND UniqMonthID = '$month_id' AND DimensionTypeId = 7 and SOURCE_DB = '$dbm' ORDER BY OrgIdProv),
  Denominator AS
  (SELECT OrgIdProv,MeasureId,value FROM $db_output.dq_vw_Inventory_rollup WHERE MeasureTypeName = 'Denominator' AND UniqMonthID = '$month_id' AND DimensionTypeId = 7 and SOURCE_DB = '$dbm' ORDER BY OrgIdProv)
- 
+
  INSERT INTO $db_output.DQMI_Integrity
  SELECT 
    '$month_id' AS Month_ID,

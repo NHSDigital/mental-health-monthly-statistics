@@ -2,7 +2,7 @@
 # DBTITLE 1,MHS08 - Provider Level
  %sql
  --MHS08 - PEOPLE SUBJECT TO MENTAL HEALTH ACT AT END OF REPORTING PERIOD
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START,
              '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -39,7 +39,7 @@
 # DBTITLE 1,MHS08a - Provider Level
  %sql
  --MHS08a - PEOPLE SUBJECT TO MENTAL HEALTH ACT AT END OF REPORTING PERIOD, AGED 0-17
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START,
              '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -84,7 +84,7 @@
 # DBTITLE 1,MH08 - Provider
  %sql
  --MH08 - PEOPLE SUBJECT TO MENTAL HEALTH ACT (MENTAL HEALTH SERVICES) AT END OF REPORTING PERIOD
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START,
              '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -125,7 +125,7 @@
 # DBTITLE 1,MH08a Provider
  %sql
  --MH08a - PEOPLE SUBJECT TO MENTAL HEALTH ACT (MENTAL HEALTH SERVICES) AT END OF REPORTING PERIOD, AGED 0-17
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START,
              '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -381,7 +381,7 @@
 
 # DBTITLE 1,MHS10 - Provider Level
  %sql
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START,
              '$rp_enddate' AS REPORTING_PERIOD_END,

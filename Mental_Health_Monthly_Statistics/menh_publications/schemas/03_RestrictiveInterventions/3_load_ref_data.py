@@ -68,6 +68,7 @@ assert db_output
  (1, 'NHS Providers'),
  (2, 'Non NHS Providers')
 
+
 # COMMAND ----------
 
 # DBTITLE 1,AgeBandsDim

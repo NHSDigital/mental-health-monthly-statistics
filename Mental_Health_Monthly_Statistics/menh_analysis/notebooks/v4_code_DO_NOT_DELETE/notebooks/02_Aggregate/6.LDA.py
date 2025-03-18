@@ -29,6 +29,7 @@
  - Table 100 TCP Region
  - Table 101 TCP
 
+
 # COMMAND ----------
 
 # DBTITLE 1,Table 1 National Total Counts 
@@ -2149,12 +2150,12 @@
 # COMMAND ----------
 
  %sql
- 
+
  --- tim underwood comment: i dont think any of this below is needed any longer. Need to run above code in the PROD world and compare to my output from my original code to se if it matches --
 
 # COMMAND ----------
 
-# DBTITLE 1,Distinct Providers and Commissioners - needed for Expand section - add to 0.Insert_lookup_data???  OR is this already covered within existing tables...?
+# DBTITLE 1,Distinct Providers and Commissioners - User note: needed for Expand section - add to 0.Insert_lookup_data???  OR is this already covered within existing tables...?
 # %sql
 # -- CREATES TEMPORARY TABLES WHICH HOUSE ALL DISTINCT PROVIDERS AND COMMISSIONERS
 # -- This means that all providers and commissioners are held in a list to join with the menh_analysis.ProviderCrossCategories table to ensure all options are included for all providers.

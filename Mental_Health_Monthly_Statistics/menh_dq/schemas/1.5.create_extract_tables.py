@@ -13,7 +13,7 @@
 # COMMAND ----------
 
  %sql
- 
+
  CREATE TABLE IF NOT EXISTS $db.validity_rules(
    MeasureNumber STRING,
    MeasureName STRING,
@@ -99,7 +99,7 @@
 
 # DBTITLE 1,DQMI Coverage table
  %sql
- 
+
  CREATE TABLE IF NOT EXISTS $db.DQMI_Coverage(
    Month_ID INT,
    Period STRING,
@@ -114,7 +114,7 @@
 # COMMAND ----------
 
  %sql
- 
+
  CREATE TABLE IF NOT EXISTS $db.DQMI_Monthly_Data(
    Month_ID INT,
    Period STRING,
@@ -134,7 +134,7 @@
 # COMMAND ----------
 
  %sql
- 
+
  CREATE TABLE IF NOT EXISTS $db.DQMI_Integrity(
    Month_ID STRING,
    Period STRING,

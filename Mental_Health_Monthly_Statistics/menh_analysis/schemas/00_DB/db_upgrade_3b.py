@@ -1,11 +1,12 @@
 # Databricks notebook source
  %md
- 
+
  this notebook is named db_upgrade_3b as it is mostly making changes to tables created in db_upgrade_3
+
 
 # COMMAND ----------
 
-# dbutils.widgets.text("db_output","_demo_test2","Target Database")
+# dbutils.widgets.text("db_output","User note_demo_test2","Target Database")
 db_output = dbutils.widgets.get("db_output")
 assert db_output
 

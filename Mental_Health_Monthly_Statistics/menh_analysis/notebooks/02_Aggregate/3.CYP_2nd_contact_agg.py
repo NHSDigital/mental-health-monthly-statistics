@@ -20,17 +20,17 @@
 
 # DBTITLE 1,MHS69 - CCG - GP Practice or Residence; Provider
  %sql
- 
+
  INSERT INTO $db_output.CYP_2nd_contact_unformatted
  SELECT '$rp_startdate' AS REPORTING_PERIOD_START,
         '$rp_enddate' AS REPORTING_PERIOD_END,
         '$status' AS STATUS,
         'CCG - GP Practice or Residence; Provider' AS BREAKDOWN,
         CASE
-          WHEN w.OrgIDProv = 'DFC' THEN COALESCE(DFC_CCG.ORG_CODE, 'UNKNOWN')
+          WHEN w.OrgIDProv in ('DFC','S9X2N') THEN COALESCE(DFC_CCG.ORG_CODE, 'UNKNOWN')
           ELSE COALESCE(ccg.IC_Rec_CCG, 'UNKNOWN') END AS PRIMARY_LEVEL,
         CASE
-          WHEN w.OrgIDProv = 'DFC' THEN COALESCE(DFC_CCG.NAME, 'UNKNOWN')
+          WHEN w.OrgIDProv in ('DFC','S9X2N') THEN COALESCE(DFC_CCG.NAME, 'UNKNOWN')
           ELSE COALESCE(ccg.NAME, 'UNKNOWN') END AS PRIMARY_LEVEL_DESCRIPTION,
         Z.OrgIDProvider AS SECONDARY_LEVEL,
         COALESCE(x.NAME, 'UNKNOWN') AS SECONDARY_LEVEL_DESCRIPTION,
@@ -49,10 +49,10 @@
         ON w.OrgIDComm = DFC_CCG.original_ORG_CODE
  WHERE z.UniqMonthID = '$month_id'
  GROUP BY CASE
-        WHEN w.OrgIDProv = 'DFC' THEN COALESCE(DFC_CCG.ORG_CODE, 'UNKNOWN')
+        WHEN w.OrgIDProv in ('DFC','S9X2N') THEN COALESCE(DFC_CCG.ORG_CODE, 'UNKNOWN')
         ELSE COALESCE(ccg.IC_Rec_CCG, 'UNKNOWN') END,
       CASE
-        WHEN w.OrgIDProv = 'DFC' THEN COALESCE(DFC_CCG.NAME, 'UNKNOWN')
+        WHEN w.OrgIDProv in ('DFC','S9X2N') THEN COALESCE(DFC_CCG.NAME, 'UNKNOWN')
         ELSE COALESCE(ccg.NAME, 'UNKNOWN') END,
       Z.OrgIDProvider,
       COALESCE(x.NAME, 'UNKNOWN');
@@ -61,17 +61,17 @@
 
 # DBTITLE 1,MHS69 - CCG - GP Practice or Residence
  %sql
- 
+
  INSERT INTO $db_output.CYP_2nd_contact_unformatted
  SELECT '$rp_startdate' AS REPORTING_PERIOD_START,
         '$rp_enddate' AS REPORTING_PERIOD_END,
         '$status' AS STATUS,
         'CCG - GP Practice or Residence' AS BREAKDOWN,
         CASE
-          WHEN w.OrgIDProv = 'DFC' THEN COALESCE(DFC_CCG.ORG_CODE, 'UNKNOWN')
+          WHEN w.OrgIDProv in ('DFC','S9X2N') THEN COALESCE(DFC_CCG.ORG_CODE, 'UNKNOWN')
           ELSE COALESCE(ccg.IC_Rec_CCG, 'UNKNOWN') END AS PRIMARY_LEVEL,
         CASE
-          WHEN w.OrgIDProv = 'DFC' THEN COALESCE(DFC_CCG.NAME, 'UNKNOWN')
+          WHEN w.OrgIDProv in ('DFC','S9X2N') THEN COALESCE(DFC_CCG.NAME, 'UNKNOWN')
           ELSE COALESCE(ccg.NAME, 'UNKNOWN') END AS PRIMARY_LEVEL_DESCRIPTION,
         'NONE' AS SECONDARY_LEVEL,
         'NONE' AS SECONDARY_LEVEL_DESCRIPTION,
@@ -85,10 +85,10 @@
          LEFT JOIN $db_output.RD_CCG_LATEST DFC_CCG 
         ON w.OrgIDComm = DFC_CCG.original_ORG_CODE
  GROUP BY CASE
-          WHEN w.OrgIDProv = 'DFC' THEN COALESCE(DFC_CCG.ORG_CODE, 'UNKNOWN')
+          WHEN w.OrgIDProv in ('DFC','S9X2N') THEN COALESCE(DFC_CCG.ORG_CODE, 'UNKNOWN')
           ELSE COALESCE(ccg.IC_Rec_CCG, 'UNKNOWN') END,
         CASE
-          WHEN w.OrgIDProv = 'DFC' THEN COALESCE(DFC_CCG.NAME, 'UNKNOWN')
+          WHEN w.OrgIDProv in ('DFC','S9X2N') THEN COALESCE(DFC_CCG.NAME, 'UNKNOWN')
               ELSE COALESCE(ccg.NAME, 'UNKNOWN') END;
               
 
@@ -96,7 +96,7 @@
 
 # DBTITLE 1,MHS69 - Provider
  %sql
- 
+
  INSERT INTO $db_output.CYP_2nd_contact_unformatted
  SELECT '$rp_startdate' AS REPORTING_PERIOD_START,
       '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -121,7 +121,7 @@
 
 # DBTITLE 1,MHS69 - Region - uses STP_Region_mapping_post_2020 - need to put in conditional
  %sql
- 
+
  INSERT INTO $db_output.CYP_2nd_contact_unformatted
  SELECT '$rp_startdate' AS REPORTING_PERIOD_START,
     '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -140,7 +140,7 @@
     ON w.Person_ID = ccg.Person_ID 
     -- uses new non-static table 
     LEFT JOIN $db_output.STP_Region_mapping_post_2020 stp ON
-    CASE WHEN w.OrgIDProv = 'DFC' THEN w.OrgIDComm ELSE ccg.IC_Rec_CCG END = stp.CCG_code
+    CASE WHEN w.OrgIDProv in ('DFC','S9X2N') THEN w.OrgIDComm ELSE ccg.IC_Rec_CCG END = stp.CCG_code
  GROUP BY COALESCE(stp.Region_code, 'UNKNOWN'),
     COALESCE(STP.Region_description, 'UNKNOWN');
 
@@ -148,7 +148,7 @@
 
 # DBTITLE 1,MHS69 - STP - uses STP_Region_mapping_post_2020 - need to put in conditional
  %sql
- 
+
  INSERT INTO $db_output.CYP_2nd_contact_unformatted
  SELECT '$rp_startdate' AS REPORTING_PERIOD_START,
         '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -167,6 +167,6 @@
         ON w.Person_ID = ccg.Person_ID 
         -- uses new non-static table
         LEFT JOIN $db_output.STP_Region_mapping_post_2020 stp ON 
-        CASE WHEN w.OrgIDProv = 'DFC' THEN w.OrgIDComm ELSE ccg.IC_Rec_CCG END = stp.CCG_code
+        CASE WHEN w.OrgIDProv in ('DFC','S9X2N') THEN w.OrgIDComm ELSE ccg.IC_Rec_CCG END = stp.CCG_code
  GROUP BY COALESCE(stp.STP_code, 'UNKNOWN'),
         COALESCE(STP.STP_description, 'UNKNOWN');

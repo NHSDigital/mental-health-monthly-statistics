@@ -37,7 +37,7 @@ print(params)
 
 # DBTITLE 1,Clean unformatted output table (in case there already is left-over data for this month/status in the table)
  %sql
- 
+
  DELETE FROM $db_output.CCGOIS_unformatted
  WHERE REPORTING_PERIOD = '$rp_startdate'
  AND STATUS = '$status'
@@ -54,8 +54,8 @@ dbutils.notebook.run("../02_Aggregate/9.CCGOIS_3-17", 0, params)
 
 # DBTITLE 1,Optimize output table for performance
  %python
- 
+
  import os
- 
+
  if os.environ['env'] == 'prod':
    spark.sql('OPTIMIZE {db_output}.{table}'.format(db_output=db_output, table='CCGOIS_unformatted'))

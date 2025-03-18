@@ -9,7 +9,7 @@ spark.conf.set("spark.sql.legacy.allowCreatingManagedTableUsingNonemptyLocation"
  --It joins on record number to get the demographics at the time rather latest information used elsewhere in the monthly publication.
  --Was EIP_Procedures
  TRUNCATE TABLE $db_output.EIP_Referrals;
- 
+
  INSERT INTO        $db_output.EIP_Referrals
  SELECT	            r.MHS101UniqID,
                      r.UniqMonthID,
@@ -80,7 +80,7 @@ spark.conf.set("spark.sql.legacy.allowCreatingManagedTableUsingNonemptyLocation"
      c.TimeReferAndCareContact,
      c.uniqothercareprofteamlocalid AS Der_UniqCareProfTeamID,
      c.PlaceOfSafetyInd,
-     CASE WHEN c.OrgIDProv = 'DFC' THEN '1' ELSE c.Person_ID END AS Der_PersonID, -- derivation added to better reflect anonymous services (such as Kooth) where personID may change every month
+     CASE WHEN c.OrgIDProv in ('DFC','S9X2N') THEN '1' ELSE c.Person_ID END AS Der_PersonID, -- derivation added to better reflect anonymous services (such as Kooth) where personID may change every month
      'NULL' AS Der_ContactOrder,
      'NULL' AS Der_FYContactOrder,
      'NULL' AS Der_DirectContactOrder,
@@ -129,7 +129,7 @@ spark.conf.set("spark.sql.legacy.allowCreatingManagedTableUsingNonemptyLocation"
           WHEN uniqmonthid <= '1488' THEN CONCAT(i.OrgIDProv,i.CareProfTeamLocalId)
           END AS Der_UniqCareProfTeamID,
      'NULL' AS PlaceOfSafetyInd,
-     CASE WHEN i.OrgIDProv = 'DFC' THEN '1' ELSE i.Person_ID END AS Der_PersonID, -- derivation added to better reflect anonymous services where personID may change every month
+     CASE WHEN i.OrgIDProv in ('DFC','S9X2N') THEN '1' ELSE i.Person_ID END AS Der_PersonID, -- derivation added to better reflect anonymous services where personID may change every month
      'NULL' AS Der_ContactOrder,
      'NULL' AS Der_FYContactOrder,
      'NULL' AS Der_DirectContactOrder,
@@ -143,7 +143,7 @@ spark.conf.set("spark.sql.legacy.allowCreatingManagedTableUsingNonemptyLocation"
 
  %sql
  TRUNCATE TABLE $db_output.EIP_Activity;
- 
+
  INSERT INTO $db_output.EIP_Activity
  ---filtering the above table to only show indirect and direct attended activity and also ordering the contact datetime for each Unique Activity ID
  SELECT 
@@ -160,14 +160,15 @@ spark.conf.set("spark.sql.legacy.allowCreatingManagedTableUsingNonemptyLocation"
  a.Der_ContactDateTime,
  ROW_NUMBER() OVER (PARTITION BY a.Der_PersonID, a.UniqServReqID ORDER BY a.Der_ContactDateTime ASC, a.Der_ActivityUniqID ASC) AS Der_ContactOrder
  FROM $db_output.EIP_Pre_Proc_Activity a
- WHERE (a.Der_ActivityType = 'DIRECT' AND a.AttendStatus IN ('5','6') AND (((a.ConsMechanismMH NOT IN ('05', '06') and a.UniqMonthID < '1459') OR (a.ConsMechanismMH IN ('01', '02', '04', '11') and a.UniqMonthID >= '1459')) OR a.OrgIDProv = 'DFC' AND ((a.ConsMechanismMH IN ('05', '06') and a.UniqMonthID < '1459') OR (a.ConsMechanismMH IN ('05', '09', '10', '13') and a.UniqMonthID >= '1459')))) OR a.Der_ActivityType = 'INDIRECT'
+ WHERE (a.Der_ActivityType = 'DIRECT' AND a.AttendStatus IN ('5','6') AND (((a.ConsMechanismMH NOT IN ('05', '06') and a.UniqMonthID < '1459') OR (a.ConsMechanismMH IN ('01', '02', '04', '11') and a.UniqMonthID >= '1459')) OR a.OrgIDProv in ('DFC','S9X2N') AND ((a.ConsMechanismMH IN ('05', '06') and a.UniqMonthID < '1459') OR (a.ConsMechanismMH IN ('05', '09', '10', '13') and a.UniqMonthID >= '1459')))) OR a.Der_ActivityType = 'INDIRECT'
+
 
 # COMMAND ----------
 
 # DBTITLE 1,Contacts data
  %sql
  TRUNCATE TABLE $db_output.EIP_Pre_Proc_Interventions;
- 
+
  --This cell looks at all activity in the MHS 202 and MHS204 tables. It takes the left position for all snomed codes.
  INSERT INTO      $db_output.EIP_Pre_Proc_Interventions 
  SELECT                ca.RecordNumber,
@@ -188,7 +189,7 @@ spark.conf.set("spark.sql.legacy.allowCreatingManagedTableUsingNonemptyLocation"
                        ON ca.RecordNumber = cc.RecordNumber 
                        AND ca.UniqCareContID = cc.UniqCareContID
  WHERE                 (ca.Finding IS NOT NULL OR ca.Observation IS NOT NULL OR ca.Procedure IS NOT NULL)
- 
+
  UNION ALL
  SELECT 	              i.RecordNumber,
                        i.Person_ID,
@@ -213,7 +214,7 @@ spark.conf.set("spark.sql.legacy.allowCreatingManagedTableUsingNonemptyLocation"
  %sql
  --This cell makes sure we are only looking at valid snomed codes and fully specified name we require using the reference data type_id, and making sure valid snomed code
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW EIP_Interventions_DMS AS
- 
+
  SELECT DISTINCT   RecordNumber,
                    Person_ID,
                    UniqServReqID,
@@ -240,7 +241,7 @@ spark.conf.set("spark.sql.legacy.allowCreatingManagedTableUsingNonemptyLocation"
  --Lists all the NICE concordant snomed codes. The contact data needs to be between the referral start date and the rp_enddate, and joined back on with record number. 
  --The EIP referral can include contacts from other referrals within the same provider for the same person for the same month period. Only Contacts with recorded valid SNOMED codes will be brought through
  truncate table $db_output.EIP_Snomed;
- 
+
  INSERT INTO      $db_output.EIP_Snomed
  SELECT              r.Person_ID,
                      r.UniqServReqID,
@@ -270,7 +271,7 @@ spark.conf.set("spark.sql.legacy.allowCreatingManagedTableUsingNonemptyLocation"
 
  %sql
  truncate table $db_output.EIP_Snomed_Agg;
- 
+
  INSERT INTO        $db_output.EIP_Snomed_Agg 
  ---This table aggregates every contact for each uniqservreqid for every month for each provider. 
  ---As only contacts with a valid and recorded SNOMED-CT code are in Procedures_v2 where contact was
@@ -292,7 +293,7 @@ spark.conf.set("spark.sql.legacy.allowCreatingManagedTableUsingNonemptyLocation"
 
  %sql
  TRUNCATE TABLE  $db_output.EIP_Activity_Agg;
- 
+
  INSERT INTO   $db_output.EIP_Activity_Agg SELECT
  	r.Person_ID,
      r.UniqMonthID,
@@ -302,9 +303,9 @@ spark.conf.set("spark.sql.legacy.allowCreatingManagedTableUsingNonemptyLocation"
  	COUNT(CASE WHEN a.Der_ContactOrder IS NOT NULL AND Der_ActivityType = 'DIRECT' THEN a.RecordNumber END) AS Der_InMonthContacts
      
  FROM $db_output.EIP_Referrals r   
- 
+
  INNER JOIN $db_output.EIP_Activity a ON a.RecordNumber = r.RecordNumber AND a.UniqServReqID = r.UniqServReqID
- 
+
  GROUP BY r.Person_ID, r.UniqMonthID, r.RecordNumber, r.UniqServReqID
 
 # COMMAND ----------
@@ -318,11 +319,11 @@ spark.conf.set("spark.sql.legacy.allowCreatingManagedTableUsingNonemptyLocation"
  	r.RecordNumber,
  	r.UniqServReqID,
  	SUM(COALESCE(a.Der_InMonthContacts, 0)) AS Der_CumulativeContacts
- 
+
  FROM $db_output.EIP_Referrals r  
- 
+
  LEFT JOIN $db_output.EIP_Activity_Agg a ON r.Person_ID = a.Person_ID AND r.UniqServReqID = a.UniqServReqID AND a.UniqMonthID <= r.UniqMonthID
- 
+
  GROUP BY r.Person_ID, r.UniqMonthID, r.RecordNumber, r.UniqServReqID
 
 # COMMAND ----------
@@ -331,7 +332,7 @@ spark.conf.set("spark.sql.legacy.allowCreatingManagedTableUsingNonemptyLocation"
  %sql
  --Pulls together final preperation table
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW EIP_master_DMS AS
- 
+
  SELECT          r.UniqMonthID,
                  r.OrgIDProv,
                  r.RecordNumber,
@@ -350,11 +351,11 @@ spark.conf.set("spark.sql.legacy.allowCreatingManagedTableUsingNonemptyLocation"
                  -- get caseload measures
                  CASE WHEN r.ServDischDate IS NULL AND r.ReferRejectionDate IS NULL THEN 1 ELSE 0 END AS Open_Referrals,
  	            CASE WHEN r.ServDischDate IS NULL AND r.ReferRejectionDate IS NULL AND cu.Der_CumulativeContacts >=1 THEN 1 ELSE 0 END AS EIP_Caseload, ---EIP68
- 
+
                  -- get aggregate SNoMED measures
                  CASE WHEN r.ServDischDate IS NULL AND r.ReferRejectionDate IS NULL AND p.AnySNoMED > 0 THEN 1 ELSE 0 END AS RefWithAnySNoMED, ---EIP69a
                  CASE WHEN r.ServDischDate IS NULL AND r.ReferRejectionDate IS NULL AND p.NICESNoMED > 0 THEN 1 ELSE 0 END AS RefWithNICESNoMED ---EIP6b
- 
+
  FROM            $db_output.EIP_Referrals r 
  LEFT JOIN       $db_output.EIP_Snomed_Agg p ON r.RecordNumber = p.RecordNumber AND r.UniqServReqID = p.UniqServReqID
  LEFT JOIN       $db_output.EIP_Activity_Cumulative cu ON r.RecordNumber = cu.RecordNumber AND r.UniqServReqID = cu.UniqServReqID
@@ -378,7 +379,7 @@ spark.conf.set("spark.sql.legacy.allowCreatingManagedTableUsingNonemptyLocation"
 # DBTITLE 1,Insert Caseload Breakdowns - EIP68
  %sql
  -- Single Count - Count of open referrals with atleast one attended contact that were linked to an EIP team, regardless of the primary reason for referral, that were not rejected.
- 
+
  INSERT INTO $db_output.awt_unformatted
  --England breakdown
  SELECT 
@@ -394,9 +395,9 @@ spark.conf.set("spark.sql.legacy.allowCreatingManagedTableUsingNonemptyLocation"
    'NONE' AS SECONDARY_LEVEL,
   'NONE' AS SECONDARY_LEVEL_DESCRIPTION
  FROM      global_temp.EIP_master_DMS
- 
+
  union all
- 
+
  --Provider breakdown
  SELECT 
    '$rp_startdate' AS REPORTING_PERIOD_START,
@@ -412,9 +413,9 @@ spark.conf.set("spark.sql.legacy.allowCreatingManagedTableUsingNonemptyLocation"
   'NONE' AS SECONDARY_LEVEL_DESCRIPTION
  FROM      global_temp.EIP_master_DMS
  GROUP BY  OrgIDProv, PROVIDER_NAME
- 
+
  union all
- 
+
  --CCG breakdown
  SELECT 
    '$rp_startdate' AS REPORTING_PERIOD_START,
@@ -430,9 +431,9 @@ spark.conf.set("spark.sql.legacy.allowCreatingManagedTableUsingNonemptyLocation"
    'NONE' AS SECONDARY_LEVEL_DESCRIPTION
  FROM      global_temp.EIP_master_DMS
  GROUP BY  CCG_CODE, CCG_NAME
- 
+
  union all
- 
+
  --Region breakdown
  SELECT 
    '$rp_startdate' AS REPORTING_PERIOD_START,
@@ -448,9 +449,9 @@ spark.conf.set("spark.sql.legacy.allowCreatingManagedTableUsingNonemptyLocation"
    'NONE' AS SECONDARY_LEVEL_DESCRIPTION
  FROM      global_temp.EIP_master_DMS
  GROUP BY  REGION_CODE, REGION_NAME
- 
+
  union all
- 
+
  --STP breakdown
  SELECT 
    '$rp_startdate' AS REPORTING_PERIOD_START,
@@ -487,9 +488,9 @@ spark.conf.set("spark.sql.legacy.allowCreatingManagedTableUsingNonemptyLocation"
    'NONE' AS SECONDARY_LEVEL,
    'NONE' AS SECONDARY_LEVEL_DESCRIPTION
  FROM      global_temp.EIP_master_DMS
- 
+
  union all
- 
+
  --Provider breakdown
  SELECT 
    '$rp_startdate' AS REPORTING_PERIOD_START,
@@ -503,12 +504,12 @@ spark.conf.set("spark.sql.legacy.allowCreatingManagedTableUsingNonemptyLocation"
  '$db_source' as SOURCE_DB,
    'NONE' AS SECONDARY_LEVEL,
    'NONE' AS SECONDARY_LEVEL_DESCRIPTION
- 
+
  FROM      global_temp.EIP_master_DMS
  GROUP BY  OrgIDProv, PROVIDER_NAME
- 
+
  union all
- 
+
  --CCG breakdown
  SELECT 
    '$rp_startdate' AS REPORTING_PERIOD_START,
@@ -524,9 +525,9 @@ spark.conf.set("spark.sql.legacy.allowCreatingManagedTableUsingNonemptyLocation"
    'NONE' AS SECONDARY_LEVEL_DESCRIPTION
  FROM      global_temp.EIP_master_DMS
  GROUP BY  CCG_CODE, CCG_NAME
- 
+
  union all
- 
+
  --Region breakdown
  SELECT 
    '$rp_startdate' AS REPORTING_PERIOD_START,
@@ -543,9 +544,9 @@ spark.conf.set("spark.sql.legacy.allowCreatingManagedTableUsingNonemptyLocation"
   
  FROM      global_temp.EIP_master_DMS
  GROUP BY  REGION_CODE, REGION_NAME
- 
+
  union all
- 
+
  --STP breakdown
  SELECT 
    '$rp_startdate' AS REPORTING_PERIOD_START,
@@ -584,9 +585,9 @@ spark.conf.set("spark.sql.legacy.allowCreatingManagedTableUsingNonemptyLocation"
    'NONE' AS SECONDARY_LEVEL_DESCRIPTION
   
  FROM      global_temp.EIP_master_DMS
- 
+
  union all
- 
+
  --Provider breakdown
  SELECT 
    '$rp_startdate' AS REPORTING_PERIOD_START,
@@ -600,12 +601,12 @@ spark.conf.set("spark.sql.legacy.allowCreatingManagedTableUsingNonemptyLocation"
   '$db_source' as SOURCE_DB,
    'NONE' AS SECONDARY_LEVEL,
    'NONE' AS SECONDARY_LEVEL_DESCRIPTION 
- 
+
  FROM      global_temp.EIP_master_DMS
  GROUP BY  OrgIDProv, PROVIDER_NAME
- 
+
  union all
- 
+
  --CCG breakdown
  SELECT 
    '$rp_startdate' AS REPORTING_PERIOD_START,
@@ -621,9 +622,9 @@ spark.conf.set("spark.sql.legacy.allowCreatingManagedTableUsingNonemptyLocation"
    'NONE' AS SECONDARY_LEVEL_DESCRIPTION
  FROM      global_temp.EIP_master_DMS
  GROUP BY  CCG_CODE, CCG_NAME
- 
+
  union all
- 
+
  --Region breakdown
  SELECT 
    '$rp_startdate' AS REPORTING_PERIOD_START,
@@ -640,9 +641,9 @@ spark.conf.set("spark.sql.legacy.allowCreatingManagedTableUsingNonemptyLocation"
      
  FROM      global_temp.EIP_master_DMS
  GROUP BY  REGION_CODE, REGION_NAME
- 
+
  union all
- 
+
  --STP breakdown
  SELECT 
    '$rp_startdate' AS REPORTING_PERIOD_START,
@@ -658,5 +659,5 @@ spark.conf.set("spark.sql.legacy.allowCreatingManagedTableUsingNonemptyLocation"
    'NONE' AS SECONDARY_LEVEL_DESCRIPTION
  FROM      global_temp.EIP_master_DMS
  GROUP BY  STP_CODE, STP_NAME;
- 
+
  OPTIMIZE $db_output.awt_unformatted

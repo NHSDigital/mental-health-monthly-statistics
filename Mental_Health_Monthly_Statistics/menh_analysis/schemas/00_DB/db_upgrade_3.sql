@@ -1,6 +1,6 @@
 -- Databricks notebook source
  %md
- 
+
  The following tables are created in this notebook:
  - Main_monthly_unformatted
  - awt_unformatted

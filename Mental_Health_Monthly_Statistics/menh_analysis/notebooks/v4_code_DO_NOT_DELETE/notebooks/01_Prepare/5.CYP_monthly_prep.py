@@ -1,7 +1,7 @@
 # Databricks notebook source
 # DBTITLE 1,CYP02 CCG and National
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW CYP02_prep AS
       SELECT MPI.Person_ID
              ,MPI.IC_Rec_CCG
@@ -17,7 +17,7 @@
 
 # DBTITLE 1,MHS30d Prep
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW MHS30d_Prep AS
  SELECT A.* 
  ,MPI.PatMRecInRP
@@ -35,7 +35,7 @@
 
 # DBTITLE 1,CYP32 CCG AND NATIONAL
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW CYP32_prep AS
    SELECT   REF.UniqServReqID 
             ,REF.AgeServReferRecDate
@@ -50,11 +50,12 @@
  	       --AND 
             CYPServiceRefStartRP_temp = true;
 
+
 # COMMAND ----------
 
 # DBTITLE 1,CYP32 Provider
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW CYP32_prep_prov AS
    SELECT   UniqServReqID 
             ,AgeServReferRecDate
@@ -70,7 +71,7 @@
 
 # DBTITLE 1,MHS32a/b National and CCG
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW MH32_prep AS
    SELECT   REF.UniqServReqID 
             ,REF.SourceOfReferralMH
@@ -124,7 +125,7 @@
 
 # DBTITLE 1,MHS32a/b Provider
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW MH32_prep_prov AS
    SELECT   REF.UniqServReqID
             ,REF.SourceOfReferralMH
@@ -174,7 +175,7 @@
 
 # DBTITLE 1,MHS38/39 National and CCG
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW MHS3839_prep AS      
       SELECT REF.Person_ID 
             ,REF.ReferralRequestReceivedDate
@@ -198,7 +199,7 @@
 
 # DBTITLE 1,MHS38/39 Provider
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW MHS3839_prep_prov AS       
      SELECT  REF.Person_ID
             ,REF.ReferralRequestReceivedDate
@@ -222,7 +223,7 @@
 
 # DBTITLE 1,MHS40/41/42 National and CCG
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW MHS404142_prep AS        
      SELECT MPI.Person_ID
             ,MPI.IC_Rec_CCG 
@@ -245,7 +246,7 @@
 
 # DBTITLE 1,MHS40/41/42 Provider
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW MHS404142_prep_prov AS     
      SELECT MPI.Person_ID
             ,MPI.OrgIDProv
@@ -270,7 +271,7 @@
 
 # DBTITLE 1,MHS56a Prep
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW MHS56a_Prep AS
      SELECT   MPI.Person_ID
              ,MPI.IC_Rec_CCG
@@ -290,7 +291,7 @@
 
 # DBTITLE 1,MHS57a Prep
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW MHS57a_Prep AS
      SELECT   MPI.Person_ID
              ,MPI.IC_Rec_CCG
@@ -307,7 +308,7 @@
 
 # DBTITLE 1,MHS58a Prep
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW MHS58a_Prep AS
      SELECT   B.AttendOrDNACode
              ,B.DNA_Reason
@@ -327,7 +328,7 @@
 
 # DBTITLE 1,MHS61  National Prep
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW MHS61_prep AS
       SELECT CC.UniqServReqID
              ,min(CC.CareContDate) AS FirstCareContDate
@@ -347,7 +348,7 @@
 
 # DBTITLE 1,MHS61a CCG/Provider
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW MHS61a_CCG_Prov AS
                SELECT A.UniqServReqID
                       ,CCG.IC_Rec_CCG
@@ -373,7 +374,7 @@
 
 # DBTITLE 1,MHS61b National Prep
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW MHS61b AS
  SELECT a.uniqcarecontid
         ,a.uniqservreqid
@@ -394,7 +395,7 @@
 
 # DBTITLE 1,MHS61b CCG Prep
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW mhs61b_ccg AS
  SELECT a.uniqcarecontid, ccg.ic_rec_ccg, ccg.name, b.consmediumused
  FROM global_temp.MHS61b as a
@@ -412,7 +413,7 @@
 
 # DBTITLE 1,MHS61b Prov Prep
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW mhs61b_prov as
  SELECT a.uniqcarecontid, b.consmediumused, b.orgidprov
  FROM global_temp.MHS61b as a
@@ -426,7 +427,7 @@
 # DBTITLE 1,MHS68 CCG and National
  %sql
  /*** MHS68 - Referrals with any SNOMED Codes and valid PERS score from MH Assess Scale Current View completed in RP, aged 0-18***/
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW MHS68_prep AS
        SELECT REF.UniqServReqID
               ,MPI.IC_Rec_CCG

@@ -37,7 +37,7 @@
   LEFT OUTER JOIN global_temp.MHS001MPI_PATMRECINRP_FIX AS E
      ON A.Person_ID = E.Person_ID 
           AND A.UniqMonthID = E.UniqMonthID
- 
+
  LEFT OUTER JOIN (SELECT m.Person_ID,
                      CCG.IC_Rec_CCG AS IC_Rec_CCG
                 FROM global_temp.MHS001MPI_PATMRECINRP_FIX AS m
@@ -74,13 +74,13 @@
      case when vc.ValidValue is not null then 1 else 0 end as IsConsMechanismMH,
      step1.UniqMonthID                          -- ADDED TO ALLOW VALIDCODES TO COMPARE WITH SUBMISSION MONTH
  FROM  global_temp.CYP_ED_WT_STEP1 step1 
- 
+
  INNER JOIN $db_source.MHS201CareContact cc
  ON step1.UniqServReqID = cc.UniqServReqID and step1.Person_ID = cc.Person_ID
- 
+
  INNER JOIN $db_source.MHS202CareActivity ca
  ON cc.Person_ID = ca.Person_ID AND ca.UniqCareContID = cc.UniqCareContID AND ca.UniqMonthID = cc.UniqMonthID
- 
+
  INNER JOIN $db_output.validcodes as vc
  --     join updated to evaluate validity at time of data rather than reporting month
    ON vc.tablename = 'mhs201carecontact' 

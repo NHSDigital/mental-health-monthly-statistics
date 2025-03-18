@@ -4,9 +4,9 @@
 # COMMAND ----------
 
  %md
- 
+
  #tables created here:
- 
+
  - ascof_breakdown_values
  - ascof_level_values
  - ascof_metric_values
@@ -30,10 +30,10 @@
  %sql
  -- DROP TABLE IF EXISTS $db_output.ascof_breakdown_values;
  CREATE TABLE IF NOT EXISTS $db_output.ascof_breakdown_values (breakdown string) USING DELTA;
- 
+
  DROP TABLE IF EXISTS $db_output.ascof_level_values;
  CREATE TABLE IF NOT EXISTS $db_output.ascof_level_values (primary_level string, primary_level_desc string, secondary_level string, secondary_level_desc string, third_level string, breakdown string) USING DELTA;
- 
+
  -- DROP TABLE IF EXISTS $db_output.ascof_metric_values;
  CREATE TABLE IF NOT EXISTS $db_output.ascof_metric_values (metric string, metric_name string) USING DELTA;
 
@@ -42,7 +42,7 @@
 # DBTITLE 1,ascof_unformatted
  %sql
  -- DROP TABLE IF EXISTS $db_output.ascof_unformatted;
- 
+
  CREATE TABLE IF NOT EXISTS $db_output.ascof_unformatted 
       (REPORTING_PERIOD_START                                          string,   
        REPORTING_PERIOD_END                                            string,   
@@ -63,9 +63,9 @@
 
 # DBTITLE 1,AMH03e_prep
  %sql
- 
+
  -- DROP TABLE IF EXISTS $db_output.amh03e_prep; 
- 
+
  CREATE TABLE IF NOT EXISTS $db_output.AMH03e_prep 
       (Person_ID                                          string,   
        OrgIDProv                                          string,
@@ -85,9 +85,9 @@
 
 # DBTITLE 1,AMH13e_14e_prep
  %sql
- 
+
  -- DROP TABLE IF EXISTS $db_output.amh13e_14e_prep;
- 
+
  CREATE TABLE IF NOT EXISTS $db_output.AMH13e_14e_prep 
       (Person_ID                                          string, 
        OrgIDProv                                          string,
@@ -110,9 +110,9 @@
 
 # DBTITLE 1,AMH16e_17e_prep
  %sql
- 
+
  -- DROP TABLE IF EXISTS $db_output.amh16e_17e_prep;
- 
+
  CREATE TABLE IF NOT EXISTS $db_output.AMH16e_17e_prep 
       (Person_ID                                          string,   
        OrgIDProv                                          string,

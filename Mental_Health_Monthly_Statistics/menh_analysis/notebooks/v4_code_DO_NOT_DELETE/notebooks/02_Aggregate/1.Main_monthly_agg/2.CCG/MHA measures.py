@@ -2,7 +2,7 @@
 # DBTITLE 1,MHS08 - CCG Level
  %sql
  --MHS08 - PEOPLE SUBJECT TO MENTAL HEALTH ACT AT END OF REPORTING PERIOD
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START,
              '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -37,7 +37,7 @@
 # DBTITLE 1,MHS08a - CCG Level
  %sql
  --MHS08a - PEOPLE SUBJECT TO MENTAL HEALTH ACT AT END OF REPORTING PERIOD, AGED 0-17
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START,
              '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -76,6 +76,7 @@
                         WHERE AgeRepPeriodEnd <= 17  
             ) AS MHS08a   
      GROUP BY IC_REC_CCG, NAME
+
 
 # COMMAND ----------
 
@@ -230,7 +231,7 @@
 # DBTITLE 1,MH09 CCG
  %sql
  --MH09 - PEOPLE SUBJECT TO DETENTION IN HOSPITAL (MENTAL HEALTH SERVICES) AT END OF REPORTING PERIOD - FINAL
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START,
              '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -371,7 +372,7 @@
 
 # DBTITLE 1,MHS10 - CCG Level
  %sql
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START,
              '$rp_enddate' AS REPORTING_PERIOD_END,

@@ -161,10 +161,10 @@
 
 # DBTITLE 1,MH01 CCG
  %sql
- 
+
  --/**MH01 - PEOPLE IN CONTACT WITH MENTAL HEALTH SERVICES AT END OF REPORTING PERIOD**/
  INSERT INTO $db_output.Main_monthly_unformatted
- 
+
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
  	        ,'$status'	AS STATUS
@@ -187,9 +187,9 @@
  %sql
  --/**MH01a - PEOPLE IN CONTACT WITH MENTAL HEALTH SERVICES AT END OF REPORTING PERIOD, AGED 0-18**/
  -- in both monthly and cahms montly outputs
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
- 
+
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
  	        ,'$status'	AS STATUS
@@ -212,9 +212,9 @@
 # DBTITLE 1,MH01b CCG
  %sql
  --/**MH01b - PEOPLE IN CONTACT WITH MENTAL HEALTH SERVICES AT END OF REPORTING PERIOD, AGED 19-64**/
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
- 
+
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
  	        ,'$status'	AS STATUS
@@ -237,9 +237,9 @@
 # DBTITLE 1,MH01c CCG
  %sql
  --/**MH01c - PEOPLE IN CONTACT WITH MENTAL HEALTH SERVICES AT END OF REPORTING PERIOD, AGED 65 AND OVER**/
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
- 
+
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
  	        ,'$status'	AS STATUS
@@ -343,11 +343,11 @@
 
 # DBTITLE 1,MHS13 - CCG
  %sql
- 
+
  --/**MHS13 - PEOPLE IN CONTACT WITH SERVICES AT END OF REPORTING PERIOD WITH ACCOMODATION STATUS RECORDED**/
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
- 
+
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
  			,'$status' AS STATUS
@@ -470,7 +470,7 @@
  	       ,'MHS16'	AS METRIC
  		   ,CAST (COALESCE( cast(COUNT (DISTINCT MPI.Person_ID) as INT), 0) AS STRING)	AS METRIC_VALUE
              ,'$db_source' AS SOURCE_DB
- 
+
        FROM $db_output.MHS001MPI_latest_month_data AS MPI
  INNER JOIN $db_output.MHS101Referral_open_end_rp AS REF
  		   ON MPI.Person_ID = REF.Person_ID 
@@ -506,20 +506,20 @@
             ON MPI.Person_ID = CRS.Person_ID
             AND CRS.UniqMonthID <= '$month_id' 
             
- --commenting this section of code out to exclude the need for table MHS008CrisisPlan in the source data
+ --User note: commenting this section of code out to exclude the need for table MHS008CrisisPlan in the source data
  -- LEFT JOIN $db_source.MHS008CrisisPlan AS CRSold
  -- 		   ON MPI.Person_ID = CRSold.Person_ID 
  --            AND CRSold.UniqMonthID <= '$month_id' 
- 
+
      WHERE 
- --commenting this section of code out to exclude the need for table MHS008CrisisPlan in the source data
+ --User note: commenting this section of code out to exclude the need for table MHS008CrisisPlan in the source data
  --(
                       (CarePlanTypeMH = '12' AND CRS.Person_ID IS NOT NULL 
                       AND ((CRS.CarePlanCreatDate <= '$rp_enddate' 
                       AND CRS.CarePlanCreatDate >= DATE_ADD(ADD_MONTHS('$rp_enddate',-12),1))
                       OR (CRS.CarePlanLastUpdateDate <= '$rp_enddate' 
                       AND CRS.CarePlanLastUpdateDate >= DATE_ADD(ADD_MONTHS( '$rp_enddate', -12),1))))
- --commenting this section of code out to exclude the need for table MHS008CrisisPlan in the source data
+ --User note: commenting this section of code out to exclude the need for table MHS008CrisisPlan in the source data
  -- OR 
  --                      (CRSold.Person_ID IS NOT NULL 
  --                      AND ((CRSold.MHCrisisPlanCreatDate <= '$rp_enddate' 
@@ -742,9 +742,9 @@
 # DBTITLE 1,MHS29 CCG
  %sql
  --/**MHS29 - CONTACTS IN REPORTING PERIOD**/
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
- 
+
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
  			,'$status' AS STATUS
@@ -766,9 +766,9 @@
 # DBTITLE 1,MHS29a CCG
  %sql
  --/**MHS29a - CONTACTS WITH PERINATAL MENTAL HEALTH TEAM IN REPORTING PERIOD**/
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
- 
+
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
  			,'$status' AS STATUS
@@ -791,9 +791,9 @@
 
  %sql
  --/**MHS29a - CONTACTS WITH PERINATAL MENTAL HEALTH TEAM IN REPORTING PERIOD**/
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
- 
+
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
  			,'$status' AS STATUS
@@ -819,9 +819,9 @@
 # DBTITLE 1,MHS29b CCG
  %sql
  --/**MHS29b - CONTACTS WITH CRISIS RESOLUTION SERVICE OR HOME TREATMENT TEAM IN REPORTING PERIOD, CCG**/
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
- 
+
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
  			,'$status' AS STATUS
@@ -848,9 +848,9 @@
 # DBTITLE 1,MHS29c CCG
  %sql
  --/**MHS29c - CONTACTS WITH MEMORY SERVICES TEAM IN REPORTING PERIOD, CCG**/
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
- 
+
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
  			,'$status' AS STATUS
@@ -892,6 +892,7 @@
  GROUP BY    
               IC_REC_CCG
              ,NAME
+
 
 # COMMAND ----------
 
@@ -974,9 +975,9 @@
 # DBTITLE 1,MHS30 CCG
  %sql
  --/**MHS30 - ATTENDED CONTACTS IN REPORTING PERIOD**/
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
- 
+
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
  			,'$status' AS STATUS
@@ -999,9 +1000,9 @@
 # DBTITLE 1,MHS30a CCG
  %sql
  --/**MHS30a - ATTENDED CONTACTS WITH PERINATAL MENTAL HEALTH TEAM IN REPORTING PERIOD, CCG**/
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
- 
+
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
  			,'$status' AS STATUS
@@ -1024,9 +1025,9 @@
 
  %sql
  --/**MHS30a - ATTENDED CONTACTS WITH PERINATAL MENTAL HEALTH TEAM IN REPORTING PERIOD, CCG**/
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
- 
+
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
  			,'$status' AS STATUS
@@ -1052,9 +1053,9 @@
 # DBTITLE 1,MHS30b CCG
  %sql
  --/**MHS30b - ATTENDED CONTACTS WITH CRISIS RESOLUTION SERVICE OR HOME TREATMENT TEAM IN REPORTING PERIOD, CCG**/
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
- 
+
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
  			,'$status' AS STATUS
@@ -1081,9 +1082,9 @@
 # DBTITLE 1,MHS30c CCG
  %sql
  --/**MHS30c - ATTENDED CONTACTS WITH MEMORY SERVICES TEAM TEAM IN REPORTING PERIOD, CCG**/
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
- 
+
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
  			,'$status' AS STATUS
@@ -1287,39 +1288,39 @@
 # COMMAND ----------
 
 # DBTITLE 1,MHS33 CCG
- %sql 
- /**MHS33 - PEOPLE ASSIGNED TO A CARE CLUSTER AT END OF REPORTING PERIOD**/
- 
- INSERT INTO $db_output.Main_monthly_unformatted
-     SELECT '$rp_startdate' AS REPORTING_PERIOD_START
-             ,'$rp_enddate' AS REPORTING_PERIOD_END
- 			,'$status' AS STATUS
- 			,'CCG - GP Practice or Residence' AS BREAKDOWN
- 			,IC_Rec_CCG AS PRIMARY_LEVEL
- 			,NAME AS PRIMARY_LEVEL_DESCRIPTION
- 			,'NONE' AS SECONDARY_LEVEL
- 			,'NONE' AS SECONDARY_LEVEL_DESCRIPTION
- 			,'MHS33' AS METRIC
- 			,CAST (COALESCE (cast(COUNT (DISTINCT MPI.Person_ID) as INT), 0) AS STRING)	AS METRIC_VALUE
-             ,'$db_source' AS SOURCE_DB
-             
- FROM		$db_output.MHS001MPI_latest_month_data AS MPI  -- prep table in generic prep folder
- INNER JOIN  $db_source.MHS801ClusterTool AS CCT
-             ON MPI.Person_ID = CCT.Person_ID 
-             AND CCT.uniqmonthid = '$month_id'
- INNER JOIN  $db_output.MHS803CareCluster_common AS CC  -- prep table in CaP prep folder
- 			ON CCT.UniqClustID = CC.UniqClustID 
- INNER JOIN  $db_output.MHS101Referral_open_end_rp AS REF  -- prep table in generic prep folder
- 			ON MPI.Person_ID = REF.Person_ID
- GROUP BY    IC_Rec_CCG
- 			,NAME
+# %sql 
+# /**MHS33 - PEOPLE ASSIGNED TO A CARE CLUSTER AT END OF REPORTING PERIOD**/
+
+# INSERT INTO $db_output.Main_monthly_unformatted
+#     SELECT '$rp_startdate' AS REPORTING_PERIOD_START
+#             ,'$rp_enddate' AS REPORTING_PERIOD_END
+# 			,'$status' AS STATUS
+# 			,'CCG - GP Practice or Residence' AS BREAKDOWN
+# 			,IC_Rec_CCG AS PRIMARY_LEVEL
+# 			,NAME AS PRIMARY_LEVEL_DESCRIPTION
+# 			,'NONE' AS SECONDARY_LEVEL
+# 			,'NONE' AS SECONDARY_LEVEL_DESCRIPTION
+# 			,'MHS33' AS METRIC
+# 			,CAST (COALESCE (cast(COUNT (DISTINCT MPI.Person_ID) as INT), 0) AS STRING)	AS METRIC_VALUE
+#             ,'$db_source' AS SOURCE_DB
+            
+# FROM		$db_output.MHS001MPI_latest_month_data AS MPI  -- prep table in generic prep folder
+# INNER JOIN  $db_source.MHS801ClusterTool AS CCT
+#             ON MPI.Person_ID = CCT.Person_ID 
+#             AND CCT.uniqmonthid = '$month_id'
+# INNER JOIN  $db_output.MHS803CareCluster_common AS CC  -- prep table in CaP prep folder
+# 			ON CCT.UniqClustID = CC.UniqClustID 
+# INNER JOIN  $db_output.MHS101Referral_open_end_rp AS REF  -- prep table in generic prep folder
+# 			ON MPI.Person_ID = REF.Person_ID
+# GROUP BY    IC_Rec_CCG
+# 			,NAME
 
 # COMMAND ----------
 
 # DBTITLE 1,MHS57 CCG
  %sql
  /**MHS57 - NUMBER OF PEOPLE DISCHARGED IN THE RP**/
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -1407,7 +1408,7 @@
 # DBTITLE 1,MHS58 CCG
  %sql
  /**MHS58 - NUMBER OF MISSED CARE CONTACTS IN THE RP**/
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END

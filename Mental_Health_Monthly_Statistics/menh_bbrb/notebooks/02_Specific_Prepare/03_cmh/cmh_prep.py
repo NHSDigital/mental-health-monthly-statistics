@@ -35,7 +35,8 @@
      ,i.UniqHospProvSpellID --updated for v5
      ,i.Person_ID
      ,CASE WHEN r.NHSDEthnicity NOT IN ('A','99','-1') THEN 1 ELSE 0 END as NotWhiteBritish 
-     ,CASE WHEN r.NHSDEthnicity = 'A' THEN 1 ELSE 0 END as WhiteBritish     
+     ,CASE WHEN r.NHSDEthnicity = 'A' THEN 1 ELSE 0 END as WhiteBritish
+     ,coalesce(eth.UpperEthnicity, "UNKNOWN") as UpperEthnicity
      ,i.OrgIDProv
      ,od.NAME as Provider_Name
      ,COALESCE(ccg21.CCG21CDH, CASE WHEN r.IC_Rec_CCG in ('X98', '') THEN 'UNKNOWN' ELSE r.IC_Rec_CCG END, 'UNKNOWN') as CCG_Code
@@ -66,7 +67,8 @@
  LEFT JOIN $db_output.NHSE_Pre_Proc_Referral r ON i.RecordNumber = r.RecordNumber 
                                                AND i.Person_ID = r.Person_ID 
                                                AND i.UniqServReqID = r.UniqServReqID 
-                                               AND (r.LADistrictAuth LIKE 'E%' OR r.LADistrictAuth IS NULL OR r.LADistrictAuth = '')     
+                                               AND (r.LADistrictAuth LIKE 'E%' OR r.LADistrictAuth IS NULL OR r.LADistrictAuth = '')  
+ LEFT JOIN $db_output.ethnicity_desc eth on r.NHSDEthnicity = eth.LowerEthnicityCode and '$end_month_id' >= eth.FirstMonth and (eth.LastMonth is null or '$end_month_id' <= eth.LastMonth)
  LEFT JOIN $db_output.ccg_mapping_2021 ccg21 ON r.IC_Rec_CCG = ccg21.CCG_UNMAPPED  --- regions/stps taken from CCG rather than provider 
  LEFT JOIN $db_output.bbrb_org_daily_latest od ON i.OrgIDProv = od.ORG_CODE
      
@@ -134,7 +136,8 @@
          WHEN a.WhiteBritish = 1 THEN 'White British' 
          WHEN a.NotWhiteBritish = 1 THEN 'Non-white British' 
          ELSE 'Missing/invalid' 
-     END as WNW_Ethnicity
+     END as WNW_Ethnicity,
+     UpperEthnicity
      ,COUNT(DISTINCT a.UniqHospProvSpellID) AS Admissions --updated for v5
      ,SUM(CASE WHEN p.UniqHospProvSpellID IS NOT NULL THEN 1 ELSE 0 END) as Contact --updated for v5
      ,SUM(CASE WHEN p.UniqHospProvSpellID IS NULL THEN 1 ELSE 0 END) as NoContact --updated for v5
@@ -159,7 +162,8 @@
          WHEN a.WhiteBritish = 1 THEN 'White British' 
          WHEN a.NotWhiteBritish = 1 THEN 'Non-white British' 
          ELSE 'Missing/invalid' 
-     END
+     END,
+     UpperEthnicity
 
 # COMMAND ----------
 

@@ -16,7 +16,7 @@ assert db_source
 
 # DBTITLE 1,Clean unformatted output table (in case there already is left-over data for this month/status in the table)
  %sql
- 
+
  DELETE FROM $db_output.72hours_unrounded_stg
  WHERE UniqMonthID = '$month_id'
  AND STATUS = '$status'
@@ -27,7 +27,7 @@ assert db_source
 
 # DBTITLE 1,Optimize output table for performance
  %python
- 
+
  import os
- 
+
  spark.sql('OPTIMIZE {db_output}.{table}'.format(db_output=db_output, table='72hours_unrounded_stg'))

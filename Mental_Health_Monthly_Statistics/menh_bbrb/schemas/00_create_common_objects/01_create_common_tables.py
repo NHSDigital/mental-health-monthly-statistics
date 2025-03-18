@@ -288,7 +288,7 @@
 # COMMAND ----------
 
  %sql
- DROP TABLE IF EXISTS $db_output.mhs001mpi_latest_month_data; 
+ -- DROP TABLE IF EXISTS $db_output.mhs001mpi_latest_month_data; 
  CREATE TABLE IF NOT EXISTS $db_output.mhs001mpi_latest_month_data 
  (
  AgeDeath bigint,
@@ -366,18 +366,28 @@
  -- DROP TABLE IF EXISTS $db_output.eng_pop;
  CREATE TABLE IF NOT EXISTS $db_output.eng_pop
  (
- AGE_GROUP STRING,
+ Age_Group STRING,
  POPULATION_COUNT INT
  ) USING DELTA
 
 # COMMAND ----------
 
  %sql
- -- DROP TABLE IF EXISTS $db_output.age_band_pop;
+ DROP TABLE IF EXISTS $db_output.age_band_pop;
  CREATE TABLE IF NOT EXISTS $db_output.age_band_pop
  (
+ Age_Group STRING,
+ CCG_Code STRING,
+ CCG_Name STRING,
+ STP_Code STRING,
+ STP_Name STRING,
+ Region_Code STRING,
+ Region_Name STRING,
  Age_Group_IPS STRING,
  Age_Group_OAPs STRING,
+ Age_Group_MHA STRING,
+ Age_Group_CYP STRING,
+ Age_Group_Higher_Level STRING,
  POPULATION_COUNT INT
  ) USING DELTA
 
@@ -387,18 +397,35 @@
  -- DROP TABLE IF EXISTS $db_output.gender_pop;
  CREATE TABLE IF NOT EXISTS $db_output.gender_pop
  (
+ Age_Group STRING,
+ CCG_Code STRING,
+ CCG_Name STRING,
+ STP_Code STRING,
+ STP_Name STRING,
+ Region_Code STRING,
+ Region_Name STRING,
  Der_Gender STRING,
+ Der_Gender_Desc STRING,
  POPULATION_COUNT INT
  ) USING DELTA
 
 # COMMAND ----------
 
  %sql
- -- DROP TABLE IF EXISTS $db_output.higher_eth_pop;
- CREATE TABLE IF NOT EXISTS $db_output.higher_eth_pop
+ -- DROP TABLE IF EXISTS $db_output.eth_pop;
+ CREATE TABLE IF NOT EXISTS $db_output.eth_pop
  (
+ Age_Group STRING,
+ CCG_Code STRING,
+ CCG_Name STRING,
+ STP_Code STRING,
+ STP_Name STRING,
+ Region_Code STRING,
+ Region_Name STRING,
+ LowerEthnicityCode STRING,
+ LowerEthnicityName STRING,
  UpperEthnicity STRING,
- POPULATION_COUNT FLOAT
+ POPULATION_COUNT INT
  ) USING DELTA
 
 # COMMAND ----------
@@ -406,23 +433,32 @@
  %sql
  -- DROP TABLE IF EXISTS $db_output.imd_pop;
  CREATE TABLE IF NOT EXISTS $db_output.imd_pop
- (      
- IMD_Decile                STRING,
- POPULATION_COUNT          INT
+ (
+ Age_Group STRING,
+ CCG_Code STRING,
+ CCG_Name STRING,
+ STP_Code STRING,
+ STP_Name STRING,
+ Region_Code STRING,
+ Region_Name STRING,
+ IMD_Decile STRING,
+ IMD_Quintile STRING,
+ POPULATION_COUNT INT
  ) USING DELTA
 
 # COMMAND ----------
 
  %sql
- -- DROP TABLE IF EXISTS $db_output.ccg_pop;
- CREATE TABLE IF NOT EXISTS $db_output.ccg_pop
+ -- DROP TABLE IF EXISTS $db_output.commissioner_pop;
+ CREATE TABLE IF NOT EXISTS $db_output.commissioner_pop
  (
- AGE_GROUP STRING,
- CCG_successor_CODE STRING,
- CCG_successor_NAME STRING, 
- CCG_predecessor_NAME STRING,
- CCG_predecessor_CODE STRING,
- ONS_POPULATION_V2_year_of_count INT,
+ Age_Group STRING,
+ CCG_Code STRING,
+ CCG_Name STRING,
+ STP_Code STRING,
+ STP_Name STRING,
+ Region_Code STRING,
+ Region_Name STRING,
  POPULATION_COUNT INT
  ) USING DELTA
 
@@ -457,7 +493,7 @@
 # COMMAND ----------
 
  %sql
- DROP TABLE IF EXISTS $db_output.nhse_pre_proc_header;
+ -- DROP TABLE IF EXISTS $db_output.nhse_pre_proc_header;
  CREATE TABLE IF NOT EXISTS $db_output.nhse_pre_proc_header
  (
  uniqmonthid INT,
@@ -469,7 +505,7 @@
 # COMMAND ----------
 
  %sql
- DROP TABLE IF EXISTS $db_output.nhse_pre_proc_referral;
+ -- DROP TABLE IF EXISTS $db_output.nhse_pre_proc_referral;
  CREATE TABLE IF NOT EXISTS $db_output.nhse_pre_proc_referral 
  (
  Der_FY STRING,
@@ -530,7 +566,7 @@
 # COMMAND ----------
 
  %sql
- DROP TABLE IF EXISTS $db_output.nhse_pre_proc_distinct_indirect_activity;
+ -- DROP TABLE IF EXISTS $db_output.nhse_pre_proc_distinct_indirect_activity;
  CREATE TABLE IF NOT EXISTS $db_output.nhse_pre_proc_distinct_indirect_activity
  (
  UniqSubmissionID string,
@@ -552,7 +588,7 @@
 # COMMAND ----------
 
  %sql
- DROP TABLE IF EXISTS $db_output.nhse_pre_proc_activity;
+ -- DROP TABLE IF EXISTS $db_output.nhse_pre_proc_activity;
  CREATE TABLE IF NOT EXISTS $db_output.nhse_pre_proc_activity 
  (
  Der_FY string,
@@ -575,7 +611,7 @@
 # COMMAND ----------
 
  %sql
- DROP TABLE IF EXISTS $db_output.der_nhse_pre_proc_activity;
+ -- DROP TABLE IF EXISTS $db_output.der_nhse_pre_proc_activity;
  CREATE TABLE IF NOT EXISTS $db_output.der_nhse_pre_proc_activity 
  (
  Der_FY string,
@@ -600,7 +636,7 @@
 # COMMAND ----------
 
  %sql
- DROP TABLE IF EXISTS $db_output.nhse_pre_proc_inpatients;
+ -- DROP TABLE IF EXISTS $db_output.nhse_pre_proc_inpatients;
  CREATE TABLE IF NOT EXISTS $db_output.nhse_pre_proc_inpatients 
  (
  Der_FY STRING,
@@ -654,7 +690,7 @@
 # COMMAND ----------
 
  %sql
- DROP TABLE IF EXISTS $db_output.der_nhse_pre_proc_inpatients;
+ -- DROP TABLE IF EXISTS $db_output.der_nhse_pre_proc_inpatients;
  CREATE TABLE IF NOT EXISTS $db_output.der_nhse_pre_proc_inpatients 
  (
  Der_FY STRING,
@@ -711,7 +747,7 @@
 # COMMAND ----------
 
  %sql
- DROP TABLE IF EXISTS $db_output.prep_nhse_pre_proc_assessments;
+ -- DROP TABLE IF EXISTS $db_output.prep_nhse_pre_proc_assessments;
  CREATE TABLE IF NOT EXISTS $db_output.prep_nhse_pre_proc_assessments
  (
  Der_AssTable string,
@@ -736,7 +772,7 @@
 # COMMAND ----------
 
  %sql
- DROP TABLE IF EXISTS $db_output.nhse_pre_proc_assessments;
+ -- DROP TABLE IF EXISTS $db_output.nhse_pre_proc_assessments;
  CREATE TABLE IF NOT EXISTS $db_output.nhse_pre_proc_assessments
  (
  ReportingPeriodStartDate date,
@@ -772,7 +808,7 @@
 # COMMAND ----------
 
  %sql
- DROP TABLE IF EXISTS $db_output.nhse_pre_proc_assessments_unique;
+ -- DROP TABLE IF EXISTS $db_output.nhse_pre_proc_assessments_unique;
  CREATE TABLE IF NOT EXISTS $db_output.nhse_pre_proc_assessments_unique
  (
  ReportingPeriodStartDate date,
@@ -805,7 +841,7 @@
 # COMMAND ----------
 
  %sql
- DROP TABLE IF EXISTS $db_output.nhse_pre_proc_assessments_unique_valid;
+ -- DROP TABLE IF EXISTS $db_output.nhse_pre_proc_assessments_unique_valid;
  CREATE TABLE IF NOT EXISTS $db_output.nhse_pre_proc_assessments_unique_valid
  (
  ReportingPeriodStartDate date,
@@ -842,7 +878,7 @@
 # COMMAND ----------
 
  %sql
- DROP TABLE IF EXISTS $db_output.nhse_pre_proc_interventions;
+ -- DROP TABLE IF EXISTS $db_output.nhse_pre_proc_interventions;
  CREATE TABLE IF NOT EXISTS $db_output.nhse_pre_proc_interventions
  (
  RecordNumber string,
@@ -868,7 +904,7 @@
 # COMMAND ----------
 
  %sql
- DROP TABLE IF EXISTS $db_output.eng_desc;
+ -- DROP TABLE IF EXISTS $db_output.eng_desc;
  CREATE TABLE IF NOT EXISTS $db_output.eng_desc
  (
  England STRING,
@@ -886,7 +922,7 @@
 # COMMAND ----------
 
  %sql
- DROP TABLE IF EXISTS $db_output.gender_desc;
+ -- DROP TABLE IF EXISTS $db_output.gender_desc;
  CREATE TABLE IF NOT EXISTS $db_output.gender_desc
  (
  Der_Gender STRING,
@@ -917,6 +953,8 @@
  Age_Group_Higher_Level STRING,
  Age_Group_OAPs STRING,
  Age_Group_IPS STRING,
+ Age_Group_MHA STRING,
+ Age_Group_CYP STRING,
  FirstMonth INT,
  LastMonth INT
  ) USING DELTA
@@ -930,7 +968,12 @@ AgeCat = {
   "Age_Group_Higher_Level": ["Under 18", "18 and over"],          
   "Age_Group_OAPs": ["0 to 17", "18 to 24", "25 to 29", "30 to 34", "35 to 39", "40 to 44", "45 to 49", "50 to 54", "55 to 59", "60 to 64", "65 or over"],
   "Age_Group_IPS": ["0 to 5", "6 to 10", "11 to 15", "16", "17", "18", "19", "20 to 24", "25 to 29", "30 to 34", "35 to 39", "40 to 44", "45 to 49", "50 to 54", "55 to 59", "60 to 64", "65 to 69" , "70 to 74",
-                    "75 to 79", "80 to 84", "85 to 89", "90 and over"]
+                    "75 to 79", "80 to 84", "85 to 89", "90 and over"],
+  ##MHA_Measures
+  "Age_Group_MHA": ["Under 18", "18 to 19", "20 to 24", "25 to 29", "30 to 34", "35 to 39", "40 to 44", "45 to 49", "50 to 54", "55 to 59", "60 to 64", "65 to 69" , "70 to 74",
+                    "75 to 79", "80 to 84", "85 to 89", "90 and over"],
+   #CYP_Outcome_Measures
+  "Age_Group_CYP": ["0 to 5", "6 to 10", "11 to 14", "15", "16", "17"]
 }
  
 AgeCat1 = {key: {x1: x for x in AgeCat[key] for x1 in mapage(x)} for key in AgeCat}
@@ -939,7 +982,7 @@ AgeData = [[i] + [AgeCat1[key][i] if i in AgeCat1[key] else "NA" for key in AgeC
 lh = ["Age int"] + [f"{x} string" for x in AgeCat]
 schema1 = ', '.join(lh)
 df1 = spark.createDataFrame(AgeData, schema = schema1)
-unknown_row = spark.createDataFrame([("UNKNOWN", "UNKNOWN", "UNKNOWN", "UNKNOWN")], df1.columns)
+unknown_row = spark.createDataFrame([("UNKNOWN", "UNKNOWN", "UNKNOWN", "UNKNOWN", "UNKNOWN", "UNKNOWN")], df1.columns)
 df1 = df1.union(unknown_row)
 df1 = df1.select(
   "*",
@@ -951,9 +994,10 @@ df1.write.insertInto(f"{db_output}.age_band_desc", overwrite=True)
 # COMMAND ----------
 
  %sql
- DROP TABLE IF EXISTS $db_output.ethnicity_desc;
+ -- DROP TABLE IF EXISTS $db_output.ethnicity_desc;
  CREATE TABLE IF NOT EXISTS $db_output.ethnicity_desc
  (
+ Census21EthnicityCode INT,
  LowerEthnicityCode STRING,
  LowerEthnicityName STRING,
  UpperEthnicity STRING,
@@ -967,30 +1011,33 @@ df1.write.insertInto(f"{db_output}.age_band_desc", overwrite=True)
  %sql
  TRUNCATE TABLE $db_output.ethnicity_desc;
  INSERT INTO $db_output.ethnicity_desc VALUES
- ("A", "British", "White or White British", "White British", 1390, null),
- ("B", "Irish", "White or White British", "Non-white British", 1390, null),
- ("C", "Any Other White background", "White or White British", "Non-white British", 1390, null),
- ("D", "White and Black Caribbean", "Mixed", "Non-white British", 1390, null),
- ("E", "White and Black African", "Mixed", "Non-white British", 1390, null),
- ("F", "White and Asian", "Mixed", "Non-white British", 1390, null),
- ("G", "Any Other mixed background", "Mixed", "Non-white British", 1390, null),
- ("H", "Indian", "Asian or Asian British", "Non-white British", 1390, null),
- ("J", "Pakistani", "Asian or Asian British", "Non-white British", 1390, null),
- ("K", "Bangladeshi", "Asian or Asian British", "Non-white British", 1390, null),
- ("L", "Any Other Asian background", "Asian or Asian British", "Non-white British", 1390, null),
- ("M", "Caribbean", "Black or Black British", "Non-white British", 1390, null),
- ("N", "African", "Black or Black British", "Non-white British", 1390, null),
- ("P", "Any Other Black background", "Black or Black British", "Non-white British", 1390, null),
- ("R", "Chinese", "Other Ethnic Groups", "Non-white British", 1390, null),
- ("S", "Any Other Ethnic Group", "Other Ethnic Groups", "Non-white British", 1390, null),
- ("Z", "Not Stated", "Not Stated", "Missing/invalid", 1390, null),
- ("99", "Not Known", "Not Known", "Missing/invalid", 1390, null),
- ("UNKNOWN", "UNKNOWN", "UNKNOWN", "Missing/invalid", 1390, null)
+ (13, "A", "British", "White or White British", "White British", 1390, null),
+ (14, "B", "Irish", "White or White British", "Non-white British", 1390, null),
+ (17, "C", "Any Other White background", "White or White British", "Non-white British", 1390, null),
+ (11, "D", "White and Black Caribbean", "Mixed", "Non-white British", 1390, null),
+ (10, "E", "White and Black African", "Mixed", "Non-white British", 1390, null),
+ (9, "F", "White and Asian", "Mixed", "Non-white British", 1390, null),
+ (12, "G", "Any Other mixed background", "Mixed", "Non-white British", 1390, null),
+ (3, "H", "Indian", "Asian or Asian British", "Non-white British", 1390, null),
+ (4, "J", "Pakistani", "Asian or Asian British", "Non-white British", 1390, null),
+ (1, "K", "Bangladeshi", "Asian or Asian British", "Non-white British", 1390, null),
+ (5, "L", "Any Other Asian background", "Asian or Asian British", "Non-white British", 1390, null),
+ (7, "M", "Caribbean", "Black or Black British", "Non-white British", 1390, null),
+ (6, "N", "African", "Black or Black British", "Non-white British", 1390, null),
+ (8, "P", "Any Other Black background", "Black or Black British", "Non-white British", 1390, null),
+ (2, "R", "Chinese", "Other Ethnic Groups", "Non-white British", 1390, null),
+ (19, "S", "Any Other Ethnic Group", "Other Ethnic Groups", "Non-white British", 1390, null),
+ (15, "T", "Gypsy or Irish Traveller", "White or White British", "Non-white British", 1390, 1390),
+ (16, "U", "Roma", "White or White British", "Non-white British", 1390, 1390),
+ (18, "V", "Arab", "Asian or Asian British", "Non-white British", 1390, 1390),
+ (-8, "Z", "Not Stated", "Not Stated", "Missing/invalid", 1390, null),
+ (-8, "99", "Not Known", "Not Known", "Missing/invalid", 1390, null),
+ (-8, "UNKNOWN", "UNKNOWN", "UNKNOWN", "Missing/invalid", 1390, null)
 
 # COMMAND ----------
 
  %sql
- DROP TABLE IF EXISTS $db_output.imd_desc;
+ -- DROP TABLE IF EXISTS $db_output.imd_desc;
  CREATE TABLE IF NOT EXISTS $db_output.imd_desc
  (
  IMD_Number STRING,
@@ -1020,7 +1067,7 @@ df1.write.insertInto(f"{db_output}.age_band_desc", overwrite=True)
 # COMMAND ----------
 
  %sql
- DROP TABLE IF EXISTS $db_output.hosp_bed_desc;
+ -- DROP TABLE IF EXISTS $db_output.hosp_bed_desc;
  CREATE TABLE IF NOT EXISTS $db_output.hosp_bed_desc
  (
  MHAdmittedPatientClass STRING,
@@ -1095,7 +1142,7 @@ df1.write.insertInto(f"{db_output}.age_band_desc", overwrite=True)
 # COMMAND ----------
 
  %sql
- DROP TABLE IF EXISTS $db_output.ref_reason_desc;
+ -- DROP TABLE IF EXISTS $db_output.ref_reason_desc;
  CREATE TABLE IF NOT EXISTS $db_output.ref_reason_desc
  (
  PrimReasonReferralMH STRING,
@@ -1138,7 +1185,143 @@ df1.write.insertInto(f"{db_output}.age_band_desc", overwrite=True)
  ("28", "Gambling disorder", 1459, null),
  ("29", "Community Perinatal Mental Health Partner Assessment", 1459, null),
  ("30", "Behaviours that challenge due to a Learning Disability", 1459, null),
+ ("31", "Employment Support", 1489, null),
  ("UNKNOWN", "UNKNOWN", 1459, null)
+
+# COMMAND ----------
+
+ %sql
+ -- DROP TABLE IF EXISTS $db_output.serv_team_type_ref_to_desc;
+ CREATE TABLE IF NOT EXISTS $db_output.serv_team_type_ref_to_desc
+ (
+ ServTeamTypeRefToMH STRING,
+ ServTeamTypeRefToMHDesc STRING,
+ FirstMonth INT,
+ LastMonth INT
+ ) USING DELTA
+
+# COMMAND ----------
+
+ %sql
+ TRUNCATE TABLE $db_output.serv_team_type_ref_to_desc;
+ INSERT INTO $db_output.serv_team_type_ref_to_desc VALUES
+ ("A01", "Day Care Service", 1429, null),
+ ("A02", "Crisis Resolution Team/Home Treatment Service", 1429, null),
+ ("A03", "Crisis Resolution Team", 1429, 1458),
+ ("A04", "Home Treatment Service", 1429, 1458),
+ ("A05", "Primary Care Mental Health Service", 1429, null),
+ ("A06", "Community Mental Health Team - Functional", 1429, null),
+ ("A07", "Community Mental Health Team - Organic", 1429, null),
+ ("A08", "Assertive Outreach Team", 1429, null),
+ ("A09", "Community Rehabilitation Service", 1429, null),
+ ("A10", "General Psychiatry Service", 1429, null),
+ ("A11", "Psychiatric Liaison Service", 1429, null),
+ ("A12", "Psychotherapy Service", 1429, null),
+ ("A13", "Psychological Therapy Service (non IAPT)", 1429, null),
+ ("A14", "Early Intervention Team for Psychosis", 1429, null),
+ ("A15", "Young Onset Dementia Team", 1429, null),
+ ("A16", "Personality Disorder Service", 1429, null),
+ ("A17", "Memory Services/Clinic/Drop in service", 1429, null),
+ ("A18", "Single Point of Access Service", 1429, null),
+ ("A19", "24/7 Crisis Response Line", 1429, null),
+ ("A20", "Health Based Place Of Safety Service", 1429, null),
+ ("A21", "Crisis Café/Safe Haven/Sanctuary Service", 1429, null),
+ ("A22", "Walk-in Crisis Assessment Unit Service", 1429, null),
+ ("A23", "Psychiatric Decision Unit Service", 1429, null),
+ ("A24", "Acute Day Service", 1429, null),
+ ("A25", "Crisis House Service", 1429, null),
+ ("B01", "Forensic Mental Health Service", 1429, null),
+ ("B02", "Forensic Learning Disability Service", 1429, null),
+ ("C01", "Autism Service", 1429, null),
+ ("C02", "Specialist Perinatal Mental Health Community Service", 1429, null),
+ ("C04", "Neurodevelopment Team", 1429, null),
+ ("C05", "Paediatric Liaison Service", 1429, null),
+ ("C06", "Looked After Children Service", 1429, null),
+ ("C07", "Youth Offending Service", 1429, null),
+ ("C08", "Acquired Brain Injury Service", 1429, null),
+ ("C10", "Community Eating Disorder Service", 1429, null),
+ ("D01", "Substance Misuse Team", 1429, null),
+ ("D02", "Criminal Justice Liaison and Diversion Service", 1429, null),
+ ("D03", "Prison Psychiatric Inreach Service", 1429, null),
+ ("D04", "Asylum Service", 1429, null),
+ ("D05", "Individual Placement and Support Service", 1429, null),
+ ("D06", "Mental Health In Education Service", 1429, null),
+ ("D07", "Problem Gambling Service", 1429, null),
+ ("D08", "Rough Sleeping Service", 1429, null),
+ ("E01", "Community Team for Learning Disabilities", 1429, null),
+ ("E02", "Epilepsy/Neurological Service", 1429, null),
+ ("E03", "Specialist Parenting Service", 1429, null),
+ ("E04", "Enhanced/Intensive Support Service", 1429, null),
+ ("F01", "Education-based Mental Health Support Team", 1459, null),
+ ("F02", "Maternal Mental Health Service", 1459, null),
+ ("F03", "Mental Health Services for Deaf people", 1459, null),
+ ("F04", "Veterans Complex Treatment Service", 1459, 1488),
+ ("F05", "Enhanced care in care homes teams", 1459, null),
+ ("F06", "Mental Health and Wellbeing Hubs", 1459, null),
+ ("Z01", "Other Mental Health Service - in scope of National Tariff Payment System", 1459, null),
+ ("Z02", "Other Mental Health Service - out of scope of National Tariff Payment System", 1459, null),
+ ("UNKNOWN", "UNKNOWN", 1459, null)
+
+# COMMAND ----------
+
+ %md
+ ### Tables for MHA Measures: Autism and LD Status
+
+# COMMAND ----------
+
+ %sql
+ DROP TABLE IF EXISTS $db_output.autism_status_desc;
+ CREATE TABLE IF NOT EXISTS $db_output.autism_status_desc
+ (
+ AutismStatus STRING,
+ AutismStatus_desc STRING,
+ FirstMonth INT,
+ LastMonth INT
+ ) USING DELTA
+
+# COMMAND ----------
+
+ %sql
+ TRUNCATE TABLE $db_output.autism_status_desc;
+ INSERT INTO $db_output.autism_status_desc VALUES
+ ("1", "Confirmed patient diagnosis of autism", 1489, null),
+ ("2", "Suspected patient diagnosis of autism and the patient is on a diagnostic patient pathway for a patient diagnosis of autism", 1489, null),
+ ("3", "Suspected patient diagnosis of autism but the patient is not on a diagnostic patient pathway for a patient diagnosis of autism", 1489, null),
+ ("4", "Suspected patient diagnosis of autism but it is not known whether the patient is on a diagnostic patient pathway for a patient diagnosis of autism", 1489, null),
+ ("5", "No patient diagnosis of autism", 1489, null),
+ ("U", "Patient asked but autism status not known", 1489, null),
+ ("X", "Not Known (Not Recorded)", 1489, null),
+ ("Z", "Not Stated (PATIENT asked but declined to provide a response)", 1489, null),
+ ("UNKNOWN", "UNKNOWN", 1489, null)
+
+# COMMAND ----------
+
+ %sql
+ DROP TABLE IF EXISTS $db_output.LD_status_desc;
+ CREATE TABLE IF NOT EXISTS $db_output.LD_status_desc
+ (
+ LDStatus STRING,
+ LDStatus_desc STRING,
+ FirstMonth INT,
+ LastMonth INT
+ ) USING DELTA
+
+# COMMAND ----------
+
+ %sql
+
+ TRUNCATE TABLE $db_output.LD_status_desc;
+ INSERT INTO $db_output.LD_status_desc VALUES
+
+ ("1", "Confirmed patient diagnosis of a learning disability", 1489, null),
+ ("2", "Suspected patient diagnosis of a learning disability and the patient is on a diagnostic patient pathway for a patient diagnosis of a learning disability", 1489, null),
+ ("3", "Suspected patient diagnosis of a learning disability but the patient is not on a diagnostic patient pathway for a patient diagnosis of a learning disability", 1489, null),
+ ("4", "Suspected patient diagnosis of a learning disability but it is not known whether the patient is on a diagnostic patient pathway for a patient diagnosis of a learning disability", 1489, null),
+ ("5", "No patient diagnosis of a learning disability", 1489, null),
+ ("U", "Patient asked but learning disability status not known", 1489, null),
+ ("X", "Not Known (Not Recorded)", 1489, null),
+ ("Z", "Not Stated (PATIENT asked but declined to provide a response)", 1489, null),
+ ("UNKNOWN", "UNKNOWN", 1489, null)
 
 # COMMAND ----------
 
@@ -1148,7 +1331,7 @@ df1.write.insertInto(f"{db_output}.age_band_desc", overwrite=True)
 # COMMAND ----------
 
  %sql
- DROP TABLE IF EXISTS $db_output.ServiceTeamType;
+ -- DROP TABLE IF EXISTS $db_output.ServiceTeamType;
  CREATE TABLE IF NOT EXISTS $db_output.ServiceTeamType
  (
  UniqMonthID BIGINT,

@@ -1,10 +1,10 @@
 -- Databricks notebook source
  %sql
- 
+
   CREATE WIDGET TEXT month_id DEFAULT "1448"; 
   CREATE WIDGET TEXT rp_startdate DEFAULT "2020-01-01";
   CREATE WIDGET TEXT rp_enddate DEFAULT "2020-12-31";
-  CREATE WIDGET TEXT db_source DEFAULT "testdata_menh_publications_mh_pre_pseudo_d1";
+  CREATE WIDGET TEXT db_source DEFAULT "testdata_menh_publications_mhsds_db";
   CREATE WIDGET TEXT db_output DEFAULT "menh_publications";
   CREATE WIDGET TEXT status DEFAULT "Performance";
   CREATE WIDGET TEXT reference_data DEFAULT "reference_data";

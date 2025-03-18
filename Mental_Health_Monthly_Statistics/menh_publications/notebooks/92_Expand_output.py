@@ -1,8 +1,8 @@
 # Databricks notebook source
  %md
- 
+
  # Expand output for each product to cover all possible metrics
- 
+
  By RIGHT JOINing the unformatted output to the list of possible metrics, and using COALESCE we can 
  fill in any metrics which didn't emerge from the submitted data.
 
@@ -35,7 +35,7 @@ params = {
 
 # DBTITLE 1,1. Expand Main monthly - this may not be doing anything any more...
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMP VIEW Main_monthly_expanded AS
  SELECT * FROM (
  SELECT  
@@ -129,7 +129,7 @@ params = {
  AND m.MONTH_ID = '$month_id'
  AND m.STATUS = '$status'
  AND m.SOURCE_DB = '$db_source'
- 
+
  UNION ALL
  SELECT  
  '$month_id' AS MONTH_ID,
@@ -159,7 +159,7 @@ params = {
 
 # DBTITLE 1,CYP_ED_WaitingTimes
  %python
- 
+
  if month_id <= '9999':
    spark.sql(f""" CREATE OR REPLACE GLOBAL TEMP VIEW cyp_ed_wt_expanded AS
                  select 
@@ -216,9 +216,9 @@ params = {
                            AND c.REPORTING_PERIOD_END = '{rp_enddate}'
                            AND c.STATUS = '{status}' 
                            AND c.SOURCE_DB = '{db_source}'
- 
+
                  UNION ALL
- 
+
                  select 
                    COALESCE(c.REPORTING_PERIOD_START, '{rp_startdate_12m} as REPORTING_PERIOD_START, 
                    COALESCE(c.REPORTING_PERIOD_END, '{rp_enddate}') as REPORTING_PERIOD_END,
@@ -254,31 +254,33 @@ params = {
 # COMMAND ----------
 
 # DBTITLE 1,MHA_Monthly
- %sql
- CREATE OR REPLACE GLOBAL TEMP VIEW mha_monthly_expanded AS
- select 
-   COALESCE(c.REPORTING_PERIOD_START, '$rp_startdate') as REPORTING_PERIOD_START, 
-   COALESCE(c.REPORTING_PERIOD_END, '$rp_enddate') as REPORTING_PERIOD_END,
-   COALESCE(c.STATUS,'$status') as STATUS,
-   COALESCE(c.BREAKDOWN,d.BREAKDOWN,'UNKNOWN') as BREAKDOWN,
-   COALESCE(c.PRIMARY_LEVEL,d.PRIMARY_LEVEL,'UNKNOWN') as PRIMARY_LEVEL,
-   d.PRIMARY_LEVEL_DESC as PRIMARY_LEVEL_DESCRIPTION,
-   COALESCE(c.SECONDARY_LEVEL,d.SECONDARY_LEVEL,'UNKNOWN') as SECONDARY_LEVEL,
-   d.SECONDARY_LEVEL_DESC as SECONDARY_LEVEL_DESCRIPTION,
-   COALESCE(c.METRIC,d.METRIC) as METRIC,
-   d.METRIC_NAME AS METRIC_NAME,
-   c.METRIC_VALUE AS METRIC_VALUE,
-   COALESCE(c.SOURCE_DB, '$db_source') AS SOURCE_DB
- from $db_output.mha_monthly_unformatted c
- right outer join global_temp.mha_possible_metrics d 
-           ON c.BREAKDOWN = d.BREAKDOWN
-           AND  COALESCE(c.PRIMARY_LEVEL,'UNKNOWN') = d.primary_level
-           AND c.SECONDARY_LEVEL = d.secondary_level
-           AND c.METRIC = d.metric
-           AND c.REPORTING_PERIOD_START = '$rp_startdate'
-           AND c.REPORTING_PERIOD_END = '$rp_enddate'
-           AND c.STATUS = '$status' 
-           AND c.SOURCE_DB = '$db_source'
+#%sql
+#MHA metrics moved to menh_bbrb
+
+#CREATE OR REPLACE GLOBAL TEMP VIEW mha_monthly_expanded AS
+#select 
+#  COALESCE(c.REPORTING_PERIOD_START, '$rp_startdate') as REPORTING_PERIOD_START, 
+#  COALESCE(c.REPORTING_PERIOD_END, '$rp_enddate') as REPORTING_PERIOD_END,
+#  COALESCE(c.STATUS,'$status') as STATUS,
+#  COALESCE(c.BREAKDOWN,d.BREAKDOWN,'UNKNOWN') as BREAKDOWN,
+#  COALESCE(c.PRIMARY_LEVEL,d.PRIMARY_LEVEL,'UNKNOWN') as PRIMARY_LEVEL,
+#  d.PRIMARY_LEVEL_DESC as PRIMARY_LEVEL_DESCRIPTION,
+#  COALESCE(c.SECONDARY_LEVEL,d.SECONDARY_LEVEL,'UNKNOWN') as SECONDARY_LEVEL,
+#  d.SECONDARY_LEVEL_DESC as SECONDARY_LEVEL_DESCRIPTION,
+#  COALESCE(c.METRIC,d.METRIC) as METRIC,
+#  d.METRIC_NAME AS METRIC_NAME,
+#  c.METRIC_VALUE AS METRIC_VALUE,
+# COALESCE(c.SOURCE_DB, '$db_source') AS SOURCE_DB
+#from $db_output.mha_monthly_unformatted c
+#right outer join global_temp.mha_possible_metrics d 
+#          ON c.BREAKDOWN = d.BREAKDOWN
+#          AND  COALESCE(c.PRIMARY_LEVEL,'UNKNOWN') = d.primary_level
+#          AND c.SECONDARY_LEVEL = d.secondary_level
+#          AND c.METRIC = d.metric
+#          AND c.REPORTING_PERIOD_START = '$rp_startdate'
+#          AND c.REPORTING_PERIOD_END = '$rp_enddate'
+#         AND c.STATUS = '$status' 
+#          AND c.SOURCE_DB = '$db_source'
 
 # COMMAND ----------
 
@@ -309,6 +311,7 @@ params = {
            AND c.SOURCE_DB = '$db_source'
            
  where c.METRIC IN ('MHS92', 'MHS93', 'MHS94')
+
 
 # COMMAND ----------
 
@@ -366,7 +369,7 @@ params = {
            AND m.REPORTING_PERIOD_END = '$rp_enddate'
  AND m.STATUS = '$status'
  AND m.SOURCE_DB = '$db_source'
- 
+
  UNION ALL
  SELECT  
  COALESCE(m.REPORTING_PERIOD_START, add_months('$rp_startdate', -11)) as REPORTING_PERIOD_START,
@@ -383,7 +386,7 @@ params = {
  m.SOURCE_DB
  FROM $db_output.cyp_peri_monthly_unformatted as m
  LEFT JOIN $db_output.RD_ORG_DAILY_LATEST od1 ON m.PRIMARY_LEVEL = od1.ORG_CODE
- 
+
  JOIN $db_output.peri_metric_values mv ON mv.metric = m.metric
  WHERE m.BREAKDOWN = 'CCG of Residence'
  --           AND m.REPORTING_PERIOD_START = '$rp_startdate'
@@ -396,7 +399,7 @@ params = {
 
 # DBTITLE 1,Expand AWT (Access and Waiting Times) EIP (Early Intervention in Psychosis)
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMP VIEW EIP_expanded AS
  SELECT DISTINCT 
    COALESCE(m.REPORTING_PERIOD_START, '$rp_startdate_quarterly') as REPORTING_PERIOD_START,
@@ -429,7 +432,7 @@ params = {
 
 # DBTITLE 1,EIP - Monthly measure (EIP68,69a,69b)
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMP VIEW EIP_expanded_Monthly AS
  SELECT DISTINCT 
    COALESCE(m.REPORTING_PERIOD_START, '$rp_startdate') as REPORTING_PERIOD_START,
@@ -463,9 +466,9 @@ params = {
 
 # DBTITLE 1,Expand ASCOF
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMP VIEW ascof_expanded AS 
- 
+
  SELECT 
    COALESCE(m.REPORTING_PERIOD_START, '$rp_startdate') as REPORTING_PERIOD_START, 
    COALESCE(m.REPORTING_PERIOD_END, '$rp_enddate') as REPORTING_PERIOD_END, 
@@ -480,7 +483,7 @@ params = {
    p.METRIC_NAME AS METRIC_NAME, 
    m.METRIC_VALUE AS METRIC_VALUE, 
    COALESCE(m.SOURCE_DB, '$db_source') AS SOURCE_DB 
- 
+
  FROM $db_output.ascof_unformatted as m 
  RIGHT OUTER JOIN global_temp.ascof_possible_metrics as p 
    ON m.BREAKDOWN = p.BREAKDOWN 
@@ -491,17 +494,17 @@ params = {
    AND m.REPORTING_PERIOD_START = '$rp_startdate' 
    AND m.REPORTING_PERIOD_END = '$rp_enddate' 
    AND m.SOURCE_DB = '$db_source'
- 
+
  WHERE 
  -- (
        p.BREAKDOWN NOT IN ('CASSR;Provider', 'CASSR;Provider;Gender', 'Provider;Gender')
  AND p.PRIMARY_LEVEL != 'UNKNOWN'
- 
- 
- 
+
+
+
  UNION ALL
  -- these other measures only include rows where data has been submitted
- 
+
  SELECT 
    COALESCE(m.REPORTING_PERIOD_START, '$rp_startdate') as REPORTING_PERIOD_START, 
    COALESCE(m.REPORTING_PERIOD_END, '$rp_enddate') as REPORTING_PERIOD_END, 
@@ -516,7 +519,7 @@ params = {
    p.METRIC_NAME AS METRIC_NAME, 
    m.METRIC_VALUE AS METRIC_VALUE, 
    COALESCE(m.SOURCE_DB, '$db_source') AS SOURCE_DB 
- 
+
  FROM $db_output.ascof_unformatted as m 
  INNER JOIN global_temp.ascof_possible_metrics as p 
    ON m.BREAKDOWN = p.BREAKDOWN 
@@ -524,10 +527,10 @@ params = {
    AND m.SECONDARY_LEVEL = p.SECONDARY_LEVEL 
    AND m.THIRD_LEVEL = p.third_level 
    AND m.METRIC = p.METRIC 
- 
+
  WHERE p.BREAKDOWN IN ('CASSR;Provider', 'CASSR;Provider;Gender', 'Provider;Gender')
  AND p.PRIMARY_LEVEL != 'UNKNOWN'
- 
+
  AND m.REPORTING_PERIOD_START = '$rp_startdate' 
  AND m.REPORTING_PERIOD_END = '$rp_enddate' 
  AND m.SOURCE_DB = '$db_source'

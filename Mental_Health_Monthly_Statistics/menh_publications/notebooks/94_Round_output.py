@@ -1,8 +1,8 @@
 # Databricks notebook source
  %md
- 
+
  # Round METRIC_VALUE and fill in 'NONE' wherever no value
- 
+
  Suppression Rules are documented through inline comments in SQL below.
 
 # COMMAND ----------
@@ -24,7 +24,7 @@ assert db_source
 
 # DBTITLE 1,Numerator / Denominator proportions
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMP VIEW NumeratorDenominatorProportions AS
  SELECT 'MHS80' AS METRIC,'MHS79' AS Numerator,'MHS78' AS Denominator UNION
  SELECT 'AMH13e%' AS METRIC,'AMH13e' AS Numerator,'AMH03e' AS Denominator UNION
@@ -49,29 +49,29 @@ assert db_source
  SELECT 'EIP67b' AS METRIC, 'EIP66b' AS Numerator, 'EIP64b' AS Denominator UNION
  SELECT 'EIP67c' AS METRIC, 'EIP66c' AS Numerator, 'EIP64c' AS Denominator UNION
  SELECT 'MHS94' AS METRIC, 'MHS92' AS Numerator, 'MHS93' AS Denominator
- 
+
  -- Adding these in to resolve suppression issues with proportion measures
  UNION
  SELECT 'ED86e' AS METRIC, 'ED86a' AS Numerator, 'ED86' AS Denominator
- 
+
  -- how can we get both ED87a and ED87b into this table as the Numerator without breaking everything???
  -- adding in as 2 separate rows doesn't work! - leads to 2 separate outputs for ED87e
  -- could we keep as 2 separate rows and then further process the output - RANK?
  -- this is the method used below... Further step introduced later in the code
- 
+
  UNION
  SELECT 'ED87e' AS METRIC, 'ED87a' AS Numerator, 'ED87' AS Denominator
  UNION
  SELECT 'ED87e' AS METRIC, 'ED87b' AS Numerator, 'ED87' AS Denominator
- 
+
  --ADD EXTRA ROWS FOR NEW PROPORTION METRICS
- 
+
  -- the alternative of generating an unpublished measure to represent the Numerator as a single figure doesn't check both parts...
  -- UNION
  -- SELECT 'ED87e' AS METRIC, 'ED87xtra' AS Numerator, 'ED87' AS Denominator
  --  ED87e =  (ED87a + ED87b) / ED87
  -- ED87xtra = ED87a + ED87b
- 
+
  --Additions for the new CYPED metrics
  UNION
  SELECT 'ED86e' AS METRIC, 'ED86a' AS Numerator, 'ED86' AS Denominator
@@ -105,15 +105,17 @@ assert db_source
  SELECT 'ED90g' AS METRIC, 'ED90c' AS Numerator, 'ED90' AS Denominator
  UNION
  SELECT 'ED90h' AS METRIC, 'ED90d' AS Numerator, 'ED90' AS Denominator
- 
- UNION
- SELECT 'MHS81a' AS METRIC, 'MHS81' AS Numerator, 'MHS81' AS Denominator
+
+ --MHA metrics moved to menh_bbrb
+ --UNION
+ --SELECT 'MHS81a' AS METRIC, 'MHS81' AS Numerator, 'MHS81' AS Denominator
+
 
 # COMMAND ----------
 
 # DBTITLE 1,1-5. Format most products (for England figures)
  %sql
- 
+
  INSERT INTO $db_output.All_products_formatted
  SELECT DISTINCT
      MONTH_ID,
@@ -141,7 +143,7 @@ assert db_source
 
 # DBTITLE 1,1-5. Round and format most products (for Sub-England figures)
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMP VIEW All_products_formatted_prep3 AS
  SELECT DISTINCT
      a.MONTH_ID,
@@ -175,16 +177,16 @@ assert db_source
        
        -- If present in NumeratorDenominatorProportions, when either denominator or numerator is NULL, then suppress result
        WHEN (b.Denominator IS NOT NULL And b.Numerator IS NOT NULL) AND (d.METRIC_VALUE IS NULL or c.METRIC_VALUE IS NULL) THEN '*'
- 
+
        -- If NOT present in NumeratorDenominatorProportions, if value is LESS than 5, then suppress
        WHEN a.METRIC_VALUE < 5 THEN '*'
        
        -- If NOT present in NumeratorDenominatorProportions, if value is MORE than 5, round to nearest 5
        WHEN a.METRIC_VALUE >= 5 THEN CAST(ROUND(a.METRIC_VALUE / 5.0, 0) * 5 AS INT)
- 
+
        -- If NOT present in NumeratorDenominatorProportions, if value is NULL, then suppress
        WHEN a.METRIC_VALUE IS NULL THEN '*'
- 
+
        -- This impossible fallback proves that the WHEN clauses above are logically complete
        ELSE 'Error: No value returned, because rounding logic is logically incomplete!'
      END AS MEASURE_VALUE,
@@ -204,25 +206,29 @@ assert db_source
  AND a.STATUS = '$status'
  AND a.SOURCE_DB = '$db_source'
 
+
 # COMMAND ----------
 
  %sql
- 
+
  --Re-introduced as there are still 2 rows coming out for ED87e in the rounded outputs
- 
+
  CREATE OR REPLACE GLOBAL TEMP VIEW All_products_formatted_prep4 AS
- 
- 
+
+
  SELECT *,
  ROW_NUMBER () OVER(PARTITION BY BREAKDOWN, PRIMARY_LEVEL, SECONDARY_LEVEL, MEASURE_ID ORDER BY MEASURE_VALUE DESC) AS RANK
  FROM global_temp.All_products_formatted_prep3
 
+
+
+
 # COMMAND ----------
 
  %sql
- 
+
  INSERT INTO $db_output.All_products_formatted
- 
+
  SELECT 
      MONTH_ID,
      PRODUCT_NO,
@@ -242,7 +248,7 @@ assert db_source
      
  FROM global_temp.All_products_formatted_prep4
  WHERE RANK = 1
- 
+
  ORDER BY MEASURE_ID, BREAKDOWN, PRIMARY_LEVEL, SECONDARY_LEVEL
      
 
@@ -250,7 +256,7 @@ assert db_source
 
 # DBTITLE 1,Format products with THIRD_LEVEL breakdowns (for England figures)
  %sql
- 
+
  INSERT INTO $db_output.third_level_products_formatted
  SELECT DISTINCT
      MONTH_ID,
@@ -280,9 +286,9 @@ assert db_source
 
 # DBTITLE 1,Round and format products with THIRD_LEVEL breakdowns (for Sub-England figures)
  %sql
- 
+
  INSERT INTO $db_output.third_level_products_formatted
- 
+
  SELECT DISTINCT
      a.MONTH_ID,
      a.PRODUCT_NO,
@@ -306,16 +312,16 @@ assert db_source
        
        -- If present in NumeratorDenominatorProportions, when either denominator or numerator is NULL, then suppress result
        WHEN (b.Denominator IS NOT NULL And b.Numerator IS NOT NULL) AND (d.METRIC_VALUE IS NULL or c.METRIC_VALUE IS NULL) THEN '*'
- 
+
        -- If NOT present in NumeratorDenominatorProportions, if value is LESS than 5, then suppress
        WHEN a.METRIC_VALUE < 5 THEN '*'
        
        -- If NOT present in NumeratorDenominatorProportions, if value is MORE than 5, round to nearest 5
        WHEN a.METRIC_VALUE >= 5 THEN CAST(ROUND(a.METRIC_VALUE / 5.0, 0) * 5 AS INT)
- 
+
        -- If NOT present in NumeratorDenominatorProportions, if value is NULL, then suppress
        WHEN a.METRIC_VALUE IS NULL THEN '*'
- 
+
        -- This impossible fallback proves that the WHEN clauses above are logically complete
        ELSE 'Error: No value returned, because rounding logic is logically incomplete!'
      END AS MEASURE_VALUE,
@@ -335,14 +341,15 @@ assert db_source
  AND a.STATUS = '$status'
  AND a.SOURCE_DB = '$db_source'
 
+
 # COMMAND ----------
 
 # DBTITLE 1,Special case: Renaming RAW ASCOF outputs for Social Care Team
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMP VIEW ascof_formatted AS 
  SELECT DISTINCT
- 
+
      REPORTING_PERIOD_START AS REPORTING_PERIOD,
      STATUS,
      BREAKDOWN,

@@ -2,12 +2,12 @@
 # DBTITLE 1,MH01a National - commented out
  %sql
  -- removed 02/08/2019 due to being duplicated in final formatted CSV output - measure still in main monthly 
- 
+
  --MH01a - PEOPLE IN CONTACT WITH MENTAL HEALTH SERVICES AT END OF REPORTING PERIOD, AGED 0-18**/
  -- has both monthly and camhs monthly outputs
- 
+
  -- INSERT INTO $db_output.CYP_monthly_unformatted -- needs changing to CYP monthly table MS: I have updated this in order to get the code to run. This needs checking by MENH SME.
- 
+
  --     SELECT '$rp_startdate' AS REPORTING_PERIOD_START
  --             ,'$rp_enddate' AS REPORTING_PERIOD_END
  --             ,'$status' AS STATUS
@@ -21,13 +21,14 @@
  -- FROM		global_temp.MH01_prep	 -- prep table in main monthly prep folder 
  -- WHERE  		AGE_GROUP = '00-18'
 
+
 # COMMAND ----------
 
 # DBTITLE 1,CYP01-i - commented out
  %sql
- 
+
  -- removed 14/08/2019 due to being duplicated in final formatted CSV output - measure still in main monthly
- 
+
  -- INSERT INTO $db_output.CYP_monthly_unformatted
  --    SELECT '$rp_startdate' AS REPORTING_PERIOD_START
  --           ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -64,11 +65,11 @@
 
 # DBTITLE 1,CYP23-i
  %sql
- 
+
  -- removed 14/08/2019 due to being duplicated in final formatted CSV output - measure still in main monthly
- -- 29-07-2021 - despite the comment above this code was still live (and also exists in main monthly) - commenting this one out as the England total is appearing twice in the unrounded outputs.
- 
- 
+ -- User note: 29-07-2021 - despite the comment above this code was still live (and also exists in main monthly) - commenting this one out as the England total is appearing twice in the unrounded outputs.
+
+
  -- INSERT INTO $db_output.CYP_monthly_unformatted
  --     SELECT '$rp_startdate' AS REPORTING_PERIOD_START
  --            ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -89,9 +90,9 @@
 # DBTITLE 1,MHS30d National
  %sql
  /************ MHS30d - Attended care contacts in the RP, 0-18 ************/
- 
+
  INSERT INTO $db_output.CYP_monthly_unformatted
- 
+
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
  			,'$status' AS STATUS
@@ -105,14 +106,15 @@
              ,'$db_source' AS SOURCE_DB
  FROM		global_temp.MHS30d_Prep 
 
+
 # COMMAND ----------
 
 # DBTITLE 1,MHS30e National
  %sql
  ----- MHS30e -  Attended contacts in the RP, 0-18, by consultation medium -----
- 
+
  INSERT INTO $db_output.CYP_monthly_unformatted
- 
+
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
  			,'$status' AS STATUS
@@ -347,9 +349,9 @@
 # DBTITLE 1,MHS55a
  %sql
  /******** MHS55a - People attending at least one contact in the RP, 0-18 ***********/
- 
+
  INSERT INTO $db_output.CYP_monthly_unformatted
- 
+
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
              ,'$status' AS STATUS
@@ -363,12 +365,13 @@
              ,'$db_source' AS SOURCE_DB
  FROM        global_temp.MHS30d_prep  -- prep table in CYP monthly prep folder 
 
+
 # COMMAND ----------
 
 # DBTITLE 1,MHS56a National
  %sql
  /*********** MHS56a - People with indirect activity in the RP, 0-18 ****************/
- 
+
  INSERT INTO $db_output.CYP_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -389,9 +392,9 @@
 # DBTITLE 1,MHS57a National
  %sql
  /*** MHS57a - People discharged from the service in the RP, 0-18 ***/
- 
+
  -- National 
- 
+
  INSERT INTO $db_output.CYP_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END

@@ -5,12 +5,12 @@
      r.UniqMonthID,
      r.OrgIDProv,
      CASE 
-       WHEN r.OrgIDProv = 'DFC' THEN CONCAT(r.OrgIDProv, r.LocalPatientID)
+       WHEN r.OrgIDProv in ('DFC','S9X2N') THEN CONCAT(r.OrgIDProv, r.LocalPatientID)
        ELSE r.Person_ID
        END AS Person_ID,
      r.RecordNumber,
      r.UniqServReqID,
-     Case when r.OrgIDProv = 'DFC' then r.OrgIDComm
+     Case when r.OrgIDProv in ('DFC','S9X2N') then r.OrgIDComm
           else r.IC_Rec_CCG end as Der_OrgComm,
      r.LADistrictAuth,
      r.AgeServReferRecDate,
@@ -28,7 +28,7 @@
  CREATE OR REPLACE TEMPORARY VIEW Comb AS
  SELECT
      CASE 
-       WHEN c.OrgIDProv = 'DFC' THEN CONCAT(m.OrgIDProv, m.LocalPatientID)
+       WHEN c.OrgIDProv in ('DFC','S9X2N') THEN CONCAT(m.OrgIDProv, m.LocalPatientID)
        ELSE c.Person_ID
        END AS Person_ID,
      c.RecordNumber,
@@ -44,13 +44,13 @@
      ( c.AttendStatus IN ('5', '6') and ((c.ConsMechanismMH NOT IN ('05', '06') and c.UniqMonthID < '1459') or (c.ConsMechanismMH IN ('01', '02', '04', '11') and c.UniqMonthID >= '1459')))   
  -------/*** ConsMediumUsed' will change to 'ConsMechanismMH', code '06' will change to '09' from Oct 2021 data /*** updated to v5 AM ***/
      or 
-     ( ((c.ConsMechanismMH IN ('05', '06') and c.UniqMonthID < '1459') or (c.ConsMechanismMH IN ('05', '09', '10', '13') and c.UniqMonthID >= '1459')) and c.OrgIdProv = 'DFC') 
+     ( ((c.ConsMechanismMH IN ('05', '06') and c.UniqMonthID < '1459') or (c.ConsMechanismMH IN ('05', '09', '10', '13') and c.UniqMonthID >= '1459')) and c.OrgIdProv in ('DFC','S9X2N')) 
     )-------/*** ConsMediumUsed' will change to 'ConsMechanismMH', code '06' will change to '09' from Oct 2021 data V5.0 /*** updated to v5 AM ***/
  UNION ALL
   
  SELECT
      CASE 
-       WHEN i.OrgIDProv = 'DFC' THEN CONCAT(m.OrgIDProv, m.LocalPatientID)
+       WHEN i.OrgIDProv in ('DFC','S9X2N') THEN CONCAT(m.OrgIDProv, m.LocalPatientID)
        ELSE i.Person_ID
        END AS Person_ID,
      i.RecordNumber,
@@ -90,7 +90,7 @@
  SELECT
      r.UniqMonthID,
      r.OrgIDProv,
-     Case when r.OrgIDProv = 'DFC' then r.OrgIDComm
+     Case when r.OrgIDProv in ('DFC','S9X2N') then r.OrgIDComm
           else ccg.SubICBGPRes end as Der_OrgComm,
      r.Person_ID,
      r.RecordNumber,
@@ -174,12 +174,12 @@
      r.UniqMonthID,
      r.OrgIDProv,
      CASE 
-       WHEN r.OrgIDProv = 'DFC' THEN CONCAT(r.OrgIDProv, r.LocalPatientID)
+       WHEN r.OrgIDProv in ('DFC','S9X2N') THEN CONCAT(r.OrgIDProv, r.LocalPatientID)
        ELSE r.Person_ID
        END AS Person_ID,
      r.RecordNumber,
      r.UniqServReqID,
-     Case when r.OrgIDProv = 'DFC' then r.OrgIDComm
+     Case when r.OrgIDProv in ('DFC','S9X2N') then r.OrgIDComm
           else r.IC_Rec_CCG end as Der_OrgComm,
      r.LADistrictAuth,
      r.AgeServReferRecDate,    

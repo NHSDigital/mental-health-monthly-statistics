@@ -17,7 +17,7 @@
 # COMMAND ----------
 
  %sql
- 
+
  INSERT INTO $db_output.CYP_2nd_contact_unformatted
  SELECT '$rp_startdate' AS REPORTING_PERIOD_START,
         '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -56,7 +56,7 @@
 # COMMAND ----------
 
  %sql
- 
+
  INSERT INTO $db_output.CYP_2nd_contact_unformatted
  SELECT '$rp_startdate' AS REPORTING_PERIOD_START,
         '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -89,7 +89,7 @@
 # COMMAND ----------
 
  %sql
- 
+
  INSERT INTO $db_output.CYP_2nd_contact_unformatted
  SELECT '$rp_startdate' AS REPORTING_PERIOD_START,
       '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -112,7 +112,7 @@
 # COMMAND ----------
 
  %sql
- 
+
  INSERT INTO $db_output.CYP_2nd_contact_unformatted
  SELECT '$rp_startdate' AS REPORTING_PERIOD_START,
     '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -137,7 +137,7 @@
 # COMMAND ----------
 
  %sql
- 
+
  INSERT INTO $db_output.CYP_2nd_contact_unformatted
  SELECT '$rp_startdate' AS REPORTING_PERIOD_START,
         '$rp_enddate' AS REPORTING_PERIOD_END,

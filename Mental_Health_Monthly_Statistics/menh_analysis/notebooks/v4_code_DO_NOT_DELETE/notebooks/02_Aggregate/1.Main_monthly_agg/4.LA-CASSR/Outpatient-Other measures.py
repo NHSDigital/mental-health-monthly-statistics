@@ -1,7 +1,7 @@
 # Databricks notebook source
 # DBTITLE 1,AMH03 CASSR
  %sql
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START,
               '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -21,7 +21,7 @@
 
 # DBTITLE 1,AMH03 CASSR;Provider
  %sql
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START,
               '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -43,9 +43,9 @@
 
 # DBTITLE 1,AMH14 CASSR
  %sql
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
- 
+
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
  			,'$status' AS STATUS
@@ -65,9 +65,9 @@
 
 # DBTITLE 1,AMH14 CASSR;Provider
  %sql
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
- 
+
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
  			,'$status' AS STATUS
@@ -90,9 +90,9 @@
 
 # DBTITLE 1,AMH15 CASSR
  %sql
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
- 
+
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
  			,'$status' AS STATUS
@@ -114,9 +114,9 @@
 
 # DBTITLE 1,AMH15 CASSR;Provider
  %sql
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
- 
+
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
  			,'$status' AS STATUS
@@ -150,9 +150,9 @@
 
 # DBTITLE 1,AMH17 CASSR
  %sql
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
- 
+
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
  			,'$status' AS STATUS
@@ -174,9 +174,9 @@
 
 # DBTITLE 1,AMH17 CASSR;Provider
  %sql
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
- 
+
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
  			,'$status' AS STATUS
@@ -203,9 +203,9 @@
 
 # DBTITLE 1,AMH18 CASSR
  %sql
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
- 
+
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
  			,'$status' AS STATUS
@@ -226,9 +226,9 @@
 
 # DBTITLE 1,AMH18 CASSR;Provider
  %sql
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
- 
+
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
  			,'$status' AS STATUS
@@ -262,3 +262,4 @@
      GROUP BY COALESCE(AMH18.CASSR,"UNKNOWN")
              ,COALESCE(AMH18.CASSR_description,"UNKNOWN")
              ,AMH18.OrgIDProv
+

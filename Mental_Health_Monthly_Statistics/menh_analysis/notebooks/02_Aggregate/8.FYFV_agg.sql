@@ -189,7 +189,7 @@ INSERT INTO $db_output.FYFV_unformatted
 -- COMMAND ----------
 
  %sql
- 
+
  INSERT INTO $db_output.FYFV_unformatted
      SELECT '$rp_startdate_m1' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END            
@@ -211,7 +211,7 @@ INSERT INTO $db_output.FYFV_unformatted
 -- COMMAND ----------
 
  %sql
- 
+
  INSERT INTO $db_output.FYFV_unformatted
      SELECT '$rp_startdate_m1' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END            
@@ -233,7 +233,7 @@ INSERT INTO $db_output.FYFV_unformatted
 -- COMMAND ----------
 
  %sql
- 
+
  INSERT INTO $db_output.FYFV_unformatted
      SELECT '$rp_startdate_m1' AS REPORTING_PERIOD_START,
               '$rp_enddate' AS REPORTING_PERIOD_END,             
@@ -253,7 +253,7 @@ INSERT INTO $db_output.FYFV_unformatted
 -- COMMAND ----------
 
  %sql
- 
+
  INSERT INTO $db_output.FYFV_unformatted
      SELECT '$rp_startdate_m1' AS REPORTING_PERIOD_START,
               '$rp_enddate' AS REPORTING_PERIOD_END,             
@@ -274,7 +274,7 @@ INSERT INTO $db_output.FYFV_unformatted
 -- COMMAND ----------
 
  %sql
- 
+
  INSERT INTO $db_output.FYFV_unformatted
      SELECT '$rp_startdate_m1' AS REPORTING_PERIOD_START,
               '$rp_enddate' AS REPORTING_PERIOD_END,             
@@ -295,7 +295,7 @@ INSERT INTO $db_output.FYFV_unformatted
 -- COMMAND ----------
 
  %sql
- 
+
  INSERT INTO $db_output.FYFV_unformatted
      SELECT '$rp_startdate_m1' AS REPORTING_PERIOD_START,
               '$rp_enddate' AS REPORTING_PERIOD_END,             
@@ -736,10 +736,10 @@ SELECT '$rp_startdate_m1' AS REPORTING_PERIOD_START,
        '$status' AS STATUS,
        'CCG - GP Practice or Residence' AS BREAKDOWN,
        CASE
-         WHEN w.OrgIDProv = 'DFC' THEN COALESCE(DFC_CCG.ORG_CODE, 'UNKNOWN')
+         WHEN w.OrgIDProv in ('DFC','S9X2N') THEN COALESCE(DFC_CCG.ORG_CODE, 'UNKNOWN')
          ELSE COALESCE(ccg.IC_Rec_CCG, 'UNKNOWN') END AS PRIMARY_LEVEL,
        CASE
-         WHEN w.OrgIDProv = 'DFC' THEN COALESCE(DFC_CCG.NAME, 'UNKNOWN')
+         WHEN w.OrgIDProv in ('DFC','S9X2N') THEN COALESCE(DFC_CCG.NAME, 'UNKNOWN')
          ELSE COALESCE(CCG_REF.NAME, 'UNKNOWN') END AS PRIMARY_LEVEL_DESCRIPTION,
        'NONE' AS SECONDARY_LEVEL,
        'NONE' AS SECONDARY_LEVEL_DESCRIPTION,
@@ -754,10 +754,10 @@ LEFT JOIN $db_output.RD_CCG_LATEST DFC_CCG
 LEFT JOIN $db_output.RD_CCG_LATEST AS CCG_REF
        ON ccg.IC_Rec_CCG  = CCG_REF.original_ORG_CODE
 GROUP BY CASE
-         WHEN w.OrgIDProv = 'DFC' THEN COALESCE(DFC_CCG.ORG_CODE, 'UNKNOWN')
+         WHEN w.OrgIDProv in ('DFC','S9X2N') THEN COALESCE(DFC_CCG.ORG_CODE, 'UNKNOWN')
          ELSE COALESCE(ccg.IC_Rec_CCG, 'UNKNOWN') END,
        CASE
-         WHEN w.OrgIDProv = 'DFC' THEN COALESCE(DFC_CCG.NAME, 'UNKNOWN')
+         WHEN w.OrgIDProv in ('DFC','S9X2N') THEN COALESCE(DFC_CCG.NAME, 'UNKNOWN')
              ELSE COALESCE(CCG_REF.NAME, 'UNKNOWN') END;
 
 -- COMMAND ----------
@@ -779,7 +779,7 @@ FROM $db_output.CYPFinal_2nd_contact_Quarterly w
    ON w.Person_ID = ccg.Person_ID 
    --created a static table in breakdowns for this - will need reviewing as and when
    LEFT JOIN $db_output.STP_Region_mapping_post_2020 stp ON
-   CASE WHEN w.OrgIDProv = 'DFC' THEN w.OrgIDComm ELSE ccg.IC_Rec_CCG END = stp.CCG_code
+   CASE WHEN w.OrgIDProv in ('DFC','S9X2N') THEN w.OrgIDComm ELSE ccg.IC_Rec_CCG END = stp.CCG_code
 GROUP BY COALESCE(stp.Region_code, 'UNKNOWN'),
    COALESCE(STP.Region_description, 'UNKNOWN');
 
@@ -802,7 +802,7 @@ SELECT '$rp_startdate_m1' AS REPORTING_PERIOD_START,
        ON w.Person_ID = ccg.Person_ID 
        --created a static table in breakdowns for this - will need reviewing as and when
        LEFT JOIN $db_output.STP_Region_mapping_post_2020 stp ON 
-       CASE WHEN w.OrgIDProv = 'DFC' THEN w.OrgIDComm ELSE ccg.IC_Rec_CCG END = stp.CCG_code
+       CASE WHEN w.OrgIDProv in ('DFC','S9X2N') THEN w.OrgIDComm ELSE ccg.IC_Rec_CCG END = stp.CCG_code
 GROUP BY COALESCE(stp.STP_code, 'UNKNOWN'),
        COALESCE(STP.STP_description, 'UNKNOWN');
 

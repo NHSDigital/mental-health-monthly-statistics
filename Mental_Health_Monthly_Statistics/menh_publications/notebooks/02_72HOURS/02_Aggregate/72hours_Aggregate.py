@@ -102,6 +102,7 @@ assert rp_enddate
  AND    Status = '$status'
   AND SOURCE_DB = '$db_source'
 
+
 # COMMAND ----------
 
 # DBTITLE 1,Provider - MHS78:Discharges from adult acute beds
@@ -126,6 +127,7 @@ assert rp_enddate
  AND    Status = '$status'
   AND SOURCE_DB = '$db_source'
  GROUP  BY ResponsibleProv;
+
 
 # COMMAND ----------
 
@@ -180,7 +182,7 @@ assert rp_enddate
 
 # DBTITLE 1,CCG - MHS78:Discharges from adult acute beds
  %sql
- 
+
  INSERT INTO $db_output.main_monthly_unformatted_new
  SELECT 
  '$month_id' UniqMonthID
@@ -201,6 +203,7 @@ assert rp_enddate
  AND    Status = '$status'
   AND SOURCE_DB = '$db_source'
  GROUP  BY CCG
+
 
 # COMMAND ----------
 
@@ -256,7 +259,7 @@ assert rp_enddate
 
 # DBTITLE 1,CCG - GP Practice or Residence; Provider of Responsibility - MHS78
  %sql
- 
+
  INSERT INTO $db_output.main_monthly_unformatted_new
  SELECT 
  '$month_id' UniqMonthID
@@ -282,7 +285,7 @@ assert rp_enddate
 
 # DBTITLE 1,CCG - GP Practice or Residence; Provider of Responsibility- MHS79
  %sql
- 
+
  INSERT INTO $db_output.main_monthly_unformatted_new
  SELECT 
  '$month_id' UniqMonthID

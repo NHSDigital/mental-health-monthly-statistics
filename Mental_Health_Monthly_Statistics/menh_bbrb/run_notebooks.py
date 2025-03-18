@@ -1,5 +1,5 @@
 # Databricks notebook source
-###dbutils.widgets.removeAll()
+# dbutils.widgets.removeAll()
 
 # COMMAND ----------
 
@@ -9,7 +9,7 @@ Code is left here for easy copying to other notebooks!  or for cases where widge
 dbutils.widgets.removeAll() above can be run to annihilate the existing widgets and then run these to create new ones'''
 
 # dbutils.widgets.text("db", "menh_bbrb", "Target database")
-# dbutils.widgets.text("$mhsds_database", "testdata_menh_bbrb_$mhsds_database", "Input database")
+# dbutils.widgets.text("$mhsds_db", "testdata_menh_bbrb_$mhsds_db", "Input database")
 # dbutils.widgets.text("status", "Performance", "status")
 # dbutils.widgets.text("reference_data", "reference_data", "reference_data")
 # dbutils.widgets.text(name='rp_startdate', defaultValue='2021-10-01', label='Reporting period start date')
@@ -19,14 +19,14 @@ dbutils.widgets.removeAll() above can be run to annihilate the existing widgets 
 
  %python
  import os
- 
+
  '''
  In Prod if the scheduler runs the job, at that time only default params which were already configured will be passed. 'rp_startdate' and 'status' are manual entries for parameters during custom job run, these params are passed as widget entry or json values but won't be there during automatic run. So, we need to check presence of these params to determine if this is an Automatic run
  '''
- 
+
  is_rp_start_avail = True
  is_status_avail = True
- 
+
  # Toggle the comments if you want to simulate the run in Ref
  # if(os.environ.get('env') == 'ref'):
  if(os.environ.get('env') == 'prod'):
@@ -34,13 +34,13 @@ dbutils.widgets.removeAll() above can be run to annihilate the existing widgets 
      dbutils.widgets.get("rp_startdate")
    except Exception as ex:
      is_rp_start_avail = False
- 
+
    try:
      dbutils.widgets.get("status")
    except Exception as ex:
      is_status_avail = False
  print(f'rp_start parameter availability: {is_rp_start_avail} \nstatus parameter availability: {is_status_avail}')
- 
+
  # It can  be auto run if both fields are not available as in automatic run (means those widges are not present)
  auto_prov_check = False if (is_rp_start_avail and is_status_avail) else True
  print(f'Provisional check for automatic run: {auto_prov_check}')  
@@ -59,17 +59,17 @@ import json
 db_output = dbutils.widgets.get("db")
 assert db_output
 
-# the parameter name of any source database(s) for a cp project is the same as the database name, i.e. the $mhsds_database parameter is named $mhsds_database!
+# the parameter name of any source database(s) for a cp project is the same as the database name, i.e. the $mhsds_db parameter is named $mhsds_db!
 # here this is renamed to the standard db_source for familiarity/consistency with other projects
 try:
-  db_source = dbutils.widgets.get("$mhsds_database")
+  db_source = dbutils.widgets.get("$mhsds_db")
 except:
-  print('$mhsds_database is not defined')
+  print('$mhsds_db is not defined')
   
 try:
-  db_source = dbutils.widgets.get("$mhsds_database")
+  db_source = dbutils.widgets.get("$mhsds_db")
 except:
-  print('$mhsds_database is not defined')
+  print('$mhsds_db is not defined')
 
 ###dbutils.widgets.text("reference_data","reference_data","Source Ref Database")
 reference_data = dbutils.widgets.get("reference_data")
@@ -343,10 +343,10 @@ def auditInsertLog(params, runStart, runEnd, notes):
 
 # DBTITLE 1,Extracts of job
  %python
- 
+
  from datetime import datetime
  import time
- 
+
  try:
    if(params['automatic_run'] or params['custom_run']):
      for run in jobs:
@@ -358,7 +358,7 @@ def auditInsertLog(params, runStart, runEnd, notes):
  ############################## Some manipulation to pass the performance parameters from the submission calendar #############################################
  # Assuming run made it upto here means, we have supplied Provisional parameters too. so we can access them now, if it is custom run those parameters are not introduced in the params section
  # As the Primary run completed with values rp_startdate, rp_enddate, Unique_MonthID. Now we need to assign the same parameter keys with Refresh values as the same parameter names are being passed in the notebooks
- 
+
        if(params['automatic_run'] and run == 'Performance'):
          params['rp_startdate'] = params['perf_rp_startdate'] 
          params['rp_enddate'] = params['perf_rp_enddate'] 

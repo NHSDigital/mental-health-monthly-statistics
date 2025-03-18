@@ -2,7 +2,7 @@
 statuses = ["Provisional", "Performance", "Final"]
  
 # dbutils.widgets.text("db_output","menh_bbrb")
-# dbutils.widgets.text("db_source","$mhsds_database")
+# dbutils.widgets.text("db_source","$mhsds_db")
 # dbutils.widgets.dropdown("status","Provisional", statuses)
 # dbutils.widgets.text("pub_month", "202201")
 # dbutils.widgets.text("rp_enddate", "2021-12-31")

@@ -24,7 +24,7 @@ assert month_id
 
 # DBTITLE 1,Restrictive Intervention Type
  %sql
- 
+
  Insert into $db_output.MHSRestrictiveInterventionPeople
    SELECT           '$rp_startdate' AS REPORTING_PERIOD_START
                     ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -47,11 +47,12 @@ assert month_id
    FROM             $db_output.MHSRestrictiveInterventionRaw
    GROUP BY         DerivedRestrictiveIntTypeCode, DerivedRestrictiveIntTypeDescription
 
+
 # COMMAND ----------
 
 # DBTITLE 1,Gender
  %sql
- 
+
  Insert into $db_output.MHSRestrictiveInterventionPeople
    SELECT           '$rp_startdate' AS REPORTING_PERIOD_START
                     ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -78,7 +79,7 @@ assert month_id
 
 # DBTITLE 1,Gender, Type of restraint
  %sql
- 
+
  Insert into $db_output.MHSRestrictiveInterventionPeople
    SELECT           '$rp_startdate' AS REPORTING_PERIOD_START
                     ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -105,7 +106,7 @@ assert month_id
 
 # DBTITLE 1,Ethnicity
  %sql
- 
+
  Insert into $db_output.MHSRestrictiveInterventionPeople
    SELECT           '$rp_startdate' AS REPORTING_PERIOD_START
                     ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -132,7 +133,7 @@ assert month_id
 
 # DBTITLE 1,Ethnicity, Type of restraint
  %sql
- 
+
  Insert into $db_output.MHSRestrictiveInterventionPeople
    SELECT           '$rp_startdate' AS REPORTING_PERIOD_START
                     ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -159,7 +160,7 @@ assert month_id
 
 # DBTITLE 1,Ethnic group
  %sql
- 
+
  Insert into $db_output.MHSRestrictiveInterventionPeople
    SELECT           '$rp_startdate' AS REPORTING_PERIOD_START
                     ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -186,7 +187,7 @@ assert month_id
 
 # DBTITLE 1,Ethnic group, Type of restraint
  %sql
- 
+
  Insert into $db_output.MHSRestrictiveInterventionPeople
    SELECT           '$rp_startdate' AS REPORTING_PERIOD_START
                     ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -213,7 +214,7 @@ assert month_id
 
 # DBTITLE 1,Age group
  %sql
- 
+
  Insert into $db_output.MHSRestrictiveInterventionPeople
    SELECT           '$rp_startdate' AS REPORTING_PERIOD_START
                     ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -240,7 +241,7 @@ assert month_id
 
 # DBTITLE 1,Age group, Type of restraint
  %sql
- 
+
  Insert into $db_output.MHSRestrictiveInterventionPeople
    SELECT           '$rp_startdate' AS REPORTING_PERIOD_START
                     ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -267,7 +268,7 @@ assert month_id
 
 # DBTITLE 1,Gender, Age group
  %sql
- 
+
  Insert into $db_output.MHSRestrictiveInterventionPeople
    SELECT           '$rp_startdate' AS REPORTING_PERIOD_START
                     ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -294,7 +295,7 @@ assert month_id
 
 # DBTITLE 1,Gender, Age group, Type of restraint
  %sql
- 
+
  Insert into $db_output.MHSRestrictiveInterventionPeople
    SELECT           '$rp_startdate' AS REPORTING_PERIOD_START
                     ,'$rp_enddate' AS REPORTING_PERIOD_END

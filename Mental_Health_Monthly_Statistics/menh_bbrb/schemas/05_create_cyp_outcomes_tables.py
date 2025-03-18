@@ -439,7 +439,7 @@
 # COMMAND ----------
 
  %sql
- -- DROP TABLE IF EXISTS $db_output.cyp_closed_referrals;
+ DROP TABLE IF EXISTS $db_output.cyp_closed_referrals;
  CREATE TABLE IF NOT EXISTS $db_output.cyp_closed_referrals
  (
  Person_ID string,
@@ -461,7 +461,16 @@
  ReferralRequestReceivedDate date,
  ServDischDate date,
  ReferRejectionDate date,
- Der_HospSpellCount int
+ Der_HospSpellCount int,
+ Der_Gender string,
+ Der_Gender_Desc string,
+ Age_Band string,
+ UpperEthnicity string,
+ IMD_Decile string,
+ PrimReasonReferralMH string,
+ PrimReasonReferralMHName string,
+ ServTeamTypeRefToMH string,
+ ServTeamTypeRefToMHDesc string
  ) USING DELTA
 
 # COMMAND ----------
@@ -741,7 +750,7 @@
 # COMMAND ----------
 
  %sql
- -- DROP TABLE IF EXISTS $db_output.cyp_master;
+ DROP TABLE IF EXISTS $db_output.cyp_master;
  CREATE TABLE IF NOT EXISTS $db_output.cyp_master
  (
  Person_ID string,
@@ -760,6 +769,15 @@
  Gender string,
  ReferralRequestReceivedDate date,
  ServDischDate date,
+ Der_Gender string,
+ Der_Gender_Desc string,
+ Age_Band string,
+ UpperEthnicity string,
+ IMD_Decile string,
+ PrimReasonReferralMH string,
+ PrimReasonReferralMHName string,
+ ServTeamTypeRefToMH string,
+ ServTeamTypeRefToMHDesc string,
  Contact1 date,
  Contact2 date,
  Assessment_SR int,

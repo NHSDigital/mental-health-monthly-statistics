@@ -1,15 +1,15 @@
 # Databricks notebook source
  %md
- 
+
  # Round METRIC_VALUE and fill in 'NONE' wherever no value
- 
+
  Suppression Rules are documented through inline comments in SQL below.
 
 # COMMAND ----------
 
 # DBTITLE 1,Numerator / Denominator proportions
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMP VIEW NumeratorDenominatorProportions AS
  SELECT 'AMH13e%' AS METRIC,'AMH13e' AS Numerator,'AMH03e' AS Denominator UNION
  SELECT 'AMH14e%' AS METRIC,'AMH14e' AS Numerator,'AMH03e' AS Denominator UNION
@@ -37,7 +37,7 @@
 
 # DBTITLE 1,1-5. Round and format most products (for England figures)
  %sql
- 
+
  INSERT INTO $db_output.All_products_formatted
  SELECT 
      PRODUCT_NO,
@@ -61,7 +61,7 @@
 
 # DBTITLE 1,1-5. Round and format most products (for Sub-England figures)
  %sql
- 
+
  INSERT INTO $db_output.All_products_formatted
  SELECT
      a.PRODUCT_NO,
@@ -84,16 +84,16 @@
        
        -- If present in NumeratorDenominatorProportions, when either denominator or numerator is NULL, then suppress result
        WHEN (b.Denominator IS NOT NULL And b.Numerator IS NOT NULL) AND (d.METRIC_VALUE IS NULL or c.METRIC_VALUE IS NULL) THEN '*'
- 
+
        -- If NOT present in NumeratorDenominatorProportions, if value is LESS than 5, then suppress
        WHEN a.METRIC_VALUE < 5 THEN '*'
        
        -- If NOT present in NumeratorDenominatorProportions, if value is MORE than 5, round to nearest 5
        WHEN a.METRIC_VALUE >= 5 THEN CAST(ROUND(a.METRIC_VALUE / 5.0, 0) * 5 AS INT)
- 
+
        -- If NOT present in NumeratorDenominatorProportions, if value is NULL, then suppress
        WHEN a.METRIC_VALUE IS NULL THEN '*'
- 
+
        -- This impossible fallback proves that the WHEN clauses above are logically complete
        ELSE 'Error: No value returned, because rounding logic is logically incomplete!'
      END AS MEASURE_VALUE,
@@ -137,13 +137,13 @@ else:
 
 # DBTITLE 1,Optimize formatted output tables (again) for performance
  %python
- 
+
  import os
- 
+
  db_output = dbutils.widgets.get("db_output")
  rp_enddate = dbutils.widgets.get("rp_enddate")
  status = dbutils.widgets.get("status")
- 
+
  if os.environ['env'] == 'prod':
    spark.sql('OPTIMIZE {db_output}.{table} WHERE REPORTING_PERIOD_END = "{rp_enddate}" AND STATUS = "{status}"'.format(db_output=db_output, table='All_products_formatted', rp_enddate=rp_enddate, status=status))
    

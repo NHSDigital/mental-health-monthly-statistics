@@ -1,6 +1,6 @@
 -- Databricks notebook source
  %md
- 
+
  # NB this notebook hasn't been fully updated for v5 
  ## perinatal measures are currently being produced within the BBRB code in LIVE - once everything else is stable for v5 this can be addressed - there was still an outstanding difference for MHS92.
 
@@ -33,7 +33,7 @@
 
 -- DBTITLE 1,Referrals
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMP VIEW MHA_Referrals AS 
  SELECT DISTINCT
     r.UniqMonthID,
@@ -51,24 +51,25 @@
     COALESCE(map.REGION_CODE, 'UNKNOWN') AS Region_Code,
     COALESCE(map.REGION_DESCRIPTION, 'UNKNOWN') AS Region_Name
  FROM $db_source.MHS101Referral r
- 
+
  INNER JOIN $db_output.ServiceTeamType s ON s.RecordNumber = r.RecordNumber AND s.UniqServReqID = r.UniqServReqID AND s.ServTeamTypeRefToMH = 'C02' 
                  and s.uniqmonthid between $month_id-11 AND $month_id
- 
+
  INNER JOIN $db_source.MHS001MPI m ON m.recordnumber = r.recordnumber AND m.Gender = '2' AND (m.LADistrictAuth IS NULL OR m.LADistrictAuth LIKE ('E%') or ladistrictauth = '')
                  and m.uniqmonthid between $month_id-11 AND $month_id
- 
+
  LEFT JOIN $db_output.STP_Region_mapping_post_2020 map on m.OrgIDCCGRes = map.CCG_CODE
- 
+
  WHERE  r.UniqMonthID BETWEEN $month_id-11 AND $month_id
+
 
 -- COMMAND ----------
 
 -- DBTITLE 1,Contacts from referrals
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMP VIEW MHA_Contacts AS 
- 
+
  SELECT
  r.UniqMonthID,
  r.Person_ID,
@@ -81,19 +82,20 @@
  c.CareContDate AS Der_ContactDate,
  r.STP_Code,
  r.Region_Code
- 
+
  FROM global_temp.MHA_Referrals r
- 
+
  INNER JOIN $db_source.MHS201CareContact c 
         ON r.RecordNumber = c.RecordNumber 
         AND r.UniqServReqID = c.UniqServReqID 
         AND c.AttendStatus IN ('5','6') AND c.ConsMechanismMH IN ('01', '03')                      ---V6_Changes
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,Contacts YTD
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMP VIEW MHA_ContactYTD AS 
  SELECT
         c.UniqMonthID,
@@ -112,18 +114,20 @@
         ROW_NUMBER () OVER(PARTITION BY c.Person_ID ORDER BY c.UniqMonthID ASC, c.Der_ContactDate ASC, c.UniqCareContID ASC) AS FYAccessEngRN,
         ROW_NUMBER () OVER(PARTITION BY c.Person_ID, c.STP_Code ORDER BY c.UniqMonthID ASC, c.Der_ContactDate ASC, c.UniqCareContID ASC) AS FYAccessSTPRN,
         ROW_NUMBER () OVER(PARTITION BY c.Person_ID, c.Region_Code ORDER BY c.UniqMonthID ASC, c.Der_ContactDate ASC, c.UniqCareContID ASC) AS FYAccessRegionRN
- 
+
  FROM global_temp.MHA_Contacts c
- 
+
  WHERE c.UniqMonthID BETWEEN $month_id-11 AND $month_id
+
+
 
 -- COMMAND ----------
 
 -- DBTITLE 1,master
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMP VIEW MHA91_Main AS
- 
+
  SELECT DISTINCT
  r.UniqMonthID,
  r.Person_ID,
@@ -137,20 +141,20 @@
  r.REGION_CODE,
  REGION_NAME,
  COALESCE(r.LADistrictAuth,'Unknown') AS LACode,
- 
+
  CASE WHEN c1.Contacts >0 THEN 1 ELSE NULL END AS AttContacts,
- 
+
  CASE WHEN c1.Contacts = 0 THEN 1 ELSE NULL END AS NotAttContacts,
- 
+
  c2.FYAccessLARN, 
  c2.FYAccessRNProv,
  c2.FYAccessCCGRN,
  c2.FYAccessSTPRN,
  c2.FYAccessRegionRN,
  c2.FYAccessEngRN
- 
+
  FROM global_temp.MHA_Referrals r    
- 
+
  LEFT JOIN 
         (SELECT
   c.UniqMonthID,
@@ -161,7 +165,7 @@
         GROUP BY c.UniqMonthID, c.RecordNumber, c.UniqServReqID) c1
               ON r.RecordNumber = c1.RecordNumber
               AND r.UniqServReqID = c1.UniqServReqID
- 
+
  LEFT JOIN global_temp.MHA_ContactYTD c2 
         ON r.RecordNumber = c2.RecordNumber
         AND r.UniqServReqID = c2.UniqServReqID
@@ -173,13 +177,14 @@
  LEFT JOIN $db_output.RD_ORG_DAILY_LATEST o
        ON r.OrgIDProv = o.ORG_CODE
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,Final data
  %sql
- 
+
  INSERT INTO $db_output.cyp_peri_monthly_unformatted
- 
+
  SELECT
   add_months('$rp_startdate', -11)  AS REPORTING_PERIOD_START_DATE,
  '$rp_enddate' AS REPORTING_PERIOD_END_DATE,
@@ -193,9 +198,9 @@
  COUNT(DISTINCT CASE WHEN m.AttContacts > 0 AND m.FYAccessEngRN = 1 THEN m.Person_ID END) AS METRIC_VALUE,
  '$db_source' AS SOURCE_DB
  from global_temp.MHA91_Main m
- 
+
  union all
- 
+
  SELECT
  add_months('$rp_startdate', -11)  AS REPORTING_PERIOD_START_DATE,
  '$rp_enddate' AS REPORTING_PERIOD_END_DATE,
@@ -217,9 +222,9 @@
  LEFT JOIN global_temp.MHA91_Main m on m.orgidprov = h.OrgIDPRovider
  LEFT JOIN $db_output.RD_ORG_DAILY_LATEST o on o.ORG_CODE = h.ORGIDPROVIDER
  GROUP BY h.OrgIDProvider, o.name
- 
+
  union all
- 
+
  SELECT
  add_months('$rp_startdate', -11)  AS REPORTING_PERIOD_START_DATE,
  '$rp_enddate' AS REPORTING_PERIOD_END_DATE,
@@ -237,9 +242,9 @@
         FROM $db_output.STP_Region_mapping_post_2020) h 
  LEFT JOIN global_temp.MHA91_Main m on h.CCG_CODE = m.orgidccgres
  GROUP BY h.CCG_CODE, h.CCG_DESCRIPTION
- 
+
  union all
- 
+
  SELECT
  add_months('$rp_startdate', -11)  AS REPORTING_PERIOD_START_DATE,
  '$rp_enddate' AS REPORTING_PERIOD_END_DATE,
@@ -257,10 +262,10 @@
         FROM $db_output.STP_Region_mapping_post_2020) h 
  LEFT JOIN global_temp.MHA91_Main m on h.STP_CODE = m.stp_code
  GROUP BY h.STP_CODE, h.STP_DESCRIPTION
- 
- 
+
+
  UNION ALL 
- 
+
  SELECT
  add_months('$rp_startdate', -11)  AS REPORTING_PERIOD_START_DATE,
  '$rp_enddate' AS REPORTING_PERIOD_END_DATE,

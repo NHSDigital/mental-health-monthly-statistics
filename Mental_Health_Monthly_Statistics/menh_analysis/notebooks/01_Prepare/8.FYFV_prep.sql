@@ -7,7 +7,7 @@
 -- CREATE WIDGET TEXT db_output DEFAULT "menh_analysis";
 -- CREATE WIDGET TEXT status DEFAULT "Performance";
 -- CREATE WIDGET TEXT month_id DEFAULT "1419";
--- CREATE WIDGET TEXT db_source DEFAULT "testdata_menh_analysis_mh_pre_pseudo_d1";
+-- CREATE WIDGET TEXT db_source DEFAULT "testdata_menh_analysis_mhsds_db";
 -- CREATE WIDGET TEXT rp_startdate DEFAULT "2018-06-01";
 -- CREATE WIDGET TEXT rp_enddate DEFAULT "2018-06-30";
 
@@ -25,31 +25,31 @@
  rp_startdate = dbutils.widgets.get("rp_startdate")
  status = dbutils.widgets.get("status")
  rp_startdate_quarterly = dbutils.widgets.get("rp_startdate_quarterly")
- 
+
  params = {'db_output': db_output, 'db_source': db_source, 'month_id': month_id, 'rp_enddate': rp_enddate, 'rp_startdate': rp_startdate, 'rp_startdate_quarterly': rp_startdate_quarterly, 'status': status}
- 
+
  print(params)
 
 -- COMMAND ----------
 
 -- DBTITLE 1,Calculate remaining dates from current month widget value
  %py
- 
+
  # Moved the creation of these parameters into the notebook above as I *think* that parameters created in python code can't be used by SQL code in the same notebook...
- 
- 
+
+
  # from datetime import datetime
  # from dateutil.relativedelta import relativedelta
- 
+
  # params['month_id_1'] = int(params['month_id']) - 2
  # params['month_id_2'] = int(params['month_id']) - 1
- 
+
  # params['rp_startdate_m1'] = rp_startdate_quarterly
  # params['rp_startdate_m2'] = (datetime.strptime(params['rp_startdate_quarterly'], '%Y-%m-%d') + relativedelta(months=1)).strftime('%Y-%m-%d')
- 
+
  # params['rp_enddate_m1'] = (datetime.strptime(params['rp_startdate_quarterly'], '%Y-%m-%d') + relativedelta(months=1,days=-1)).strftime('%Y-%m-%d')
  # params['rp_enddate_m2'] = (datetime.strptime(params['rp_startdate_quarterly'], '%Y-%m-%d') + relativedelta(months=2,days=-1)).strftime('%Y-%m-%d')
- 
+
  # print(params)
 
 -- COMMAND ----------
@@ -119,14 +119,14 @@ WHERE              (e.ORG_CODE is not null or c.ORG_CODE is not null or e1.ORG_C
 -- COMMAND ----------
 
  %py
- 
+
  import os
- 
+
  db_output = dbutils.widgets.get("db_output")
- 
+
  if os.environ['env'] == 'prod':
    spark.sql('OPTIMIZE {db_output}.{table}'.format(db_output=db_output, table='MHS001_CCG_LATEST'))
- 
+
  spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output, table='MHS001_CCG_LATEST'))
 
 -- COMMAND ----------
@@ -159,14 +159,14 @@ INSERT INTO TABLE $db_output.AMH03e_prep
 -- COMMAND ----------
 
  %python
- 
+
  import os
- 
+
  db_output = dbutils.widgets.get("db_output")
- 
+
  if os.environ['env'] == 'prod':
    spark.sql('OPTIMIZE {db_output}.{table}'.format(db_output=db_output, table='AMH03e_prep'))
- 
+
  spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output, table='AMH03e_prep'))
 
 -- COMMAND ----------
@@ -194,14 +194,14 @@ INNER JOIN global_temp.Accomodation_latest AS ACC
 -- COMMAND ----------
 
  %python
- 
+
  import os
- 
+
  db_output = dbutils.widgets.get("db_output")
- 
+
  if os.environ['env'] == 'prod':
    spark.sql('OPTIMIZE {db_output}.{table}'.format(db_output=db_output, table='AMH13e_14e_prep'))
- 
+
  spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output, table='AMH13e_14e_prep'))
 
 -- COMMAND ----------
@@ -236,20 +236,20 @@ LEFT JOIN $db_output.STP_Region_mapping_post_2020 AS stp
 -- COMMAND ----------
 
  %python
- 
+
  import os
- 
+
  db_output = dbutils.widgets.get("db_output")
- 
+
  if os.environ['env'] == 'prod':
    spark.sql('OPTIMIZE {db_output}.{table}'.format(db_output=db_output, table='AMH16e_17e_prep'))
- 
+
  spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output, table='AMH16e_17e_prep'))
 
 -- COMMAND ----------
 
  %md
- 
+
  Table 2 Prep
 
 -- COMMAND ----------
@@ -270,7 +270,7 @@ CREATE OR REPLACE GLOBAL TEMPORARY VIEW ContPer_Quarterly AS
            FROM global_temp.FirstPersQtr s
 INNER JOIN global_temp.first_contacts f 
            ON ((f.UniqServReqID = s.UniqServReqID AND f.Person_ID = s.Person_ID) 
-           OR (s.OrgIDProv = 'DFC' AND f.UniqServReqID = s.UniqServReqID))
+           OR (s.OrgIDProv in ('DFC','S9X2N') AND f.UniqServReqID = s.UniqServReqID))
      WHERE QtrRN=1
 
 -- COMMAND ----------
@@ -302,14 +302,14 @@ INSERT INTO TABLE $db_output.CYPFinal_2nd_contact_Quarterly
 -- COMMAND ----------
 
  %python
- 
+
  import os
- 
+
  db_output = dbutils.widgets.get("db_output")
- 
+
  if os.environ['env'] == 'prod':
    spark.sql('OPTIMIZE {db_output}.{table}'.format(db_output=db_output, table='CYPFinal_2nd_contact_Quarterly'))
- 
+
  spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output, table='CYPFinal_2nd_contact_Quarterly'))
 
 -- COMMAND ----------

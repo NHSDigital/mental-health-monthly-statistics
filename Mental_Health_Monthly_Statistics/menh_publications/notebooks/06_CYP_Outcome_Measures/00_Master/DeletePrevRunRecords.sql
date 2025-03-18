@@ -23,6 +23,8 @@
  %sql
  Truncate table $db_output.assessments
 
+
+
 -- COMMAND ----------
 
  %sql

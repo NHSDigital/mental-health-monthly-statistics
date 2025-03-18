@@ -43,16 +43,16 @@ dbutils.notebook.run("../01_Prepare/5.CYP_monthly_prep", 0, params)
  %py
  from datetime import datetime
  from dateutil.relativedelta import relativedelta
- 
+
  params['month_id_1'] = int(params['month_id']) - 2
  params['month_id_2'] = int(params['month_id']) - 1
- 
+
  params['rp_startdate_m1'] = rp_startdate_quarterly
  params['rp_startdate_m2'] = (datetime.strptime(params['rp_startdate'], '%Y-%m-%d') + relativedelta(months=-1)).strftime('%Y-%m-%d')
- 
+
  params['rp_enddate_m1'] = (datetime.strptime(params['rp_startdate'], '%Y-%m-%d') + relativedelta(months=-1,days=-1)).strftime('%Y-%m-%d')
  params['rp_enddate_m2'] = (datetime.strptime(params['rp_startdate'], '%Y-%m-%d') + relativedelta(days=-1)).strftime('%Y-%m-%d')
- 
+
  print(params)
 
 # COMMAND ----------

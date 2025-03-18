@@ -1,8 +1,8 @@
 -- Databricks notebook source
  %md
- 
+
  # code from FYFV from menh_analysis (with changes)
- 
+
  The only metrics remaining are 
  - AMH03e = DENOMINATOR
  - AMH14e = 1H_NUMERATOR
@@ -20,11 +20,14 @@
  assert dbutils.widgets.get('rp_startdate')
  assert dbutils.widgets.get('status')
 
+
+
 -- COMMAND ----------
 
  %md
- 
+
  ## DENOMINATOR
+
 
 -- COMMAND ----------
 
@@ -202,14 +205,15 @@ INSERT INTO $db_output.ascof_unformatted
 -- COMMAND ----------
 
  %md
- 
+
  ## 1H_NUMERATOR
+
 
 -- COMMAND ----------
 
 -- DBTITLE 1,England
  %sql
- 
+
  INSERT INTO $db_output.ascof_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START,
               '$rp_enddate' AS REPORTING_PERIOD_END,             
@@ -398,8 +402,9 @@ INSERT INTO $db_output.ascof_unformatted
 -- COMMAND ----------
 
  %md
- 
+
  ## 1H_OUTCOME
+
 
 -- COMMAND ----------
 
@@ -616,8 +621,9 @@ INSERT INTO $db_output.ascof_unformatted
 -- COMMAND ----------
 
  %md
- 
+
  ## 1F_NUMERATOR
+
 
 -- COMMAND ----------
 
@@ -810,8 +816,9 @@ INSERT INTO $db_output.ascof_unformatted
 -- COMMAND ----------
 
  %md
- 
+
  ## 1F_OUTCOME 
+
 
 -- COMMAND ----------
 

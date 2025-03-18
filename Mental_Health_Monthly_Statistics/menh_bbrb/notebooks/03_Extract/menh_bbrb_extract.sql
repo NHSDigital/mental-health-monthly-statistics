@@ -1,38 +1,38 @@
 -- Databricks notebook source
  %python
  import os
- 
+
  # import functions
  from datetime import datetime, date
  from dateutil.relativedelta import relativedelta
  from dsp.common.exports import create_csv_for_download
- 
+
  from dsp.code_promotion.mesh_send import cp_mesh_send
- 
+
  # dbutils.widgets.removeAll()
 
 -- COMMAND ----------
 
 -- DBTITLE 1,Create widgets
  %python
- 
+
  db_output = dbutils.widgets.get("db_output")
  rp_startdate = dbutils.widgets.get("rp_startdate")
  rp_enddate = dbutils.widgets.get("rp_enddate")
  status = dbutils.widgets.get("status")
  db_source = dbutils.widgets.get("db_source") 
  ##month_id = dbutils.widgets.get("end_month_id")
- 
- 
- 
+
+
+
  print(f'db_output is {db_output}; \
        rp_startdate is {rp_startdate}; \
        rp_enddate is {rp_enddate}; \
        status is {status}; \
        db_source is {db_source}')
        ##month_id is {month_id}')
- 
- 
+
+
  if status == 'Final':
    shortstatus = status
  else:
@@ -40,10 +40,10 @@
    
  YYYY = rp_startdate[:4]
  Mname = datetime.strptime(rp_startdate, '%Y-%m-%d').strftime("%b")
- 
+
  file_part_name = f"_{Mname}{shortstatus}_{YYYY}" # without csv extension
  print(f'Second part of file name: {file_part_name}')
- 
+
  #Prod mail box id
  mailbox_to = 'X26HC004'
  workflow_id = 'GNASH_MHSDS'
@@ -58,29 +58,29 @@
  # rp_enddate =  "2020-12-31"
  # rp_startdate = "2020-12-01"
  # reference_data =  "reference_data"
- 
- 
- # db_source = "mh_v5_pre_pseudo_d1" 
- 
- 
+
+
+ # db_source = "$mhsds_db" 
+
+
  # print(f'db_output is {db_output}; \
  #       rp_startdate is {rp_startdate}; \
  #       rp_enddate is {rp_enddate}; \
  #       status is {status}; \
  #       db_source is {db_source}; \
  #       month_id is {month_id}')
- 
- 
+
+
  # # import functions
  # from datetime import datetime, date
  # from dateutil.relativedelta import relativedelta
  # from dsp.common.exports import create_csv_for_download
- 
- 
+
+
  # shortstatus = status[:4]
  # YYYY = rp_startdate[:4]
  # Mname = datetime.strptime(rp_startdate, '%Y-%m-%d').strftime("%b")
- 
+
  # file_part_name = f"_{Mname}{shortstatus}_{YYYY}" # without csv extension
  # print(f'Second part of file name: {file_part_name}')
 
@@ -115,6 +115,9 @@
                                        AND MEASURE_ID NOT LIKE "%OAP%"
                                        AND MEASURE_ID NOT LIKE "%MRS%"
                                        AND MEASURE_ID NOT LIKE "%MHSPOP%"
+                                       AND MEASURE_ID NOT LIKE "%ADD%"
+                                       AND MEASURE_ID NOT LIKE "%BED%"
+                                       AND MEASURE_ID NOT LIKE "%DISCH%"
                                        ORDER BY REPORTING_PERIOD_START, REPORTING_PERIOD_END, STATUS, BREAKDOWN, PRIMARY_LEVEL, SECONDARY_LEVEL, MEASURE_ID""")
   
  #to help with local testing and avoiding the commenting and uncommenting the code
@@ -153,6 +156,9 @@
                                    AND SOURCE_DB = '{db_source}'                                  
                                    AND MEASURE_ID NOT LIKE "%OAP%"
                                    AND MEASURE_ID NOT LIKE "%MRS%"
+                                   AND MEASURE_ID NOT LIKE "%ADD%"
+                                   AND MEASURE_ID NOT LIKE "%BED%"
+                                   AND MEASURE_ID NOT LIKE "%DISCH%"
                                    ORDER BY REPORTING_PERIOD_START, REPORTING_PERIOD_END, STATUS, BREAKDOWN, PRIMARY_LEVEL, SECONDARY_LEVEL, MEASURE_ID""")
   
  if(os.environ.get('env') == 'prod'):

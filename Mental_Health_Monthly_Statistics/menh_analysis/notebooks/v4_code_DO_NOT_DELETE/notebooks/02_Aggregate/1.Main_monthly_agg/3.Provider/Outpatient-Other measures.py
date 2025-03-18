@@ -62,7 +62,7 @@
 
 # DBTITLE 1,AMH02 Provider
  %sql
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START,
              '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -88,7 +88,7 @@
 
 # DBTITLE 1,AMH03 Provider
  %sql
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START,
              '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -345,9 +345,9 @@
 # DBTITLE 1,MH01 Provider
  %sql
  --/**MH01 - PEOPLE IN CONTACT WITH MENTAL HEALTH SERVICES AT END OF REPORTING PERIOD, PROVIDER**/
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
- 
+
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
  	        ,'$status'	AS STATUS
@@ -368,9 +368,9 @@
  %sql
  --/**MH01a - PEOPLE IN CONTACT WITH MENTAL HEALTH SERVICES AT END OF REPORTING PERIOD, AGED 0-18, PROVIDER**/
  -- in both monthly and cahms monthly outputs
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
- 
+
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
  	        ,'$status'	AS STATUS
@@ -391,9 +391,9 @@
 # DBTITLE 1,MH01b Provider
  %sql
  --/**MH01b - PEOPLE IN CONTACT WITH MENTAL HEALTH SERVICES AT END OF REPORTING PERIOD, AGED 19-64, PROVIDER**/
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
- 
+
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
  	        ,'$status'	AS STATUS
@@ -409,14 +409,15 @@
  WHERE		AGE_GROUP = '19-64'
  GROUP BY	OrgIDProv
 
+
 # COMMAND ----------
 
 # DBTITLE 1,MH01c Provider
  %sql
  --/**MH01c - PEOPLE IN CONTACT WITH MENTAL HEALTH SERVICES AT END OF REPORTING PERIOD, AGED 65 AND OVER, PROVIDER**/
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
- 
+
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
  	        ,'$status'	AS STATUS
@@ -512,7 +513,7 @@
 # DBTITLE 1,MHS13 - Provider
  %sql
  /**MHS13 - PEOPLE IN CONTACT WITH SERVICES AT END OF REPORTING PERIOD WITH ACCOMODATION STATUS RECORDED, PROVIDER**/
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -537,13 +538,15 @@
              AND ACC.Person_ID is not NULL -- not sure if this is necessary
  GROUP BY	MPI.OrgIDProv
 
+
+
 # COMMAND ----------
 
 # DBTITLE 1,AMH14
  %sql
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
- 
+
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
  			,'$status' AS STATUS
@@ -562,9 +565,9 @@
 
 # DBTITLE 1,AMH15
  %sql
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
- 
+
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
  			,'$status' AS STATUS
@@ -587,7 +590,7 @@
 # DBTITLE 1,AMH17
  %sql
  INSERT INTO $db_output.Main_monthly_unformatted
- 
+
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
  			,'$status' AS STATUS
@@ -608,9 +611,9 @@
 
 # DBTITLE 1,AMH18
  %sql
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
- 
+
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
  			,'$status' AS STATUS
@@ -644,7 +647,7 @@
  	       ,'MHS16'	AS METRIC
  		   ,CAST (COALESCE( cast(COUNT (DISTINCT REF.Person_ID) as INT), 0) AS STRING)	AS METRIC_VALUE 
             ,'$db_source' AS SOURCE_DB
- 
+
        FROM $db_output.MHS101Referral_open_end_rp AS REF 
  INNER JOIN $db_source.MHS004EmpStatus AS EMP
  		   ON REF.Person_ID = EMP.Person_ID 
@@ -677,14 +680,14 @@
              AND REF.OrgIDProv = CRS.OrgIDProv
    
    
-     --commenting this section of code out to exclude the need for table MHS008CrisisPlan in the source data
+     --User note: commenting this section of code out to exclude the need for table MHS008CrisisPlan in the source data
  --     LEFT JOIN $db_source.MHS008CrisisPlan AS CRSold
  -- 		    ON REF.Person_ID = CRSold.Person_ID 
  --             AND CRSold.UniqMonthID <= '${month_id}' 
  --             AND REF.OrgIDProv = CRSold.OrgIDProv
        WHERE 
- 
-     --commenting this section of code out to exclude the need for table MHS008CrisisPlan in the source data
+
+     --User note: commenting this section of code out to exclude the need for table MHS008CrisisPlan in the source data
      --(
                       (CarePlanTypeMH = '12' AND CRS.Person_ID IS NOT NULL 
                       AND ((CRS.CarePlanCreatDate <= '${rp_enddate}' 
@@ -692,7 +695,7 @@
                       OR (CRS.CarePlanLastUpdateDate <= '${rp_enddate}' 
                       AND CRS.CarePlanLastUpdateDate >= DATE_ADD(ADD_MONTHS( '${rp_enddate}', -12),1))))
       
-     --commenting this section of code out to exclude the need for table MHS008CrisisPlan in the source data
+     --User note: commenting this section of code out to exclude the need for table MHS008CrisisPlan in the source data
  --                 OR 
  --                      (CRSold.Person_ID IS NOT NULL 
  --                      AND ((CRSold.MHCrisisPlanCreatDate <= '${rp_enddate}' 
@@ -870,7 +873,7 @@
 # DBTITLE 1,MHS29 Provider
  %sql
  --/**MHS29 - CONTACTS IN REPORTING PERIOD, PROVIDER**/
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -886,12 +889,13 @@
  FROM		global_temp.MHS29_prep -- prep table in main monthly prep folder
  GROUP BY	OrgIDProv
 
+
 # COMMAND ----------
 
 # DBTITLE 1,MHS29a Provider
  %sql
  --/**MHS29a - CONTACTS WITH PERINATAL MENTAL HEALTH TEAM IN REPORTING PERIOD**/
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -913,7 +917,7 @@
 # DBTITLE 1,MHS29b Provider
  %sql
  --/**MHS29b - CONTACTS WITH CRISIS RESOLUTION SERVICE OR HOME TREATMENT TEAM IN REPORTING PERIOD, PROVIDER**/
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -935,7 +939,7 @@
 # DBTITLE 1,MHS29c Provider
  %sql
  --/**MHS29c - CONTACTS WITH MEMORY SERVICES TEAM IN REPORTING PERIOD, PROVIDER**/
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -957,7 +961,7 @@
 # DBTITLE 1,MHS30 Provider
  %sql
  --/**MHS30 - ATTENDED CONTACTS IN REPORTING PERIOD, PROVIDER**/
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -979,7 +983,7 @@
 # DBTITLE 1,MHS30a Provider
  %sql
  --/**MHS30a - ATTENDED CONTACTS WITH PERINATAL MENTAL HEALTH TEAM IN REPORTING PERIOD, PROVIDER**/
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -1002,7 +1006,7 @@
 # DBTITLE 1,MHS30b Provider
  %sql
  --/**MHS30b - ATTENDED CONTACTS WITH CRISIS RESOLUTION SERVICE OR HOME TREATMENT TEAM IN REPORTING PERIOD, PROVIDER**/
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -1025,7 +1029,7 @@
 # DBTITLE 1,MHS30c Provider
  %sql
  --/**MHS30c - ATTENDED CONTACTS WITH MEMORY SERVICES TEAM TEAM IN REPORTING PERIOD, PROVIDER**/
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -1069,7 +1073,7 @@
 # DBTITLE 1,MHS33 Provider
  %sql
  /**MHS33 - PEOPLE ASSIGNED TO A CARE CLUSTER AT END OF REPORTING PERIOD, PROVIDER**/
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -1101,7 +1105,7 @@
 # DBTITLE 1,MHS57 Provider
  %sql
  /**MHS57 - NUMBER OF PEOPLE DISCHARGED IN THE RP**/
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -1124,7 +1128,7 @@
 # DBTITLE 1,MHS58 Provider
  %sql
  /**MHS58 - NUMBER OF MISSED CARE CONTACTS IN THE RP**/
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -1159,6 +1163,7 @@
         FROM global_temp.CCR7071_prep_prov
        WHERE ClinRespPriorityType = '1'
     GROUP BY OrgIDProv;
+
 
 # COMMAND ----------
 

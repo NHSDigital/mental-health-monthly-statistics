@@ -1,8 +1,8 @@
 # Databricks notebook source
  %md
- 
+
  # Expand output for each product to cover all possible metrics
- 
+
  By RIGHT JOINing the unformatted output to the list of possible metrics, and using COALESCE we can 
  fill in any metrics which didn't emerge from the submitted data.
 
@@ -34,7 +34,7 @@
  %sql
  --reinstated this SQL version now that the need to restrict outputs for Provisional & Final has dropped
  --also Final is now Performance anyway!
- 
+
  CREATE OR REPLACE GLOBAL TEMP VIEW Main_monthly_expanded AS
  -- these top measures include all possible metrics with NULL values returned when no data submitted
  SELECT  
@@ -50,7 +50,7 @@
    p.METRIC_NAME AS METRIC_NAME,
    m.METRIC_VALUE AS METRIC_VALUE,
    COALESCE(m.SOURCE_DB, '$db_source') AS SOURCE_DB
- 
+
  FROM $db_output.Main_monthly_unformatted as m
  RIGHT OUTER JOIN global_temp.main_monthly_possible_metrics as p
    ON m.BREAKDOWN = p.BREAKDOWN
@@ -77,6 +77,7 @@
            'England; Gender',
            'England; IMD Decile',
            'England; Sexual Orientation',
+           'England; Rural/Urban Classification',
            'Provider; Age Group',
            'Provider; Attendance',
            'Provider; Bed Type',
@@ -90,9 +91,9 @@
            --METRICS REMOVED AS THEY ONLY HAVE GRANULAR BREAKDOWNS (i.e. DO NOT EXIST WITH England, Provider, CCG BREAKDOWNS ONLY)
            AND 
            (p.METRIC NOT IN ('MHS27a','MHS29f','MHS30h'))
- 
+
  union all
- 
+
  SELECT  
    COALESCE(m.REPORTING_PERIOD_START, '$rp_startdate') as REPORTING_PERIOD_START,
    COALESCE(m.REPORTING_PERIOD_END, '$rp_enddate') as REPORTING_PERIOD_END,
@@ -106,7 +107,7 @@
    p.METRIC_NAME AS METRIC_NAME,
    m.METRIC_VALUE AS METRIC_VALUE,
    COALESCE(m.SOURCE_DB, '$db_source') AS SOURCE_DB
- 
+
  FROM $db_output.Main_monthly_unformatted as m
  RIGHT OUTER JOIN global_temp.main_monthly_possible_metrics as p
    ON m.BREAKDOWN = p.BREAKDOWN
@@ -130,6 +131,7 @@
    (p.BREAKDOWN IN ('England; Gender') AND p.METRIC IN ('MHS01', 'MHS07', 'MHS29', 'MHS32')) OR
    (p.BREAKDOWN IN ('England; IMD Decile') AND p.METRIC IN ('MHS01', 'MHS07', 'MHS29', 'MHS32')) OR
    (p.BREAKDOWN IN ('England; Sexual Orientation') AND p.METRIC IN ('MHS01', 'MHS07', 'MHS29', 'MHS32')) OR
+   (p.BREAKDOWN IN ('England; Rural/Urban Classification') AND p.METRIC IN ('MHS01', 'MHS07', 'MHS29', 'MHS32')) OR
    
    (p.BREAKDOWN IN ('Provider; Age Group') AND p.METRIC IN ('MHS23d', 'MHS29d', 'MHS30f', 'MHS32c', 'MHS57b')) OR
    (p.BREAKDOWN IN ('Provider; Attendance') AND p.METRIC IN ('MHS29a', 'MHS29d', 'MHS29f')) OR
@@ -143,7 +145,7 @@
    
    
  union all
- 
+
  -- these other measures only include rows where data has been submitted
  select 
    COALESCE(a.REPORTING_PERIOD_START, '$rp_startdate') as REPORTING_PERIOD_START, 
@@ -177,9 +179,9 @@
 # DBTITLE 1,1.1 Expand Main monthly - MHA26
  %sql
  --added as a separate element for MHS26
- 
+
  CREATE OR REPLACE GLOBAL TEMP VIEW DD_expanded AS
- 
+
  select 
    COALESCE(c.REPORTING_PERIOD_START, '$rp_startdate') as REPORTING_PERIOD_START, 
    COALESCE(c.REPORTING_PERIOD_END, '$rp_enddate') as REPORTING_PERIOD_END,
@@ -210,7 +212,7 @@
 
 # DBTITLE 1,2. Expand AWT (Access and Waiting Times) - code excluded to prevent 0/* outputs in Rounded outputs
  %sql
- 
+
  -- CREATE OR REPLACE GLOBAL TEMP VIEW AWT_expanded AS
  -- SELECT DISTINCT 
  --   COALESCE(m.REPORTING_PERIOD_START, '$rp_startdate_quarterly') as REPORTING_PERIOD_START,
@@ -241,7 +243,7 @@
 
 # DBTITLE 1,3. Expand CYP 2nd contact
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMP VIEW CYP_2nd_contact_expanded AS
  SELECT  
    COALESCE(m.REPORTING_PERIOD_START, '$rp_startdate') as REPORTING_PERIOD_START,
@@ -293,33 +295,33 @@
 # COMMAND ----------
 
 # DBTITLE 1,4. Expand CAP
- %sql
- 
- --reinstated this SQL version now that the need to restrict outputs for Provisional & Final has dropped
- --also Final is now Performance anyway!
- 
- CREATE OR REPLACE GLOBAL TEMP VIEW CAP_expanded AS 
- SELECT COALESCE(m.REPORTING_PERIOD_START, '$rp_startdate') as REPORTING_PERIOD_START, 
- COALESCE(m.REPORTING_PERIOD_END, '$rp_enddate') as REPORTING_PERIOD_END,
- COALESCE(m.STATUS, '$status') as STATUS, COALESCE(m.BREAKDOWN, p.BREAKDOWN) as BREAKDOWN, 
- COALESCE(m.LEVEL, p.LEVEL) as LEVEL, COALESCE(p.LEVEL_DESC) as LEVEL_DESCRIPTION, 
- COALESCE(m.CLUSTER, p.CLUSTER) as SECONDARY_LEVEL,  
- 'NONE' as SECONDARY_LEVEL_DESCRIPTION, 
- COALESCE(m.METRIC,p.METRIC) as METRIC, 
- p.METRIC_NAME AS METRIC_NAME, 
- m.METRIC_VALUE AS METRIC_VALUE,  
- COALESCE(m.SOURCE_DB, '$db_source') AS SOURCE_DB
- 
- FROM $db_output.CAP_Unformatted as m 
- RIGHT JOIN global_temp.CaP_possible_metrics as p 
- ON m.METRIC = p.METRIC 
- AND m.LEVEL = p.LEVEL 
- AND m.CLUSTER = p.CLUSTER 
- AND m.BREAKDOWN = p.BREAKDOWN 
- AND m.REPORTING_PERIOD_START = '$rp_startdate' 
- AND m.REPORTING_PERIOD_END = '$rp_enddate'
- AND m.STATUS = '$status'
- AND m.SOURCE_DB = '$db_source'
+# %sql
+
+# --reinstated this SQL version now that the need to restrict outputs for Provisional & Final has dropped
+# --also Final is now Performance anyway!
+
+# CREATE OR REPLACE GLOBAL TEMP VIEW CAP_expanded AS 
+# SELECT COALESCE(m.REPORTING_PERIOD_START, '$rp_startdate') as REPORTING_PERIOD_START, 
+# COALESCE(m.REPORTING_PERIOD_END, '$rp_enddate') as REPORTING_PERIOD_END,
+# COALESCE(m.STATUS, '$status') as STATUS, COALESCE(m.BREAKDOWN, p.BREAKDOWN) as BREAKDOWN, 
+# COALESCE(m.LEVEL, p.LEVEL) as LEVEL, COALESCE(p.LEVEL_DESC) as LEVEL_DESCRIPTION, 
+# COALESCE(m.CLUSTER, p.CLUSTER) as SECONDARY_LEVEL,  
+# 'NONE' as SECONDARY_LEVEL_DESCRIPTION, 
+# COALESCE(m.METRIC,p.METRIC) as METRIC, 
+# p.METRIC_NAME AS METRIC_NAME, 
+# m.METRIC_VALUE AS METRIC_VALUE,  
+# COALESCE(m.SOURCE_DB, '$db_source') AS SOURCE_DB
+
+# FROM $db_output.CAP_Unformatted as m 
+# RIGHT JOIN global_temp.CaP_possible_metrics as p 
+# ON m.METRIC = p.METRIC 
+# AND m.LEVEL = p.LEVEL 
+# AND m.CLUSTER = p.CLUSTER 
+# AND m.BREAKDOWN = p.BREAKDOWN 
+# AND m.REPORTING_PERIOD_START = '$rp_startdate' 
+# AND m.REPORTING_PERIOD_END = '$rp_enddate'
+# AND m.STATUS = '$status'
+# AND m.SOURCE_DB = '$db_source'
 
 # COMMAND ----------
 
@@ -339,10 +341,10 @@
 
 # DBTITLE 1,5. CYP Monthly expanded
  %sql
- 
+
  -- reinstated this SQL version now that the need to restrict outputs for Provisional & Final has dropped
  --also Final is now Performance anyway!
- 
+
  CREATE OR REPLACE GLOBAL TEMP VIEW CYP_monthly_expanded AS
  SELECT  
    COALESCE(m.REPORTING_PERIOD_START, '$rp_startdate') as REPORTING_PERIOD_START,
@@ -379,7 +381,7 @@
 
 # DBTITLE 1,7. Expand Ascof
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMP VIEW Ascof_expanded AS 
  SELECT COALESCE(m.REPORTING_PERIOD_START, '$rp_startdate') as REPORTING_PERIOD_START, 
  COALESCE(m.REPORTING_PERIOD_END, '$rp_enddate') as REPORTING_PERIOD_END,
@@ -395,7 +397,7 @@
  p.METRIC_NAME AS METRIC_NAME, 
  m.METRIC_VALUE AS METRIC_VALUE, 
  COALESCE(m.SOURCE_DB, '$db_source') AS SOURCE_DB
- 
+
  FROM $db_output.Ascof_unformatted as m 
  RIGHT OUTER JOIN global_temp.ascof_possible_metrics as p 
  ON m.BREAKDOWN = p.BREAKDOWN 
@@ -438,10 +440,10 @@ else:
 
 # DBTITLE 1,8. Expand FYFV - commented out - no is_quarter
  %sql
- 
- 
+
+
  --need to add in a condition so that this only runs when month_id is divisible by 3 with no remainder
- 
+
  -- CREATE OR REPLACE GLOBAL TEMP VIEW FYFV_expanded AS
  -- SELECT  
  --   COALESCE(m.REPORTING_PERIOD_START, '$rp_startdate') as REPORTING_PERIOD_START,

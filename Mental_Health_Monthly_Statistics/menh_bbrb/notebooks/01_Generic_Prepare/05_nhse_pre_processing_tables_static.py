@@ -142,7 +142,7 @@
  i.UniqMonthID,
  i.OrgIDProv,
  i.Person_ID,
- CASE WHEN i.OrgIDProv = 'DFC' THEN '1' ELSE i.Person_ID END AS Der_PersonID,
+ CASE WHEN i.OrgIDProv in ('DFC','S9X2N') THEN '1' ELSE i.Person_ID END AS Der_PersonID,
  i.RecordNumber,
  i.UniqServReqID,
  i.OrgIDComm,
@@ -174,12 +174,12 @@
  c.CareContTime AS Der_ContactTime,
  c.ConsMechanismMH, --new for v5
  c.AttendStatus,
- CASE WHEN c.OrgIDProv = 'DFC' THEN '1' ELSE c.Person_ID END AS Der_PersonID, -- derivation added to better reflect anonymous services where personID may change every month
+ CASE WHEN c.OrgIDProv in ('DFC','S9X2N') THEN '1' ELSE c.Person_ID END AS Der_PersonID, -- derivation added to better reflect anonymous services where personID may change every month
  CASE 
      WHEN c.AttendStatus IN ('5','6') 
      AND (((c.ConsMechanismMH NOT IN ('05', '06') and c.UniqMonthID < '1459') --v4.1 ConsMediumUsed
      OR (c.ConsMechanismMH IN ('01', '02', '04', '11') and c.UniqMonthID >= '1459')) 
-     OR c.OrgIDProv = 'DFC' AND ((c.ConsMechanismMH IN ('05', '06') and c.UniqMonthID < '1459') 
+     OR c.OrgIDProv in ('DFC','S9X2N') AND ((c.ConsMechanismMH IN ('05', '06') and c.UniqMonthID < '1459') 
      OR (c.ConsMechanismMH IN ('05', '09', '10', '13') and c.UniqMonthID >= '1459')))
      THEN 1 ELSE 'NULL' 
  END AS Der_DirectContact 
@@ -220,12 +220,12 @@
   
  SELECT *,
  ROW_NUMBER() OVER (PARTITION BY 
-                    CASE WHEN a.OrgIDProv = 'DFC' THEN a.UniqServReqID
+                    CASE WHEN a.OrgIDProv in ('DFC','S9X2N') THEN a.UniqServReqID
                     ELSE a.Person_ID END, 
                     a.UniqServReqID 
                     ORDER BY a.Der_ContactDate ASC, a.Der_ContactTime ASC, a.Der_ActivityUniqID ASC) AS Der_ContactOrder,
  ROW_NUMBER() OVER (PARTITION BY 
-                    CASE WHEN a.OrgIDProv = 'DFC' THEN a.UniqServReqID
+                    CASE WHEN a.OrgIDProv in ('DFC','S9X2N') THEN a.UniqServReqID
                     ELSE a.Person_ID END, 
                     a.UniqServReqID, a.Der_FY 
                     ORDER BY a.Der_ContactDate ASC, a.Der_ContactTime ASC, a.Der_ActivityUniqID ASC) AS Der_FYContactOrder
@@ -233,10 +233,10 @@
  FROM $db_output.nhse_pre_proc_activity a
   
  WHERE a.UniqMonthID < 1459 AND 
-      ((a.Der_ActivityType = 'DIRECT' AND a.AttendStatus IN ('5','6') AND (a.ConsMechanismMH NOT IN ('05', '06') OR OrgIDProv = 'DFC' AND a.ConsMechanismMH IN ('05','06'))) OR a.Der_ActivityType = 'INDIRECT') 
+      ((a.Der_ActivityType = 'DIRECT' AND a.AttendStatus IN ('5','6') AND (a.ConsMechanismMH NOT IN ('05', '06') OR OrgIDProv in ('DFC','S9X2N') AND a.ConsMechanismMH IN ('05','06'))) OR a.Der_ActivityType = 'INDIRECT') 
  OR
      a.UniqMonthID >= 1459 AND 
- ((a.Der_ActivityType = 'DIRECT' AND a.AttendStatus IN ('5','6') AND (a.ConsMechanismMH IN ('01', '02', '04', '11') OR OrgIDProv = 'DFC' AND a.ConsMechanismMH IN ('05','09', '10', '13'))) OR a.Der_ActivityType = 'INDIRECT')
+ ((a.Der_ActivityType = 'DIRECT' AND a.AttendStatus IN ('5','6') AND (a.ConsMechanismMH IN ('01', '02', '04', '11') OR OrgIDProv in ('DFC','S9X2N') AND a.ConsMechanismMH IN ('05','09', '10', '13'))) OR a.Der_ActivityType = 'INDIRECT')
 
 # COMMAND ----------
 
@@ -330,7 +330,7 @@
  a.RecordNumber,
  a.MHS607UniqID AS Der_AssUniqID,
  a.OrgIDProv,
- CASE WHEN a.OrgIDProv = 'DFC' THEN '1' ELSE a.Person_ID END AS Person_ID, ---Der_Person_ID Derivation
+ CASE WHEN a.OrgIDProv in ('DFC','S9X2N') THEN '1' ELSE a.Person_ID END AS Person_ID, ---Der_Person_ID Derivation
  a.UniqServReqID,
  a.AgeAssessToolCont AS Der_AgeAssessTool,
  a.UniqCareContID,
@@ -358,7 +358,7 @@
  r.RecordNumber,
  r.MHS606UniqID AS Der_AssUniqID,
  r.OrgIDProv,
- CASE WHEN r.OrgIDProv = 'DFC' THEN '1' ELSE r.Person_ID END AS Person_ID, ---Der_Person_ID Derivation,
+ CASE WHEN r.OrgIDProv in ('DFC','S9X2N') THEN '1' ELSE r.Person_ID END AS Person_ID, ---Der_Person_ID Derivation,
  r.UniqServReqID,
  r.AgeAssessToolReferCompDate AS Der_AgeAssessTool,
  'NULL' AS UniqCareContID,
@@ -384,7 +384,7 @@
  c.RecordNumber,
  a.MHS802UniqID AS Der_AssUniqID,
  a.OrgIDProv,
- CASE WHEN a.OrgIDProv = 'DFC' THEN '1' ELSE a.Person_ID END AS Person_ID,
+ CASE WHEN a.OrgIDProv in ('DFC','S9X2N') THEN '1' ELSE a.Person_ID END AS Person_ID,
  r.UniqServReqID,
  'NULL' AS Der_AgeAssessTool,
  'NULL' AS UniqCareContID,

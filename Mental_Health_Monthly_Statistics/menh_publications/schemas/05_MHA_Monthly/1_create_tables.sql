@@ -1,20 +1,21 @@
 -- Databricks notebook source
  %py
  print("MHA_Monthly create tables")
- 
+
  db_output = dbutils.widgets.get("db_output")
  print(db_output)
  assert db_output
+
 
 -- COMMAND ----------
 
  %sql
  DROP TABLE IF EXISTS $db_output.mha_breakdown_values;
  CREATE TABLE IF NOT EXISTS $db_output.mha_breakdown_values (breakdown string) USING DELTA;
- 
+
  DROP TABLE IF EXISTS $db_output.mha_level_values_1;
  CREATE TABLE IF NOT EXISTS $db_output.mha_level_values_1 (primary_level string, primary_level_desc string, secondary_level string, secondary_level_desc string, breakdown string) USING DELTA; --See above.
- 
+
  DROP TABLE IF EXISTS $db_output.mha_metric_values;
  CREATE TABLE IF NOT EXISTS $db_output.mha_metric_values (metric string, metric_name string) USING DELTA;
 

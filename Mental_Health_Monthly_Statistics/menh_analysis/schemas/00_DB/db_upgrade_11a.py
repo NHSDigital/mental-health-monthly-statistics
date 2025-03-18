@@ -1,15 +1,15 @@
 # Databricks notebook source
  %md
- 
+
  this notebook is named db_upgrade_11a as it is making changes to tables created in db_upgrade_11
- 
+
  it must be run after db_upgrade_11 as it alters tables created there.
- 
+
  the changes are the addition of the ADHOC_DESC column to audit_menh_analysis
 
 # COMMAND ----------
 
-# dbutils.widgets.text("db_output","_demo_test2","Target Database")
+# dbutils.widgets.text("db_output","User note_demo_test2","Target Database")
 db_output = dbutils.widgets.get("db_output")
 assert db_output
 

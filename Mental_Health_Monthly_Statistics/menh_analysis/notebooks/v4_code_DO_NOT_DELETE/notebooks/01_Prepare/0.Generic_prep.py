@@ -1,9 +1,9 @@
 # Databricks notebook source
  %md
- 
+
  # Generic Prep assets used throughout Mental health
  -- check that all cells are listed here appropriately IN ORDER and are all needed
- 
+
  - RD_CCG_LATEST
  - CCG_PRAC
  - CCG_PREP
@@ -53,7 +53,7 @@
 # DBTITLE 1,RD_CCG_LATEST
  %sql
  TRUNCATE TABLE $db_output.RD_CCG_LATEST;
- 
+
  INSERT INTO TABLE $db_output.RD_CCG_LATEST
  SELECT DISTINCT ORG_CODE,
                  NAME
@@ -81,7 +81,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 
 # DBTITLE 1,CCG_PRAC - have changed to person_id - SH 2019-04-29
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW CCG_PRAC AS
  SELECT GP.Person_ID,
        GP.OrgIDCCGGPPractice,
@@ -138,9 +138,9 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 
 # DBTITLE 1,RD_ORG_DAILY_LATEST
  %sql
- 
+
  /* Org daily latest */
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW RD_ORG_DAILY_LATEST AS
  SELECT DISTINCT ORG_CODE, 
                  NAME
@@ -154,9 +154,9 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 # DBTITLE 1,List of providers
  %sql
  /* List of providers (taken from EIP script) */
- 
+
  TRUNCATE TABLE $db_output.Provider_list;
- 
+
  INSERT INTO TABLE $db_output.Provider_list
  SELECT DISTINCT OrgIDProvider as ORG_CODE, x.NAME as NAME
            FROM $db_source.MHS000Header as Z
@@ -165,6 +165,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
            WHERE	Z.UniqMonthID = '$month_id'
                            --ReportingPeriodStartDate >= '$rp_startdate'
                            --AND ReportingPeriodEndDate <= '$rp_enddate';
+
 
 # COMMAND ----------
 
@@ -182,7 +183,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 # DBTITLE 1,List of providers - EIP
  %sql
  /* List of providers (taken from EIP script) */
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW Provider_list_AWT AS
  SELECT DISTINCT OrgIDProvider as ORG_CODE, x.NAME as NAME
            FROM $db_source.MHS000Header as Z
@@ -196,9 +197,9 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 
 # DBTITLE 1,Service area end RP - For testing only - derivation to be created
  %sql
- 
+
  /**CODE TO SPLIT THE DIFFERENT SERVICE AREAS FOR WARD STAYS**/
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW ward_type_list AS
      SELECT  DISTINCT CASE WHEN CAMHSTier IN ('4','9') THEN 'Y'
  					      WHEN TreatFuncCodeMH = '711' THEN 'Y'
@@ -241,7 +242,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 
 # DBTITLE 1,Service area end RP - For testing only - derivation to be created
  %sql
- 
+
  --CREATES A DISTINCT VERSION OF THE SERVICE AREA BREAKDOWNS
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW ward_stay_cats AS
  SELECT  DISTINCT UniqWardStayID
@@ -255,9 +256,9 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 
 # DBTITLE 1,Service area end RP - For testing only - derivation to be created
  %sql
- 
+
  /**CREATES THE SERVICE AREA BREAKDOWN FOR REFERRALS**/
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW referral_list AS
      SELECT	CASE WHEN F.LD = 'Y' THEN 'Y'
  				 WHEN ServTeamTypeRefToMH IN ('E01', 'E02', 'E03', 'E04' , 'B02', 'C01') THEN 'Y'
@@ -298,9 +299,9 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 
 # DBTITLE 1,Service area end RP - For testing only - derivation to be created
  %sql
- 
+
  --CREATES A DISTINCT VERSION OF THE SERVICE AREA BREAKDOWNS
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW referral_cats AS
  SELECT  DISTINCT UniqServReqID
          ,MIN (LD) AS LD
@@ -313,7 +314,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 
 # DBTITLE 1,Service area end RP - For testing only - derivation to be created
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW MHS502WardStay_service_area AS
  SELECT	A.*
          ,B.CAMHS
@@ -329,7 +330,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 
 # DBTITLE 1,Service area end RP - For testing only - derivation to be created
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW MHS101Referral_service_area AS
  SELECT  A.*
          ,B.CAMHS
@@ -345,11 +346,11 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 
 # DBTITLE 1,MHS001MPI_latest_month_data - MPI Table with latest month and latest patient info, with CCG data attached
  %sql
- 
+
  TRUNCATE table $db_output.MHS001MPI_latest_month_data;
- 
- -- MPI
- 
+
+ -- User note: MPI
+
  INSERT INTO $db_output.MHS001MPI_latest_month_data 
      (SELECT MPI.AgeDeath 
             ,MPI.AgeRepPeriodEnd 
@@ -412,11 +413,11 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 
 # DBTITLE 1,MHS101Referral_open_end_rp - Referral table, latest month and open end RP
  %sql
- 
- --  replacing ref.* here with a list of all columns to allow the _v sourced menhprimary_refresh and menh_point_in_time tables to be used as source data too.
- 
+
+ -- User note replacing ref.* here with a list of all columns to allow the _v sourced menhprimary_refresh and menh_point_in_time tables to be used as source data too.
+
  TRUNCATE TABLE $db_output.MHS101Referral_open_end_rp;
- 
+
  INSERT INTO $db_output.MHS101Referral_open_end_rp
      SELECT 
  --     ref.*
@@ -481,7 +482,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 
 # DBTITLE 1,MHS102ServiceTypeReferredTo
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW MHS102ServiceTypeReferredTo AS
        SELECT SRV.*              
          FROM $db_source.MHS102ServiceTypeReferredTo AS SRV
@@ -492,7 +493,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 
 # DBTITLE 1,MHS502WardStay_open_end_rp
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW MHS502WardStay_open_end_rp AS
      SELECT WRD.*
             ,case when WRDa.CAMHS = 'Y' then 'TRUE' else 'FALSE' end AS CYPServiceWSEndRP_temp
@@ -508,7 +509,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 
 # DBTITLE 1,MHS501HospProvSpell_open_end_rp
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW MHS501HospProvSpell_open_end_rp AS
      SELECT HSP.*
        FROM $db_source.MHS501HospProvSpell HSP
@@ -519,9 +520,9 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 
 # DBTITLE 1,MHS701CPACareEpisode_latest - CPA Intermediate Table
  %sql
- 
+
  TRUNCATE TABLE $db_output.MHS701CPACareEpisode_latest;
- 
+
  INSERT INTO TABLE $db_output.MHS701CPACareEpisode_latest
    SELECT CPAEpisodeId
           ,EndDateCPA
@@ -537,11 +538,12 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
           ,UniqCPAEpisodeID
           ,UniqMonthID
           ,UniqSubmissionID
- 
+
      FROM $db_source.MHS701CPACareEpisode
     WHERE UniqMonthID = '$month_id'
           AND (EndDateCPA IS NULL OR EndDateCPA > '$rp_enddate')
           --and ic_use_submission_flag = 'Y' -- need in hue
+
 
 # COMMAND ----------
 
@@ -558,7 +560,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 
 # DBTITLE 1,Accomodation_latest
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW Accomodation_latest AS
      SELECT  *
              ,dense_rank() OVER (PARTITION BY Person_ID ORDER BY AccommodationStatusDate DESC, UniqMonthID DESC, RecordNumber DESC) AS RANK
@@ -574,7 +576,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 
 # DBTITLE 1,Employment_Latest
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW Employment_Latest AS
      SELECT  *
              ,dense_rank() OVER (PARTITION BY Person_ID ORDER BY EmployStatusRecDate DESC, UniqMonthID DESC, RecordNumber DESC) AS RANK
@@ -590,7 +592,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 
 # DBTITLE 1,bed_types
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW bed_types AS
      SELECT	CASE WHEN WardSecLevel IN ('1', '2', '3') THEN 1 --Specialist MH Servcies
  				 WHEN IntendClinCareIntenCodeMH = '53' THEN 3 --Rehab and older adults organic
@@ -613,7 +615,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 
 # DBTITLE 1,unique_bed_types
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW unique_bed_types AS
       SELECT UniqWardStayID
  			,MIN (Bed_type) AS Bed_type
@@ -624,7 +626,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 
 # DBTITLE 1,ward_list_in_rp
  %sql
- 
+
         CREATE OR REPLACE GLOBAL TEMPORARY VIEW ward_list_in_rp AS
     SELECT DISTINCT CASE WHEN SRV.CAMHSTier IN ('4','9') THEN 'Y'
  						WHEN PROF.TreatFuncCodeMH = '711' THEN 'Y'
@@ -664,7 +666,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 
 # DBTITLE 1,ward_stay_cats_in_rp
  %sql
- 
+
         CREATE OR REPLACE GLOBAL TEMPORARY VIEW ward_stay_cats_in_rp AS 
            SELECT UniqWardStayID
  				,MIN (LD) AS LD
@@ -677,7 +679,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 
 # DBTITLE 1,MHS502WardStay_service_area_discharges
  %sql
- 
+
          CREATE OR REPLACE GLOBAL TEMPORARY VIEW MHS502WardStay_service_area_discharges AS
               SELECT WRD.*
                      ,CATS.CAMHS
@@ -692,7 +694,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 
 # DBTITLE 1,bed_types_in_rp
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW bed_types_in_rp AS
      SELECT	CASE WHEN WardSecLevel IN ('1', '2', '3') THEN 1 --Specialist MH Servcies
  				 WHEN IntendClinCareIntenCodeMH = '53' THEN 3 --Rehab and older adults organic
@@ -717,7 +719,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 
 # DBTITLE 1,unique_bed_types_in_rp
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW unique_bed_types_in_rp AS
       SELECT UniqWardStayID
  			,MIN (Bed_type) AS Bed_type
@@ -740,9 +742,9 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 
 # DBTITLE 1,BED_DAYS_IN_RP
  %sql
- 
+
          TRUNCATE TABLE $db_output.BED_DAYS_IN_RP;
- 
+
          INSERT INTO TABLE $db_output.BED_DAYS_IN_RP
               SELECT 
                      'England' AS LEVEL
@@ -796,7 +798,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 
 # DBTITLE 1,BED_DAYS_IN_RP_PROV
  %sql
- 
+
          CREATE OR REPLACE GLOBAL TEMPORARY VIEW BED_DAYS_IN_RP_PROV AS
               SELECT  MPI.OrgIDProv
                      ,MPI.AgeRepPeriodEnd
@@ -838,7 +840,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 
 # DBTITLE 1,HOME_LEAVE_IN_RPmhs25
  %sql
- 
+
          CREATE OR REPLACE GLOBAL TEMPORARY VIEW HOME_LEAVE_IN_RP AS
               SELECT 'England' AS LEVEL
                      ,MPI.IC_Rec_CCG			
@@ -911,7 +913,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 
 # DBTITLE 1,LOA_IN_RP
  %sql
- 
+
          CREATE OR REPLACE GLOBAL TEMPORARY VIEW LOA_IN_RP AS
               SELECT 'England' AS LEVEL
                      ,MPI.IC_Rec_CCG			
@@ -983,7 +985,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 
 # DBTITLE 1,ref_list_in_rp - commented out
  %sql
- 
+
  --       CREATE OR REPLACE GLOBAL TEMPORARY VIEW ref_list_in_rp AS
  --            SELECT CASE WHEN WRDRP.LD = 'Y'
  --						THEN 'Y'
@@ -1030,6 +1032,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
  --              WHERE (ReferralRequestReceivedDate >= '$rp_startdate' and ReferralRequestReceivedDate  <= '$rp_enddate') 
  --                    AND REF.UniqMonthID = '$month_id' 
 
+
 # COMMAND ----------
 
 # DBTITLE 1,ref_cats_in_rp - commented out
@@ -1047,7 +1050,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 
 # DBTITLE 1,ward_type_list_RPstart - for testing - can use derivation
  %sql
- 
+
   CREATE OR REPLACE GLOBAL TEMPORARY VIEW ward_type_list_RPstart AS
   select distinct case WHEN CAMHSTier IN ('4','9') THEN 'Y'
   WHEN TreatFuncCodeMH = '711' THEN 'Y'
@@ -1095,7 +1098,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 
 # DBTITLE 1,ward_type_list_RPstart - for testing - can use derivation
  %sql
- 
+
   CREATE OR REPLACE GLOBAL TEMPORARY VIEW ward_stay_cats_RPstart AS
    select distinct UniqWardStayID, 
         MIN(LD) as LD,
@@ -1108,7 +1111,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 
 # DBTITLE 1,referral_list_RPstart - for testing - can use derivation
  %sql
- 
+
   CREATE OR REPLACE GLOBAL TEMPORARY VIEW referral_list_RPstart AS
   select Case WHEN F.LD = 'Y' THEN 'Y'
  		 WHEN ServTeamTypeRefToMH IN ('E01', 'E02', 'E03', 'E04', 'B02', 'C01') THEN 'Y'
@@ -1137,11 +1140,12 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
     where (ReferralRequestReceivedDate >= '$rp_startdate' and ReferralRequestReceivedDate  <= '$rp_enddate') 
          and d.UniqMonthID = '$month_id'
 
+
 # COMMAND ----------
 
 # DBTITLE 1,referral_cats_RPstart - for testing - can use derivation
  %sql
- 
+
    CREATE OR REPLACE GLOBAL TEMPORARY VIEW referral_cats_RPstart AS
     select UniqServReqID, 
            MIN(LD) as LD,
@@ -1154,7 +1158,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 
 # DBTITLE 1,MHS502WardStay_service_area_RPstart - for testing - can use derivation
  %sql
- 
+
    CREATE OR REPLACE GLOBAL TEMPORARY VIEW MHS502WardStay_service_area_RPstart AS
      select a.*,
            case when b.CAMHS = 'Y' then TRUE else FALSE end as CYPServiceWSStartRP,
@@ -1169,7 +1173,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 
 # DBTITLE 1,MHS101Referral_service_area_RPstart - for testing - can use derivation
  %sql
- 
+
    CREATE OR REPLACE GLOBAL TEMPORARY VIEW MHS101Referral_service_area_RPstart AS
      select a.*,
             --true as CYPServiceRefStartRP,
@@ -1188,11 +1192,11 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 
 # DBTITLE 1,CASSR_mapping
  %sql
- 
+
  --USING ENTITY_CODE THIS SELECTS ALL UNITARY AUTHORITIES, NON-METROPOLITAN DISTRICTS, METROPOLITAN DISTRICTS, AND LONDON BOROUGHS. NON-METROPOLITAN DISTICTS ARE THEN 
  --REPLACED BY THE RELEVANT HIGHER TIER LOCAL AUTHORITY
  --ONE RANDOM WELSH CODE IS LET THROUGH TO CREATE AN 'UNKNOWN' RECORD
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW CASSR_mapping AS
  SELECT case when a.GEOGRAPHY_CODE = "W04000869" THEN "UNKNOWN" ELSE a.GEOGRAPHY_CODE END as LADistrictAuth
        ,case when a.GEOGRAPHY_NAME = "W04000869" THEN "UNKNOWN" ELSE a.GEOGRAPHY_NAME END as LADistrictAuthName
@@ -1207,11 +1211,11 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
        INNER JOIN $reference_data.ONS_CHD_GEO_LISTINGS as b
          ON b.GEOGRAPHY_CODE = a.PARENT_GEOGRAPHY_CODE
          AND a.ENTITY_CODE IN ('E06', 'E07', 'E08', 'E09','W04')
- 
+
  WHERE ((a.DATE_OF_TERMINATION >= '$rp_enddate' OR ISNULL(a.DATE_OF_TERMINATION))
                  AND a.DATE_OF_OPERATION <= '$rp_enddate')
        AND ((b.DATE_OF_TERMINATION >= '$rp_enddate' OR ISNULL(b.DATE_OF_TERMINATION))
                  AND b.DATE_OF_OPERATION <= '$rp_enddate')
        AND (a.GEOGRAPHY_CODE LIKE "E%" OR B.GEOGRAPHY_CODE LIKE "E%" OR a.GEOGRAPHY_CODE = "W04000869")
- 
+
  ORDER BY a.GEOGRAPHY_NAME

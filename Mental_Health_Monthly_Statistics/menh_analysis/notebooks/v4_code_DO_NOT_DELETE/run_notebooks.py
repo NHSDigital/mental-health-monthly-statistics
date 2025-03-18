@@ -1,6 +1,6 @@
 # Databricks notebook source
  %md
- 
+
  # this notebook is probably redundant in its current placement
 
 # COMMAND ----------

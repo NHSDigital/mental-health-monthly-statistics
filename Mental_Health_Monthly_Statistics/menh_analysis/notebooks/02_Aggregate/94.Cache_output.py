@@ -1,6 +1,6 @@
 # Databricks notebook source
  %md
- 
+
  # Collect and cache newly computed data in "all_products_cached"
 
 # COMMAND ----------
@@ -9,7 +9,7 @@
  %sql
  --reinstated this SQL version now that the need to restrict outputs for Provisional & Final has dropped
  --also Final is now Performance anyway!
- 
+
  INSERT INTO $db_output.all_products_cached 
  SELECT 1 AS PRODUCT_NO, 
  REPORTING_PERIOD_START, 
@@ -30,8 +30,8 @@
 
 # DBTITLE 1,1.1 Cache Delayed Discharge (MHA26)
  %sql
- 
- 
+
+
  INSERT INTO $db_output.all_products_cached 
  SELECT 1 AS PRODUCT_NO, 
  REPORTING_PERIOD_START, 
@@ -52,7 +52,7 @@
 
 # DBTITLE 1,2.Cache AWT - code excluded to prevent 0/* outputs in Rounded outputs
  %sql
- 
+
  -- INSERT INTO $db_output.all_products_cached
  -- SELECT
  --   2 AS PRODUCT_NO,
@@ -75,7 +75,7 @@
 
 # DBTITLE 1,3.Cache CYP 2nd Contact
  %sql
- 
+
  INSERT INTO $db_output.all_products_cached
  SELECT
    3 AS PRODUCT_NO,
@@ -97,26 +97,26 @@
 # COMMAND ----------
 
 # DBTITLE 1,4.Cache CAP
- %sql
- --reinstated this SQL version now that the need to restrict outputs for Provisional & Final has dropped
- --also Final is now Performance anyway!
- 
- INSERT INTO $db_output.all_products_cached 
- SELECT 
- 4 AS PRODUCT_NO, 
- REPORTING_PERIOD_START, 
- REPORTING_PERIOD_END,
- STATUS, BREAKDOWN, 
- LEVEL AS PRIMARY_LEVEL, 
- LEVEL_DESCRIPTION AS 
- PRIMARY_LEVEL_DESCRIPTION, 
- SECONDARY_LEVEL, 
- SECONDARY_LEVEL_DESCRIPTION, 
- METRIC, 
- METRIC_NAME, 
- METRIC_VALUE, 
- SOURCE_DB 
- FROM global_temp.CAP_expanded
+# %sql
+# --reinstated this SQL version now that the need to restrict outputs for Provisional & Final has dropped
+# --also Final is now Performance anyway!
+
+# INSERT INTO $db_output.all_products_cached 
+# SELECT 
+# 4 AS PRODUCT_NO, 
+# REPORTING_PERIOD_START, 
+# REPORTING_PERIOD_END,
+# STATUS, BREAKDOWN, 
+# LEVEL AS PRIMARY_LEVEL, 
+# LEVEL_DESCRIPTION AS 
+# PRIMARY_LEVEL_DESCRIPTION, 
+# SECONDARY_LEVEL, 
+# SECONDARY_LEVEL_DESCRIPTION, 
+# METRIC, 
+# METRIC_NAME, 
+# METRIC_VALUE, 
+# SOURCE_DB 
+# FROM global_temp.CAP_expanded
 
 # COMMAND ----------
 
@@ -124,7 +124,7 @@
  %sql
  --reinstated this SQL version now that the need to restrict outputs for Provisional & Final has dropped
  --also Final is now Performance anyway!
- 
+
  INSERT INTO $db_output.all_products_cached 
  SELECT 5 AS PRODUCT_NO, 
  REPORTING_PERIOD_START,

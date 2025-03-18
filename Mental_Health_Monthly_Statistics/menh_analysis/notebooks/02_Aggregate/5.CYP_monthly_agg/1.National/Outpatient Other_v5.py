@@ -2,9 +2,9 @@
 # DBTITLE 1,MHS30d National
  %sql
  /************ MHS30d - Attended care contacts in the RP, 0-18 ************/
- 
+
  INSERT INTO $db_output.CYP_monthly_unformatted
- 
+
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
  			,'$status' AS STATUS
@@ -24,9 +24,9 @@
 # DBTITLE 1,MHS30e National
  %sql
  ----- MHS30e -  Attended contacts in the RP, 0-18, by consultation medium -----
- 
+
  INSERT INTO $db_output.CYP_monthly_unformatted
- 
+
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
  			,'$status' AS STATUS
@@ -273,9 +273,9 @@
 # DBTITLE 1,MHS55a
  %sql
  /******** MHS55a - People attending at least one contact in the RP, 0-18 ***********/
- 
+
  INSERT INTO $db_output.CYP_monthly_unformatted
- 
+
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
              ,'$status' AS STATUS
@@ -295,7 +295,7 @@
 # DBTITLE 1,MHS56a National
  %sql
  /*********** MHS56a - People with indirect activity in the RP, 0-18 ****************/
- 
+
  INSERT INTO $db_output.CYP_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -317,9 +317,9 @@
 # DBTITLE 1,MHS57a National
  %sql
  /*** MHS57a - People discharged from the service in the RP, 0-18 ***/
- 
+
  -- National 
- 
+
  INSERT INTO $db_output.CYP_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END

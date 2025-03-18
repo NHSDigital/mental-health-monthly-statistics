@@ -7,7 +7,7 @@
  %sql
  -- 12/Feb/2021 : This code has to be commented after first use/run
  DROP TABLE IF EXISTS $db_output.eip23a_common;
- 
+
  -- EIP measures moved to menh_publications
  -- CREATE TABLE IF NOT EXISTS $db_output.eip23a_common 
  -- (AGE_GROUP                                STRING,
@@ -24,7 +24,7 @@
  %sql
  -- 12/Feb/2021 : This code has to be commented after first use/run
  DROP TABLE IF EXISTS $db_output.eip23a_common_prov;
- 
+
  -- # EIP measures moved to menh_publications
  -- CREATE TABLE IF NOT EXISTS $db_output.eip23a_common_prov 
  --  (AGE_GROUP                                 STRING,
@@ -41,7 +41,7 @@
  %sql
  -- Uncommented below code in order to add NHSDEthnicity
  DROP TABLE IF EXISTS $db_output.eip64abc_common;
- 
+
  -- # EIP measures moved to menh_publications
  -- CREATE TABLE IF NOT EXISTS $db_output.eip64abc_common 
  --  (AGE_GROUP                                 STRING,
@@ -57,9 +57,9 @@
 # COMMAND ----------
 
  %sql
- 
+
  -- DROP TABLE IF EXISTS $db_output.mhs09_intermediate;
- 
+
  CREATE TABLE IF NOT EXISTS $db_output.mhs09_intermediate 
   (Person_ID                                    STRING,
    RecordNumber                                 BIGINT,
@@ -72,12 +72,13 @@
  USING delta 
  PARTITIONED BY (AgeRepPeriodEnd)  
 
+
 # COMMAND ----------
 
  %sql
- 
+
  -- DROP TABLE IF EXISTS $db_output.mhs09prov_intermediate;
- 
+
  CREATE TABLE IF NOT EXISTS $db_output.mhs09prov_intermediate 
    (Person_ID                                   STRING,
     RecordNumber                                BIGINT,
@@ -93,9 +94,9 @@
 # COMMAND ----------
 
  %sql
- 
+
  DROP TABLE IF EXISTS $db_output.mhs101referral_open_end_rp;
- 
+
  CREATE TABLE IF NOT EXISTS $db_output.mhs101referral_open_end_rp
   (AMHServiceRefEndRP                           BOOLEAN,
    AgeServReferDischDate                        BIGINT,
@@ -142,9 +143,9 @@
 # COMMAND ----------
 
  %sql
- 
+
  -- DROP TABLE IF EXISTS $db_output.mhs10_intermediate;
- 
+
  CREATE TABLE IF NOT EXISTS $db_output.mhs10_intermediate 
    (Person_ID                                   STRING,
     RecordNumber                                BIGINT,
@@ -160,9 +161,9 @@
 # COMMAND ----------
 
  %sql
- 
+
  -- DROP TABLE IF EXISTS $db_output.mhs10prov_intermediate;
- 
+
  CREATE TABLE IF NOT EXISTS $db_output.mhs10prov_intermediate 
    (Person_ID                                    STRING,
     RecordNumber                                 BIGINT,
@@ -177,9 +178,9 @@
 # COMMAND ----------
 
  %sql
- 
+
  -- DROP TABLE IF EXISTS $db_output.mhs11_intermediate;
- 
+
  CREATE TABLE IF NOT EXISTS $db_output.mhs11_intermediate 
    (Person_ID                                    STRING,
     RecordNumber                                 BIGINT,
@@ -195,9 +196,9 @@
 # COMMAND ----------
 
  %sql
- 
+
  -- DROP TABLE IF EXISTS $db_output.mhs11prov_intermediate;
- 
+
  CREATE TABLE IF NOT EXISTS $db_output.mhs11prov_intermediate 
     (Person_ID                                  STRING,
      RecordNumber                               BIGINT,
@@ -212,9 +213,9 @@
 # COMMAND ----------
 
  %sql
- 
+
  -- DROP TABLE IF EXISTS $db_output.mhs21_prep;
- 
+
  CREATE TABLE IF NOT EXISTS $db_output.mhs21_prep
    (UniqWardStayID                              STRING,
     Person_ID                                   STRING,
@@ -231,9 +232,9 @@
 # COMMAND ----------
 
  %sql
- 
+
  -- DROP TABLE IF EXISTS $db_output.mhs21_prov_prep;
- 
+
  CREATE TABLE IF NOT EXISTS $db_output.mhs21_prov_prep
    (Person_ID                                   STRING,
     OrgIDProv                                   STRING,
@@ -249,9 +250,9 @@
 # COMMAND ----------
 
  %sql
- 
+
  -- DROP TABLE IF EXISTS $db_output.mhs803carecluster_common;
- 
+
  CREATE TABLE IF NOT EXISTS $db_output.mhs803carecluster_common
     (UniqClustID                                STRING,
      OrgIDProv                                  STRING,

@@ -12,9 +12,9 @@ assert db_output
 # COMMAND ----------
 
  %md
- 
+
  # tables created in this notebook
- 
+
  - validcodes
  - referral_dim
  - ConsMechanismMH_dim
@@ -24,9 +24,9 @@ assert db_output
 # DBTITLE 1,validcodes
  %sql
  -- populated with valid codes in /notebooks/common_objects/00_version_change_tables
- 
+
  DROP TABLE IF EXISTS $db_output.validcodes;
- 
+
  CREATE TABLE IF NOT EXISTS $db_output.validcodes
  (
    TableName string,
@@ -42,9 +42,9 @@ assert db_output
 
 # DBTITLE 1,referral_dim
  %sql
- 
+
  -- DROP TABLE IF EXISTS $db_output.referral_dim;
- 
+
  CREATE TABLE IF NOT EXISTS $db_output.referral_dim
  (
    Referral_Source string,
@@ -57,7 +57,7 @@ assert db_output
 
 # DBTITLE 1,ConsMechanismMH_dim
  %sql
- 
+
  CREATE TABLE IF NOT EXISTS $db_output.ConsMechanismMH_dim
  (
    Code string,

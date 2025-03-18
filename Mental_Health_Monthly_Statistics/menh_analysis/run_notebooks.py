@@ -1,6 +1,6 @@
 # Databricks notebook source
  %md
- 
+
  # This code base has been updated to be compatible with Spark 3 and will work fine only on Spark3 clusters ( SPARK-3-DBR-10-4-DATA-MANAGERS-1). It might raise exception on Spark 2 clusters.
 
 # COMMAND ----------
@@ -114,29 +114,29 @@ db = dbutils.widgets.get("db")
 assert db
 
 # this is needed to enable run_notebooks to be run both from run_tests during promotion and directly run
-# needs to use mh_v5_pre_pseudo_d1 for both but the parameter is fed in from run_tests as the original mh_pre_pseudo_d1 :o(
+# needs to use $mhsds_db for both but the parameter is fed in from run_tests as the original mhsds_db :o(
 
 # get the original parameter value (will work in all situations)
 try:
-  db_source = dbutils.widgets.get("mh_pre_pseudo_d1")
+  db_source = dbutils.widgets.get("mhsds_db")
 except:
-  print('mh_pre_pseudo_d1 is not defined')
+  print('mhsds_db is not defined')
 
-# get the new parameter value (will only work in direct run, and will overwrite value for mh_pre_pseudo_d1)
+# get the new parameter value (will only work in direct run, and will overwrite value for mhsds_db)
 try:
-  db_source = dbutils.widgets.get("mh_v5_pre_pseudo_d1")
+  db_source = dbutils.widgets.get("$mhsds_db")
 except:
-  print('mh_v5_pre_pseudo_d1 is not defined')
+  print('$mhsds_db is not defined')
   
 try:
-  db_source = dbutils.widgets.get("mhsds_v6_database")
+  db_source = dbutils.widgets.get("$mhsds_db")
 except:
-  print('mhsds_v6_database is not defined')
+  print('$mhsds_db is not defined')
   
 
 # the above replaces this simpler situation!  
-# dbutils.widgets.text("mh_pre_pseudo_d1", "", "Input database")
-# db_source = dbutils.widgets.get("mh_pre_pseudo_d1")
+# dbutils.widgets.text("mhsds_db", "", "Input database")
+# db_source = dbutils.widgets.get("mhsds_db")
 # assert db_source
 dbutils.widgets.text("reference_data","reference_data","Source Ref Database")
 reference_data = dbutils.widgets.get("reference_data")
@@ -173,7 +173,7 @@ print('Basic parameters: {}'.format(json.dumps(params,
 
 # COMMAND ----------
 
-#  added for alternative run with different source data
+# User note added for alternative run with different source data
 
 #
 
@@ -187,7 +187,7 @@ print("alt_source_data: ",alt_source_data)
 
 # COMMAND ----------
 
-#  added for alternative run of v4 code 
+# User note added for alternative run of v4 code 
 
 # test running this with June 2018 as this appears to be the only month with any likely data for the FYFV measures
 
@@ -201,7 +201,7 @@ print("run_v4_code: ",run_v4_code)
 
 # COMMAND ----------
 
-#  this enables the main code base (or the v4 code base) to run on an alternative data source - such as Point In Time data or v4 (non-MSWM) data
+# User note this enables the main code base (or the v4 code base) to run on an alternative data source - such as Point In Time data or v4 (non-MSWM) data
 # value of alt_source_data should be the name of the alternative database
 
 # options for this parameter are:
@@ -228,26 +228,26 @@ else:
 # DBTITLE 1,Parameter building for the job run
  %python
  # UKD 11/03/2022 BITC-3068 menh_analysis: Determine standard run months>>>>>>>>
- 
+
  ####### THIS HAS BEEN MOVED OUT OF THE IF SECTION AS IS USED FOR BOTH AUTO AND MANUAL RUNS #######
  # As the provisional check is passed, we need to get the month id, reporting periods for the provisional months of current date
  # Submission calendars are fetched from yanai, if there is descrepancy from the fetched details, very good reason to check there.
  #   _mhsds_ytd_calendar = submission_calendar(DS.MHSDS_YTD, {}) #this is V4 call
  _mhsds_ytd_calendar = submission_calendar(DS.MHSDS_V6, {})
- 
+
  today_date = datetime.today()
  submission_window = _mhsds_ytd_calendar.find_last_closed_submission_window(
      today_date, fake_historic_windows=False,
  )
  idx_current_report_month = len(submission_window.reporting_periods) - 1
- 
+
  if(auto_prov_check):
- 
+
    print('Validity check for the date: {0}\n'.format( today_date))
    
    prov_month_id = submission_window.reporting_periods[idx_current_report_month].unique_month_id
    
- 
+
    print(f"\
            length of period tuple from Submission Calendar: {len(submission_window.reporting_periods)}\n\
            Submission window opens: {submission_window.opens}\n\
@@ -256,7 +256,7 @@ else:
            Provisional period end: {submission_window.reporting_periods[idx_current_report_month].end}\n\
            Provisional period month id: {prov_month_id}\n\
            ")
- 
+
    #Define adhoc_desc as blank as automatic run will never be an adhoc run
    adhoc_desc = ""
    
@@ -265,7 +265,7 @@ else:
    print(f'Audit month ID from recent job runs: {audit_month_id}')
  #   audit_month_id = 1461
    source_month_id = spark.sql("SELECT MAX(UniqMonthId) AS sourceMonthId FROM {0}.mhs000header".format(params['db_source'])).collect()[0]['sourceMonthId']; 
- 
+
  #   source_month_id = 1462
    print(f'Recent month id available at source database: {source_month_id}')
    ### CONDITION TO CHECK WHETHER THERE IS SUCCESSFUL RUN FOR PROVISIONAL MONTH AND DATA AVAILABLE FOR PROVISIONAL IN SOURCE DB
@@ -313,7 +313,7 @@ else:
      adhoc_desc = dbutils.widgets.get("adhoc_desc")
    else:
      adhoc_desc = ""
- 
+
    print("adhoc_desc: ",adhoc_desc)
    # Calculated few needed parameters to run the custom job
    startdateasdate = datetime.strptime(rp_startdate, "%Y-%m-%d")
@@ -379,7 +379,7 @@ else:
 
 # COMMAND ----------
 
-#  this allows an extra parameter to be included at run time which will cause the v4 code rather than the v4.1 code to run
+# User note this allows an extra parameter to be included at run time which will cause the v4 code rather than the v4.1 code to run
 
 print(json.dumps(params,
                 indent = 4,
@@ -406,8 +406,8 @@ else:
 # COMMAND ----------
 
 # DBTITLE 1,Quick glance at the audit table for runs
- 
- 
+
+
  %python
  audit_table = spark.sql(f"SELECT * FROM {params['db_output']}.audit_menh_analysis ORDER BY RUN_START DESC LIMIT 5")
  display(audit_table)

@@ -5,10 +5,10 @@
  /* EIP01 national age groups aggregation - this counts the number of distinct UniqServReqIDs in EIP01_common 
  to make the national EIP01a, b and c metrics (for each age bracket), and then inserts this into the
  AWT_unformatted table. 
- 
-   2018-03-12                                                                           */ 
+
+   Sam Hollings - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted
    select '$rp_startdate' AS REPORTING_PERIOD_START, 
            '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -32,13 +32,13 @@
 
 -- DBTITLE 1,EIP01 national national
  %sql
- 
+
  /* ---------------------------------------------------------------------------------------------------------*/
  /* EIP01 national national aggregation - this counts the number of distinct UniqServReqIDs in EIP01_common 
  to make the national EIP01 (age agnostic), and then inserts this into the
  AWT_unformatted table. 
- 
-   2018-03-12                                                                           */ 
+
+   Sam Hollings - 2018-03-12                                                                           */ 
  /* --------------------------------------------MHS69-------------------------------------------------------------*/
  Insert into $db_output.AWT_unformatted
    SELECT  '$rp_startdate' AS REPORTING_PERIOD_START, 
@@ -63,10 +63,10 @@
  /* EIP01 CCG age groups aggregation - this counts the number of distinct UniqServReqIDs for each CCG in 
  EIP01_common to make CCG EIP01a, b and c metrics (for each age bracket), and then inserts this into the
  AWT_unformatted table. 
- 
-   2018-03-12                                                                           */ 
+
+   Sam Hollings - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted
  SELECT			'$rp_startdate' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -94,10 +94,10 @@
  /* EIP01 CCG national aggregation - this counts the number of distinct UniqServReqIDs per CCG in 
  EIP01_common to make the CCG EIP01 metrics (age agnostic), and then inserts this into the
  AWT_unformatted table. 
- 
-   2018-03-12                                                                           */ 
+
+   Sam Hollings - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted
  SELECT        '$rp_startdate' AS REPORTING_PERIOD_START, 
                '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -122,10 +122,10 @@
  /* EIP01 provider age groups aggregation - this counts the number of distinct UniqServReqIDs per provider in 
  EIP01_common to make the provider EIP01a, b and c metrics (for each age bracket), and then inserts this into the
  AWT_unformatted table. 
- 
-   2018-03-12                                                                           */ 
+
+   Sam Hollings - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted
  SELECT			'$rp_startdate' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -153,10 +153,10 @@
  /* EIP01 provider national aggregation - this counts the number of distinct UniqServReqIDs per provider in 
  EIP01_common to make the provider EIP01 metric (age agnostic), and then inserts this into the
  AWT_unformatted table. 
- 
-   2018-03-12                                                                           */ 
+
+   Sam Hollings - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted
  SELECT			'$rp_startdate' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -181,10 +181,10 @@
  /* EIP01 Ethnicity aggregation - this counts the number of distinct UniqServReqIDs for each Ethnicity in 
  EIP01_Common to make the metrics (for each Ethnicity), and then inserts this into the
  AWT_unformatted table. 
- 
+
  Bhabani Sahoo changed dated 2021-01-25 */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted
  SELECT			'$rp_startdate' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -209,10 +209,10 @@
  /* EIP01 CCG national aggregation based on Ethnicity - this counts the number of distinct UniqServReqIDs per CCG in 
  EIP01_common to make the CCG EIP01 metrics based on Ethnicity, and then inserts this into the
  AWT_unformatted table. 
- 
+
    Bhabani Sahoo - 2021-03-31                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted
  SELECT        '$rp_startdate' AS REPORTING_PERIOD_START, 
                '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -236,10 +236,10 @@
  /* ---------------------------------------------------------------------------------------------------------*/
  /* EIP01 provider national aggregation based on Ethnicity - this counts the number of distinct UniqServReqIDs per provider in 
  EIP01_common to make the provider EIP01 metric, and then inserts this into the AWT_unformatted table. 
- 
+
    Bhabani Sahoo - 2021-03-31                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted
  SELECT			'$rp_startdate' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -264,10 +264,10 @@
  /* EIP23a national age groups aggregation - this counts the number of distinct UniqServReqIDs in EIP23a_common 
  to make the national EIP23aa, b and c metrics (for each age bracket), and then inserts this into the
  AWT_unformatted table. 
- 
-   2018-03-12                                                                           */ 
+
+   Sam Hollings - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted
     select '$rp_startdate' AS REPORTING_PERIOD_START, 
            '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -295,10 +295,10 @@
  /* EIP23a national national aggregation - this counts the number of distinct UniqServReqIDs in EIP01_common 
  to make the national EIP23a (age agnostic), and then inserts this into the
  AWT_unformatted table. 
- 
-   2018-03-13                                                                           */ 
+
+   Sam Hollings - 2018-03-13                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted
     select '$rp_startdate' AS REPORTING_PERIOD_START, 
            '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -322,10 +322,10 @@
  /* EIP23a CCG age groups aggregation - this counts the number of distinct UniqServReqIDs per CCG in EIP23a_common 
  to make the CCG EIP23aa, b and c metrics (for each age bracket), and then inserts this into the
  AWT_unformatted table. 
- 
-   2018-03-12                                                                           */ 
+
+   Sam Hollings - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted
  SELECT			'$rp_startdate' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -353,10 +353,10 @@
  /* EIP23a CCG national aggregation - this counts the number of distinct UniqServReqIDs per CCG in EIP23a_common 
  to make the CCG EIP23a metric (age agnostic), and then inserts this into the
  AWT_unformatted table. 
- 
-   2018-03-12                                                                           */ 
+
+   Sam Hollings - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted
  SELECT			'$rp_startdate' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -381,10 +381,10 @@
  /* EIP23a Provider age groups aggregation - this counts the number of distinct UniqServReqIDs per provider in EIP23a_common 
  to make the provider EIP23aa, b and c metrics (for each age bracket), and then inserts this into the
  AWT_unformatted table. 
- 
-   2018-03-12                                                                           */ 
+
+   Sam Hollings - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
       SELECT '$rp_startdate' AS REPORTING_PERIOD_START, 
              '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -412,10 +412,10 @@
  /* EIP23a Provider national aggregation - this counts the number of distinct UniqServReqIDs per provider in EIP23a_common 
  to make the provider EIP23a metric (age agnostic), and then inserts this into the
  AWT_unformatted table.
- 
-   2018-03-12                                                                           */ 
+
+   Sam Hollings - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
       SELECT '$rp_startdate' AS REPORTING_PERIOD_START, 
              '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -439,10 +439,10 @@
  /* ---------------------------------------------------------------------------------------------------------*/
  /* EIP23a Ethnicity aggregation - this counts the number of distinct UniqServReqIDs for each Ethnicity in 
  EIP23a_Common to make the metrics, and then inserts this into the AWT_unformatted table. 
- 
+
  Bhabani Sahoo changed dated 2021-02-12 */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted
     select '$rp_startdate' AS REPORTING_PERIOD_START, 
            '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -466,10 +466,10 @@
  /* ---------------------------------------------------------------------------------------------------------*/
  /* EIP23a CCG national aggregation based on Ethnicity - this counts the number of distinct UniqServReqIDs per CCG in EIP23a_common 
  to make the CCG EIP23a metric, and then inserts this into the AWT_unformatted table. 
- 
+
  Bhabani Sahoo changed dated 2021-02-12 */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted
  SELECT			'$rp_startdate' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -493,10 +493,10 @@
  /* ---------------------------------------------------------------------------------------------------------*/
  /* EIP23a Provider national aggregation based on Ethnicity - this counts the number of distinct UniqServReqIDs per provider in EIP23a_common 
  to make the provider EIP23a metric, and then inserts this into the AWT_unformatted table.
- 
+
  Bhabani Sahoo changed dated 2021-02-12 */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
       SELECT '$rp_startdate' AS REPORTING_PERIOD_START, 
              '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -521,10 +521,10 @@
  /* EIP23b national age groups aggregation - this counts the number of distinct UniqServReqIDs in EIP23a_common 
  to make the national EIP23ba, b and c metrics (for each age bracket), and then inserts this into the
  AWT_unformatted table. 
- 
-   2018-03-12                                                                           */ 
+
+   Sam Hollings - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
     select '$rp_startdate' AS REPORTING_PERIOD_START, 
            '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -553,10 +553,10 @@
  /* EIP23b national national aggregation - this counts the number of distinct UniqServReqIDs in EIP23a_common 
  to make the national EIP23b metric (age agnostic), and then inserts this into the
  AWT_unformatted table. 
- 
-   2018-03-12                                                                           */ 
+
+   Sam Hollings - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
     select '$rp_startdate' AS REPORTING_PERIOD_START, 
            '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -581,10 +581,10 @@
  /* EIP23b CCG age groups aggregation - this counts the number of distinct UniqServReqIDs per CCG in EIP23a_common 
  to make the CCG EIP23ba, b and c metrics (for each age bracket), and then inserts this into the
  AWT_unformatted table. 
- 
-   2018-03-12                                                                           */ 
+
+   Sam Hollings - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
  SELECT			'$rp_startdate' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -613,10 +613,10 @@
  /* EIP23b CCG national aggregation - this counts the number of distinct UniqServReqIDs per CCG in EIP23a_common 
  to make the CCG EIP23b metric (age agnostic), and then inserts this into the
  AWT_unformatted table. 
- 
-   2018-03-12                                                                           */ 
+
+   Sam Hollings - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
  SELECT    '$rp_startdate' AS REPORTING_PERIOD_START, 
            '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -642,10 +642,10 @@
  /* EIP23b Provider age groups aggregation - this counts the number of distinct UniqServReqIDs per provider in EIP23a_common 
  to make the provider EIP23ba, b and c metrics (for each age bracket), and then inserts this into the
  AWT_unformatted table. 
- 
-   2018-03-12                                                                           */ 
+
+   Sam Hollings - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
       SELECT '$rp_startdate' AS REPORTING_PERIOD_START, 
              '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -674,10 +674,10 @@
  /* EIP23b Provider national aggregation - this counts the number of distinct UniqServReqIDs per provider in EIP23a_common 
  to make the provider EIP23b metric (age agnostic), and then inserts this into the
  AWT_unformatted table. 
- 
-   2018-03-12                                                                           */ 
+
+   Sam Hollings - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
       SELECT '$rp_startdate' AS REPORTING_PERIOD_START, 
              '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -703,10 +703,10 @@
  /* EIP23b Ethnicity aggregation - this counts the number of distinct UniqServReqIDs for each Ethnicity in 
  EIP23a_Common to make the metrics (for each Ethnicity), and then inserts this into the
  AWT_unformatted table. 
- 
+
  Bhabani Sahoo changed dated 2021-02-16 */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
     select '$rp_startdate' AS REPORTING_PERIOD_START, 
            '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -731,10 +731,10 @@
  /* ---------------------------------------------------------------------------------------------------------*/
  /* EIP23b CCG national aggregation based on Ethnicity - this counts the number of distinct UniqServReqIDs per CCG in EIP23a_common 
  to make the CCG EIP23b metric, and then inserts this into the AWT_unformatted table. 
- 
+
    Bhabani Sahoo - 2021-03-31                                                                          */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
  SELECT    '$rp_startdate' AS REPORTING_PERIOD_START, 
            '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -759,10 +759,10 @@
  /* ---------------------------------------------------------------------------------------------------------*/
  /* EIP23b Provider national aggregation based on Ethnicity - this counts the number of distinct UniqServReqIDs per provider in EIP23a_common 
  to make the provider EIP23b metric, and then inserts this into the AWT_unformatted table. 
- 
+
    Bhabani Sahoo - 2021-03-31                                                                          */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
       SELECT '$rp_startdate' AS REPORTING_PERIOD_START, 
              '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -788,10 +788,10 @@
  /* EIP23c national age groups aggregation - this counts the number of distinct UniqServReqIDs in EIP23a_common 
  to make the national EIP23ca, b and c metrics (for each age bracket), and then inserts this into the
  AWT_unformatted table. 
- 
-   2018-03-12                                                                           */ 
+
+   Sam Hollings - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted
     select '$rp_startdate' AS REPORTING_PERIOD_START, 
            '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -820,10 +820,10 @@
  /* EIP23c national national aggregation - this counts the number of distinct UniqServReqIDs in EIP23a_common 
  to make the national EIP23c metric (age agnostic), and then inserts this into the
  AWT_unformatted table. 
- 
-   2018-03-12                                                                           */ 
+
+   Sam Hollings - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
     select '$rp_startdate' AS REPORTING_PERIOD_START, 
            '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -848,10 +848,10 @@
  /* EIP23c CCG age groups aggregation - this counts the number of distinct UniqServReqIDs per CCG in EIP23a_common 
  to make the CCG EIP23ca, b and c metrics (for each age bracket), and then inserts this into the
  AWT_unformatted table. 
- 
-   2018-03-12                                                                           */ 
+
+   Sam Hollings - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
  SELECT			'$rp_startdate' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -880,10 +880,10 @@
  /* EIP23c CCG national aggregation - this counts the number of distinct UniqServReqIDs per CCG in EIP23a_common 
  to make the CCG EIP23c metric (age agnostic), and then inserts this into the
  AWT_unformatted table. 
- 
-   2018-03-12                                                                           */ 
+
+   Sam Hollings - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted
  SELECT			'$rp_startdate' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -909,10 +909,10 @@
  /* EIP23c Provider age groups aggregation - this counts the number of distinct UniqServReqIDs per provider in EIP23a_common 
  to make the provider EIP23ca, b and c metrics (for each age bracket), and then inserts this into the
  AWT_unformatted table. 
- 
-   2018-03-12                                                                           */ 
+
+   Sam Hollings - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
       SELECT '$rp_startdate' AS REPORTING_PERIOD_START, 
              '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -941,10 +941,10 @@
  /* EIP23c Provider national aggregation - this counts the number of distinct UniqServReqIDs per provider in EIP23a_common 
  to make the provider EIP23c metric (age agnostic), and then inserts this into the
  AWT_unformatted table. 
- 
-   2018-03-12                                                                           */ 
+
+   Sam Hollings - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
       SELECT '$rp_startdate' AS REPORTING_PERIOD_START, 
              '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -970,10 +970,10 @@
  /* EIP23c Ethnicity aggregation - this counts the number of distinct UniqServReqIDs for each Ethnicity in 
  EIP23a_Common to make the metrics (for each Ethnicity), and then inserts this into the
  AWT_unformatted table. 
- 
+
  Bhabani Sahoo changed dated 2021-02-16 */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted
     select '$rp_startdate' AS REPORTING_PERIOD_START, 
            '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -998,10 +998,10 @@
  /* ---------------------------------------------------------------------------------------------------------*/
  /* EIP23c CCG national aggregation based on Ethnicity - this counts the number of distinct UniqServReqIDs per CCG in EIP23a_common 
  to make the CCG EIP23c metric, and then inserts this into the AWT_unformatted table. 
- 
+
  Bhabani Sahoo - 2021-03-31                                                                              */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted
  SELECT			'$rp_startdate' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -1026,10 +1026,10 @@
  /* ---------------------------------------------------------------------------------------------------------*/
  /* EIP23c Provider national aggregation based on Ethnicity - this counts the number of distinct UniqServReqIDs per provider in EIP23a_common 
  to make the provider EIP23c metric, and then inserts this into the AWT_unformatted table. 
- 
+
   Bhabani Sahoo - 2021-03-31                                                                             */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
       SELECT '$rp_startdate' AS REPORTING_PERIOD_START, 
              '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -1055,10 +1055,10 @@
  /* EIP23c national age groups aggregation - this counts the number of distinct UniqServReqIDs in EIP23d_common 
  to make the national EIP23ca, b and c metrics (for each age bracket), and then inserts this into the
  AWT_unformatted table. 
- 
-   2018-03-12                                                                           */ 
+
+   Sam Hollings - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
     select '$rp_startdate' AS REPORTING_PERIOD_START, 
            '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -1086,10 +1086,10 @@
  /* EIP23c national national aggregation - this counts the number of distinct UniqServReqIDs in EIP23d_common 
  to make the national EIP23c metrics (age agnostic), and then inserts this into the
  AWT_unformatted table. 
- 
-   2018-03-12                                                                           */ 
+
+   Sam Hollings - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
     select '$rp_startdate' AS REPORTING_PERIOD_START, 
            '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -1109,15 +1109,15 @@
 
 -- DBTITLE 1,EIP23d CCG Age Groups
  %sql
- 
+
  /* ---------------------------------------------------------------------------------------------------------*/
  /* EIP23d CCG age groups aggregation - this counts the number of distinct UniqServReqIDs for each CCG in 
  EIP23d_common to make CCG EIP23da, b and c metrics (for each age bracket), and then inserts this into the
  AWT_unformatted table. 
- 
-   2018-03-12                                                                           */ 
+
+   Sam Hollings - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
  SELECT			'$rp_startdate' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -1141,15 +1141,15 @@
 
 -- DBTITLE 1,EIP23d CCG National
  %sql
- 
+
  /* ---------------------------------------------------------------------------------------------------------*/
  /* EIP23d CCG national aggregation - this counts the number of distinct UniqServReqIDs for each CCG in 
  EIP23d_common to make CCG EIP23d metrics (age agnostic), and then inserts this into the
  AWT_unformatted table. 
- 
-   2018-03-12                                                                           */ 
+
+   Sam Hollings - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
  SELECT			'$rp_startdate' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -1174,10 +1174,10 @@
  /* EIP23d provider age groups aggregation - this counts the number of distinct UniqServReqIDs per provider in 
  EIP23d_common to make the provider EIP23da, b and c metrics (for each age bracket), and then inserts this into the
  AWT_unformatted table. 
- 
-   2018-03-12                                                                           */ 
+
+   Sam Hollings - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
  SELECT			'$rp_startdate' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -1205,10 +1205,10 @@
  /* EIP23d provider national aggregation - this counts the number of distinct UniqServReqIDs per provider in 
  EIP23d_common to make the provider EIP23d metrics (age agnostic), and then inserts this into the
  AWT_unformatted table. 
- 
-   2018-03-12                                                                           */ 
+
+   Sam Hollings - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
  SELECT			'$rp_startdate' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -1233,7 +1233,7 @@
  /* EIP23d Ethnicity aggregation - this counts the number of distinct UniqServReqIDs for each Ethnicity in 
  EIP23a_Common to make the metrics (for each Ethnicity), and then inserts this into the
  AWT_unformatted table. 
- 
+
  Bhabani Sahoo changed dated 2021-02-16 */ 
  /* ---------------------------------------------------------------------------------------------------------*/
            
@@ -1257,14 +1257,14 @@
 
 -- DBTITLE 1,EIP23d CCG National - Ethnicity
  %sql
- 
+
  /* ---------------------------------------------------------------------------------------------------------*/
  /* EIP23d CCG national aggregation based on Ethnicity - this counts the number of distinct UniqServReqIDs for each CCG in 
  EIP23d_common to make CCG EIP23d metrics, and then inserts this into the AWT_unformatted table. 
- 
+
    Bhabani Sahoo - 2021-03-31                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
  SELECT			'$rp_startdate' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -1288,10 +1288,10 @@
  /* ---------------------------------------------------------------------------------------------------------*/
  /* EIP23d provider national aggregation based on Ethnicity - this counts the number of distinct UniqServReqIDs per provider in 
  EIP23d_common to make the provider EIP23d metrics, and then inserts this into the AWT_unformatted table. 
- 
+
    Bhabani Sahoo - 2021-03-31                                                                              */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
  SELECT			'$rp_startdate' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -1316,10 +1316,10 @@
  /* EIP23e national age groups aggregation - this counts the number of distinct UniqServReqIDs in EIP23d_common 
  to make the national EIP23ea, b and c metrics (for each age bracket), and then inserts this into the
  AWT_unformatted table. 
- 
-   2018-03-12                                                                           */ 
+
+   Sam Hollings - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
     select '$rp_startdate' AS REPORTING_PERIOD_START, 
            '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -1348,10 +1348,10 @@
  /* EIP23e national national aggregation - this counts the number of distinct UniqServReqIDs in EIP23d_common 
  to make the national EIP23e metrics (age agnostic), and then inserts this into the
  AWT_unformatted table. 
- 
-   2018-03-12                                                                           */ 
+
+   Sam Hollings - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
     select '$rp_startdate' AS REPORTING_PERIOD_START, 
            '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -1376,10 +1376,10 @@
  /* EIP23e CCG age groups aggregation - this counts the number of distinct UniqServReqIDs for each CCG in 
  EIP23d_common to make CCG EIP23ea, b and c metrics (for each age bracket), and then inserts this into the
  AWT_unformatted table. 
- 
-   2018-03-12                                                                           */ 
+
+   Sam Hollings - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
  SELECT			'$rp_startdate' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -1408,10 +1408,10 @@
  /* EIP23e CCG national aggregation - this counts the number of distinct UniqServReqIDs for each CCG in 
  EIP23d_common to make CCG EIP23e metrics (age agnostic), and then inserts this into the
  AWT_unformatted table. 
- 
-   2018-03-12                                                                           */ 
+
+   Sam Hollings - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted
  SELECT			'$rp_startdate' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -1437,10 +1437,10 @@
  /* EIP23e provider age groups aggregation - this counts the number of distinct UniqServReqIDs per provider in 
  EIP23d_common to make the provider EIP23ea, b and c metrics (for each age bracket), and then inserts this into the
  AWT_unformatted table. 
- 
-   2018-03-12                                                                           */ 
+
+   Sam Hollings - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
        SELECT    '$rp_startdate' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -1469,10 +1469,10 @@
  /* EIP23e provider national aggregation - this counts the number of distinct UniqServReqIDs per provider in 
  EIP23d_common to make the provider EIP23e metrics (age agnostic), and then inserts this into the
  AWT_unformatted table. 
- 
-   2018-03-12                                                                           */ 
+
+   Sam Hollings - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
        SELECT    '$rp_startdate' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -1498,10 +1498,10 @@
  /* EIP23e Ethnicity aggregation - this counts the number of distinct UniqServReqIDs for each Ethnicity in 
  EIP23d_Common to make the metrics (for each Ethnicity), and then inserts this into the
  AWT_unformatted table. 
- 
+
  Bhabani Sahoo changed dated 2021-02-17 */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
     select '$rp_startdate' AS REPORTING_PERIOD_START, 
            '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -1526,10 +1526,10 @@
  /* ---------------------------------------------------------------------------------------------------------*/
  /* EIP23e CCG national aggregation based on Ethnicity - this counts the number of distinct UniqServReqIDs for each CCG in 
  EIP23d_common to make CCG EIP23e metrics and then inserts this into the AWT_unformatted table. 
- 
+
    Bhabani Sahoo - 2021-03-31                                                                             */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted
  SELECT			'$rp_startdate' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -1554,10 +1554,10 @@
  /* ---------------------------------------------------------------------------------------------------------*/
  /* EIP23e provider national aggregation based on Ethnicity - this counts the number of distinct UniqServReqIDs per provider in 
  EIP23d_common to make the provider EIP23e metrics, and then inserts this into the AWT_unformatted table. 
- 
+
    Bhabani Sahoo - 2021-03-31                                                                             */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
        SELECT    '$rp_startdate' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -1583,10 +1583,10 @@
  /* EIP23f national age groups aggregation - this counts the number of distinct UniqServReqIDs in EIP23d_common 
  to make the national EIP23fa, b and c metrics (for each age bracket), and then inserts this into the
  AWT_unformatted table. 
- 
-   2018-03-12                                                                           */ 
+
+   Sam Hollings - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
     select '$rp_startdate' AS REPORTING_PERIOD_START, 
            '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -1616,10 +1616,10 @@
  /* EIP23f national national aggregation - this counts the number of distinct UniqServReqIDs in EIP23d_common 
  to make the national EIP23f metrics (age agnostic), and then inserts this into the
  AWT_unformatted table. 
- 
-   2018-03-12                                                                           */ 
+
+   Sam Hollings - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
     select '$rp_startdate' AS REPORTING_PERIOD_START, 
            '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -1644,10 +1644,10 @@
  /* EIP23f CCG age groups aggregation - this counts the number of distinct UniqServReqIDs for each CCG in 
  EIP01_common to make CCG EIP23fa, b and c metrics (for each age bracket), and then inserts this into the
  AWT_unformatted table. 
- 
-   2018-03-12                                                                           */ 
+
+   Sam Hollings - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
  SELECT			'$rp_startdate' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -1676,10 +1676,10 @@
  /* EIP23f CCG national aggregation - this counts the number of distinct UniqServReqIDs for each CCG in 
  EIP01_common to make CCG EIP23f metrics (age agnostic), and then inserts this into the
  AWT_unformatted table. 
- 
-   2018-03-12                                                                           */ 
+
+   Sam Hollings - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
  SELECT			'$rp_startdate' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -1705,10 +1705,10 @@
  /* EIP23f provider age groups aggregation - this counts the number of distinct UniqServReqIDs per provider in 
  EIP23d_common to make the provider EIP23fa, b and c metrics (for each age bracket), and then inserts this into the
  AWT_unformatted table. 
- 
-   2018-03-12                                                                           */ 
+
+   Sam Hollings - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
      SELECT		'$rp_startdate' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -1737,10 +1737,10 @@
  /* EIP23f provider national aggregation - this counts the number of distinct UniqServReqIDs per provider in 
  EIP23d_common to make the provider EIP23f metrics (age agnostic), and then inserts this into the
  AWT_unformatted table. 
- 
-   2018-03-12                                                                           */ 
+
+   Sam Hollings - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
      SELECT		'$rp_startdate' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -1766,10 +1766,10 @@
  /* EIP23f Ethnicity aggregation - this counts the number of distinct UniqServReqIDs for each Ethnicity in 
  EIP23d_Common to make the metrics (for each Ethnicity), and then inserts this into the
  AWT_unformatted table. 
- 
+
  Bhabani Sahoo changed dated 2021-02-17 */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
     select '$rp_startdate' AS REPORTING_PERIOD_START, 
            '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -1795,10 +1795,10 @@
  /* ---------------------------------------------------------------------------------------------------------*/
  /* EIP23f CCG national aggregation based on Ethnicity - this counts the number of distinct UniqServReqIDs for each CCG in 
  EIP01_common to make CCG EIP23f metrics, and then inserts this into the AWT_unformatted table. 
- 
+
    Bhabani Sahoo - 2021-03-31                                                                            */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
  SELECT			'$rp_startdate' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -1823,10 +1823,10 @@
  /* ---------------------------------------------------------------------------------------------------------*/
  /* EIP23f provider national aggregation based on Ethnicity - this counts the number of distinct UniqServReqIDs per provider in 
  EIP23d_common to make the provider EIP23f metrics, and then inserts this into the AWT_unformatted table. 
- 
+
    Bhabani Sahoo - 2021-03-31                                                                            */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
      SELECT		'$rp_startdate' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -1852,10 +1852,10 @@
  /* EIP23g national national aggregation - this counts the number of distinct UniqServReqIDs per provider in 
  EIP23g_common to make the provider EIP23g metrics (age agnostic), and then inserts this into the
  AWT_unformatted table. 
- 
-   2018-03-12                                                                           */ 
+
+   Sam Hollings - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
         SELECT '$rp_startdate' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -1879,10 +1879,10 @@
  /* EIP23g provider national aggregation - this counts the number of distinct UniqServReqIDs per provider in 
  EIP23g_common to make the provider EIP23g metrics (age agnostic), and then inserts this into the
  AWT_unformatted table. 
- 
-   2018-03-12                                                                           */ 
+
+   Sam Hollings - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
       SELECT '$rp_startdate' AS REPORTING_PERIOD_START, 
              '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -1908,10 +1908,10 @@
  /* EIP23g provider national aggregation - this counts the number of distinct UniqServReqIDs per provider in 
  EIP23g_common to make the provider EIP23g metrics (age agnostic), and then inserts this into the
  AWT_unformatted table. 
- 
-   2018-03-12                                                                           */ 
+
+   Sam Hollings - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
       SELECT '$rp_startdate' AS REPORTING_PERIOD_START, 
              '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -1936,10 +1936,10 @@
  /* EIP23h national national aggregation - this counts the number of distinct UniqServReqIDs per provider in 
  EIP23h_common to make the provider EIP23h metrics (age agnostic), and then inserts this into the
  AWT_unformatted table. 
- 
-   2018-03-12                                                                           */ 
+
+   Sam Hollings - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
         SELECT '$rp_startdate' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -1963,10 +1963,10 @@
  /* EIP23h provider national aggregation - this counts the number of distinct UniqServReqIDs per provider in 
  EIP23h_common to make the provider EIP23h metrics (age agnostic), and then inserts this into the
  AWT_unformatted table. 
- 
-   2018-03-12                                                                           */ 
+
+   Sam Hollings - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
       SELECT '$rp_startdate' AS REPORTING_PERIOD_START, 
              '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -1991,10 +1991,10 @@
  /* EIP23h provider national aggregation - this counts the number of distinct UniqServReqIDs per provider in 
  EIP23h_common to make the provider EIP23h metrics (age agnostic), and then inserts this into the
  AWT_unformatted table. 
- 
-   2018-03-12                                                                           */ 
+
+   Sam Hollings - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
       SELECT '$rp_startdate' AS REPORTING_PERIOD_START, 
              '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -2023,11 +2023,11 @@
      - EIP23b metric = numhber of referrals on EIP pathway entering treatment within two weeks
      - EIP23a metric = total referrals on EIP pathway entering treatment)
  This is then inserted into the AWT_unformatted table. 
- 
-   2019-05-01                                                                           
+
+   Laura Markendale - 2019-05-01                                                                           
    Bhabani Sahoo    - 2021-04-01 : Updated the code to fix Ethnicity fix                                     */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
       SELECT '$rp_startdate' AS REPORTING_PERIOD_START, 
              '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -2051,7 +2051,7 @@
              AND A.SECONDARY_LEVEL = B.SECONDARY_LEVEL
              AND A.METRIC = 'EIP23a' 
              AND B.METRIC = 'EIP23b'
- 
+
  WHERE       A.REPORTING_PERIOD_START = '$rp_startdate'
              AND A.REPORTING_PERIOD_END = '$rp_enddate'
              AND A.STATUS = '$status'
@@ -2068,10 +2068,10 @@
      - EIP23b age metric = referrals on EIP pathway entering treatment within two weeks
      - EIP23a age metric = total referrals on EIP pathway entering treatment)
  This is then inserted into the AWT_unformatted table. 
- 
-   2019-05-01                                                                           */ 
+
+   Laura Markendale - 2019-05-01                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
       SELECT '$rp_startdate' AS REPORTING_PERIOD_START, 
              '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -2102,7 +2102,7 @@
                 OR (A.METRIC = 'EIP23ab' AND B.METRIC = 'EIP23bb')
                 OR (A.METRIC = 'EIP23ac' AND B.METRIC = 'EIP23bc')
                   )
- 
+
  WHERE       A.REPORTING_PERIOD_START = '$rp_startdate'
              AND A.REPORTING_PERIOD_END = '$rp_enddate'
              AND A.STATUS = '$status'
@@ -2113,7 +2113,7 @@
 
 -- DBTITLE 1,EIP23i : Ethnicity
  %py
- 
+
  # %sql
  # /* ---------------------------------------------------------------------------------------------------------*/
  # /* EIP23i Ethnicity - the national proportion of referrals on EIP pathway entering treatment within two weeks.
@@ -2121,11 +2121,11 @@
  #     - EIP23b ethnicity metric = referrals on EIP pathway entering treatment within two weeks
  #     - EIP23a ethnicity metric = total referrals on EIP pathway entering treatment)
  # This is then inserted into the AWT_unformatted table. 
- 
+
  #   Bhabani Sahoo - 2021-02-18                                                                           
  #   Bhabani Sahoo - 2021-04-01 : Commented this code as it was merged into the main code above                */ 
  # /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  # /*
  # Insert into $db_output.AWT_unformatted 
  #      SELECT '$rp_startdate' AS REPORTING_PERIOD_START, 
@@ -2152,7 +2152,7 @@
  #             AND A.BREAKDOWN = 'England; Ethnicity'
  #             AND A.METRIC = 'EIP23a' 
  #             AND B.METRIC = 'EIP23b'
- 
+
  # WHERE       A.REPORTING_PERIOD_START = '$rp_startdate'
  #             AND A.REPORTING_PERIOD_END = '$rp_enddate'
  #             AND A.STATUS = '$status'
@@ -2169,11 +2169,11 @@
      - EIP23f metric = numhber of open referrals on EIP pathway at end of reporting period waiting for treatment for over two weeks
      - EIP23d metric = number of open referrals at end of reporting period
  This is then inserted into the AWT_unformatted table. 
- 
-   2019-05-01                                                                           
+
+   Laura Markendale - 2019-05-01                                                                           
    Bhabani Sahoo    - 2021-04-01 : Updated the code to fix Ethnicity fix                                     */  
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
       SELECT '$rp_startdate' AS REPORTING_PERIOD_START, 
              '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -2197,7 +2197,7 @@
              AND A.SECONDARY_LEVEL = B.SECONDARY_LEVEL
              AND A.METRIC = 'EIP23d' 
              AND B.METRIC = 'EIP23f'
- 
+
  WHERE       A.REPORTING_PERIOD_START = '$rp_startdate'
              AND A.REPORTING_PERIOD_END = '$rp_enddate'
              AND A.STATUS = '$status'
@@ -2214,10 +2214,10 @@
      - EIP23f metric = numhber of referrals on EIP pathway waiting for treatment for more than two weeks
      - EIP23d metric = open referrals at end of reporting period
  This is then inserted into the AWT_unformatted table. 
- 
-   2019-05-01                                                                           */ 
+
+   Laura Markendale - 2019-05-01                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
       SELECT '$rp_startdate' AS REPORTING_PERIOD_START, 
              '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -2248,7 +2248,7 @@
                 OR (A.METRIC = 'EIP23db' AND B.METRIC = 'EIP23fb')
                 OR (A.METRIC = 'EIP23dc' AND B.METRIC = 'EIP23fc')
                   )
- 
+
  WHERE       A.REPORTING_PERIOD_START = '$rp_startdate'
              AND A.REPORTING_PERIOD_END = '$rp_enddate'
              AND A.STATUS = '$status'
@@ -2266,7 +2266,7 @@
  #     - EIP23f metric = number of referrals on EIP pathway waiting for treatment for more than two weeks
  #     - EIP23d metric = open referrals at end of reporting period
  # This is then inserted into the AWT_unformatted table. 
- 
+
  #   Bhabani Sahoo - 2021-02-18                                                                          
  #   Bhabani Sahoo - 2021-04-01 : Commented this code as it was merged into the main code above                */ 
  # /* ---------------------------------------------------------------------------------------------------------*/
@@ -2296,12 +2296,12 @@
  #             AND A.BREAKDOWN = 'England; Ethnicity'
  #             AND A.METRIC = 'EIP23d' 
  #             AND B.METRIC = 'EIP23f'
- 
+
  # WHERE       A.REPORTING_PERIOD_START = '$rp_startdate'
  #             AND A.REPORTING_PERIOD_END = '$rp_enddate'
  #             AND A.STATUS = '$status'
  #             --AND A.BREAKDOWN = 'England; Ethnicity'
- 
+
  # */
 
 -- COMMAND ----------
@@ -2311,10 +2311,10 @@
  /* ---------------------------------------------------------------------------------------------------------*/
  /* EIP32 national aggregation - this aggregates the EIP32_ED32_common table based on the requirements of EIP32
    across the whole country.
- 
-   2018-03-20                                                                           */ 
+
+   Sam Hollings - 2018-03-20                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
         SELECT '$rp_startdate' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -2339,10 +2339,10 @@
  /* ---------------------------------------------------------------------------------------------------------*/
  /* EIP32 CCG - this aggregates the EIP32_ED32_common table based on the requirements of EIP32
    for each CCG.
- 
-   2018-03-20                                                                           */ 
+
+   Sam Hollings - 2018-03-20                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
     SELECT '$rp_startdate' AS REPORTING_PERIOD_START, 
            '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -2368,10 +2368,10 @@
  /* ---------------------------------------------------------------------------------------------------------*/
  /* EIP32 Provider - this aggregates the EIP32_ED32_common table based on the requirements of EIP32
    for each Provider.
- 
-   2018-03-20                                                                           */ 
+
+   Sam Hollings - 2018-03-20                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
     SELECT '$rp_startdate' AS REPORTING_PERIOD_START, 
            '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -2397,10 +2397,10 @@
  /* ---------------------------------------------------------------------------------------------------------*/
  /* ED32 national aggregation - this aggregates the EIP32_ED32_common table based on the requirements of ED32
    across the whole country.
- 
-   2018-03-20                                                                           */ 
+
+   Sam Hollings - 2018-03-20                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
         SELECT '$rp_startdate' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -2424,10 +2424,10 @@
  /* ---------------------------------------------------------------------------------------------------------*/
  /* ED32 CCG - this aggregates the EIP32_ED32_common table based on the requirements of ED32
    for each CCG.
- 
-   2018-03-20                                                                           */ 
+
+   Sam Hollings - 2018-03-20                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
     SELECT '$rp_startdate' AS REPORTING_PERIOD_START, 
            '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -2452,10 +2452,10 @@
  /* ---------------------------------------------------------------------------------------------------------*/
  /* ED32 Provider - this aggregates the EIP32_ED32_common table based on the requirements of ED32
    for each Provider.
- 
-   2018-03-20                                                                           */ 
+
+   Sam Hollings - 2018-03-20                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
     SELECT '$rp_startdate' AS REPORTING_PERIOD_START, 
            '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -2477,7 +2477,7 @@
 
 -- DBTITLE 1,MHS32 National
  %sql
- 
+
  Insert into $db_output.AWT_unformatted 
  SELECT			'$rp_startdate' AS REPORTING_PERIOD_START
  				,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -2502,7 +2502,7 @@
 
 -- DBTITLE 1,MHS32 CCG
  %sql
- 
+
  Insert into $db_output.AWT_unformatted 
  SELECT			'$rp_startdate' AS REPORTING_PERIOD_START
  				,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -2529,7 +2529,7 @@
 
 -- DBTITLE 1,MHS32 Provider
  %sql
- 
+
  Insert into $db_output.AWT_unformatted 
  SELECT			'$rp_startdate' AS REPORTING_PERIOD_START
  				, '$rp_enddate' AS REPORTING_PERIOD_END
@@ -2557,10 +2557,10 @@
  /* ---------------------------------------------------------------------------------------------------------*/
  /* EIP63 National Age Groups - Denormalised the EIP63 metric data to 
  also include CCG fields - this can be used for the CCG extract and summed to provide national extract.
- 
-   2018-03-6                                                                           */ 
+
+   Sam Hollings - 2018-03-6                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
    select '$rp_startdate' AS REPORTING_PERIOD_START, 
            '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -2588,10 +2588,10 @@
  /* ---------------------------------------------------------------------------------------------------------*/
  /* EIP63 National National - Denormalised the EIP63 metric data to 
  also include CCG fields - this can be used for the CCG extract and the national extract.
- 
-   2018-03-6                                                                           */ 
+
+   Sam Hollings - 2018-03-6                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
    select '$rp_startdate' AS REPORTING_PERIOD_START, 
            '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -2614,10 +2614,10 @@
  /* ---------------------------------------------------------------------------------------------------------*/
  /* EIP63 CCG Age Groups - this is the aggregate calculation of EIP63 CCG breakdown. Denormalised the EIP63 metric data to 
  also include CCG fields - this can be used for the CCG extract and summed to provide national extract.
- 
-   2018-03-6                                                                           */ 
+
+   Sam Hollings - 2018-03-6                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
  SELECT			'$rp_startdate' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -2644,10 +2644,10 @@
  /* ---------------------------------------------------------------------------------------------------------*/
  /* EIP63 CCG National - this is the aggregate calculation of EIP63 CCG breakdown. Denormalised the EIP63 metric data to 
  also include CCG fields - this can be used for the CCG extract and summed to provide national extract.
- 
-   2018-03-6                                                                           */ 
+
+   Sam Hollings - 2018-03-6                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
  SELECT			'$rp_startdate' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -2670,8 +2670,8 @@
  %sql
  /* ---------------------------------------------------------------------------------------------------------*/
  /* EIP63 Provider Age groups - this is the aggregate calculation of EIP63 Prov breakdown for the age groups
- 
-   2018-03-6                                                                           */ 
+
+   Sam Hollings - 2018-03-6                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
  Insert into $db_output.AWT_unformatted 
  SELECT			'$rp_startdate' AS REPORTING_PERIOD_START, 
@@ -2698,8 +2698,8 @@
  %sql
  /* ---------------------------------------------------------------------------------------------------------*/
  /* EIP63 Provider National - this is the aggregate calculation of EIP63 Prov breakdown for the age groups
- 
-   2018-03-6                                                                           */ 
+
+   Sam Hollings - 2018-03-6                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
  Insert into $db_output.AWT_unformatted 
  SELECT			'$rp_startdate' AS REPORTING_PERIOD_START, 
@@ -2723,7 +2723,7 @@
  %sql
  /* ---------------------------------------------------------------------------------------------------------*/
  /* EIP63 National Ethnicity Groups
- 
+
     Bhabani Sahoo changed dated 2021-02-24 */ 
  /* ---------------------------------------------------------------------------------------------------------*/
   
@@ -2751,11 +2751,11 @@
  /* EIP63 CCG National based on ethnicity - this is the aggregate calculation of EIP63 CCG breakdown. 
     Denormalised the EIP63 metric data to also include CCG fields - this can be used for the CCG extract 
     and summed to provide national extract.
- 
-   2018-03-6
+
+   Sam Hollings - 2018-03-6
    Bhabani Sahoo- 2021-04-08                                                                                 */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
  SELECT			'$rp_startdate' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -2778,8 +2778,8 @@
  %sql
  /* ---------------------------------------------------------------------------------------------------------*/
  /* EIP63 Provider National - this is the aggregate calculation of EIP63 Prov breakdown based on Ethnicity
- 
-   2018-03-6
+
+   Sam Hollings - 2018-03-6
    Bhabani Sahoo- 2021-04-08                                                                                 */ 
  /* ---------------------------------------------------------------------------------------------------------*/
  Insert into $db_output.AWT_unformatted 
@@ -2805,10 +2805,10 @@
  /* ---------------------------------------------------------------------------------------------------------*/
  /* EIP64a/64 National Age Group - This aggregates the EIP64abc_common table to to produce the EIP64 national
    metric  for each age group.
- 
-   2018-03-6                                                                           */ 
+
+   Sam Hollings - 2018-03-6                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
    select '$rp_startdate' AS REPORTING_PERIOD_START, 
            '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -2835,10 +2835,10 @@
  /* ---------------------------------------------------------------------------------------------------------*/
  /* EIP64a/64 National National - This aggregates the EIP64abc_common table to to produce the EIP64 national
    metric over all age groups.
- 
-   2018-03-6                                                                           */ 
+
+   Sam Hollings - 2018-03-6                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
    select '$rp_startdate' AS REPORTING_PERIOD_START, 
            '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -2860,10 +2860,10 @@
  %sql
  /* ---------------------------------------------------------------------------------------------------------*/
  /* EIP64 CCG Age Groups - this is the aggregate calculation of EIP64 CCG breakdown from EIP64abc_common.
- 
-   2018-03-6                                                                           */ 
+
+   Sam Hollings - 2018-03-6                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
  SELECT			'$rp_startdate' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -2891,9 +2891,9 @@
  /* EIP64 CCG National - this is the aggregate calculation of EIP64 CCG breakdown from EIP64abc_common. Across
    all age groups.
    
-   2018-03-6                                                                           */ 
+   Sam Hollings - 2018-03-6                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
  SELECT			'$rp_startdate' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -2916,8 +2916,8 @@
  %sql
  /* ---------------------------------------------------------------------------------------------------------*/
  /* EIP64 Provider Age groups - this is the aggregate calculation of EIP64 Prov breakdown for the age groups
- 
-   2018-03-6                                                                           */ 
+
+   Sam Hollings - 2018-03-6                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
  Insert into $db_output.AWT_unformatted 
  SELECT			'$rp_startdate' AS REPORTING_PERIOD_START, 
@@ -2944,8 +2944,8 @@
  %sql
  /* ---------------------------------------------------------------------------------------------------------*/
  /* EIP64 Provider National - this is the aggregate calculation of EIP64 Prov breakdown across the age groups
- 
-   2018-03-6                                                                           */ 
+
+   Sam Hollings - 2018-03-6                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
  Insert into $db_output.AWT_unformatted 
  SELECT			'$rp_startdate' AS REPORTING_PERIOD_START, 
@@ -2970,10 +2970,10 @@
  /* ---------------------------------------------------------------------------------------------------------*/
  /* EIP64 National Ethnicity - This aggregates the EIP64abc_common table to to produce the EIP64 national
    metric for each ethnic group.
- 
+
    Bhabani Sahoo changed dated 2021-02-24                                                                    */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
    select '$rp_startdate' AS REPORTING_PERIOD_START, 
            '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -2998,10 +2998,10 @@
  /* EIP64 CCG National - this is the aggregate calculation of EIP64 CCG breakdown from EIP64abc_common. Across
    all age groups.
    
-   2018-03-6    
+   Sam Hollings - 2018-03-6    
    Bhabani Sahoo - 2021-04-08                                                                                */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
  SELECT			'$rp_startdate' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -3024,8 +3024,8 @@
  %sql
  /* ---------------------------------------------------------------------------------------------------------*/
  /* EIP64 Provider National - this is the aggregate calculation of EIP64 Prov breakdown based on Ethnicity
- 
-   2018-03-6 
+
+   Sam Hollings - 2018-03-6 
    Bhabani Sahoo - 2021-04-08                                                                                */ 
  /* ---------------------------------------------------------------------------------------------------------*/
  Insert into $db_output.AWT_unformatted 
@@ -3051,10 +3051,10 @@
  /* ---------------------------------------------------------------------------------------------------------*/
  /* EIP64b/65 National Age Group - This aggregates the EIP64abc_common table to to produce the EIP65 national
    metric for each age group.
- 
-   2018-03-6                                                                           */ 
+
+   Sam Hollings - 2018-03-6                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
    select
            '$rp_startdate' AS REPORTING_PERIOD_START, 
@@ -3083,10 +3083,10 @@
  /* ---------------------------------------------------------------------------------------------------------*/
  /* EIP64b/65 National National - This aggregates the EIP64abc_common table to to produce the EIP65 national
    metric over all age groups.
- 
-   2018-03-6                                                                           */ 
+
+   Sam Hollings - 2018-03-6                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
    select '$rp_startdate' AS REPORTING_PERIOD_START, 
            '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -3109,10 +3109,10 @@
  %sql
  /* ---------------------------------------------------------------------------------------------------------*/
  /* EIP64b/65 CCG Age Groups - this is the aggregate calculation of EIP64b/65 CCG breakdown from EIP64abc_common.
- 
-   2018-03-6                                                                           */ 
+
+   Sam Hollings - 2018-03-6                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
  SELECT			'$rp_startdate' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -3141,9 +3141,9 @@
  /* EIP64b/65 CCG Age Groups - this is the aggregate calculation of EIP64b/65 CCG breakdown from EIP64abc_common.
    This is across all age groups.
    
-   2018-03-6                                                                           */ 
+   Sam Hollings - 2018-03-6                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
  SELECT			'$rp_startdate' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -3167,8 +3167,8 @@
  %sql
  /* ---------------------------------------------------------------------------------------------------------*/
  /* EIP64b/65 Provider Age groups - this is the aggregate calculation of EIP65 Prov breakdown for the age groups
- 
-   2018-03-6                                                                           */ 
+
+   Sam Hollings - 2018-03-6                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
  Insert into $db_output.AWT_unformatted 
  SELECT			'$rp_startdate' AS REPORTING_PERIOD_START, 
@@ -3196,8 +3196,8 @@
  %sql
  /* ---------------------------------------------------------------------------------------------------------*/
  /* EIP64b/65 Provider National - this is the aggregate calculation of EIP65 Prov breakdown across the age groups
- 
-   2018-03-6                                                                           */ 
+
+   Sam Hollings - 2018-03-6                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
  Insert into $db_output.AWT_unformatted 
  SELECT			'$rp_startdate' AS REPORTING_PERIOD_START, 
@@ -3223,7 +3223,7 @@
  /* ---------------------------------------------------------------------------------------------------------*/
  /* EIP65 National Ethnicity - This aggregates the EIP64abc_common table to to produce the EIP65 national
    metric for each ethnic group.
- 
+
    Bhabani Sahoo changed dated 2021-02-24                                                                    */ 
  /* ---------------------------------------------------------------------------------------------------------*/
    
@@ -3252,10 +3252,10 @@
  /* ---------------------------------------------------------------------------------------------------------*/
  /* EIP65 CCG based on Ethnicity - this is the aggregate calculation of EIP65 CCG breakdown from EIP64abc_common.
      
-   2018-03-6    
+   Sam Hollings - 2018-03-6    
    Bhabani Sahoo - 2021-04-09                                                                                */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
  SELECT			'$rp_startdate' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -3279,8 +3279,8 @@
  %sql
  /* ---------------------------------------------------------------------------------------------------------*/
  /* EIP64b/65 Provider National - this is the aggregate calculation of EIP65 Prov breakdown across the age groups
- 
-   2018-03-6
+
+   Sam Hollings - 2018-03-6
    Bhabani Sahoo - 2021-04-08                                                                                */ 
  /* ---------------------------------------------------------------------------------------------------------*/
  Insert into $db_output.AWT_unformatted 
@@ -3307,10 +3307,10 @@
  /* ---------------------------------------------------------------------------------------------------------*/
  /* EIP64c/66 National Age Group - This aggregates the EIP64abc_common table to to produce the EIP66 national
    metric for each age group.
- 
-   2018-03-6                                                                           */ 
+
+   Sam Hollings - 2018-03-6                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
    select '$rp_startdate' AS REPORTING_PERIOD_START, 
            '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -3338,10 +3338,10 @@
  /* ---------------------------------------------------------------------------------------------------------*/
  /* EIP64c/66 National National - This aggregates the EIP64abc_common table to to produce the EIP66 national
    metric over all age groups.
- 
-   2018-03-6                                                                           */ 
+
+   Sam Hollings - 2018-03-6                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
    select '$rp_startdate' AS REPORTING_PERIOD_START, 
            '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -3364,10 +3364,10 @@
  %sql
  /* ---------------------------------------------------------------------------------------------------------*/
  /* EIP64c/66 CCG Age Groups - this is the aggregate calculation of EIP64c/66 CCG breakdown from EIP64abc_common.
- 
-   2018-03-6                                                                           */ 
+
+   Sam Hollings - 2018-03-6                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
  SELECT			'$rp_startdate' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -3395,10 +3395,10 @@
  /* ---------------------------------------------------------------------------------------------------------*/
  /* EIP64c/66 CCG National - this is the aggregate calculation of EIP64c/66 CCG breakdown from EIP64abc_common,
    across all age groups.
- 
-   2018-03-6                                                                           */ 
+
+   Sam Hollings - 2018-03-6                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
  SELECT			'$rp_startdate' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -3422,8 +3422,8 @@
  %sql
  /* ---------------------------------------------------------------------------------------------------------*/
  /* EIP64c/66 Provider Age groups - this is the aggregate calculation of EIP66 Prov breakdown for the age groups
- 
-   2018-03-6                                                                           */ 
+
+   Sam Hollings - 2018-03-6                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
  Insert into $db_output.AWT_unformatted 
  SELECT			'$rp_startdate' AS REPORTING_PERIOD_START, 
@@ -3451,8 +3451,8 @@
  %sql
  /* ---------------------------------------------------------------------------------------------------------*/
  /* EIP64c/66 Provider Natinal - this is the aggregate calculation of EIP66 Prov breakdown across the age groups
- 
-   2018-03-6                                                                           */ 
+
+   Sam Hollings - 2018-03-6                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
  Insert into $db_output.AWT_unformatted 
  SELECT			'$rp_startdate' AS REPORTING_PERIOD_START, 
@@ -3478,10 +3478,10 @@
  /* ---------------------------------------------------------------------------------------------------------*/
  /* EIP66 National Ethnicity - This aggregates the EIP64abc_common table to to produce the EIP66 national
    metric for each ethnic group.
- 
+
    Bhabani Sahoo changed dated 2021-02-24                                                                    */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
    select '$rp_startdate' AS REPORTING_PERIOD_START, 
            '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -3506,11 +3506,11 @@
  /* ---------------------------------------------------------------------------------------------------------*/
  /* EIP66 CCG National - this is the aggregate calculation of EIP64c/66 CCG breakdown from EIP64abc_common,
    based on Ethnicity.
- 
-   2018-03-6  
+
+   Sam Hollings - 2018-03-6  
    Bhabani Sahoo - 2021-04-08                                                                                */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
  SELECT			'$rp_startdate' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -3534,8 +3534,8 @@
  %sql
  /* ---------------------------------------------------------------------------------------------------------*/
  /* EIP66 Provider Natinal - this is the aggregate calculation of EIP66 Prov breakdown across Ethnicity
- 
-   2018-03-6                                                                           
+
+   Sam Hollings - 2018-03-6                                                                           
    Bhabani Sahoo - 2021-04-08                                                                                */ 
  /* ---------------------------------------------------------------------------------------------------------*/
  Insert into $db_output.AWT_unformatted 
@@ -3559,7 +3559,7 @@
 
 -- DBTITLE 1,EIP67 - All
  %sql
- 
+
  Insert into $db_output.AWT_unformatted 
       SELECT '$rp_startdate' AS REPORTING_PERIOD_START, 
              '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -3583,7 +3583,7 @@
              AND A.SECONDARY_LEVEL = B.SECONDARY_LEVEL
              AND A.METRIC = 'EIP64' 
              AND B.METRIC = 'EIP66'
- 
+
  WHERE       A.REPORTING_PERIOD_START = '$rp_startdate'
              AND A.REPORTING_PERIOD_END = '$rp_enddate'
              AND A.STATUS = '$status'
@@ -3595,9 +3595,9 @@
 -- DBTITLE 1,EIP67 - Ethnicity
  %py
  # %sql
- 
+
  # /* Bhabani Sahoo - 2021-04-08 : Commented this code as it was merged into the main code above */
- 
+
  # /*
  # Insert into $db_output.AWT_unformatted 
  #      SELECT '$rp_startdate' AS REPORTING_PERIOD_START, 
@@ -3623,7 +3623,7 @@
  #             AND A.METRIC = 'EIP64' 
  #             AND B.METRIC = 'EIP66'
  #             AND A.BREAKDOWN = 'England; Ethnicity'
- 
+
  # WHERE       A.REPORTING_PERIOD_START = '$rp_startdate'
  #             AND A.REPORTING_PERIOD_END = '$rp_enddate'
  #             AND A.STATUS = '$status'
@@ -3634,7 +3634,7 @@
 
 -- DBTITLE 1,EIP67a - All
  %sql
- 
+
  Insert into $db_output.AWT_unformatted 
       SELECT '$rp_startdate' AS REPORTING_PERIOD_START, 
              '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -3658,7 +3658,7 @@
               AND A.SECONDARY_LEVEL = B.SECONDARY_LEVEL
              AND A.METRIC = 'EIP64a' 
              AND B.METRIC = 'EIP66a'
- 
+
  WHERE       A.REPORTING_PERIOD_START = '$rp_startdate'
              AND A.REPORTING_PERIOD_END = '$rp_enddate'
              AND A.STATUS = '$status'
@@ -3669,7 +3669,7 @@
 
 -- DBTITLE 1,EIP67b - All
  %sql
- 
+
  Insert into $db_output.AWT_unformatted 
       SELECT '$rp_startdate' AS REPORTING_PERIOD_START, 
              '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -3693,7 +3693,7 @@
               AND A.SECONDARY_LEVEL = B.SECONDARY_LEVEL
              AND A.METRIC = 'EIP64b' 
              AND B.METRIC = 'EIP66b'
- 
+
  WHERE       A.REPORTING_PERIOD_START = '$rp_startdate'
              AND A.REPORTING_PERIOD_END = '$rp_enddate'
              AND A.STATUS = '$status'
@@ -3704,7 +3704,7 @@
 
 -- DBTITLE 1,EIP67c - All
  %sql
- 
+
  Insert into $db_output.AWT_unformatted 
       SELECT '$rp_startdate' AS REPORTING_PERIOD_START, 
              '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -3728,7 +3728,7 @@
               AND A.SECONDARY_LEVEL = B.SECONDARY_LEVEL
              AND A.METRIC = 'EIP64c' 
              AND B.METRIC = 'EIP66c'
- 
+
  WHERE       A.REPORTING_PERIOD_START = '$rp_startdate'
              AND A.REPORTING_PERIOD_END = '$rp_enddate'
              AND A.STATUS = '$status'

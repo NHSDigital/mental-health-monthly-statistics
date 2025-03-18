@@ -79,7 +79,7 @@
 
 # DBTITLE 1,AMH03 National
  %sql
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START,
               '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -98,7 +98,7 @@
 
 # DBTITLE 1,AMH04
  %sql
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
               ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -137,9 +137,9 @@
 # DBTITLE 1,MH01 National
  %sql
  --/**MH01 - PEOPLE IN CONTACT WITH MENTAL HEALTH SERVICES AT END OF REPORTING PERIOD**/
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
- 
+
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
  	        ,'$status' AS STATUS
@@ -159,9 +159,9 @@
  %sql
  --/**MH01a - PEOPLE IN CONTACT WITH MENTAL HEALTH SERVICES AT END OF REPORTING PERIOD, AGED 0-18**/
  -- has both monthly and camhs monthly outputs
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
- 
+
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
  	        ,'$status'	AS STATUS
@@ -176,14 +176,15 @@
  FROM		global_temp.MH01_prep	 -- prep table in main monthly prep folder 
  WHERE  		AGE_GROUP = '00-18'
 
+
 # COMMAND ----------
 
 # DBTITLE 1,MH01b National
  %sql
  --/**MH01b - PEOPLE IN CONTACT WITH MENTAL HEALTH SERVICES AT END OF REPORTING PERIOD, AGED 19-64**/
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
- 
+
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
  	        ,'$status'	AS STATUS
@@ -203,9 +204,9 @@
 # DBTITLE 1,MH01c National
  %sql
  --/**MH01c - PEOPLE IN CONTACT WITH MENTAL HEALTH SERVICES AT END OF REPORTING PERIOD, AGED 65 AND OVER**/
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
- 
+
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
  	        ,'$status'	AS STATUS
@@ -292,9 +293,9 @@
 
 # DBTITLE 1,MHS13 National
  %sql
- 
+
  --/**MHS13 - PEOPLE IN CONTACT WITH SERVICES AT END OF REPORTING PERIOD WITH ACCOMODATION STATUS RECORDED**/
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -315,7 +316,7 @@
 # DBTITLE 1,AMH14
  %sql
  INSERT INTO $db_output.Main_monthly_unformatted
- 
+
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
  			,'$status' AS STATUS
@@ -334,7 +335,7 @@
 # DBTITLE 1,AMH15
  %sql
  INSERT INTO $db_output.Main_monthly_unformatted
- 
+
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
  			,'$status' AS STATUS
@@ -356,7 +357,7 @@
 # DBTITLE 1,MHS16
  %sql
  INSERT INTO $db_output.Main_monthly_unformatted
- 
+
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
  			,'$status' AS STATUS
@@ -376,12 +377,13 @@
       WHERE EMP.EmployStatusRecDate <= '$rp_enddate'
  		   AND EMP.EmployStatusRecDate >= DATE_ADD(ADD_MONTHS('$rp_enddate', -12),1)
 
+
 # COMMAND ----------
 
 # DBTITLE 1,AMH17
  %sql
  INSERT INTO $db_output.Main_monthly_unformatted
- 
+
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
  			,'$status' AS STATUS
@@ -402,7 +404,7 @@
 # DBTITLE 1,AMH18
  %sql
  INSERT INTO $db_output.Main_monthly_unformatted
- 
+
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
  			,'$status' AS STATUS
@@ -442,15 +444,15 @@
  LEFT JOIN $db_source.MHS008CarePlanType AS CRS
             ON MPI.Person_ID = CRS.Person_ID
             AND CRS.UniqMonthID <= '$month_id' 
- 
-     --commenting this section of code out to exclude the need for table MHS008CrisisPlan in the source data
+
+     --User note: commenting this section of code out to exclude the need for table MHS008CrisisPlan in the source data
  -- LEFT JOIN $db_source.MHS008CrisisPlan AS CRSold
  -- 		   ON MPI.Person_ID = CRSold.Person_ID 
  --            AND CRSold.UniqMonthID <= '$month_id' 
- 
+
      WHERE 
      
-     --commenting this section of code out to exclude the need for table MHS008CrisisPlan in the source data
+     --User note: commenting this section of code out to exclude the need for table MHS008CrisisPlan in the source data
      --(
                       (CarePlanTypeMH = '12' AND CRS.Person_ID IS NOT NULL 
                       AND ((CRS.CarePlanCreatDate <= '$rp_enddate' 
@@ -458,7 +460,7 @@
                       OR (CRS.CarePlanLastUpdateDate <= '$rp_enddate' 
                       AND CRS.CarePlanLastUpdateDate >= DATE_ADD(ADD_MONTHS( '$rp_enddate', -12),1))))
                       
-    --commenting this section of code out to exclude the need for table MHS008CrisisPlan in the source data
+    --User note: commenting this section of code out to exclude the need for table MHS008CrisisPlan in the source data
  --                 OR 
  --                      (CRSold.Person_ID IS NOT NULL 
  --                      AND ((CRSold.MHCrisisPlanCreatDate <= '$rp_enddate' 
@@ -466,6 +468,7 @@
  --                      OR (CRSold.MHCrisisPlanLastUpdateDate <= '$rp_enddate' 
  --                      AND CRSold.MHCrisisPlanLastUpdateDate >= DATE_ADD(ADD_MONTHS('$rp_enddate', -12),1))))
  --           );
+
 
 # COMMAND ----------
 
@@ -496,6 +499,7 @@
            ON REF.UniqServReqID = SDGN.UniqServReqID 
            AND ((SDGN.RecordEndDate IS null OR SDGN.recordenddate >= '$rp_enddate') AND SDGN.recordstartdate <= '$rp_enddate')
      WHERE (PDGN.Person_ID IS NOT NULL OR PVDGN.Person_ID IS NOT NULL OR SDGN.Person_ID IS NOT NULL)
+
 
 # COMMAND ----------
 
@@ -615,9 +619,9 @@
 # DBTITLE 1,MHS29 National
  %sql
  --MHS29 - CONTACTS IN REPORTING PERIOD**/
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
- 
+
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
  			,'$status' AS STATUS
@@ -636,9 +640,9 @@
 # DBTITLE 1,MHS29a National
  %sql
  --/**MHS29a - CONTACTS WITH PERINATAL MENTAL HEALTH TEAM IN REPORTING PERIOD**/
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
- 
+
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
  			,'$status' AS STATUS
@@ -658,9 +662,9 @@
 # DBTITLE 1,MHS29b National
  %sql
  --/**MHS29b - CONTACTS WITH CRISIS RESOLUTION SERVICE OR HOME TREATMENT TEAM IN REPORTING PERIOD**/
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
- 
+
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
  			,'$status' AS STATUS
@@ -700,9 +704,9 @@
 # DBTITLE 1,MHS30 National
  %sql
  --/**MHS30 - ATTENDED CONTACTS IN REPORTING PERIOD**/
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
- 
+
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
  			,'$status' AS STATUS
@@ -722,9 +726,9 @@
 # DBTITLE 1,MHS30a National
  %sql
  --/**MHS30a - ATTENDED CONTACTS WITH PERINATAL MENTAL HEALTH TEAM IN REPORTING PERIOD**/
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
- 
+
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
  			,'$status' AS STATUS
@@ -744,11 +748,11 @@
 
 # DBTITLE 1,MHS30b National
  %sql
- 
+
  --/**MHS30b - ATTENDED CONTACTS WITH CRISIS RESOLUTION SERVICE OR HOME TREATMENT TEAM IN REPORTING PERIOD**/
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
- 
+
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
  			,'$status' AS STATUS
@@ -769,9 +773,9 @@
 # DBTITLE 1,MHS30c National
  %sql
  --/**MHS30c - ATTENDED CONTACTS WITH MEMORY SERVICES TEAM TEAM IN REPORTING PERIOD**/
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
- 
+
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
  			,'$status' AS STATUS
@@ -812,9 +816,9 @@
 # DBTITLE 1,MHS33 National
  %sql
  /**MHS33 - PEOPLE ASSIGNED TO A CARE CLUSTER AT END OF REPORTING PERIOD**/
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
- 
+
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
  			,'$status' AS STATUS
@@ -835,12 +839,14 @@
  INNER JOIN  $db_output.MHS101Referral_open_end_rp AS REF -- prep table in generic prep folder
  			ON MPI.Person_ID = REF.Person_ID 
 
+
+
 # COMMAND ----------
 
 # DBTITLE 1,MHS57 National
  %sql
  /**MHS57 - NUMBER OF PEOPLE DISCHARGED IN THE RP**/
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -854,7 +860,7 @@
  			,CAST (COALESCE (cast(COUNT (DISTINCT Person_ID) AS INT), 0) AS STRING) AS METRIC_VALUE 
              ,'$db_source' AS SOURCE_DB
  FROM		$db_source.MHS101Referral
- 
+
  WHERE		(ServDischDate >= '$rp_startdate' AND ServDischDate <= '$rp_enddate')
  			AND uniqmonthid = '$month_id'
 
@@ -863,7 +869,7 @@
 # DBTITLE 1,MHS58 National
  %sql
  /**MHS58 - NUMBER OF MISSED CARE CONTACTS IN THE RP**/
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -916,6 +922,7 @@
         FROM global_temp.CCR7071_prep
        WHERE ClinRespPriorityType = '1'
              AND AGE_GROUP = '18 and over';
+
 
 # COMMAND ----------
 

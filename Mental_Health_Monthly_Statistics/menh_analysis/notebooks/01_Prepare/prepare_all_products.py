@@ -35,13 +35,13 @@ dbutils.notebook.run("../01_Prepare/0.Insert_lookup_data", 0, params)
 # DBTITLE 1,Product-specific preparation (monthly start date)
 dbutils.notebook.run("../01_Prepare/1.Main_monthly_prep", 0, params)
 dbutils.notebook.run("../01_Prepare/3.CYP_2nd_contact_prep", 0, params)
-dbutils.notebook.run("../01_Prepare/4.CAP_prep", 0, params)
+#dbutils.notebook.run("../01_Prepare/4.CAP_prep", 0, params)
 dbutils.notebook.run("../01_Prepare/5.CYP_monthly_prep", 0, params)
 
 
 # COMMAND ----------
 
-# added by  (taken from 8.FYFV_prep)
+# added by User note (taken from 8.FYFV_prep)
 
 from datetime import datetime
 from dateutil.relativedelta import relativedelta

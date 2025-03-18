@@ -1,10 +1,10 @@
 # Databricks notebook source
 # DBTITLE 1,1. Main monthly
  %sql
- 
+
  -- Outpatient-Other measures
  INSERT INTO $db_output.Main_monthly_metric_values VALUES 
- 
+
    ('MHS02', 'People on CPA  at the end of the reporting period')
    , ('AMH02', 'People in contact with adult mental health services on CPA  at the end of the reporting period')
    , ('AMH03', 'People on CPA aged 18 to 69  at the end of the reporting period (adult mental health services only)')
@@ -20,7 +20,7 @@
 
 # DBTITLE 1,4. CaP
  %sql
- 
+
  INSERT INTO $db_output.CaP_metric_values VALUES
    ('ACC02', 'People on CPA at the end of the Reporting Period')
    , ('ACC53', 'Proportion of people at the end of the Reporting Period who are on CPA')
@@ -29,157 +29,157 @@
 
 # DBTITLE 1,5. CYP monthly
  %sql
- 
+
  -- Outpatient Other
  INSERT INTO $db_output.CYP_monthly_metric_values VALUES 
- 
+
      ('CYP02', 'People in contact with children and young people''s mental health services on CPA at the end of the reporting period')
 
 # COMMAND ----------
 
 # DBTITLE 1,ACC02
- %sql
- /**ACC02 - People on CPA at the end of the Reporting Period - FINAL**/
- 
- INSERT INTO $db_output.CAP_unformatted
-     SELECT '$rp_startdate' AS REPORTING_PERIOD_START
-         ,'$rp_enddate' AS REPORTING_PERIOD_END
-         ,'$status' AS STATUS
-         ,BREAKDOWN
-         ,CAST (LEVEL AS STRING) AS LEVEL
-         ,CAST (LEVEL_DESCRIPTION AS STRING) AS LEVEL_DESCRIPTION
-         ,CLUSTER
-         ,METRIC
-         ,CAST (METRIC_VALUE AS STRING) AS METRIC_VALUE
-         ,'$db_source' AS SOURCE_DB
-         
-   FROM	global_temp.ACC02
+# %sql
+# /**ACC02 - People on CPA at the end of the Reporting Period - FINAL**/
+
+# INSERT INTO $db_output.CAP_unformatted
+#     SELECT '$rp_startdate' AS REPORTING_PERIOD_START
+#         ,'$rp_enddate' AS REPORTING_PERIOD_END
+#         ,'$status' AS STATUS
+#         ,BREAKDOWN
+#         ,CAST (LEVEL AS STRING) AS LEVEL
+#         ,CAST (LEVEL_DESCRIPTION AS STRING) AS LEVEL_DESCRIPTION
+#         ,CLUSTER
+#         ,METRIC
+#         ,CAST (METRIC_VALUE AS STRING) AS METRIC_VALUE
+#         ,'$db_source' AS SOURCE_DB
+        
+#   FROM	global_temp.ACC02
 
 # COMMAND ----------
 
 # DBTITLE 1,ACC02 - Provider
- %sql
- /**ACC02 - People on CPA at the end of the Reporting Period, PROVIDER - INTERMEDIATE**/
- 
- INSERT INTO $db_output.CAP_unformatted
-     SELECT '$rp_startdate' AS REPORTING_PERIOD_START
-         ,'$rp_enddate' AS REPORTING_PERIOD_END
-         ,'$status' AS STATUS
-         ,BREAKDOWN
-         ,CAST (LEVEL AS STRING) AS LEVEL
-         ,CAST (LEVEL_DESCRIPTION AS STRING) AS LEVEL_DESCRIPTION
-         ,CLUSTER
-         ,METRIC
-         ,CAST (METRIC_VALUE AS STRING) AS METRIC_VALUE
-         ,'$db_source' AS SOURCE_DB
-         
-   FROM	global_temp.ACC02_PROVIDER
+# %sql
+# /**ACC02 - People on CPA at the end of the Reporting Period, PROVIDER - INTERMEDIATE**/
+
+# INSERT INTO $db_output.CAP_unformatted
+#     SELECT '$rp_startdate' AS REPORTING_PERIOD_START
+#         ,'$rp_enddate' AS REPORTING_PERIOD_END
+#         ,'$status' AS STATUS
+#         ,BREAKDOWN
+#         ,CAST (LEVEL AS STRING) AS LEVEL
+#         ,CAST (LEVEL_DESCRIPTION AS STRING) AS LEVEL_DESCRIPTION
+#         ,CLUSTER
+#         ,METRIC
+#         ,CAST (METRIC_VALUE AS STRING) AS METRIC_VALUE
+#         ,'$db_source' AS SOURCE_DB
+        
+#   FROM	global_temp.ACC02_PROVIDER
 
 # COMMAND ----------
 
 # DBTITLE 1,ACC02 - CCG
- %sql
- /**ACC02 - People on CPA at the end of the Reporting Period, CCG - INTERMEDIATE**/
- 
- INSERT INTO $db_output.CAP_unformatted
-     SELECT '$rp_startdate' AS REPORTING_PERIOD_START
-             ,'$rp_enddate' AS REPORTING_PERIOD_END
-             ,'$status' AS STATUS
- 			,BREAKDOWN
- 			,CAST (LEVEL AS STRING) AS LEVEL
- 			,CAST (LEVEL_DESCRIPTION AS STRING) AS LEVEL_DESCRIPTION
- 			,CLUSTER
- 			,METRIC
- 			,CAST (METRIC_VALUE AS STRING) AS METRIC_VALUE
-             ,'$db_source' AS SOURCE_DB
-             
-       FROM	global_temp.ACC02_CCG
+# %sql
+# /**ACC02 - People on CPA at the end of the Reporting Period, CCG - INTERMEDIATE**/
+
+# INSERT INTO $db_output.CAP_unformatted
+#     SELECT '$rp_startdate' AS REPORTING_PERIOD_START
+#             ,'$rp_enddate' AS REPORTING_PERIOD_END
+#             ,'$status' AS STATUS
+# 			,BREAKDOWN
+# 			,CAST (LEVEL AS STRING) AS LEVEL
+# 			,CAST (LEVEL_DESCRIPTION AS STRING) AS LEVEL_DESCRIPTION
+# 			,CLUSTER
+# 			,METRIC
+# 			,CAST (METRIC_VALUE AS STRING) AS METRIC_VALUE
+#             ,'$db_source' AS SOURCE_DB
+            
+#       FROM	global_temp.ACC02_CCG
 
 # COMMAND ----------
 
 # DBTITLE 1,ACC53
- %sql
- /**ACC53 - Proportion of people at the end of the Reporting Period who are on CPA, ENGLAND - FINAL**/
- 
- INSERT INTO $db_output.CAP_unformatted
-     SELECT '$rp_startdate' AS REPORTING_PERIOD_START
-             ,'$rp_enddate' AS REPORTING_PERIOD_END
-             ,'$status' AS STATUS
-             ,ACC33.BREAKDOWN
- 			,CAST (ACC33.LEVEL AS STRING) AS LEVEL
- 			,CAST (ACC33.LEVEL_DESCRIPTION AS STRING) AS LEVEL_DESCRIPTION
- 			,ACC33.CLUSTER
- 			,'ACC53' AS METRIC
- 			,CAST (CASE	WHEN COALESCE (ACC02.METRIC_VALUE, 0) = 0 THEN 0
- 					    ELSE COALESCE (ACC02.METRIC_VALUE, 0)  / COALESCE (ACC33.METRIC_VALUE, 0) *100
- 						END AS STRING) AS METRIC_VALUE
-             ,'$db_source' AS SOURCE_DB
-             
-       FROM	global_temp.ACC33 AS ACC33
-  LEFT JOIN   global_temp.ACC02 AS ACC02
- 			ON ACC33.LEVEL = ACC02.LEVEL 
-             AND ACC33.CLUSTER = ACC02.CLUSTER 
-             AND ACC33.BREAKDOWN = ACC02.BREAKDOWN
+# %sql
+# /**ACC53 - Proportion of people at the end of the Reporting Period who are on CPA, ENGLAND - FINAL**/
+
+# INSERT INTO $db_output.CAP_unformatted
+#     SELECT '$rp_startdate' AS REPORTING_PERIOD_START
+#             ,'$rp_enddate' AS REPORTING_PERIOD_END
+#             ,'$status' AS STATUS
+#             ,ACC33.BREAKDOWN
+# 			,CAST (ACC33.LEVEL AS STRING) AS LEVEL
+# 			,CAST (ACC33.LEVEL_DESCRIPTION AS STRING) AS LEVEL_DESCRIPTION
+# 			,ACC33.CLUSTER
+# 			,'ACC53' AS METRIC
+# 			,CAST (CASE	WHEN COALESCE (ACC02.METRIC_VALUE, 0) = 0 THEN 0
+# 					    ELSE COALESCE (ACC02.METRIC_VALUE, 0)  / COALESCE (ACC33.METRIC_VALUE, 0) *100
+# 						END AS STRING) AS METRIC_VALUE
+#             ,'$db_source' AS SOURCE_DB
+            
+#       FROM	global_temp.ACC33 AS ACC33
+#  LEFT JOIN   global_temp.ACC02 AS ACC02
+# 			ON ACC33.LEVEL = ACC02.LEVEL 
+#             AND ACC33.CLUSTER = ACC02.CLUSTER 
+#             AND ACC33.BREAKDOWN = ACC02.BREAKDOWN
 
 # COMMAND ----------
 
 # DBTITLE 1,ACC53 - Provider
- %sql
- /**ACC53 - Proportion of people at the end of the Reporting Period who are on CPA, PROVIDER - FINAL**/
- 
- INSERT INTO $db_output.CAP_unformatted
-     SELECT '$rp_startdate' AS REPORTING_PERIOD_START
-             ,'$rp_enddate' AS REPORTING_PERIOD_END
-             ,'$status' AS STATUS
- 			,ACC33.BREAKDOWN
- 			,CAST (ACC33.LEVEL AS STRING) AS LEVEL
- 			,CAST (ACC33.LEVEL_DESCRIPTION AS STRING) AS LEVEL_DESCRIPTION
- 			,ACC33.CLUSTER
- 			,'ACC53' AS METRIC
- 			,CAST (CASE	WHEN COALESCE (ACC02.METRIC_VALUE, 0) = 0 THEN 0
- 					    ELSE COALESCE (ACC02.METRIC_VALUE, 0)  / COALESCE (ACC33.METRIC_VALUE, 0) *100
- 						END AS STRING) AS METRIC_VALUE
-             ,'$db_source' AS SOURCE_DB
-             
-       FROM	global_temp.ACC33_PROVIDER AS ACC33
-  LEFT JOIN   global_temp.ACC02_PROVIDER AS ACC02
- 			ON ACC33.LEVEL = ACC02.LEVEL 
-             AND ACC33.CLUSTER = ACC02.CLUSTER 
-             AND ACC33.BREAKDOWN = ACC02.BREAKDOWN
+# %sql
+# /**ACC53 - Proportion of people at the end of the Reporting Period who are on CPA, PROVIDER - FINAL**/
+
+# INSERT INTO $db_output.CAP_unformatted
+#     SELECT '$rp_startdate' AS REPORTING_PERIOD_START
+#             ,'$rp_enddate' AS REPORTING_PERIOD_END
+#             ,'$status' AS STATUS
+# 			,ACC33.BREAKDOWN
+# 			,CAST (ACC33.LEVEL AS STRING) AS LEVEL
+# 			,CAST (ACC33.LEVEL_DESCRIPTION AS STRING) AS LEVEL_DESCRIPTION
+# 			,ACC33.CLUSTER
+# 			,'ACC53' AS METRIC
+# 			,CAST (CASE	WHEN COALESCE (ACC02.METRIC_VALUE, 0) = 0 THEN 0
+# 					    ELSE COALESCE (ACC02.METRIC_VALUE, 0)  / COALESCE (ACC33.METRIC_VALUE, 0) *100
+# 						END AS STRING) AS METRIC_VALUE
+#             ,'$db_source' AS SOURCE_DB
+            
+#       FROM	global_temp.ACC33_PROVIDER AS ACC33
+#  LEFT JOIN   global_temp.ACC02_PROVIDER AS ACC02
+# 			ON ACC33.LEVEL = ACC02.LEVEL 
+#             AND ACC33.CLUSTER = ACC02.CLUSTER 
+#             AND ACC33.BREAKDOWN = ACC02.BREAKDOWN
 
 # COMMAND ----------
 
 # DBTITLE 1,ACC53 - CCG
- %sql
- /**ACC62 - Proportion of people at the end of the Reporting Period who are on CPA, ENGLAND - FINAL**/
- 
- --CREATE OR REPLACE GLOBAL TEMP VIEW ACC53_ccg_v AS -- removed 20/8/19 and replaced with insert into statement (believe this was done in error in the first place)
- INSERT INTO $db_output.CAP_unformatted
-     SELECT '$rp_startdate' AS REPORTING_PERIOD_START
-             ,'$rp_enddate' AS REPORTING_PERIOD_END
-             ,'$status' AS STATUS
- 			,ACC33.BREAKDOWN
- 			,CAST (ACC33.LEVEL AS STRING) AS LEVEL
- 			,CAST (ACC33.LEVEL_DESCRIPTION AS STRING) AS LEVEL_DESCRIPTION
- 			,ACC33.CLUSTER
- 			,'ACC53' AS METRIC
- 			,CAST (CASE	WHEN COALESCE (ACC02.METRIC_VALUE, 0) = 0 THEN 0
- 					    ELSE COALESCE (ACC02.METRIC_VALUE, 0)  / COALESCE (ACC33.METRIC_VALUE, 0) *100
- 						END AS STRING) AS METRIC_VALUE
-             ,'$db_source' AS SOURCE_DB
-             
-       FROM	global_temp.ACC33_CCG AS ACC33
-  LEFT JOIN   global_temp.ACC02_CCG AS ACC02
- 			ON ACC33.LEVEL = ACC02.LEVEL 
-             AND ACC33.CLUSTER = ACC02.CLUSTER 
-             AND ACC33.BREAKDOWN = ACC02.BREAKDOWN
+# %sql
+# /**ACC62 - Proportion of people at the end of the Reporting Period who are on CPA, ENGLAND - FINAL**/
+
+# --CREATE OR REPLACE GLOBAL TEMP VIEW ACC53_ccg_v AS -- removed 20/8/19 and replaced with insert into statement (believe this was done in error in the first place)
+# INSERT INTO $db_output.CAP_unformatted
+#     SELECT '$rp_startdate' AS REPORTING_PERIOD_START
+#             ,'$rp_enddate' AS REPORTING_PERIOD_END
+#             ,'$status' AS STATUS
+# 			,ACC33.BREAKDOWN
+# 			,CAST (ACC33.LEVEL AS STRING) AS LEVEL
+# 			,CAST (ACC33.LEVEL_DESCRIPTION AS STRING) AS LEVEL_DESCRIPTION
+# 			,ACC33.CLUSTER
+# 			,'ACC53' AS METRIC
+# 			,CAST (CASE	WHEN COALESCE (ACC02.METRIC_VALUE, 0) = 0 THEN 0
+# 					    ELSE COALESCE (ACC02.METRIC_VALUE, 0)  / COALESCE (ACC33.METRIC_VALUE, 0) *100
+# 						END AS STRING) AS METRIC_VALUE
+#             ,'$db_source' AS SOURCE_DB
+            
+#       FROM	global_temp.ACC33_CCG AS ACC33
+#  LEFT JOIN   global_temp.ACC02_CCG AS ACC02
+# 			ON ACC33.LEVEL = ACC02.LEVEL 
+#             AND ACC33.CLUSTER = ACC02.CLUSTER 
+#             AND ACC33.BREAKDOWN = ACC02.BREAKDOWN
 
 # COMMAND ----------
 
 # DBTITLE 1,CYP02 - CCG
  %sql
  INSERT INTO $db_output.CYP_monthly_unformatted
- 
+
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
             ,'$rp_enddate' AS REPORTING_PERIOD_END
             ,'$status' AS STATUS
@@ -296,7 +296,7 @@
 
 # DBTITLE 1,AMH03 National
  %sql
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START,
               '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -316,7 +316,7 @@
 
 # DBTITLE 1,AMH04
  %sql
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
               ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -388,7 +388,7 @@
 # DBTITLE 1,AMH15
  %sql
  INSERT INTO $db_output.Main_monthly_unformatted
- 
+
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
  			,'$status' AS STATUS
@@ -411,7 +411,7 @@
 # DBTITLE 1,AMH18
  %sql
  INSERT INTO $db_output.Main_monthly_unformatted
- 
+
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
  			,'$status' AS STATUS
@@ -481,7 +481,7 @@
 
 # DBTITLE 1,AMH03 CCG
  %sql
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START,
               '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -502,7 +502,7 @@
 
 # DBTITLE 1,AMH04
  %sql
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START,
               '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -582,7 +582,7 @@
 # DBTITLE 1,AMH15
  %sql
  INSERT INTO $db_output.Main_monthly_unformatted
- 
+
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
              ,'$status' AS STATUS
@@ -605,7 +605,7 @@
 # DBTITLE 1,AMH18
  %sql
  INSERT INTO $db_output.Main_monthly_unformatted
- 
+
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
  			,'$status' AS STATUS
@@ -650,7 +650,7 @@
 
 # DBTITLE 1,AMH02 Provider
  %sql
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START,
              '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -677,7 +677,7 @@
 
 # DBTITLE 1,AMH03 Provider
  %sql
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START,
              '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -971,9 +971,9 @@
 
 # DBTITLE 1,AMH15
  %sql
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
- 
+
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
  			,'$status' AS STATUS
@@ -996,9 +996,9 @@
 
 # DBTITLE 1,AMH18
  %sql
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
- 
+
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
  			,'$status' AS STATUS
@@ -1021,7 +1021,7 @@
 
 # DBTITLE 1,AMH03 CASSR
  %sql
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START,
               '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -1042,7 +1042,7 @@
 
 # DBTITLE 1,AMH03 CASSR;Provider
  %sql
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START,
               '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -1065,9 +1065,9 @@
 
 # DBTITLE 1,AMH15 CASSR
  %sql
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
- 
+
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
  			,'$status' AS STATUS
@@ -1090,9 +1090,9 @@
 
 # DBTITLE 1,AMH15 CASSR;Provider
  %sql
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
- 
+
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
  			,'$status' AS STATUS
@@ -1127,9 +1127,9 @@
 
 # DBTITLE 1,AMH18 CASSR
  %sql
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
- 
+
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
  			,'$status' AS STATUS
@@ -1151,9 +1151,9 @@
 
 # DBTITLE 1,AMH18 CASSR;Provider
  %sql
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
- 
+
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
  			,'$status' AS STATUS
@@ -1194,7 +1194,7 @@
 # DBTITLE 1,AMH14 - National
  %sql
  INSERT INTO $db_output.Main_monthly_unformatted
- 
+
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
  			,'$status' AS STATUS
@@ -1214,7 +1214,7 @@
 # DBTITLE 1,AMH17 - National
  %sql
  INSERT INTO $db_output.Main_monthly_unformatted
- 
+
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
  			,'$status' AS STATUS
@@ -1236,7 +1236,7 @@
 # DBTITLE 1,AMH14 - CCG
  %sql
  INSERT INTO $db_output.Main_monthly_unformatted
- 
+
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
              ,'$status' AS STATUS
@@ -1257,7 +1257,7 @@
 # DBTITLE 1,AMH17 - CCG
  %sql
  INSERT INTO $db_output.Main_monthly_unformatted
- 
+
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
  			,'$status' AS STATUS
@@ -1279,9 +1279,9 @@
 
 # DBTITLE 1,AMH14 - Provider
  %sql
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
- 
+
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
  			,'$status' AS STATUS
@@ -1302,7 +1302,7 @@
 # DBTITLE 1,AMH17 - Provider
  %sql
  INSERT INTO $db_output.Main_monthly_unformatted
- 
+
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
  			,'$status' AS STATUS
@@ -1324,9 +1324,9 @@
 
 # DBTITLE 1,AMH14 CASSR
  %sql
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
- 
+
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
  			,'$status' AS STATUS
@@ -1347,9 +1347,9 @@
 
 # DBTITLE 1,AMH14 CASSR - Provider
  %sql
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
- 
+
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
  			,'$status' AS STATUS
@@ -1373,9 +1373,9 @@
 
 # DBTITLE 1,AMH17 CASSR
  %sql
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
- 
+
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
  			,'$status' AS STATUS
@@ -1398,9 +1398,9 @@
 
 # DBTITLE 1,AMH17 CASSR - Provider
  %sql
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
- 
+
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
  			,'$status' AS STATUS

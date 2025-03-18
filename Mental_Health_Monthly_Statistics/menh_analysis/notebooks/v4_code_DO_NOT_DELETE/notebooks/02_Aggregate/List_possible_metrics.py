@@ -1,15 +1,15 @@
 # Databricks notebook source
  %md
- 
+
  # List possible metrics for each product
- 
+
  Create full list of providers and CCGs, and fill in unused metrics/breakdown/clusters.
 
 # COMMAND ----------
 
 # DBTITLE 1,1. List possible Main monthly metrics
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMP VIEW Main_monthly_possible_metrics AS 
  SELECT b.breakdown,
  l.primary_level,
@@ -27,9 +27,9 @@
 
 # DBTITLE 1,2. List possible AWT metrics
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMP VIEW AWT_possible_metrics AS
- -- original code comented out
+ -- User note: original code comented out
  -- SELECT      DISTINCT b.breakdown, l.level, l.level_desc, m.metric, m.metric_name
  SELECT      DISTINCT b.breakdown, l.level, l.level_desc, l.secondary_level, l.secondary_level_desc, m.metric, m.metric_name
  FROM        $db_output.AWT_breakdown_values as b
@@ -40,7 +40,7 @@
 
 # DBTITLE 1,3. List possible CYP 2nd contact metrics
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMP VIEW CYP_2nd_contact_possible_metrics AS
  SELECT      b.breakdown, l.primary_level, l.primary_level_desc, l.secondary_level, l.secondary_level_desc, m.metric, m.metric_name
  FROM        $db_output.CYP_2nd_contact_breakdown_values as b
@@ -51,7 +51,7 @@
 
 # DBTITLE 1,4. List possible CAP metrics
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMP VIEW CaP_possible_metrics AS 
  SELECT b.breakdown, l.level, l.level_desc, c.cluster, m.metric, m.metric_name
  FROM $db_output.CaP_breakdown_values as b 
@@ -64,7 +64,7 @@
 
 # DBTITLE 1,5. List possible CYP monthly metrics
   %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW CYP_monthly_possible_metrics AS 
  SELECT distinct b.breakdown,l.primary_level,l.primary_level_desc,l.secondary_level,l.secondary_level_desc,m.metric,m.metric_name 
  FROM $db_output.CYP_monthly_breakdown_values as b 
@@ -76,7 +76,7 @@
 
 # DBTITLE 1,7. List  possible ASCOF metrics
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMP VIEW Ascof_possible_metrics AS 
  SELECT b.breakdown, l.level, l.level_desc, m.metric, m.metric_name 
  FROM $db_output.Ascof_breakdown_values as b 

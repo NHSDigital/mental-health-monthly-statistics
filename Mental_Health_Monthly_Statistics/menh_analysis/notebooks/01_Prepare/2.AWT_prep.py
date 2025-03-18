@@ -3,14 +3,14 @@
  %sql
  /* ---------------------------------------------------------------------------------------------------------*/
  /* providers_between_rp_start_end_dates: This is a view used in a lot of the the Provider breakdowns        
- 
+
    This returns the OrgIDProvider codes between the reporting period dates from MHS000Header
    
                                                                                    */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  -- 2020-12-12 changed rp_startdate to rp_startdate_quarterly as this is the parameter required for this query and explicit naming makes this more obvious.
- 
+
  CREATE OR REPLACE GLOBAL TEMP VIEW providers_between_rp_start_end_dates AS 
  SELECT DISTINCT OrgIDProvider, x.NAME as NAME
             FROM $db_source.MHS000Header as Z
@@ -28,18 +28,18 @@
  %sql
  --15 feb 2021 : copied to common objects in menh_publications\notebooks\common_objects\02_load_common_ref_data
  --20 Sep 2021 : #COPIED_EIP
- 
- 
+
+
  -- This code replicates PatMRecInRP for Feb and Mar 2018 to account for these derivation not being available on legacy data. It has been coded so that this only makes a difference if the relevant reporting period is called, otherwise the subsequent bricks use the DDC coded derivation. 
- 
+
  CREATE OR REPLACE GLOBAL TEMP VIEW MHS001_PATMRECINRP_201819_F_M AS
- 
+
  SELECT MPI.Person_ID,
         MPI.UniqSubmissionID,
         MPI.UniqMonthID,
         CASE WHEN x.Person_ID IS NULL THEN False ELSE True END AS  PatMRecInRP_temp
         
- 
+
  FROM   $db_source.mhs001MPI MPI
  LEFT JOIN
  (
@@ -48,27 +48,27 @@
         MAX (UniqSubmissionID) AS UniqSubmissionID
         
  FROM   $db_source.mhs001MPI
- 
+
  WHERE  UniqMonthID IN ('1427', '1428')
- 
+
  GROUP BY Person_ID, UniqMonthID
  ) AS x
  ON MPI.Person_ID = x.Person_ID AND MPI.UniqSubmissionID = x.UniqSubmissionID AND MPI.UniqMonthID = x.UniqMonthID
- 
+
  WHERE MPI.UniqMonthID IN ('1427', '1428');
 
 # COMMAND ----------
 
  %sql
  --15 feb 2021 : copied to common objects in menh_publications\notebooks\common_objects\02_load_common_ref_data
- 
+
  CREATE OR REPLACE GLOBAL TEMP VIEW MHS001MPI_PATMRECINRP_FIX AS
- 
+
  SELECT MPI.*,
         CASE WHEN FIX.Person_ID IS NULL THEN MPI.PatMRecInRP ELSE FIX.PatMRecInRP_temp END AS PatMRecInRP_FIX
- 
+
  FROM $db_source.mhs001MPI MPI
- 
+
  LEFT JOIN global_temp.MHS001_PATMRECINRP_201819_F_M FIX
  ON MPI.Person_ID = FIX.Person_ID AND MPI.UniqSubmissionID = FIX.UniqSubmissionID and MPI.UniqMonthID = FIX.UniqMonthID;
 
@@ -78,7 +78,7 @@
  %sql
  --15 feb 2021 : copied to common objects in menh_publications\notebooks\common_objects\02_load_common_ref_data
  --07-07-2022 : this table is needed by the cell below (used in FYFV_prep) - with the move of EIP/AWT measures to menh_publications this can move to FYFV_prep notebook
- 
+
  CREATE OR REPLACE GLOBAL TEMP VIEW CCG_prep_EIP AS
  SElECT DISTINCT    a.Person_ID
  				   ,max(a.RecordNumber) as recordnumber	
@@ -103,9 +103,9 @@
  -- 15 feb 2021 : copied to common objects in menh_publications\notebooks\common_objects\02_load_common_ref_data
  -- 07-07-2022 : this table is needed by FYFV_prep - with the move of EIP/AWT measures to menh_publications this can move to FYFV_prep notebook
  -- uses global_temp.CCG_prep_EIP
- 
+
  TRUNCATE TABLE $db_output.MHS001_CCG_LATEST;
- 
+
  INSERT INTO TABLE $db_output.MHS001_CCG_LATEST
  select distinct    a.Person_ID,
  				   CASE WHEN b.OrgIDCCGGPPractice IS NOT NULL and e.ORG_CODE is not null THEN b.OrgIDCCGGPPractice
@@ -143,13 +143,13 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
  %sql
  /* ---------------------------------------------------------------------------------------------------------*/
  /* MHS006MHCareCoord_LATEST: This is a view used in a lot of EIP metrics breakdowns        
- 
+
    This provides the latest MSH006CareCoord Assessment care coordination dates for a given provider between 
    the reporting period dates
    
                                                                                  */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  CREATE OR REPLACE GLOBAL TEMP VIEW MHS006MHCareCoord_LATEST AS 
       SELECT DISTINCT c.CareProfServOrTeamTypeAssoc, 
              c.UniqMonthID,
@@ -165,8 +165,8 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 # DBTITLE 1,MHS101Referral_LATEST (EIP)
  %sql
  --NP 15/2/2021 copied to menh_publications\notebooks\common_objects\02_load_common_ref_data
- 
- 
+
+
  /* ---------------------------------------------------------------------------------------------------------*/
  /* MHS101Referral_LATEST:  This is a view used in a lot of EIP metrics breakdowns . This provides the latest 
    records between the reporting period dates from MHS101Referral
@@ -176,7 +176,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
  /* Latest Referrals */
  -- TODO: RecEndDateRef required in MHS101Referral as per TOS
  -- NOTE: r.IC_Use_Submission_Flag no longer used.
- 
+
  CREATE OR REPLACE GLOBAL TEMP VIEW MHS101Referral_LATEST AS
      SELECT DISTINCT r.Person_ID,
             r.UniqServReqID,
@@ -192,14 +192,14 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 # COMMAND ----------
 
 # DBTITLE 1,EIP_MHS101Referral_LATEST (EIP)
- 
+
  %sql
  /* ---------------------------------------------------------------------------------------------------------*/
  /* MHS101Referral_LATEST: Extension of MHS101Referral_LATEST with additional filters which are used across 
    EIP metrics
                                                                  */
    /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  --CREATE OR REPLACE GLOBAL TEMP VIEW EIP_MHS101Referral_LATEST AS
     -- SELECT r.Person_ID,
      --       r.UniqServReqID,
@@ -222,9 +222,9 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
      -- WHERE r.ReferralRequestReceivedDate >= '2016-01-01'
      --       AND r.PrimReasonReferralMH = '01'
      --       AND ((r.RecordEndDate IS NULL OR r.RecordEndDate >= '$rp_enddate') AND r.RecordStartDate <= '$rp_enddate')
- 
- 
- 
+
+
+
  CREATE OR REPLACE GLOBAL TEMP VIEW EIP_MHS101Referral_LATEST AS
  SELECT DISTINCT r.Person_ID,
             r.UniqServReqID,
@@ -261,7 +261,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
                                                                              */ 
  /* ---------------------------------------------------------------------------------------------------------*/
  -- NOTE: The select column IC_Use_Submission_Flag has been removed
- 
+
  CREATE OR REPLACE GLOBAL TEMP VIEW MHS102ServiceTypeReferredTo_LATEST AS
       SELECT S.UniqMonthID
              ,S.OrgIDProv
@@ -285,7 +285,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
                                                                                 */ 
  /* ---------------------------------------------------------------------------------------------------------*/
  -- NOTE: The select column IC_Use_Submission_Flag has been removed
- 
+
  CREATE OR REPLACE GLOBAL TEMP VIEW EIP_MHS102ServiceTypeReferredTo_LATEST AS
      SELECT s.UniqMonthID,
             s.OrgIDProv,
@@ -316,7 +316,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
    It returns the earliest care contact dates for each service request ID.
                                                                                   */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  CREATE OR REPLACE GLOBAL TEMP VIEW earliest_care_contact_dates_by_service_request_id AS 
       SELECT a.UniqServReqID,
              MIN(CareContDate) AS CareContDate
@@ -347,7 +347,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
    
                                                                                    */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  CREATE OR REPLACE GLOBAL TEMP VIEW earliest_care_assessment_dates_by_service_request_id AS 
      SELECT B.UniqServReqID,
             MIN (A.StartDateAssCareCoord) AS StartDateAssCareCoord
@@ -373,7 +373,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
    
                                                                                   */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  CREATE OR REPLACE GLOBAL TEMP VIEW earliest_care_assessment_dates_by_service_request_id_Prov AS 
      SELECT B.UniqServReqID,
             B.OrgIDProv,
@@ -399,7 +399,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
    
                                                                                    */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  CREATE OR REPLACE GLOBAL TEMP VIEW earliest_care_assessment_dates_by_service_request_id_any_team AS 
      SELECT B.UniqServReqID,
             MIN (A.StartDateAssCareCoord) AS StartDateAssCareCoord
@@ -429,10 +429,10 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
  /* ---------------------------------------------------------------------------------------------------------*/
  /* Distinct_Referral_UniqSerReqIDs - this is used in EIP63 and returns a distinct list of UniqServReqIDs 
  after joining the referral intermediate tables.
- 
+
                                                                             */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  CREATE OR REPLACE GLOBAL TEMP VIEW Distinct_Referral_UniqServReqIDs AS
  select distinct a.UniqServReqID
             from global_temp.EIP_MHS101Referral_LATEST a -- AH_comment - Does this work with the intermediate tables coming after this brick? Don't know if they have to be in order, i.e. run the other two first?
@@ -448,10 +448,10 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
  /* ---------------------------------------------------------------------------------------------------------*/
  /* Distinct_Referral_UniqSerReqIDs - this is used in EIP63 and returns a distinct list of UniqServReqIDs 
  after joining the referral intermediate tables.
- 
+
                                                                              */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  CREATE OR REPLACE GLOBAL TEMP VIEW Distinct_Referral_UniqServReqIDs_any_month AS
  select distinct a.UniqServReqID
             from global_temp.EIP_MHS101Referral_LATEST a -- AH_comment - Does this work with the intermediate tables coming after this brick? Don't know if they have to be in order, i.e. run the other two first?
@@ -465,7 +465,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
  %sql
  /* ---------------------------------------------------------------------------------------------------------*/
  /* EIP01_common: This is the core calculation for the EIP01 metric, used for National and CCG      
- 
+
    This has been denormalised across age groups and so returns the UniqServReqID and "clock stop" for the age
    groupings.
    Old code description: FEP REFERRALS ON FEP PATHWAY IN TREATMENT AT END OF REPORTING PERIOD
@@ -473,9 +473,9 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
                      
    -- Added an extra column for Ethnicity in existing code dated 2021-01-25 */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  TRUNCATE TABLE $db_output.EIP01_common;
- 
+
  INSERT INTO TABLE $db_output.EIP01_common
  SELECT	CASE	WHEN E.AgeRepPeriodEnd BETWEEN 0 and 17 THEN '00-17' --chunks the calculation into age groupings
  				WHEN E.AgeRepPeriodEnd BETWEEN 18 AND 34 THEN '18-34' 
@@ -535,16 +535,16 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
  %sql
  /* ---------------------------------------------------------------------------------------------------------*/
  /* EIP01_common_Prov: This is the core calculation for the EIP01 metric Provider breakdown.      
- 
+
    This has been denormalised across age groups and so returns the UniqServReqID and "clock stop" for the age
    groupings.
    Old code description: FEP REFERRALS ON FEP PATHWAY IN TREATMENT AT END OF REPORTING PERIOD
    
                                                                                   */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  TRUNCATE TABLE $db_output.EIP01_common_prov;
- 
+
  INSERT INTO TABLE $db_output.EIP01_common_prov
  SELECT	CASE	WHEN E.AgeRepPeriodEnd BETWEEN 0 and 17 THEN '00-17' --chunks the calculation into age groupings
  				WHEN E.AgeRepPeriodEnd BETWEEN 18 AND 34 THEN '18-34' 
@@ -608,11 +608,11 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
    
                                                                                    */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  -- 2020-12-12 changed rp_startdate to rp_startdate_quarterly as this is the parameter required for this query and explicit naming makes this more obvious.
- 
+
  TRUNCATE TABLE $db_output.EIP23a_common;
- 
+
  INSERT INTO $db_output.EIP23a_common
        SELECT CASE WHEN AgeServReferRecDate BETWEEN 0 and 17 THEN '00-17'
                    WHEN AgeServReferRecDate BETWEEN 18 AND 34 THEN '18-34' 
@@ -679,11 +679,11 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
    
                                                                                 */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  --  2020-12-12 changed rp_startdate to rp_startdate_quarterly as this is the parameter required for this query and explicit naming makes this more obvious.
- 
+
  TRUNCATE table $db_output.EIP23a_common_Prov;
- 
+
  INSERT INTO $db_output.EIP23a_common_Prov
       SELECT CASE WHEN AgeServReferRecDate BETWEEN 0 and 17 THEN '00-17'
                   WHEN AgeServReferRecDate BETWEEN 18 AND 34 THEN '18-34' 
@@ -747,9 +747,9 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
    
                                                                                   */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  TRUNCATE TABLE $db_output.EIP23d_common;
- 
+
  INSERT INTO TABLE $db_output.EIP23d_common
       SELECT CASE WHEN AgeServReferRecDate BETWEEN 0 and 17 THEN '00-17'
                   WHEN AgeServReferRecDate BETWEEN 18 AND 34 THEN '18-34' 
@@ -814,9 +814,9 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
    
                                                                                    */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  TRUNCATE TABLE $db_output.EIP23d_common_Prov;
- 
+
  INSERT INTO TABLE $db_output.EIP23d_common_Prov
       SELECT CASE WHEN AgeServReferRecDate BETWEEN 0 and 17 THEN '00-17'
                   WHEN AgeServReferRecDate BETWEEN 18 AND 34 THEN '18-34' 
@@ -877,9 +877,9 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
    
                                                                                    */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  --  2020-12-12 changed rp_startdate to rp_startdate_quarterly as this is the parameter required for this query and explicit naming makes this more obvious.
- 
+
  CREATE OR REPLACE GLOBAL TEMP VIEW EIP23g_common AS
       SELECT a.UniqServReqID,
              IC_Rec_CCG,
@@ -920,9 +920,9 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
    
                                                                                    */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  --  changed rp_startdate to rp_startdate_quarterly as this is the parameter required for this query and explicit naming makes this more obvious.
- 
+
  CREATE OR REPLACE GLOBAL TEMP VIEW EIP23h_common AS
       SELECT a.UniqServReqID,
             IC_Rec_CCG,
@@ -963,9 +963,9 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
    
                                                                                    */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  -- 2020-12-12 changed rp_startdate to rp_startdate_quarterly as this is the parameter required for this query and explicit naming makes this more obvious.
- 
+
  CREATE OR REPLACE GLOBAL TEMP VIEW EIP23h_common_Prov AS
       SELECT a.UniqServReqID,
  			A.OrgIDProv,
@@ -999,7 +999,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
  -- 2020-12-12 changed rp_startdate to rp_startdate_quarterly as this is the parameter required for this query and explicit naming makes this more obvious.  
    
  TRUNCATE TABLE $db_output.EIP32_ED32_common;
- 
+
  INSERT INTO TABLE $db_output.EIP32_ED32_common
  SELECT	A.UniqServReqID,
  		A.OrgIDProv,
@@ -1045,9 +1045,9 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
    
                                                                                  */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  TRUNCATE TABLE $db_output.EIP63_common;
- 
+
  INSERT INTO TABLE $db_output.EIP63_common
  SELECT	A.UniqServReqID,
  		A.OrgIDProv,
@@ -1121,11 +1121,11 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
      
                                                                                   */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  -- 2020-12-12 changed rp_startdate to rp_startdate_quarterly as this is the parameter required for this query and explicit naming makes this more obvious.
- 
+
  TRUNCATE table $db_output.EIP64abc_common;
- 
+
  INSERT INTO $db_output.EIP64abc_common
  SELECT	CASE WHEN AgeServReferRecDate BETWEEN 0 and 17 THEN '00-17'
  			WHEN AgeServReferRecDate BETWEEN 18 AND 34 THEN '18-34' 

@@ -3,7 +3,7 @@
 
 
 # dbutils.widgets.text("db_output" , "menh_dq", "db_output")
-# dbutils.widgets.text("dbm" , "testdata_menh_dq_mhsds_v5_database", "dbm")
+# dbutils.widgets.text("dbm" , "testdata_menh_dq_$mhsds_db", "dbm")
 
 # dbutils.widgets.text("month_id", "1449", "month_id")
 # dbutils.widgets.text("reference_data", "reference_data", "reference_data")
@@ -40,7 +40,7 @@ assert month_id
 
 # DBTITLE 1,Accommodation Type
  %sql
- 
+
  INSERT INTO $db_output.dq_stg_validity
  SELECT
    --'Accommodation Type' AS MeasureName,
@@ -86,7 +86,7 @@ assert month_id
 
 # DBTITLE 1,Employment Status
  %sql
- 
+
  INSERT INTO $db_output.dq_stg_validity
  SELECT
    --'Employment Status' AS MeasureName,
@@ -123,7 +123,7 @@ assert month_id
 
 # DBTITLE 1,Disability Code
  %sql
- 
+
  INSERT INTO $db_output.dq_stg_validity
  SELECT
    --'Disibility Code' AS MeasureName,
@@ -164,7 +164,7 @@ assert month_id
 
 # DBTITLE 1,Decided to Admit Date
  %sql
- 
+
  INSERT INTO $db_output.dq_stg_validity
  SELECT
    --'Decided to Admit Date' AS MeasureName,
@@ -197,7 +197,7 @@ assert month_id
 
 # DBTITLE 1,Decided to Admit Time
  %sql
- 
+
  INSERT INTO $db_output.dq_stg_validity
  SELECT
    --'Decided to Admit Time' AS MeasureName,
@@ -225,7 +225,7 @@ assert month_id
 
 # DBTITLE 1,Admission Source (Mental Health Provider Spell)
  %sql
- 
+
  INSERT INTO $db_output.dq_stg_validity
  SELECT
    --'Admission Source (Mental Health Provider Spell)' AS MeasureName,
@@ -269,7 +269,7 @@ assert month_id
 
 # DBTITLE 1,Destination Of Discharge (Hospital Provider Spell)
  %sql
- 
+
  INSERT INTO $db_output.dq_stg_validity
  SELECT
    --'Destination Of Discharge (Hospital Provider Spell)' AS MeasureName,
@@ -313,7 +313,7 @@ assert month_id
 
 # DBTITLE 1,Start Time (Restrictive Intervention Incident)
  %sql
- 
+
  INSERT INTO $db_output.dq_stg_validity
  SELECT
    --'Start Time (Restrictive Intervention Incident)' AS MeasureName,
@@ -341,7 +341,7 @@ assert month_id
 
 # DBTITLE 1,Restrictive Intervention Reason
  %sql
- 
+
  INSERT INTO $db_output.dq_stg_validity
  SELECT
    --'Restrictive Intervention Reason' AS MeasureName,
@@ -386,7 +386,7 @@ assert month_id
 
 # DBTITLE 1,Start Time (Restrictive Intervention Type)
  %sql
- 
+
  INSERT INTO $db_output.dq_stg_validity
  SELECT
    --'Valid Start Time (Restrictive Intervention Type)' AS MeasureName,
@@ -414,7 +414,7 @@ assert month_id
 
 # DBTITLE 1,Restrictive Intervention Type
  %sql
- 
+
  INSERT INTO $db_output.dq_stg_validity
  SELECT
    --'Restrictive Intervention Type' AS MeasureName,
@@ -451,7 +451,7 @@ assert month_id
 
 # DBTITLE 1,Ward Setting Type (Mental Health)
  %sql
- 
+
  INSERT INTO $db_output.dq_stg_validity
  SELECT
    --'Ward Setting Type (Mental Health)' AS MeasureName,
@@ -488,7 +488,7 @@ assert month_id
 
 # DBTITLE 1,Intended Age Group (Mental Health)
  %sql
- 
+
  INSERT INTO $db_output.dq_stg_validity
  SELECT
    --'Intended Age Group (Mental Health)' AS MeasureName,
@@ -529,7 +529,7 @@ assert month_id
 
 # DBTITLE 1,Sex Of Patients Code (Mental Health)
  %sql
- 
+
  INSERT INTO $db_output.dq_stg_validity
  SELECT
    --'Sex Of Patients Code (Mental Health)' AS MeasureName,
@@ -570,7 +570,7 @@ assert month_id
 
 # DBTITLE 1,Intended Clinical Care Intensity Code (Mental Health)
  %sql
- 
+
  INSERT INTO $db_output.dq_stg_validity
  SELECT
    --'Intended Clinical Care Intensity Code (Mental Health)' AS MeasureName,
@@ -607,7 +607,7 @@ assert month_id
 
 # DBTITLE 1,Ward Security Level
  %sql
- 
+
  INSERT INTO $db_output.dq_stg_validity
  SELECT
    --'Ward Security Level' AS MeasureName,
@@ -644,7 +644,7 @@ assert month_id
 
 # DBTITLE 1,Locked Ward Indicator
  %sql
- 
+
  INSERT INTO $db_output.dq_stg_validity
  SELECT
    --'Locked Ward Indicator' AS MeasureName,

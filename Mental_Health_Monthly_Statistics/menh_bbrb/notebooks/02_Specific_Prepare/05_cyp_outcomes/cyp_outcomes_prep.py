@@ -27,7 +27,18 @@
  ,r.ServDischDate
  ,r.ReferRejectionDate
  ,i.Der_HospSpellCount    
-  
+ ,COALESCE(gen.Der_Gender, "UNKNOWN") AS Der_Gender
+ ,COALESCE(gen.Der_Gender_Desc, "UNKNOWN") as Der_Gender_Desc
+ ,COALESCE(ab.Age_Group_CYP, "UNKNOWN") as Age_Band
+ ,COALESCE(eth.UpperEthnicity, "UNKNOWN") as UpperEthnicity
+ ,COALESCE(imd.IMD_Decile, "UNKNOWN") as IMD_Decile
+ ,CASE WHEN COALESCE(r.PrimReasonReferralMH) NOT IN (SELECT PrimReasonReferralMH FROM $db_output.ref_reason_desc) THEN "UNKNOWN"
+       ELSE COALESCE(r.PrimReasonReferralMH, "UNKNOWN")
+       END as PrimReasonReferralMH --class invalid codes as unknown
+ ,COALESCE(ref_reason.PrimReasonReferralMHName, "UNKNOWN") as PrimReasonReferralMHName
+ ,COALESCE(serv.ServTeamTypeRefToMH, "UNKNOWN") as ServTeamTypeRefToMH
+ ,COALESCE(serv_desc.ServTeamTypeRefToMHDesc, "UNKNOWN") as ServTeamTypeRefToMHDesc
+
  FROM $db_output.nhse_pre_proc_referral r 
   
  LEFT JOIN (
@@ -41,7 +52,37 @@
  LEFT JOIN $db_output.bbrb_ccg_in_month ccg on r.Person_ID = ccg.Person_ID
   
  LEFT JOIN $db_output.ccg_mapping_2021 c on ccg.IC_Rec_CCG = c.CCG21CDH ---ICB and Region reference data
+
+ -- Breakdowns joins
+ LEFT JOIN (SELECT *
+            FROM $db_source.MHS001MPI
+            WHERE UniqMonthID = "$end_month_id"
+            AND PatMRecInRP = 'true'
+            AND (RECORDENDDATE IS NULL OR RECORDENDDATE >= '$rp_enddate')
+            AND (RECORDSTARTDATE < '$rp_enddate')
+            ) AS mpi 
+    ON mpi.Person_ID = r.Person_ID
+
+ LEFT JOIN $reference_data.english_indices_of_dep_v02 imd_ref ON mpi.LSOA2011 = imd_ref.LSOA_CODE_2011 AND imd_ref.IMD_YEAR = '2019' 
+   
+ LEFT JOIN $db_output.imd_desc imd ON imd_ref.DECI_IMD = imd.IMD_Number AND '$end_month_id' >= imd.FirstMonth AND (imd.LastMonth IS null OR '$end_month_id' <= imd.LastMonth)
+   
+ LEFT JOIN $db_output.age_band_desc ab ON r.AgeServReferRecDate = ab.AgeRepPeriodEnd and '$end_month_id' >= ab.FirstMonth and (ab.LastMonth IS null OR '$end_month_id' <= ab.LastMonth)
   
+ LEFT JOIN $db_output.gender_desc gen
+         ON CASE WHEN mpi.GenderIDCode IN ('1','2','3','4') THEN mpi.GenderIDCode
+                 WHEN mpi.Gender IN ('1','2','9') THEN mpi.Gender
+                 ELSE 'UNKNOWN' END = gen.Der_Gender
+          AND '$end_month_id' >= gen.FirstMonth AND (gen.LastMonth IS null OR '$end_month_id' <= gen.LastMonth)
+   
+ LEFT JOIN $db_output.ethnicity_desc eth ON mpi.NHSDEthnicity = eth.LowerEthnicityCode AND '$end_month_id' >= eth.FirstMonth AND (eth.LastMonth IS null OR '$end_month_id' <= eth.LastMonth) 
+
+ LEFT JOIN $db_output.ref_reason_desc ref_reason ON r.PrimReasonReferralMH = ref_reason.PrimReasonReferralMH AND '$end_month_id' >= ref_reason.FirstMonth AND (ref_reason.LastMonth IS null OR '$end_month_id' <= ref_reason.LastMonth) 
+
+ LEFT JOIN $db_output.ServiceTeamType serv ON r.UniqCareProfTeamID = serv.UniqCareProfTeamID AND r.OrgIDProv = serv.OrgIDProv AND r.UniqMonthID = serv.UniqMonthID
+
+ LEFT JOIN $db_output.serv_team_type_ref_to_desc serv_desc ON serv.ServTeamTypeRefToMH = serv_desc.ServTeamTypeRefToMH AND '$end_month_id' >= serv_desc.FirstMonth AND (serv_desc.LastMonth IS null OR '$end_month_id' <= serv_desc.LastMonth)  
+
  WHERE r.AgeServReferRecDate BETWEEN 0 AND 17 ---changed from 0-18 to match CQUIN 
  AND r.UniqMonthID BETWEEN $start_month_id AND $end_month_id
  AND r.ReferralRequestReceivedDate >= '2016-01-01' 
@@ -55,7 +96,7 @@
 
  %sql
  INSERT OVERWRITE TABLE $db_output.cyp_closed_contacts
- SELECT 
+ SELECT distinct
  r.Person_ID
  ,r.UniqServReqID
  ,r.RecordNumber 
@@ -72,7 +113,7 @@
 
  %sql
  INSERT OVERWRITE TABLE $db_output.cyp_all_assessments
- SELECT
+ SELECT DISTINCT
  r.Person_ID
  ,r.UniqServReqID
  ,r.RecordNumber
@@ -97,7 +138,7 @@
 
  %sql
  INSERT OVERWRITE TABLE $db_output.cyp_ref_cont_out
- SELECT 
+ SELECT DISTINCT
  r.Person_ID
  ,r.UniqServReqID
  ,r.RecordNumber
@@ -206,7 +247,7 @@
 
  %sql
  INSERT OVERWRITE TABLE $db_output.cyp_first_and_last_assessments
- SELECT      
+ SELECT DISTINCT   
  r.Person_ID
  ,r.UniqServReqID
  ,r.RecordNumber
@@ -347,7 +388,7 @@
 
  %sql
  INSERT OVERWRITE TABLE $db_output.cyp_master
- SELECT 
+ SELECT DISTINCT
  r.Person_ID
  ,r.UniqServReqID
  ,r.RecordNumber
@@ -364,6 +405,15 @@
  ,r.Gender
  ,r.ReferralRequestReceivedDate
  ,r.ServDischDate  
+ ,r.Der_Gender
+ ,r.Der_Gender_Desc
+ ,r.Age_Band
+ ,r.UpperEthnicity 
+ ,r.IMD_Decile
+ ,r.PrimReasonReferralMH
+ ,r.PrimReasonReferralMHName
+ ,r.ServTeamTypeRefToMH
+ ,r.ServTeamTypeRefToMHDesc
  ,c.Contact1
  ,c.Contact2
  -- self-rated measures 

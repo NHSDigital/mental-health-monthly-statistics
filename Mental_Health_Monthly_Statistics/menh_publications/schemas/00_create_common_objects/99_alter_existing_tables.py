@@ -1,6 +1,6 @@
 # Databricks notebook source
  %md
- 
+
  ## functions and lists to allow alterations to existing tables that cannot be dropped and recreated because they contain data that needs to be persisted
 
 # COMMAND ----------
@@ -74,5 +74,6 @@ for table, column in tableColumnINT.items():
 
 # DBTITLE 1,tidy up after BITC-2921 (can be removed after init_schemas has been run in PROD)
  %sql
- 
+
  DROP TABLE IF EXISTS $db_output.all_products_cached_v2;
+

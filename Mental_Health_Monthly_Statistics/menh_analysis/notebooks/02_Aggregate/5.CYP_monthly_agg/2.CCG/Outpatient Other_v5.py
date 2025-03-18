@@ -23,11 +23,11 @@
 
 # DBTITLE 1,CYP23-i - commented out
  %sql
- 
+
  -- removed 14/08/2019 due to being duplicated in final formatted CSV output - measure still in main monthly
- 
+
  -- INSERT INTO $db_output.CYP_monthly_unformatted
- 
+
  --     SELECT '$rp_startdate' AS REPORTING_PERIOD_START
  --            ,'$rp_enddate' AS REPORTING_PERIOD_END
  --            ,'$status' AS STATUS
@@ -51,7 +51,7 @@
  ----- MHS30d - Attended care contacts in the RP, 0-18 -----
             
  INSERT INTO $db_output.CYP_monthly_unformatted
- 
+
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
  			,'$status' AS STATUS
@@ -270,7 +270,7 @@
 # DBTITLE 1,MHS40
  %sql
  INSERT INTO $db_output.CYP_monthly_unformatted
- 
+
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
              ,'$status' AS STATUS
@@ -334,7 +334,7 @@
 # DBTITLE 1,MHS55a CCG
  %sql
  ----- MHS55a - People attending at least one contact in the RP, 0-18 -----
- 
+
  INSERT INTO $db_output.CYP_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -356,9 +356,9 @@
 
 # DBTITLE 1,MHS56a CCG
  %sql
- 
+
  ----- MHS56a - People with indirect activity in the RP, 0-18 -----
- 
+
  INSERT INTO $db_output.CYP_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -381,7 +381,7 @@
 # DBTITLE 1,MHS57a CCG
  %sql
  /*** MHS57a - People discharged from the service in the RP, 0-18 ***/
- 
+
  INSERT INTO $db_output.CYP_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -475,7 +475,7 @@
            ,CASE WHEN b.ConsMechanismMH IS NULL THEN 'Missing'
                  ELSE COALESCE(cm.level_description, 'Invalid')
                  END;
- 
+
          
 
 # COMMAND ----------

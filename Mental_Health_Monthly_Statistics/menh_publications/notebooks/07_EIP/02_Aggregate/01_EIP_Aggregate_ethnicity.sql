@@ -7,7 +7,7 @@
  AWT_unformatted table. 
  */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted
  SELECT			'$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -34,7 +34,7 @@
  AWT_unformatted table. 
  */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted
  SELECT        '$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
                '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -60,7 +60,7 @@
  EIP01_common to make the provider EIP01 metric, and then inserts this into the AWT_unformatted table.  
  */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted
  SELECT			'$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -77,6 +77,7 @@
  FROM			$db_output.EIP01_common_prov AS A
  GROUP BY		A.OrgIDProv, A.NHSDEthnicity
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP23a National : Ethnicity
@@ -86,7 +87,7 @@
  EIP23a_Common to make the metrics, and then inserts this into the AWT_unformatted table. 
  */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted
     select '$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
            '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -103,6 +104,7 @@
     FROM  $db_output.EIP23a_common A
     GROUP BY A.NHSDEthnicity
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP23a CCG National - Ethnicity
@@ -112,7 +114,7 @@
  to make the CCG EIP23a metric, and then inserts this into the AWT_unformatted table. 
  */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted
  SELECT			'$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -129,6 +131,7 @@
  FROM $db_output.EIP23a_common as  A
  GROUP BY LEVEL, A.NHSDEthnicity
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP23a Provider National - Ethnicity
@@ -138,7 +141,7 @@
  to make the provider EIP23a metric, and then inserts this into the AWT_unformatted table.
  */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
       SELECT '$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
              '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -155,6 +158,7 @@
         FROM $db_output.EIP23a_common_Prov A
     GROUP BY A.OrgIDProv, A.NHSDEthnicity
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP23b National : Ethnicity
@@ -165,7 +169,7 @@
  AWT_unformatted table. 
  */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
     select '$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
            '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -183,6 +187,7 @@
     WHERE A.days_between_ReferralRequestReceivedDate <= 14
     GROUP BY A.NHSDEthnicity
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP23b CCG National - Ethnicity
@@ -192,7 +197,7 @@
  to make the CCG EIP23b metric, and then inserts this into the AWT_unformatted table. 
  */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
  SELECT    '$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
            '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -210,6 +215,7 @@
  WHERE     A.days_between_ReferralRequestReceivedDate <= 14
  GROUP BY  LEVEL, A.NHSDEthnicity
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP23b Provider National - Ethnicity
@@ -219,7 +225,7 @@
  to make the provider EIP23b metric, and then inserts this into the AWT_unformatted table. 
  */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
       SELECT '$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
              '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -237,6 +243,7 @@
        WHERE A.days_between_ReferralRequestReceivedDate <= 14   
     GROUP BY A.OrgIDProv, A.NHSDEthnicity
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP23c National : Ethnicity
@@ -247,7 +254,7 @@
  AWT_unformatted table. 
  */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted
     select '$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
            '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -265,6 +272,7 @@
    WHERE A.days_between_ReferralRequestReceivedDate > 14
   GROUP BY A.NHSDEthnicity
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP23c CCG National - Ethnicity
@@ -274,7 +282,7 @@
  to make the CCG EIP23c metric, and then inserts this into the AWT_unformatted table. 
  */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted
  SELECT			'$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -292,6 +300,7 @@
  WHERE A.days_between_ReferralRequestReceivedDate > 14
  GROUP BY LEVEL, A.NHSDEthnicity
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP23c Provider National - Ethnicity
@@ -301,7 +310,7 @@
  to make the provider EIP23c metric, and then inserts this into the AWT_unformatted table. 
  */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
       SELECT '$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
              '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -318,6 +327,7 @@
         FROM $db_output.EIP23a_common_Prov A
        WHERE A.days_between_ReferralRequestReceivedDate > 14   
     GROUP BY A.OrgIDProv, A.NHSDEthnicity
+
 
 -- COMMAND ----------
 
@@ -346,17 +356,18 @@
         FROM $db_output.EIP23d_common A
        GROUP BY A.NHSDEthnicity
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP23d CCG National - Ethnicity
  %sql
- 
+
  /* ---------------------------------------------------------------------------------------------------------*/
  /* EIP23d CCG national aggregation based on Ethnicity - this counts the number of distinct UniqServReqIDs for each CCG in 
  EIP23d_common to make CCG EIP23d metrics, and then inserts this into the AWT_unformatted table. 
  */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
  SELECT			'$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -373,6 +384,7 @@
  FROM			$db_output.EIP23d_common AS A
  GROUP BY		LEVEL, A.NHSDEthnicity
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP23d Provider National - Ethnicity
@@ -382,7 +394,7 @@
  EIP23d_common to make the provider EIP23d metrics, and then inserts this into the AWT_unformatted table. 
  */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
  SELECT			'$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -399,6 +411,7 @@
  FROM			$db_output.EIP23d_common_prov AS A
  GROUP BY		 A.OrgIDProv, A.NHSDEthnicity
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP23e National : Ethnicity
@@ -409,7 +422,7 @@
  AWT_unformatted table. 
  */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
     select '$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
            '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -427,6 +440,7 @@
        WHERE A.days_between_endate_ReferralRequestReceivedDate <= 14      
        GROUP BY A.NHSDEthnicity
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP23e CCG National - Ethnicity
@@ -436,7 +450,7 @@
  EIP23d_common to make CCG EIP23e metrics and then inserts this into the AWT_unformatted table. 
  */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted
  SELECT			'$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -454,6 +468,7 @@
  WHERE A.days_between_endate_ReferralRequestReceivedDate <= 14
  GROUP BY LEVEL, A.NHSDEthnicity
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP23e Provider National - Ethnicity
@@ -463,7 +478,7 @@
  EIP23d_common to make the provider EIP23e metrics, and then inserts this into the AWT_unformatted table. 
  */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
        SELECT    '$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -481,6 +496,7 @@
        WHERE     A.days_between_endate_ReferralRequestReceivedDate <= 14
        GROUP BY  A.OrgIDProv, A.NHSDEthnicity
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP23f National : Ethnicity
@@ -491,7 +507,7 @@
  AWT_unformatted table. 
  */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
     select '$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
            '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -519,7 +535,7 @@
  EIP01_common to make CCG EIP23f metrics, and then inserts this into the AWT_unformatted table. 
  */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
  SELECT			'$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -537,6 +553,7 @@
  WHERE           A.days_between_endate_ReferralRequestReceivedDate > 14
  GROUP BY		LEVEL, A.NHSDEthnicity
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP23f Provider Groups - Ethnicity
@@ -546,7 +563,7 @@
  EIP23d_common to make the provider EIP23f metrics, and then inserts this into the AWT_unformatted table. 
  */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
      SELECT		'$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -563,6 +580,7 @@
        FROM	    $db_output.EIP23d_common_prov AS A
        WHERE     A.days_between_endate_ReferralRequestReceivedDate > 14
        GROUP BY  A.OrgIDProv, A.NHSDEthnicity
+
 
 -- COMMAND ----------
 
@@ -589,6 +607,8 @@
    FROM $db_output.EIP63_common as A
    GROUP BY A.NHSDEthnicity
 
+
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP63 CCG National : Ethnicity
@@ -599,7 +619,7 @@
     and summed to provide national extract.
  */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
  SELECT			'$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -615,6 +635,7 @@
                  
  FROM			$db_output.EIP63_common AS A
  GROUP BY		LEVEL, A.NHSDEthnicity
+
 
 -- COMMAND ----------
 
@@ -640,6 +661,7 @@
  FROM			$db_output.EIP63_common AS A
  GROUP BY	    A.OrgIDProv, A.NHSDEthnicity
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP64 National : Ethnicity
@@ -649,7 +671,7 @@
    metric for each ethnic group.
  */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
    select '$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
            '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -675,7 +697,7 @@
    all age groups.
  */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
  SELECT			'$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -691,6 +713,7 @@
                  
  FROM			$db_output.EIP64abc_common AS A
  GROUP BY		LEVEL, A.NHSDEthnicity
+
 
 -- COMMAND ----------
 
@@ -715,6 +738,7 @@
                  
  FROM			$db_output.EIP64abc_common AS A
  GROUP BY		A.OrgIDProv, A.NHSDEthnicity
+
 
 -- COMMAND ----------
 
@@ -744,6 +768,8 @@
    WHERE ABS(DATEDIFF (CLOCK_STOP,A.ReferralRequestReceivedDate)) > 14
    GROUP BY A.NHSDEthnicity
 
+
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP65 CCG National : Ethnicity
@@ -752,7 +778,7 @@
  /* EIP65 CCG based on Ethnicity - this is the aggregate calculation of EIP65 CCG breakdown from EIP64abc_common.
  */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
  SELECT			'$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -769,6 +795,7 @@
  FROM			$db_output.EIP64abc_common AS A
  WHERE ABS(DATEDIFF (CLOCK_STOP,A.ReferralRequestReceivedDate)) > 14
  GROUP BY		LEVEL, A.NHSDEthnicity
+
 
 -- COMMAND ----------
 
@@ -795,6 +822,7 @@
  WHERE ABS(DATEDIFF (CLOCK_STOP,A.ReferralRequestReceivedDate)) > 14
  GROUP BY	    A.OrgIDProv, A.NHSDEthnicity
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP66 National : Ethnicity
@@ -804,7 +832,7 @@
    metric for each ethnic group.
  */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
    select '$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
            '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -822,6 +850,7 @@
    WHERE ABS(DATEDIFF (CLOCK_STOP,A.ReferralRequestReceivedDate)) <= 14
    GROUP BY A.NHSDEthnicity
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP66 CCG National : Ethnicity
@@ -831,7 +860,7 @@
    based on Ethnicity.
  */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
  SELECT			'$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -848,6 +877,7 @@
  FROM			$db_output.EIP64abc_common AS A
  WHERE ABS(DATEDIFF (CLOCK_STOP,A.ReferralRequestReceivedDate)) <= 14
  GROUP BY		LEVEL, A.NHSDEthnicity
+
 
 -- COMMAND ----------
 

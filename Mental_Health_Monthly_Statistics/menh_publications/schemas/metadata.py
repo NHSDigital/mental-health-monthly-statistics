@@ -53,16 +53,6 @@ if update_metadata == 'true':
             ('CYP_ED_WaitingTimes_12m', 'run_notebooks', '04a_CYP_ED_WaitingTimes/01_Prepare/PrepViews', 465, 'transform', null),
             ('CYP_ED_WaitingTimes_12m', 'run_notebooks', '04a_CYP_ED_WaitingTimes/02_Aggregate/01_CYP_ED_WT_Aggregate', 466, 'transform', null),
             
-            ('MHA_Monthly', 'init_schemas', '05_MHA_Monthly/1_create_tables', 501, 'create_schema', null),
-            ('MHA_Monthly', 'run_notebooks', '05_MHA_Monthly/00_Master/DeletePrevRunRecords', 502, 'transform', null),
-            ('MHA_Monthly', 'run_notebooks', '05_MHA_Monthly/01_Prepare/00_LoadRefData', 503, 'transform', null),
-            ('MHA_Monthly', 'run_notebooks', '05_MHA_Monthly/01_Prepare/01_CreateViews', 504, 'transform', null),
-            ('MHA_Monthly', 'run_notebooks', '05_MHA_Monthly/02_Aggregate/01_MHS81', 505, 'transform', null),
-            ('MHA_Monthly', 'run_notebooks', '05_MHA_Monthly/02_Aggregate/02_MHS82', 506, 'transform', null),
-            ('MHA_Monthly', 'run_notebooks', '05_MHA_Monthly/02_Aggregate/03_MHS83', 507, 'transform', null),
-            ('MHA_Monthly', 'run_notebooks', '05_MHA_Monthly/02_Aggregate/04_MHS84', 508, 'transform', null),
-            ('MHA_Monthly', 'run_notebooks', '05_MHA_Monthly/02_Aggregate/05_Rates', 509, 'transform', null),
-            ('MHA_Monthly', 'run_notebooks', '05_MHA_Monthly/02_Aggregate/06_MHS143_to_MHS145', 510, 'transform', null),
             
             ('CYP_Outcome_Measures', 'init_schemas', '06_CYP_Outcome_Measures/create_tables', 601, 'create_schema', null),
             
@@ -109,6 +99,22 @@ if update_metadata == 'true':
 #             ('CYP_Outcome_Measures', 'run_notebooks', '06_CYP_Outcome_Measures/02_Aggregate/MHS92-94', 605, 'transform', null),
 #             ('CYP_Outcome_Measures', 'run_notebooks', '06_CYP_Outcome_Measures/02_Aggregate/MHS91', 606, 'transform', null),
 #             ('CYP_Outcome_Measures', 'run_notebooks', '06_CYP_Outcome_Measures/02_Aggregate/MHS95', 607, 'transform', null),
+
+#MHA migrated to menh_bbrb
+
+ #           ('MHA_Monthly', 'init_schemas', '05_MHA_Monthly/1_create_tables', 501, 'create_schema', null),
+ #           ('MHA_Monthly', 'run_notebooks', '05_MHA_Monthly/00_Master/DeletePrevRunRecords', 502, 'transform', null),
+ #           ('MHA_Monthly', 'run_notebooks', '05_MHA_Monthly/01_Prepare/00_LoadRefData', 503, 'transform', null),
+ #           ('MHA_Monthly', 'run_notebooks', '05_MHA_Monthly/01_Prepare/01_CreateViews', 504, 'transform', null),
+ #           ('MHA_Monthly', 'run_notebooks', '05_MHA_Monthly/02_Aggregate/01_MHS81', 505, 'transform', null),
+ #           ('MHA_Monthly', 'run_notebooks', '05_MHA_Monthly/02_Aggregate/02_MHS82', 506, 'transform', null),
+ #           ('MHA_Monthly', 'run_notebooks', '05_MHA_Monthly/02_Aggregate/03_MHS83', 507, 'transform', null),
+ #           ('MHA_Monthly', 'run_notebooks', '05_MHA_Monthly/02_Aggregate/04_MHS84', 508, 'transform', null),
+ #           ('MHA_Monthly', 'run_notebooks', '05_MHA_Monthly/02_Aggregate/05_Rates', 509, 'transform', null),
+ #           ('MHA_Monthly', 'run_notebooks', '05_MHA_Monthly/02_Aggregate/06_MHS143_to_MHS145', 510, 'transform', null),
+            
+
+
             
 
 # COMMAND ----------

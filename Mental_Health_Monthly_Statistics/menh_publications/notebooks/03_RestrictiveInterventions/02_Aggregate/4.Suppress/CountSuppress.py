@@ -17,7 +17,7 @@ assert db_source
 
 # DBTITLE 1,Count suppression
  %sql
- 
+
  Insert into $db_output.MHSRestrictiveInterventionCountSuppressed
  SELECT  REPORTING_PERIOD_START
         ,REPORTING_PERIOD_END

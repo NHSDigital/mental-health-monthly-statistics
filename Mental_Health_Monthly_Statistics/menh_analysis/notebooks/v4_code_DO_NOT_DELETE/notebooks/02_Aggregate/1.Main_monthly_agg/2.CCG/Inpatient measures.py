@@ -1,9 +1,9 @@
 # Databricks notebook source
 # DBTITLE 1,MHS07 CCG
  %sql
- 
+
  /**MHS07 - PEOPLE WITH AN OPEN HOSPITAL PROVIDER SPELL AT END OF REPORTING PERIOD**/
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
             ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -25,7 +25,7 @@
 # DBTITLE 1,MHS07a CCG
  %sql
  /**MHS07a - PEOPLE WITH AN OPEN HOSPITAL PROVIDER SPELL AT END OF REPORTING PERIOD, AGED 0-18**/
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
             ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -48,7 +48,7 @@
 # DBTITLE 1,MHS07b CCG
  %sql
  /**MHS07b - PEOPLE WITH AN OPEN HOSPITAL PROVIDER SPELL AT END OF REPORTING PERIOD, AGED 19-64**/
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
             ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -114,7 +114,7 @@
 # DBTITLE 1,MHS21a CCG
  %sql
  /**MHS21a - OPEN WARD STAYS DISTANCE AT END OF REPORTING PERIOD, AGED 0-18**/
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -159,7 +159,7 @@
 # DBTITLE 1,MHS21c CCG
  %sql
  /**MHS21c - OPEN WARD STAYS DISTANCE AT END OF REPORTING PERIOD, AGED 65 AND OVER**/
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -182,7 +182,7 @@
 # DBTITLE 1,AMH21 CCG
  %sql
  -- /**AMH21 - OPEN WARD STAYS (ADULT MENTAL HEALTH SERVICES) AT END OF REPORTING PERIOD**/
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -206,7 +206,7 @@
  %sql
  /**CYP21 - OPEN WARD STAYS (CHILDREN AND YOUNG PEOPLE'S MENTAL HEALTH SERVICES) AT END OF REPORTING PERIOD**/
  -- in both monthly and cahms monthly tables
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -274,9 +274,9 @@
 
 # DBTITLE 1,MHS22 CCG
  %sql
- 
+
  /**MHS22 - OPEN WARD STAYS DISTANCE >= 50KM AT END OF REPORTING PERIOD**/
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -298,9 +298,9 @@
 
 # DBTITLE 1,MHS22a CCG
  %sql
- 
+
  /**MHS22a - OPEN WARD STAYS DISTANCE > 50KM AT END OF REPORTING PERIOD, AGED 0-18**/
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -323,9 +323,9 @@
 
 # DBTITLE 1,MHS22b CCG
  %sql
- 
+
  /**MHS22b - OPEN WARD STAYS DISTANCE > 50KM AT END OF REPORTING PERIOD, AGED 19-64**/
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -348,9 +348,9 @@
 
 # DBTITLE 1,MHS22c CCG
  %sql
- 
+
  /**MHS22c - OPEN WARD STAYS DISTANCE > 50KM AT END OF REPORTING PERIOD, AGED 65 AND OVER**/
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END

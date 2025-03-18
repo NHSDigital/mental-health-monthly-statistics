@@ -2,17 +2,17 @@
 # DBTITLE 1,AWT
  %sql
  CREATE TABLE IF NOT EXISTS $db_output.AWT_breakdown_values (breakdown string) USING DELTA;
- 
+
  -- DROP TABLE IF EXISTS $db_output.awt_level_values;
  CREATE TABLE IF NOT EXISTS $db_output.awt_level_values (level string, level_desc string, secondary_level string, secondary_level_desc string, breakdown string) USING DELTA;
- 
+
  -- DROP TABLE IF EXISTS $db_output.AWT_metric_values;
  CREATE TABLE IF NOT EXISTS $db_output.AWT_metric_values (metric string, metric_name string) USING DELTA;
 
 # COMMAND ----------
 
  %sql
- 
+
  CREATE TABLE IF NOT EXISTS $db_output.awt_unformatted
  (
    REPORTING_PERIOD_START DATE,
@@ -33,7 +33,7 @@
 # COMMAND ----------
 
  %sql
- 
+
  CREATE TABLE IF NOT EXISTS $db_output.EIP01_common
      (AGE_GROUP                           STRING,
       UniqServReqID                       STRING,
@@ -70,7 +70,7 @@
 # COMMAND ----------
 
  %sql
- 
+
  CREATE TABLE IF NOT EXISTS $db_output.EIP23d_common
        (AGE_GROUP                                        STRING,
         UniqServReqID                                    STRING,
@@ -95,7 +95,7 @@
 # COMMAND ----------
 
  %sql
- 
+
  CREATE TABLE IF NOT EXISTS $db_output.EIP01_common_prov
      (AGE_GROUP                                                   STRING,
       UniqServReqID                                               STRING,
@@ -108,7 +108,7 @@
 # COMMAND ----------
 
  %sql
- 
+
  CREATE TABLE IF NOT EXISTS $db_output.eip64abc_common 
   (AGE_GROUP                                 STRING,
    NHSDEthnicity                             STRING,
@@ -249,7 +249,7 @@
  SERVTEAMTYPEREFTOMH string,
  PRIMREASONREFERRALMH string,
  IC_RESIDENCE string
- 
+
  )
  USING delta 
 
@@ -257,10 +257,10 @@
 
  %sql
  -- This is intermediate table which gets truncated during the job run, and Spark 3 giving exception when ORGIDCOMM as date type. As it is intermediate table, dropping it to update the schema, ORGIDCOMM to string type
- 
+
  DROP TABLE IF EXISTS $db_output.eip_pre_proc_activity;
  CREATE TABLE if not exists $db_output.EIP_Pre_Proc_Activity(
- 
+
  DER_ACTIVITYTYPE string,
  DER_ACTIVITYUNIQID bigint,
  PERSON_ID string,
@@ -308,7 +308,7 @@
 
  %sql
  CREATE TABLE if not exists $db_output.EIP_Activity(
- 
+
  DER_ACTIVITYTYPE string,
  DER_ACTIVITYUNIQID bigint,
  PERSON_ID string,
@@ -324,12 +324,13 @@
  )
  USING delta 
 
+
 # COMMAND ----------
 
  %sql
  DROP TABLE IF EXISTS $db_output.EIP_Pre_Proc_Interventions;
  CREATE TABLE if not exists $db_output.EIP_Pre_Proc_Interventions(
- 
+
  RECORDNUMBER bigint,
  PERSON_ID string,
  UNIQMONTHID bigint,
@@ -341,7 +342,7 @@
  Procedure string,
  DER_SNOMEDPROCCODE string,
  Observation string
- 
+
  )
  USING delta 
 
@@ -350,7 +351,7 @@
  %sql
  DROP TABLE IF EXISTS $db_output.EIP_Snomed;
  CREATE TABLE if not exists  $db_output.EIP_Snomed(
- 
+
  PERSON_ID string,
  UNIQSERVREQID string,
  UNIQMONTHID bigint,
@@ -376,6 +377,7 @@
  NICESNOMED bigint)
  USING delta 
 
+
 # COMMAND ----------
 
  %sql
@@ -387,9 +389,10 @@
  DER_INMONTHCONTACTS bigint)
  USING delta 
 
+
 # COMMAND ----------
 
- 
+
  %sql
  CREATE TABLE if not exists  $db_output.EIP_Activity_Cumulative(
  PERSON_ID string,

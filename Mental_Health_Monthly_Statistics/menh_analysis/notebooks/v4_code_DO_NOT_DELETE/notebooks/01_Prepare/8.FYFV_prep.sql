@@ -5,7 +5,7 @@
 -- COMMAND ----------
 
 -- create widget text db_output default "menh_analysis";
--- create widget text db_source default "mh_pre_pseudo_d1";
+-- create widget text db_source default "mhsds_db";
 -- create widget text month_id default "1434";
 -- create widget text rp_startdate default "2019-09-01";
 -- create widget text rp_enddate default "2019-09-30";
@@ -24,36 +24,37 @@
  rp_startdate = dbutils.widgets.get("rp_startdate")
  status = dbutils.widgets.get("status")
  rp_startdate_quarterly = dbutils.widgets.get("rp_startdate_quarterly")
- 
+
  params = {'db_output': db_output, 'db_source': db_source, 'month_id': month_id, 'rp_enddate': rp_enddate, 'rp_startdate': rp_startdate, 'rp_startdate_quarterly': rp_startdate_quarterly, 'status': status}
- 
+
  print(params)
 
 -- COMMAND ----------
 
 -- DBTITLE 1,Calculate remaining dates from current month widget value
  %py
- 
- # I've moved the creation of these parameters into the notebook above as I *think* that parameters created in python code can't be used by SQL code in the same notebook...
- 
+
+ # User note: I've moved the creation of these parameters into the notebook above as I *think* that parameters created in python code can't be used by SQL code in the same notebook...
+
  # from datetime import datetime
  # from dateutil.relativedelta import relativedelta
- 
+
  # params['month_id_1'] = int(params['month_id']) - 2
  # params['month_id_2'] = int(params['month_id']) - 1
- 
+
  # params['rp_startdate_m1'] = rp_startdate_quarterly
  # params['rp_startdate_m2'] = (datetime.strptime(params['rp_startdate'], '%Y-%m-%d') + relativedelta(months=-1)).strftime('%Y-%m-%d')
- 
+
  # params['rp_enddate_m1'] = (datetime.strptime(params['rp_startdate'], '%Y-%m-%d') + relativedelta(months=-1,days=-1)).strftime('%Y-%m-%d')
  # params['rp_enddate_m2'] = (datetime.strptime(params['rp_startdate'], '%Y-%m-%d') + relativedelta(days=-1)).strftime('%Y-%m-%d')
- 
+
  # print(params)
 
 -- COMMAND ----------
 
  %md
  Table 1 Prep
+
 
 -- COMMAND ----------
 
@@ -80,14 +81,14 @@ INSERT INTO TABLE $db_output.AMH03e_prep
 -- COMMAND ----------
 
  %python
- 
+
  import os
- 
+
  db_output = dbutils.widgets.get("db_output")
- 
+
  if os.environ['env'] == 'prod':
    spark.sql('OPTIMIZE {db_output}.{table}'.format(db_output=db_output, table='AMH03e_prep'))
- 
+
  spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output, table='AMH03e_prep'))
 
 -- COMMAND ----------
@@ -115,14 +116,14 @@ INNER JOIN global_temp.Accomodation_latest AS ACC
 -- COMMAND ----------
 
  %python
- 
+
  import os
- 
+
  db_output = dbutils.widgets.get("db_output")
- 
+
  if os.environ['env'] == 'prod':
    spark.sql('OPTIMIZE {db_output}.{table}'.format(db_output=db_output, table='AMH13e_14e_prep'))
- 
+
  spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output, table='AMH13e_14e_prep'))
 
 -- COMMAND ----------
@@ -157,25 +158,25 @@ LEFT JOIN $db_output.STP_Region_mapping_post_2018 AS stp
 -- COMMAND ----------
 
  %python
- 
+
  import os
- 
+
  db_output = dbutils.widgets.get("db_output")
- 
+
  if os.environ['env'] == 'prod':
    spark.sql('OPTIMIZE {db_output}.{table}'.format(db_output=db_output, table='AMH16e_17e_prep'))
- 
+
  spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output, table='AMH16e_17e_prep'))
 
 -- COMMAND ----------
 
  %md
- 
+
  Table 2 Prep
 
 -- COMMAND ----------
 
--- updated following the advice - 2nd contact date should be used to determine quarter not first contact date...
+-- User note: updated following the advice of  - 2nd contact date should be used to determine quarter not first contact date...
 -- change made is to exclude the CASE statement
 
 CREATE OR REPLACE GLOBAL TEMPORARY VIEW ContPer_Quarterly AS
@@ -205,7 +206,7 @@ INNER JOIN global_temp.first_contacts f
 -- COMMAND ----------
 
 
--- updated following the advice - 2nd contact date should be used to determine quarter not first contact date...
+-- User note: updated following the advice of  - 2nd contact date should be used to determine quarter not first contact date...
 -- change made is to change the WHERE statement
 
 TRUNCATE TABLE $db_output.CYPFinal_2nd_contact_Quarterly;
@@ -234,14 +235,14 @@ INSERT INTO TABLE $db_output.CYPFinal_2nd_contact_Quarterly
 -- COMMAND ----------
 
  %python
- 
+
  import os
- 
+
  db_output = dbutils.widgets.get("db_output")
- 
+
  if os.environ['env'] == 'prod':
    spark.sql('OPTIMIZE {db_output}.{table}'.format(db_output=db_output, table='CYPFinal_2nd_contact_Quarterly'))
- 
+
  spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output, table='CYPFinal_2nd_contact_Quarterly'))
 
 -- COMMAND ----------

@@ -151,9 +151,10 @@
         INNER JOIN $db_output.validcodes as vc
          ON vc.tablename = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'CCR70_72' and vc.type = 'include' and prep.ClinRespPriorityType = vc.ValidValue 
          and '$month_id' >= vc.FirstMonth and (vc.LastMonth is null or '$month_id' <= vc.LastMonth)
- 
+
  --       WHERE ClinRespPriorityType = '1'
              WHERE AGE_GROUP = '18 and over';
+
 
 -- COMMAND ----------
 
@@ -177,7 +178,7 @@
         INNER JOIN $db_output.validcodes as vc
          ON vc.tablename = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'CCR70_72' and vc.type = 'include' and prep.ClinRespPriorityType = vc.ValidValue 
          and '$month_id' >= vc.FirstMonth and (vc.LastMonth is null or '$month_id' <= vc.LastMonth)
- 
+
              WHERE AGE_GROUP = '0-17';
 
 -- COMMAND ----------
@@ -266,6 +267,7 @@
          ON vc.tablename = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'CCR70_72' and vc.type = 'include' and prep.ClinRespPriorityType = vc.ValidValue 
          and '$month_id' >= vc.FirstMonth and (vc.LastMonth is null or '$month_id' <= vc.LastMonth)
 
+
 -- COMMAND ----------
 
  %sql
@@ -288,7 +290,7 @@
         INNER JOIN $db_output.validcodes as vc
          ON vc.tablename = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'CCR70_72' and vc.type = 'include' and prep.ClinRespPriorityType = vc.ValidValue 
          and '$month_id' >= vc.FirstMonth and (vc.LastMonth is null or '$month_id' <= vc.LastMonth)
- 
+
              WHERE AGE_GROUP = '18 and over';
 
 -- COMMAND ----------
@@ -313,7 +315,7 @@
         INNER JOIN $db_output.validcodes as vc
          ON vc.tablename = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'CCR70_72' and vc.type = 'include' and prep.ClinRespPriorityType = vc.ValidValue 
          and '$month_id' >= vc.FirstMonth and (vc.LastMonth is null or '$month_id' <= vc.LastMonth)
- 
+
              WHERE AGE_GROUP = '0-17';
 
 -- COMMAND ----------
@@ -400,7 +402,7 @@
         INNER JOIN $db_output.validcodes as vc
          ON vc.tablename = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'CCR70_72' and vc.type = 'include' and prep.ClinRespPriorityType = vc.ValidValue 
          and '$month_id' >= vc.FirstMonth and (vc.LastMonth is null or '$month_id' <= vc.LastMonth)
- 
+
  --        WHERE ClinRespPriorityType = '1'
    GROUP BY IC_Rec_CCG, NAME;
 
@@ -426,7 +428,7 @@
         INNER JOIN $db_output.validcodes as vc
          ON vc.tablename = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'CCR70_72' and vc.type = 'include' and prep.ClinRespPriorityType = vc.ValidValue 
          and '$month_id' >= vc.FirstMonth and (vc.LastMonth is null or '$month_id' <= vc.LastMonth)
- 
+
  --        WHERE ClinRespPriorityType = '1'
              WHERE AGE_GROUP = '18 and over'
     GROUP BY IC_Rec_CCG, NAME;
@@ -453,7 +455,7 @@
         INNER JOIN $db_output.validcodes as vc
          ON vc.tablename = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'CCR70_72' and vc.type = 'include' and prep.ClinRespPriorityType = vc.ValidValue 
          and '$month_id' >= vc.FirstMonth and (vc.LastMonth is null or '$month_id' <= vc.LastMonth)
- 
+
  --         WHERE ClinRespPriorityType = '1'
              WHERE AGE_GROUP = '0-17'
     GROUP BY IC_Rec_CCG, NAME;  
@@ -546,7 +548,7 @@
         INNER JOIN $db_output.validcodes as vc
          ON vc.tablename = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'CCR70_72' and vc.type = 'include' and prep.ClinRespPriorityType = vc.ValidValue 
          and '$month_id' >= vc.FirstMonth and (vc.LastMonth is null or '$month_id' <= vc.LastMonth)
- 
+
  --           WHERE ClinRespPriorityType = '1'
     GROUP BY IC_Rec_CCG, NAME;    
 
@@ -572,7 +574,7 @@
         INNER JOIN $db_output.validcodes as vc
          ON vc.tablename = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'CCR70_72' and vc.type = 'include' and prep.ClinRespPriorityType = vc.ValidValue 
          and '$month_id' >= vc.FirstMonth and (vc.LastMonth is null or '$month_id' <= vc.LastMonth)
- 
+
  --           WHERE ClinRespPriorityType = '1'
              WHERE AGE_GROUP = '18 and over'
     GROUP BY IC_Rec_CCG, NAME;
@@ -599,7 +601,7 @@
         INNER JOIN $db_output.validcodes as vc
          ON vc.tablename = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'CCR70_72' and vc.type = 'include' and prep.ClinRespPriorityType = vc.ValidValue 
          and '$month_id' >= vc.FirstMonth and (vc.LastMonth is null or '$month_id' <= vc.LastMonth)
- 
+
  --       WHERE ClinRespPriorityType = '1'
              WHERE AGE_GROUP = '0-17'
     GROUP BY IC_Rec_CCG, NAME;
@@ -691,9 +693,10 @@
         INNER JOIN $db_output.validcodes as vc
          ON vc.tablename = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'CCR70_72' and vc.type = 'include' and prep.ClinRespPriorityType = vc.ValidValue 
          and '$month_id' >= vc.FirstMonth and (vc.LastMonth is null or '$month_id' <= vc.LastMonth)
- 
+
  --         WHERE ClinRespPriorityType = '1'
     GROUP BY OrgIDProv;
+
 
 -- COMMAND ----------
 
@@ -717,7 +720,7 @@
         INNER JOIN $db_output.validcodes as vc
          ON vc.tablename = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'CCR70_72' and vc.type = 'include' and prep.ClinRespPriorityType = vc.ValidValue 
          and '$month_id' >= vc.FirstMonth and (vc.LastMonth is null or '$month_id' <= vc.LastMonth)
- 
+
  --         WHERE ClinRespPriorityType = '1'
              WHERE AGE_GROUP = '18 and over'
     GROUP BY OrgIDProv;
@@ -744,7 +747,7 @@
         INNER JOIN $db_output.validcodes as vc
          ON vc.tablename = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'CCR70_72' and vc.type = 'include' and prep.ClinRespPriorityType = vc.ValidValue 
          and '$month_id' >= vc.FirstMonth and (vc.LastMonth is null or '$month_id' <= vc.LastMonth)
- 
+
  --         WHERE ClinRespPriorityType = '1'
              WHERE AGE_GROUP = '0-17'
     GROUP BY OrgIDProv;
@@ -836,7 +839,7 @@
         INNER JOIN $db_output.validcodes as vc
          ON vc.tablename = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'CCR70_72' and vc.type = 'include' and prep.ClinRespPriorityType = vc.ValidValue 
          and '$month_id' >= vc.FirstMonth and (vc.LastMonth is null or '$month_id' <= vc.LastMonth)
- 
+
  --         WHERE ClinRespPriorityType = '1'
     GROUP BY OrgIDProv;
 
@@ -862,7 +865,7 @@
         INNER JOIN $db_output.validcodes as vc
          ON vc.tablename = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'CCR70_72' and vc.type = 'include' and prep.ClinRespPriorityType = vc.ValidValue 
          and '$month_id' >= vc.FirstMonth and (vc.LastMonth is null or '$month_id' <= vc.LastMonth)
- 
+
  --         WHERE ClinRespPriorityType = '1'
              WHERE AGE_GROUP = '18 and over'
     GROUP BY OrgIDProv;
@@ -889,7 +892,7 @@
         INNER JOIN $db_output.validcodes as vc
          ON vc.tablename = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'CCR70_72' and vc.type = 'include' and prep.ClinRespPriorityType = vc.ValidValue 
          and '$month_id' >= vc.FirstMonth and (vc.LastMonth is null or '$month_id' <= vc.LastMonth)
- 
+
  --        WHERE ClinRespPriorityType = '1'
              WHERE AGE_GROUP = '0-17'
     GROUP BY OrgIDProv;

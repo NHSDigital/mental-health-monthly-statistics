@@ -23,12 +23,13 @@
 
  %md
  101 DOESNT NEED CHANGING (MIGHT BE BETTER AS A PROPER TABLE THOUGH)
- 
+
  Followed by (USE SAME METHODOLOGY AS MHS101 in 02_load_common_ref_data):
  MHS102 
  MHS501
- 
+
  CCG METHODOLOGY FOR 12 MONTH ROLLING (IT EXISTS ALREADY FOR 3 MONTH ROLLING)
+
 
 -- COMMAND ----------
 
@@ -99,12 +100,12 @@
      step1.UniqMonthID,                          -- ADDED TO ALLOW VALIDCODES TO COMPARE WITH SUBMISSION MONTH
      step1.RecordNumber
  FROM  global_temp.CYP_ED_WT_STEP1 step1 
- 
+
  INNER JOIN $db_source.MHS201CareContact cc
  ON step1.UniqServReqID = cc.UniqServReqID and step1.Person_ID = cc.Person_ID
  INNER JOIN $db_source.MHS202CareActivity ca
  ON cc.Person_ID = ca.Person_ID AND ca.UniqCareContID = cc.UniqCareContID AND ca.UniqMonthID = cc.UniqMonthID
- 
+
  INNER JOIN $db_output.validcodes as vc
  --     join updated to evaluate validity at time of data rather than reporting month
    ON vc.tablename = 'mhs201carecontact' 

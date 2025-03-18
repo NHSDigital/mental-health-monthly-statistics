@@ -4,26 +4,26 @@
 # COMMAND ----------
 
  %sql
- 
+
  --remove widget rp_enddate;
- 
+
  -- create widget text rp_startdate default '2019-08-01';
  -- create widget text rp_enddate default '2019-08-31';
  -- create widget text month_id default '1433';
  -- create widget text LOSPeriodEnd default '2019-08-31';
  -- create widget text PreviousMonthEnd default '2019-07-31';
  -- create widget text db_output default 'menh_analysis';
- -- create widget text db_source default 'mh_v5_pre_pseudo_d1';
+ -- create widget text db_source default '$mhsds_db';
 
 # COMMAND ----------
 
  %sql
- 
+
  -- $db_output.LDA_Data_1 only contains data for the current run (cleared out here and populated in THIS notebook) - this is clear Person level data
  -- $db_output.LDA_Counts keeps data for all months and both Respite and non-Respite outputs - needs extra filters before output
- 
+
  TRUNCATE TABLE $db_output.LDA_Data_1;
- 
+
  DELETE FROM $db_output.LDA_Counts
  WHERE PRODUCT ='Monthly' 
  AND PeriodEnd = '$rp_enddate'
@@ -34,7 +34,7 @@
 # DBTITLE 1,LDAflag derivation from SQL - for reference - commented out
 # %sql
 
-# /* this is the Stored Procedure code for LDAFlag from SQL for reference 
+# /* User note: this is the Stored Procedure code for LDAFlag from SQL for reference 
 
 
 # USE [MENH_MHSDS]
@@ -156,9 +156,9 @@
 # DBTITLE 0,Individuals identified within table MHS007
  %sql
  --Individuals identified within table MHS007
- 
+
  CREATE OR REPLACE TEMPORARY VIEW LD_007 AS
- 
+
  SELECT distinct Person_ID, '007' as table
  FROM $db_source.MHS007DisabilityType e where e.DisabCode = '04' 
  and UniqMonthID = $month_id;
@@ -168,9 +168,9 @@
 # DBTITLE 0,Individuals identified within table MHS007
  %sql
  --Individuals identified within table MHS502
- 
+
  CREATE OR REPLACE TEMPORARY VIEW LD_502 AS
- 
+
  SELECT distinct Person_ID, '502' as table
  FROM $db_source.MHS502WardStay f 
  where (f.WardType = '05' or f.WardIntendedClinCareMH in ('61','62','63'))
@@ -181,9 +181,9 @@
 
  %sql
  --Individuals identified within table MHS006
- 
+
  CREATE OR REPLACE TEMPORARY VIEW LD_006 AS
- 
+
  select distinct Person_ID, '006' as table
  from  $db_source.MHS006MHCareCoord g 
  where  g.CareProfServOrTeamTypeAssoc in ('B02','C01','E01','E02','E03') -- should E04 be included? It is included in the LD service split in the monthly
@@ -207,9 +207,9 @@
 
  %sql
  --Individuals identified within table MHS401
- 
+
  CREATE OR REPLACE TEMPORARY VIEW LD_401 AS
- 
+
  select distinct Person_ID, '401' as table
  from  $db_source.MHS401MHActPeriod i 
  where i.MentalCat = 'B' 
@@ -221,9 +221,9 @@
 
  %sql
  --Individuals identified within table MHS503
- 
+
  CREATE OR REPLACE TEMPORARY VIEW LD_503 AS
- 
+
  select distinct Person_ID, '503' as table
  from $db_source.MHS503AssignedCareProf j 
  where j.TreatFuncCodeMH = '700' 
@@ -234,9 +234,9 @@
 
  %sql
  --Individuals identified within table MHS603
- 
+
  CREATE OR REPLACE TEMPORARY VIEW LD_603 AS
- 
+
  select distinct Person_ID, '603' as table
  from $db_source.MHS603ProvDiag k 
  where k.DiagSchemeInUse = '02' and (k.ProvDiag like 'F7%' or k.ProvDiag like 'F84%')
@@ -246,9 +246,9 @@
 
  %sql
  --Individuals identified within table MHS604
- 
+
  CREATE OR REPLACE TEMPORARY VIEW LD_604 AS
- 
+
  select distinct Person_ID, '604' as table
  from $db_source.MHS604PrimDiag l 
  where l.DiagSchemeInUse = '02' and (l.PrimDiag like 'F7%' or l.PrimDiag like 'F84%')
@@ -258,9 +258,9 @@
 
  %sql
  --Individuals identified within table MHS605
- 
+
  CREATE OR REPLACE TEMPORARY VIEW LD_605 AS
- 
+
  select distinct Person_ID, '605' as table
  from $db_source.MHS605SecDiag m 
  where m.DiagSchemeInUse = '02' and (m.SecDiag like 'F7%' or m.SecDiag like 'F84%')
@@ -282,9 +282,9 @@
 
  %sql
  --Individuals identified within table MHS801
- 
+
  CREATE OR REPLACE TEMPORARY VIEW LD_801 AS
- 
+
  select distinct Person_ID, '801' as table
  from $db_source.MHS801ClusterTool n 
  where n.ClustCat in ('03','05')
@@ -294,7 +294,7 @@
 
  %sql
   
- -- /* this cell collects together all the LDA individuals into one table */
+ -- /* User note: this cell collects together all the LDA individuals into one table */
  -- /* NB includes duplicate records */
   
  CREATE OR REPLACE TEMPORARY VIEW LD_cohort_dups AS
@@ -325,14 +325,14 @@
 # COMMAND ----------
 
  %sql
- -- /* this cell replaces LDAflag */
- -- /* instead of updating a column in mhs001mpi this populates a new table with just the Person_ID of the LDA cohort in it */
+ -- /* User note: this cell replaces LDAflag */
+ -- /* User note: instead of updating a column in mhs001mpi this populates a new table with just the Person_ID of the LDA cohort in it */
  -- /* i.e. it just uses an equivalent to the temp table created in the original code and joins to this in future code rather than amending the source data table */
     
- -- this creates an ordere, distinct version of the LDA cohort
+ -- User note: this creates an ordere, distinct version of the LDA cohort
  -- need to refer to this table as global_temp.LD_cohort
- 
- 
+
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW LD_cohort AS
  select distinct Person_ID from LD_cohort_dups
  order by Person_ID
@@ -358,9 +358,9 @@ spark.udf.register("get_provider_type", get_provider_type)
  %sql
  -- This is similar to the generic prep RD_ORG_DAILY_LATEST, however it is broader and has an extra column. Possible to combine?
  -- in temp_views
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW RD_ORG_DAILY_LATEST_LDA AS
- 
+
  SELECT DISTINCT                          
         ORG_CODE,                          
         NAME,                      
@@ -390,7 +390,7 @@ spark.udf.register("get_provider_type", get_provider_type)
  ------------------- THIS REFERENCE TABLE HAS ALL THE CCGS/TCPS AND COMMISSIONING REGIONS -------------------
  ----------------------- FOR THE RELEVANT REPORTING MONTH, IT IS DYNAMIC AND DEALS WITH NEW ORGS ------------
  -- in temp_views
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW commissioners AS
  select case when O3.NAME like '%HUB%' then 'HUB' 
              when O3.NAME like '%CCG%' then 'CCG' 
@@ -574,12 +574,12 @@ spark.udf.register("get_provider_type", get_provider_type)
                      OR (RES.EndDateRestrictiveIntType BETWEEN '$rp_startdate' AND '$rp_enddate')
                      OR (RES.EndDateRestrictiveIntType is null)) AND RES.UniqMonthID = '$month_id' -- and RES.ic_use_submission_flag = 'y' -- needed for testing  in hue
          WHERE  M.UniqMonthID = '$month_id' AND M.PatMRecInRP = True 
- --LDAFlag doesn't exist in v4.1
+ --User note: LDAFlag doesn't exist in v4.1
          --M.LDAFlag = True AND 
          AND M.Person_ID IN
          (SELECT LD.Person_ID from global_temp.LD_cohort LD)
     
- -- added in for under 18 output
+ --User note added in for under 18 output
        -- AND M.AgeRepPeriodEnd < 18 
         
   
@@ -668,19 +668,19 @@ spark.udf.register("get_provider_type", get_provider_type)
 
  %sql
  --- THESE TEMP TABLES TRANSFORM THE LIST OF PATIENTS NEEDED FOR REPORTING TO INCLUDE VARIOUS COMMISSIONER FIELDS NEEDED FOR SSRS REPORTING--
- 
+
  -------------- Join the name of the provider onto LDA_Data to make the provider split easier.
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW LDA_Data_P AS
- 
+
  SELECT LD.*,O.NAME
          ,O.ORG_TYPE_CODE AS ORG_TYPE_CODE_PROV
  FROM global_temp.LDA_Data LD
  LEFT JOIN global_temp.RD_ORG_DAILY_LATEST_LDA O 
  on LD.combinedprovider = O.ORG_CODE;
- 
+
  ----- get the right commissioner in here -----
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW LDA_Data_C AS
  select L.*
         ,case WHEN O4.ORG_CODE is null and O5.ORG_CODE is null then 'Unknown'
@@ -701,7 +701,7 @@ spark.udf.register("get_provider_type", get_provider_type)
        
   
  ---- join to the correct STP/Region -------
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW LDA_Data_T AS
  Select L.*
         ,COALESCE(STP_Code, "UNKNOWN") as TCP_Code
@@ -710,13 +710,13 @@ spark.udf.register("get_provider_type", get_provider_type)
         ,COALESCE(Region_DESCRIPTION, "UNKNOWN") as Region_name
  from global_temp.LDA_Data_C L
  left join $db_output.STP_Region_mapping_post_2020 C on L.OrgCode = C.CCG_CODE;
- 
+
  ----- Convert all the commissioner groupings --------
- 
+
  INSERT INTO $db_output.LDA_Data_1
- 
+
  -- CREATE OR REPLACE GLOBAL TEMPORARY VIEW LDA_Data_1 AS
- 
+
  select L.*,R.ORG_TYPE_CODE as ORG_TYPE_ORG_R, r.ORG_CODE AS ORG_CODE_R,R.NAME AS ORG_NAME_R
        ,case when R.ORG_TYPE_CODE IS NULL then 'Invalid' 
        else R.ORG_TYPE_CODE 
@@ -724,7 +724,7 @@ spark.udf.register("get_provider_type", get_provider_type)
  from global_temp.LDA_Data_T L
  left join global_temp.RD_ORG_DAILY_LATEST_LDA R 
      on R.ORG_CODE = L.OrgCode
- 
+
  -- where respitecare is null
    
 
@@ -733,7 +733,7 @@ spark.udf.register("get_provider_type", get_provider_type)
  %sql
  -- creates table needed to create prov no ips table
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW LDA_data_prov AS
- 
+
  SELECT LD.*,O.NAME
  FROM global_temp.LDA_Data LD
  LEFT JOIN global_temp.RD_ORG_DAILY_LATEST_LDA O on LD.combinedprovider = O.ORG_CODE
@@ -741,11 +741,11 @@ spark.udf.register("get_provider_type", get_provider_type)
 # COMMAND ----------
 
  %sql 
- 
+
  ---- This table below creates a list of Provider Orgs that DO NOT have any inpatients  ---------
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW ProvNoIPs AS
- 
+
  select REF_OrgCodeProv as OrgCode
  from global_temp.LDA_Data_Prov
  where UniqHospProvSpellID is not null
@@ -757,7 +757,7 @@ spark.udf.register("get_provider_type", get_provider_type)
  %sql
  -- needed to calculate all hospital spells measures
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW HSP_Spells AS
- 
+
  SELECT 
  UniqHospProvSpellID,
  M.AgeRepPeriodEnd,
@@ -769,7 +769,7 @@ spark.udf.register("get_provider_type", get_provider_type)
  WHERE M.UniqMonthID = '$month_id' 
  --and LD.IC_Use_Submission_Flag = 'Y'
  --and LD.LDAFlag = True 
- --LDAFlag doesn't exist in v4.1 - replaced with 2 lines below
+ --User note: LDAFlag doesn't exist in v4.1 - replaced with 2 lines below
          
          AND M.Person_ID IN
          (SELECT LD.Person_ID from global_temp.LD_cohort LD)
@@ -780,7 +780,7 @@ spark.udf.register("get_provider_type", get_provider_type)
  %sql
  -- needed to create all ward spells measures
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW WARD_Spells AS
- 
+
  SELECT 
  UniqWardStayID,
  M.AgeRepPeriodEnd,
@@ -797,7 +797,7 @@ spark.udf.register("get_provider_type", get_provider_type)
  M.UniqMonthID = '$month_id' 
  -- and LD.ic_Use_Submission_Flag = 'Y'  
  --and LD.LDAFlag = True 
- --LDAFlag doesn't exist in v4.1 - replaced with 2 lines below
+ --User note: LDAFlag doesn't exist in v4.1 - replaced with 2 lines below
          
          AND M.Person_ID IN
          (SELECT LD.Person_ID from global_temp.LD_cohort LD)
@@ -808,7 +808,7 @@ spark.udf.register("get_provider_type", get_provider_type)
  %sql
  -- needed to create MHA measures
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW MHA AS
- 
+
  SELECT
  M.Person_ID,
  B.UniqHospProvSpellID,
@@ -867,7 +867,7 @@ spark.udf.register("get_provider_type", get_provider_type)
  and ((CR.EndDateCommTreatOrdRecall is null and B.DischDateHospProvSpell is null) or (CR.StartDateCommTreatOrdRecall <= B.DischDateHospProvSpell and  CR.EndDateCommTreatOrdRecall >= B.DischDateHospProvSpell))
  WHERE
  --A.LDAFlag = True 
- --LDAFlag doesn't exist in v4.1 - replaced with 2 lines below
+ --User note: LDAFlag doesn't exist in v4.1 - replaced with 2 lines below
          
         M.Person_ID IN
          (SELECT LD.Person_ID from global_temp.LD_cohort LD)
@@ -907,7 +907,7 @@ spark.udf.register("get_provider_type", get_provider_type)
  %sql
  ------------------ TABLE 1 - NATIONAL TOTAL COUNTS
  INSERT INTO $db_output.LDA_Counts
- 
+
  -- CREATE OR REPLACE TEMP VIEW Table1_LDA AS
  SELECT 
  '$PreviousMonthEnd' as PreviousMonthEnd,
@@ -950,10 +950,10 @@ spark.udf.register("get_provider_type", get_provider_type)
 
  %sql
  -------------- TABLE 2 - AGE SPLITS
- 
+
  --AGE
  INSERT INTO $db_output.LDA_counts
- 
+
  -- CREATE OR REPLACE TEMP VIEW Table2_LDA AS
  SELECT 
  '$PreviousMonthEnd' as PreviousMonthEnd,
@@ -964,12 +964,12 @@ spark.udf.register("get_provider_type", get_provider_type)
  'National' as OrgName,
  2 AS TableNumber,
  'Age' AS PrimaryMeasure,
- 
- --add this bit in for U18 output
+
+ --User note: add this bit in for U18 output
  --  AgeRepPeriodEnd AS PrimaryMeasureNumber,
  --  AgeRepPeriodEnd AS PrimarySplit,
- 
- --take this bit out for U18 output
+
+ --User note: take this bit out for U18 output
  CASE
         WHEN AgeRepPeriodEnd between 0 and 17 then '1'
  	   WHEN AgeRepPeriodEnd between 18 and 24 then '2'
@@ -990,8 +990,8 @@ spark.udf.register("get_provider_type", get_provider_type)
  	   WHEN AgeRepPeriodEnd > 64 then '65 and Over'
         ELSE 'Unknown'
         END AS PrimarySplit,
- --up to here
- 
+ --User note: up to here
+
  '' as SecondaryMeasure,
  '' as SecondaryMeasureNumber,
  '' as SecondarySplit,
@@ -1015,12 +1015,12 @@ spark.udf.register("get_provider_type", get_provider_type)
  '' as ORG_TYPE_CODE,
  'Monthly' as PRODUCT, 
  '$db_source' as SOURCE_DB
- 
+
  FROM 
   $db_output.LDA_Data_1
  GROUP BY
- 
- 
+
+
  CASE
         WHEN AgeRepPeriodEnd between 0 and 17 then '1'
  	   WHEN AgeRepPeriodEnd between 18 and 24 then '2'
@@ -1046,10 +1046,10 @@ spark.udf.register("get_provider_type", get_provider_type)
 
  %sql
  ---------------- TABLE 3 - GENDER SPLIT
- 
+
  -- GENDER
  INSERT INTO $db_output.LDA_Counts
- 
+
  -- CREATE OR REPLACE TEMP VIEW Table3_LDA AS
  SELECT 
  '$PreviousMonthEnd' as PreviousMonthEnd,
@@ -1095,7 +1095,7 @@ spark.udf.register("get_provider_type", get_provider_type)
  '' as ORG_TYPE_CODE,
  'Monthly' as PRODUCT, 
  '$db_source' as SOURCE_DB
- 
+
  FROM 
   $db_output.LDA_Data_1
  GROUP BY 
@@ -1116,10 +1116,10 @@ spark.udf.register("get_provider_type", get_provider_type)
 
  %sql
  ----------------- TABLE 4 - ETHNICITY SPLIT
- 
+
  --ETHNICITY
  INSERT INTO $db_output.LDA_counts
- 
+
  -- CREATE OR REPLACE TEMP VIEW Table4_LDA AS
  SELECT 
  '$PreviousMonthEnd' as PreviousMonthEnd,
@@ -1171,7 +1171,7 @@ spark.udf.register("get_provider_type", get_provider_type)
  '' as ORG_TYPE_CODE,
  'Monthly' as PRODUCT, 
  '$db_source' as SOURCE_DB
- 
+
  FROM 
   $db_output.LDA_Data_1
  GROUP BY 
@@ -1198,10 +1198,10 @@ spark.udf.register("get_provider_type", get_provider_type)
 
  %sql
  --------- TABLE 5 - DISTANCE FROM HOME SPLIT
- 
+
  -- DISTANCE
  INSERT INTO $db_output.LDA_counts
- 
+
  -- CREATE OR REPLACE TEMP VIEW Table5_LDA AS
  SELECT 
  '$PreviousMonthEnd' as PreviousMonthEnd,
@@ -1251,7 +1251,7 @@ spark.udf.register("get_provider_type", get_provider_type)
  '' as ORG_TYPE_CODE,
  'Monthly' as PRODUCT, 
  '$db_source' as SOURCE_DB
- 
+
  FROM 
   $db_output.LDA_Data_1
  GROUP BY 
@@ -1276,10 +1276,10 @@ spark.udf.register("get_provider_type", get_provider_type)
 
  %sql
  ----------- TABLE 6 - WARD SECURITY SPLIT
- 
+
  -- WARD SECURITY
  INSERT INTO $db_output.LDA_Counts
- 
+
  -- CREATE OR REPLACE TEMP VIEW Table6_LDA AS
  SELECT 
  '$PreviousMonthEnd' as PreviousMonthEnd,
@@ -1327,7 +1327,7 @@ spark.udf.register("get_provider_type", get_provider_type)
  '' as ORG_TYPE_CODE,
  'Monthly' as PRODUCT, 
  '$db_source' as SOURCE_DB
- 
+
  FROM 
   $db_output.LDA_Data_1
  GROUP BY 
@@ -1349,12 +1349,12 @@ spark.udf.register("get_provider_type", get_provider_type)
 # COMMAND ----------
 
  %sql
- 
+
  ---------- TABLE 7 - PLANNED DISCHARGE SPLIT
- 
+
  --Planned Discharge
  INSERT INTO $db_output.LDA_Counts
- 
+
  -- CREATE OR REPLACE TEMP VIEW Table7_LDA AS
  SELECT
  '$PreviousMonthEnd' as PreviousMonthEnd,
@@ -1395,7 +1395,7 @@ spark.udf.register("get_provider_type", get_provider_type)
  '' as ORG_TYPE_CODE,
  'Monthly' as PRODUCT, 
  '$db_source' as SOURCE_DB
- 
+
  FROM 
   $db_output.LDA_Data_1
  GROUP BY
@@ -1410,10 +1410,10 @@ spark.udf.register("get_provider_type", get_provider_type)
 
  %sql
  ------------------ TABLE 8 -PLANNED DISCHARGE DATE SPLIT
- 
+
  --Planned Discharge
  INSERT INTO $db_output.LDA_Counts
- 
+
  -- CREATE OR REPLACE TEMP VIEW Table8_LDA AS
  SELECT
  '$PreviousMonthEnd' as PreviousMonthEnd,
@@ -1467,7 +1467,7 @@ spark.udf.register("get_provider_type", get_provider_type)
  '' as ORG_TYPE_CODE,
  'Monthly' as PRODUCT, 
  '$db_source' as SOURCE_DB
- 
+
  FROM 
   $db_output.LDA_Data_1
  GROUP BY
@@ -1496,9 +1496,9 @@ spark.udf.register("get_provider_type", get_provider_type)
 
  %sql
  ------------------- TABLE 9 - RESPITE CARE SPLIT
- 
+
  INSERT INTO $db_output.LDA_Counts
- 
+
  -- CREATE OR REPLACE TEMP VIEW Table9_LDA AS
  SELECT
  '$PreviousMonthEnd' as PreviousMonthEnd,
@@ -1540,7 +1540,7 @@ spark.udf.register("get_provider_type", get_provider_type)
  '' as ORG_TYPE_CODE,
  'Monthly' as PRODUCT, 
  '$db_source' as SOURCE_DB
- 
+
  FROM 
   $db_output.LDA_Data_1
  GROUP BY
@@ -1557,10 +1557,10 @@ spark.udf.register("get_provider_type", get_provider_type)
 
  %sql
  -------------------- TABLE 10 - LENGTH OF STAY SPLIT. 
- 
+
  --LOS
  INSERT INTO $db_output.LDA_Counts
- 
+
  -- CREATE OR REPLACE TEMP VIEW Table10_LDA AS
  SELECT
  '$PreviousMonthEnd' as PreviousMonthEnd,
@@ -1622,7 +1622,7 @@ spark.udf.register("get_provider_type", get_provider_type)
  '' as ORG_TYPE_CODE,
  'Monthly' as PRODUCT, 
  '$db_source' as SOURCE_DB
- 
+
  FROM 
  global_temp.HSP_Spells H
  GROUP BY 
@@ -1659,9 +1659,9 @@ spark.udf.register("get_provider_type", get_provider_type)
 
  %sql
  ------------------- TABLE 11 - DISCHARGE DESTINATION GROUPED SPLIT
- 
+
  INSERT INTO $db_output.LDA_Counts
- 
+
  -- CREATE OR REPLACE TEMP VIEW Table11_LDA AS
  SELECT
  '$PreviousMonthEnd' as PreviousMonthEnd,
@@ -1715,7 +1715,7 @@ spark.udf.register("get_provider_type", get_provider_type)
  '' as ORG_TYPE_CODE,
  'Monthly' as PRODUCT, 
  '$db_source' as SOURCE_DB
- 
+
  FROM 
   $db_output.LDA_Data_1
  GROUP BY
@@ -1745,9 +1745,9 @@ spark.udf.register("get_provider_type", get_provider_type)
 
  %sql
  ------------------- TABLE 12 - WARD TYPE SPLIT
- 
+
  INSERT INTO $db_output.LDA_Counts
- 
+
  -- CREATE OR REPLACE TEMP VIEW Table12_LDA AS
  SELECT
  '$PreviousMonthEnd' as PreviousMonthEnd,
@@ -1799,7 +1799,7 @@ spark.udf.register("get_provider_type", get_provider_type)
  '' as ORG_TYPE_CODE,
  'Monthly' as PRODUCT, 
  '$db_source' as SOURCE_DB
- 
+
  FROM 
   $db_output.LDA_Data_1
  GROUP BY
@@ -1826,9 +1826,9 @@ spark.udf.register("get_provider_type", get_provider_type)
 
  %sql
  ------------ TABLE 13 - MHA
- 
+
  INSERT INTO $db_output.LDA_Counts
- 
+
  -- CREATE OR REPLACE TEMP VIEW Table13_LDA AS
  SELECT
  '$PreviousMonthEnd' as PreviousMonthEnd,
@@ -1878,7 +1878,7 @@ spark.udf.register("get_provider_type", get_provider_type)
  '' as ORG_TYPE_CODE,
  'Monthly' as PRODUCT, 
  '$db_source' as SOURCE_DB
- 
+
  FROM global_temp.MHA
  GROUP BY
  CASE
@@ -1901,11 +1901,11 @@ spark.udf.register("get_provider_type", get_provider_type)
 # COMMAND ----------
 
  %sql
- 
+
  ------------ TABLE 14 - Delayed Discharges----------------------------
- 
+
  INSERT INTO $db_output.LDA_Counts
- 
+
  -- CREATE OR REPLACE TEMP VIEW Table14_LDA AS
  SELECT
  '$PreviousMonthEnd' as PreviousMonthEnd,
@@ -1958,9 +1958,9 @@ spark.udf.register("get_provider_type", get_provider_type)
 
  %sql
  ---TABLE 15 -------------------------------------restraints------------------------------------------------------
- 
+
  INSERT INTO $db_output.LDA_Counts
- 
+
  -- CREATE OR REPLACE TEMP VIEW Table15_LDA AS
  SELECT 
  '$PreviousMonthEnd' as PreviousMonthEnd,
@@ -1996,12 +1996,12 @@ spark.udf.register("get_provider_type", get_provider_type)
  '' as ORG_TYPE_CODE,
  'Monthly' as PRODUCT, 
  '$db_source' as SOURCE_DB
- 
- 
+
+
  FROM 
   $db_output.LDA_Data_1
- 
- 
+
+
  GROUP BY 
  RestrictiveIntType,
  restrictiveinttypedesc
@@ -2010,10 +2010,10 @@ spark.udf.register("get_provider_type", get_provider_type)
 
  %sql
  ---- TABLE 50 - LOS by MHA
- 
+
  --LOS
  INSERT INTO $db_output.LDA_Counts
- 
+
  -- CREATE OR REPLACE TEMP VIEW Table50_LDA AS
  SELECT
  '$PreviousMonthEnd' as PreviousMonthEnd,
@@ -2141,9 +2141,9 @@ spark.udf.register("get_provider_type", get_provider_type)
 
  %sql
  ---- TABLE 51 - Restraints by Age-----------------------------------------------------------
- 
+
  INSERT INTO $db_output.LDA_Counts
- 
+
  -- CREATE OR REPLACE TEMP VIEW Table51_LDA AS
  SELECT
  '$PreviousMonthEnd' as PreviousMonthEnd,
@@ -2157,7 +2157,7 @@ spark.udf.register("get_provider_type", get_provider_type)
  RestrictiveIntType AS PrimaryMeasureNumber,
  RestrictiveIntTypedesc AS PrimaryMeasureSplit,
  'Age' as SecondaryMeasure,
- 
+
  CASE
         WHEN R.AgeRepPeriodEnd between 0 and 17 then '1'
            WHEN R.AgeRepPeriodEnd between 18 and 24 then '2'
@@ -2186,7 +2186,7 @@ spark.udf.register("get_provider_type", get_provider_type)
  '0' as HospitalSpellsDischargedInMonth,
  '0' as HospitalSpellsAdmittedAndDischargedInMonth,
  '0' as HospitalSpellsOpenAtEndOfMonth,
- 
+
  '0' as WardStaysInCarePreviousMonth,
  '0' as WardStaysAdmissionsInMonth,
  '0' as WardStaysDischargedInMonth,
@@ -2205,7 +2205,7 @@ spark.udf.register("get_provider_type", get_provider_type)
  GROUP BY 
  RestrictiveIntType,
  RestrictiveIntTypedesc,
- 
+
  CASE
         WHEN R.AgeRepPeriodEnd between 0 and 17 then '1'
            WHEN R.AgeRepPeriodEnd between 18 and 24 then '2'
@@ -2231,13 +2231,13 @@ spark.udf.register("get_provider_type", get_provider_type)
 
  %sql
  ------------ TABLE 70 - PROVIDER TOTALS SPLIT
- 
+
  -- This table is different in that the OrgCode and OrgName fields also have data in the them. The case statement here breaks the measures down by Provider.
  -- Provider cross tabs are done by including the OrgCode and OrgName in the groupings as well as the PrimaryMeasure.
- 
+
  --PROVIDERS
  INSERT INTO $db_output.LDA_Counts
- 
+
  -- CREATE OR REPLACE TEMP VIEW Table70_LDA AS
  SELECT
  '$PreviousMonthEnd' as PreviousMonthEnd,
@@ -2279,7 +2279,7 @@ spark.udf.register("get_provider_type", get_provider_type)
  'Monthly' as PRODUCT, 
  '$db_source' as SOURCE_DB
  FROM 
- 
+
   $db_output.LDA_Data_1 L
   
  GROUP BY
@@ -2296,7 +2296,7 @@ spark.udf.register("get_provider_type", get_provider_type)
  %sql
  ---- TABLE 71 LOS by provider
  INSERT INTO $db_output.lda_counts
- 
+
  -- CREATE OR REPLACE TEMP VIEW Table71_LDA AS
  SELECT
  '$PreviousMonthEnd' as PreviousMonthEnd,
@@ -2362,7 +2362,7 @@ spark.udf.register("get_provider_type", get_provider_type)
  '' as ORG_TYPE_CODE,
  'Monthly' as PRODUCT, 
  '$db_source' as SOURCE_DB
- 
+
  FROM 
   $db_output.LDA_Data_1 L
  left join global_temp.HSP_Spells H on L.UniqHospProvSpellID = H.UniqHospProvSpellID
@@ -2408,9 +2408,9 @@ spark.udf.register("get_provider_type", get_provider_type)
 
  %sql
  -- TABLE 72 - WARD TYPE BY PROVIDER
- 
+
  INSERT INTO $db_output.LDA_Counts
- 
+
  -- CREATE OR REPLACE TEMP VIEW Table72_LDA AS
  SELECT
  '$PreviousMonthEnd' as PreviousMonthEnd,
@@ -2466,7 +2466,7 @@ spark.udf.register("get_provider_type", get_provider_type)
  '' as ORG_TYPE_CODE,
  'Monthly' as PRODUCT, 
  '$db_source' as SOURCE_DB
- 
+
  FROM 
   $db_output.LDA_Data_1 L
  left join global_temp.ProvNoIPs P on P.OrgCode = L.REF_OrgCodeProv
@@ -2500,11 +2500,11 @@ spark.udf.register("get_provider_type", get_provider_type)
 # COMMAND ----------
 
  %sql
- 
+
  ---- TABLE 73 WARD SECURITY LEVEL BY PROVIDER
- 
+
  INSERT INTO $db_output.LDA_Counts
- 
+
  -- CREATE OR REPLACE TEMP VIEW Table73_LDA AS
  SELECT
  '$PreviousMonthEnd' as PreviousMonthEnd,
@@ -2556,7 +2556,7 @@ spark.udf.register("get_provider_type", get_provider_type)
  '' as ORG_TYPE_CODE,
  'Monthly' as PRODUCT, 
  '$db_source' as SOURCE_DB
- 
+
  FROM 
   $db_output.LDA_Data_1 L
  left join global_temp.ProvNoIPs P on P.OrgCode = L.REF_OrgCodeProv
@@ -2588,7 +2588,7 @@ spark.udf.register("get_provider_type", get_provider_type)
  %sql
   -----------table 74 Restraints by Provider-----------------------------------------------------------------------------------------------------------------
  INSERT INTO $db_output.LDA_Counts
- 
+
  -- CREATE OR REPLACE TEMP VIEW Table74_LDA AS
  SELECT
  '$PreviousMonthEnd' as PreviousMonthEnd,
@@ -2628,7 +2628,7 @@ spark.udf.register("get_provider_type", get_provider_type)
  '' as ORG_TYPE_CODE,
  'Monthly' as PRODUCT, 
  '$db_source' as SOURCE_DB
- 
+
  FROM 
   $db_output.LDA_Data_1 L
  left join global_temp.ProvNoIPs p on P.OrgCode = L.REF_OrgCodeProv
@@ -2647,7 +2647,7 @@ spark.udf.register("get_provider_type", get_provider_type)
 
  %sql
  INSERT INTO $db_output.LDA_COUNTS
- 
+
  -- CREATE OR REPLACE TEMP VIEW Table80_LDA AS
  SELECT 
  '$PreviousMonthEnd' as PreviousMonthEnd,
@@ -2685,7 +2685,7 @@ spark.udf.register("get_provider_type", get_provider_type)
  '$db_source' as SOURCE_DB
  FROM
   $db_output.LDA_Data_1 R  
- 
+
  group by 
  ORG_TYPE_CODE
 
@@ -2693,11 +2693,11 @@ spark.udf.register("get_provider_type", get_provider_type)
 
  %sql
  ----- TABLE 90 - Commissioner
- 
+
  -- The two joins to ORG_DAILY temp table are done as some of the Commissioner codes end 00 but are valid as the 3 digit version. Therefore the join is done on the full org code and the SUBSTR( 0, 3) version.
- 
+
  INSERT INTO $db_output.LDA_Counts
- 
+
  -- CREATE OR REPLACE TEMP VIEW Table90_LDA AS
  SELECT 
  '$PreviousMonthEnd' as PreviousMonthEnd,
@@ -2735,7 +2735,7 @@ spark.udf.register("get_provider_type", get_provider_type)
  '$db_source' as SOURCE_DB
  FROM
   $db_output.LDA_Data_1 R 
- 
+
  GROUP BY
  OrgCode,
  OrgName,
@@ -3303,10 +3303,10 @@ spark.udf.register("count_suppression", count_suppression)
 
  %sql
  --generate the MI file
- 
+
  -- CREATE OR REPLACE GLOBAL TEMPORARY VIEW lda_mi AS
  INSERT OVERWRITE TABLE $db_output.lda_mi
- 
+
  select 
    person_id,
    agerepperiodend,
@@ -3327,10 +3327,10 @@ spark.udf.register("count_suppression", count_suppression)
    enddatewardstay,
    wardseclevel,
    wardtype 
- 
+
  FROM $db_output.LDA_Data_1
  where UniqHospProvSpellID is not null
- 
+
  group by 
    person_id,
    agerepperiodend,
@@ -3351,5 +3351,5 @@ spark.udf.register("count_suppression", count_suppression)
    enddatewardstay,
    wardseclevel,
    wardtype 
- 
+
  order by HSP_orgcodeprov,orgcode, wardtype 

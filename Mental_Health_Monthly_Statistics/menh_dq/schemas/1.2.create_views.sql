@@ -122,7 +122,7 @@ SELECT
 FROM InventoryList il
   LEFT OUTER JOIN $db.dq_vw_org_daily od   -- reference_data.org_daily
   ON il.OrgIDProv = od.ORG_CODE
---WHERE od.BUSINESS_END_DATE IS NULL --this is already accounted for in creating dq_vw_org_daily
+--WHERE od.BUSINESS_END_DATE IS NULL --User note: this is already accounted for in creating dq_vw_org_daily
 --AND od.ORG_CLOSE_DATE IS NULL
 --ORDER BY OrgIdProv, UniqMonthID, DimensionTypeId, MeasureId, MetricTypeId
 

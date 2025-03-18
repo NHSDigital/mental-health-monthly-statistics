@@ -46,4 +46,12 @@ dbutils.notebook.run('08_create_oaps_tables', 0, params)
 
 # COMMAND ----------
 
+dbutils.notebook.run('09_create_mhc_tables', 0, params)
+
+# COMMAND ----------
+
+dbutils.notebook.run('10_create_mha_tables', 0, params)
+
+# COMMAND ----------
+
 dbutils.notebook.run('00_create_common_objects/99_alter_existing_tables', 0, params)

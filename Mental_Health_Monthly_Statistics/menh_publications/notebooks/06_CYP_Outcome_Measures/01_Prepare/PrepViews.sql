@@ -15,10 +15,11 @@
  rp_enddate=dbutils.widgets.get("rp_enddate")
  print(rp_enddate)
  assert rp_enddate
- 
+
  Financial_Yr_Start = dbutils.widgets.get("Financial_Yr_Start")
  print(Financial_Yr_Start)
  assert Financial_Yr_Start
+
 
 -- COMMAND ----------
 
@@ -61,9 +62,9 @@ AND (m.LADistrictAuth LIKE 'E%' OR m.LADistrictAuth IS NULL OR m.LADistrictAuth 
 
 -- DBTITLE 1,Step 2.  Direct and Indirect contacts (Activity)
  %py
- 
+
  # adapted to use v4.1 methodology for v4.1 months (pre month_id 1459) and v5 methodology for later months
- 
+
  if int(month_id) < 1459:
    # v4.1
    print("month_id is pre-v5, executing EXCLUDE statement")

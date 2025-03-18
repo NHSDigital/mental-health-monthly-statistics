@@ -17,10 +17,10 @@ assert reference_data
 # For v5 Source_DB
 # source_db is included here because one off updates to populate the new DB_SOURCE column were run from init_schemas
 # ordinarily we would not expect to need any source data within the schema creation code
-#dbutils.widgets.text("mhsds_v5_database", "mhsds_v6_database", "v5 source database")
-dbutils.widgets.text("mhsds_v6_database", "mhsds_v6_database", "v6 source database")
-mhsds_database = dbutils.widgets.get("mhsds_v6_database")
-assert mhsds_database
+#dbutils.widgets.text("$mhsds_db", "$mhsds_db", "v5 source database")
+dbutils.widgets.text("$mhsds_db", "$mhsds_db", "v6 source database")
+$mhsds_db = dbutils.widgets.get("$mhsds_db")
+assert $mhsds_db
 
 # COMMAND ----------
 
@@ -30,7 +30,7 @@ params = {
   'reference_data'   : reference_data,
   'update_metadata' : update_metadata,
   'reload_ref_data' : reload_ref_data,
-  'mhsds_database'    : mhsds_database
+  '$mhsds_db'    : $mhsds_db
 }
 
 print(params)

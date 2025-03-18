@@ -1,7 +1,7 @@
 -- Databricks notebook source
 -- DBTITLE 1,Breakdown Values
  %sql
- 
+
  TRUNCATE TABLE $db_output.peri_breakdown_values;
  INSERT INTO $db_output.peri_breakdown_values VALUES
    ('England'),
@@ -89,7 +89,7 @@ INSERT INTO $db_output.peri_metric_values VALUES
 -- COMMAND ----------
 
  %md
- 
+
  # Below Hardcoded Reference data is used for MHS91 and MHS95
 
 -- COMMAND ----------

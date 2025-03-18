@@ -3,7 +3,7 @@
 
 # dbutils.widgets.text("db_output", "menh_dq", "db_output")
 # dbutils.widgets.text("month_id", "1449", "month_id")
-# dbutils.widgets.text("dbm", "testdata_menh_dq_mhsds_v5_database", "dbm")
+# dbutils.widgets.text("dbm", "testdata_menh_dq_$mhsds_db", "dbm")
 # dbutils.widgets.text("reference_data", "reference_data", "reference_data")
 # dbutils.widgets.text("status", "Performance", "status")
 
@@ -18,10 +18,10 @@ assert dbm
 
 # DBTITLE 1,Generic coverage view (the actual publication CSV & Power BI CSV are in the 2 notebook cells underneath)
  %sql
- 
+
  CREATE OR REPLACE TEMP VIEW dq_vw_coverage
  AS
- 
+
  -- Fetch latest org names from corporate org look-up table. Prioritise the valid record org name (BUSINESS_END_DATE).
  -- In the rare case that there are multiple in/valid records, prioritise the org that closed most recently.
  WITH OrgList
@@ -33,7 +33,7 @@ assert dbm
    ROW_NUMBER() OVER(PARTITION BY ORG_CODE ORDER BY IFNULL(BUSINESS_END_DATE, CURRENT_DATE()) DESC, IFNULL(ORG_CLOSE_DATE, CURRENT_DATE()) DESC) AS RowNumber
  FROM $reference_data.org_daily
  ),
- 
+
  -- Make orgs form above unique
  UniqueOrgList AS
  (SELECT
@@ -41,7 +41,7 @@ assert dbm
    NAME
  FROM OrgList
  WHERE RowNumber = 1),
- 
+
  -- Get the orgs submitted by Mental Health
  MhsHeaderOrgs AS
  (
@@ -51,7 +51,7 @@ assert dbm
    FROM $dbm.mhs000header
    WHERE UniqMonthID = $month_id
  ),
- 
+
  -- Define user-friendly table names
  TableNames AS
  (
@@ -68,6 +68,7 @@ assert dbm
    UNION ALL SELECT 'MHS011SocPerCircumstances' AS TableName
    UNION ALL SELECT 'MHS012OverseasVisitorChargCat' AS TableName
    UNION ALL SELECT 'MHS013MHCurrencyModel' AS TableName
+   UNION ALL SELECT 'MHS014eMED3FitNote' AS TableName
    UNION ALL SELECT 'MHS101Referral' AS TableName
    UNION ALL SELECT 'MHS102OtherServiceType' AS TableName                                                                  ----V6_Changes
    UNION ALL SELECT 'MHS103OtherReasonReferral' AS TableName
@@ -79,6 +80,8 @@ assert dbm
    UNION ALL SELECT 'MHS202CareActivity' AS TableName
    UNION ALL SELECT 'MHS203OtherAttend' AS TableName
    UNION ALL SELECT 'MHS204IndirectActivity' AS TableName
+   UNION ALL SELECT 'MHS205PatientSDDI' AS TableName
+   UNION ALL SELECT 'MHS206StaffActivity' AS TableName
    UNION ALL SELECT 'MHS301GroupSession' AS TableName
    UNION ALL SELECT 'MHS302MHDropInContact' AS TableName
    UNION ALL SELECT 'MHS401MHActPeriod' AS TableName
@@ -122,7 +125,7 @@ assert dbm
    UNION ALL SELECT 'MHS902ServiceTeamDetails' AS TableName
    UNION ALL SELECT 'MHS903WardDetails' AS TableName
  ),
- 
+
  -- Calculate the actual counts for each table
  TableCounts AS
  (
@@ -220,6 +223,15 @@ assert dbm
    WHERE UniqMonthID = $month_id
    GROUP BY OrgIDProv
    
+ --   new table for v6
+   UNION ALL SELECT
+     'MHS014eMED3FitNote' AS TableName,
+     OrgIDProv,
+     COUNT(*) AS RowCount
+   FROM $dbm.MHS014eMED3FitNote
+   WHERE UniqMonthID = $month_id
+   GROUP BY OrgIDProv
+   
    UNION ALL SELECT
      'MHS101Referral' AS TableName,
      OrgIDProv,
@@ -295,6 +307,22 @@ assert dbm
      OrgIDProv,
      COUNT(*) AS RowCount
    FROM $dbm.mhs204indirectactivity
+   WHERE UniqMonthID = $month_id
+   GROUP BY OrgIDProv
+   --   new table for v6
+   UNION ALL SELECT
+     'MHS205PatientSDDI' AS TableName,
+     OrgIDProv,
+     COUNT(*) AS RowCount
+   FROM $dbm.MHS205PatientSDDI
+   WHERE UniqMonthID = $month_id
+   GROUP BY OrgIDProv
+    --   new table for v6
+   UNION ALL SELECT
+     'MHS206StaffActivity' AS TableName,
+     OrgIDProv,
+     COUNT(*) AS RowCount
+   FROM $dbm.MHS206StaffActivity
    WHERE UniqMonthID = $month_id
    GROUP BY OrgIDProv
    UNION ALL SELECT
@@ -377,7 +405,7 @@ assert dbm
    FROM $dbm.mhs504delayeddischarge
    WHERE UniqMonthID = $month_id
    GROUP BY OrgIDProv
- --   original v4.1 table - kept in for runs of earlier months -- can't exist until mhsds_v5_database is updated :o(
+ --   original v4.1 table - kept in for runs of earlier months -- can't exist until $mhsds_db is updated :o(
  --  UNION ALL SELECT
  --   'MHS505RestrictiveIntervention' AS TableName,
  --    OrgIDProv,
@@ -614,7 +642,7 @@ assert dbm
    WHERE UniqMonthID = $month_id
    GROUP BY OrgIDProv  
  ),
- 
+
  -- Multiple orgs with tables
  MhsOrgTables AS
  (
@@ -625,7 +653,7 @@ assert dbm
    FROM MhsHeaderOrgs
    CROSS JOIN TableNames
  )
- 
+
  -- Return final columns
  SELECT
    '$rp_startdate' AS REPORTING_PERIOD_START,
@@ -639,7 +667,7 @@ assert dbm
    INNER JOIN UniqueOrgList o ON ot.OrgIDProv = o.ORG_CODE
    LEFT OUTER JOIN TableCounts t ON ot.OrgIDProv = t.OrgIDProv 
                                     AND ot.TableName = t.TableName
- 
+
  -- Add total groups to result set
  GROUP BY
    GROUPING SETS

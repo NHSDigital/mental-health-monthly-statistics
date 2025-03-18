@@ -3,7 +3,7 @@
 
 
 # dbutils.widgets.text("db_output" , "menh_dq", "db_output")
-# dbutils.widgets.text("dbm" , "testdata_menh_dq_mhsds_v5_database", "dbm")
+# dbutils.widgets.text("dbm" , "testdata_menh_dq_$mhsds_db", "dbm")
 
 # dbutils.widgets.text("month_id", "1449", "month_id")
 # dbutils.widgets.text("reference_data", "reference_data", "reference_data")
@@ -40,7 +40,7 @@ assert month_id
 
 # DBTITLE 1,Gender Identity Code
  %sql
- 
+
  INSERT INTO $db_output.dq_stg_validity
  SELECT
    --'Gender Identity Code' AS MeasureName,
@@ -85,7 +85,7 @@ assert month_id
 
 # DBTITLE 1,Gender Identity Same At Birth Indicator Code
  %sql
- 
+
  INSERT INTO $db_output.dq_stg_validity
  SELECT
    --'Gender Identity Code' AS MeasureName,

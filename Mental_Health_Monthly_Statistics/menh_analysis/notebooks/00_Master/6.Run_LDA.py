@@ -1,24 +1,25 @@
 # Databricks notebook source
  %md
- 
+
  #Master Notebook for MHSDS Monthly Extract
- 
+
  WARNING: This will DROP and then CREATE the MHSDS Analytics database once again. Please first check with matt.mercer@nhs.net or thomas.erker1@nhs.net whether this is safe to do before doing this!
- 
+
  This note book will run the other note books to create the MHSDS Monthly Extract.
  The following stages will be run in order:
  - Prep
  - Aggregation
  - Extract
 
+
 # COMMAND ----------
 
  %md
  ## Get the parameter values (dates, month_id)
  This gets the provisional and final month_ids and end_dates from the MHS000Header table, and then uses these to calculate the the start_dates. 
- 
+
  There are two sets of start dates for both 1 month and 3 month products (one is one month before the end_date, the other is 3 months before the end date).
- 
+
  These values are then stored in parameter dictionaries which are then used when the notebooks are called. 
 
 # COMMAND ----------
@@ -97,11 +98,11 @@ print(params_final_3)
 
 # DBTITLE 1,Clean unformatted output table (in case there already is left-over data for this month/status in the table)
  %sql
- 
+
  DELETE FROM $db_output.LDA_Monthly_Output_Unrounded
  WHERE REPORTING_PERIOD_END = '$rp_enddate'
  AND STATUS = '$status';
- 
+
  VACUUM $db_output.LDA_Monthly_Output_Unrounded RETAIN 8 HOURS;
 
 # COMMAND ----------

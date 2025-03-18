@@ -1,13 +1,13 @@
 # Databricks notebook source
 # DBTITLE 1,MHS07a CCG - commented out
  %sql
- 
+
  -- removed 14/08/2019 due to being duplicated in final formatted CSV output - measure still in main monthly
- 
+
  --MHS07a - PEOPLE WITH AN OPEN HOSPITAL PROVIDER SPELL AT END OF REPORTING PERIOD, AGED 0-18
- 
+
  -- in both monthly and camhs monthly tables
- 
+
  -- INSERT INTO $db_output.CYP_monthly_unformatted
  --     SELECT '$rp_startdate' AS REPORTING_PERIOD_START
  --            ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -29,12 +29,12 @@
 # DBTITLE 1,CYP21 CCG - commented out
  %sql
  --CYP21 - OPEN WARD STAYS (CHILDREN AND YOUNG PEOPLE'S MENTAL HEALTH SERVICES) AT END OF REPORTING PERIOD
- 
+
  -- in both monthly and cahms monthly tables
- 
+
  -- removed 14/08/2019 due to being duplicated in final formatted CSV output - measure still in main monthly
- 
- 
+
+
  -- INSERT INTO $db_output.CYP_monthly_unformatted
  --     SELECT '$rp_startdate' AS REPORTING_PERIOD_START
  --             ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -55,13 +55,13 @@
 
 # DBTITLE 1,MHS21a CCG - commented out
  %sql
- 
+
  -- removed 14/08/2019 due to being duplicated in final formatted CSV output - measure still in main monthly
- 
+
  --MHS21a - OPEN WARD STAYS DISTANCE AT END OF REPORTING PERIOD, AGED 0-18
- 
+
  -- in both monthly and camhs monthly tables
- 
+
  -- INSERT INTO $db_output.CYP_monthly_unformatted
  --     SELECT '$rp_startdate' AS REPORTING_PERIOD_START
  --             ,'$rp_enddate' AS REPORTING_PERIOD_END

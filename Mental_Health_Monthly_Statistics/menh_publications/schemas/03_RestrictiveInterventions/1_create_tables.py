@@ -4,9 +4,9 @@ print("restrictive interventions create tables")
 db_output = dbutils.widgets.get("db_output")
 assert db_output
 
-mhsds_database=dbutils.widgets.get("mhsds_database")
-print(mhsds_database)
-assert mhsds_database
+$mhsds_db=dbutils.widgets.get("$mhsds_db")
+print($mhsds_db)
+assert $mhsds_db
 
 # COMMAND ----------
 
@@ -157,6 +157,7 @@ assert mhsds_database
  USING delta 
  								
 
+
 # COMMAND ----------
 
 # DBTITLE 1,MHSRestrictiveInterventionPeople
@@ -183,6 +184,7 @@ assert mhsds_database
       SOURCE_DB                        STRING)
  USING delta 
  								
+
 
 # COMMAND ----------
 
@@ -211,6 +213,7 @@ assert mhsds_database
  USING delta 
  								
 
+
 # COMMAND ----------
 
 # DBTITLE 1,MHSRestrictiveInterventionPeopleSuppressed
@@ -237,6 +240,7 @@ assert mhsds_database
       SOURCE_DB                        STRING)
  USING delta 
  								
+
 
 # COMMAND ----------
 
@@ -275,6 +279,6 @@ for table, column in tableColumn.items():
 # DBTITLE 1,Set SOURCE_DB to source database
 # update only needs doing once
 for table, column in tableColumn.items():
-  action = """Update {db_output}.{table} SET {column} = '{mhsds_database}' where {column} is null""".format(db_output=db_output,table=table,column=column,mhsds_database=mhsds_database)
+  action = """Update {db_output}.{table} SET {column} = '{$mhsds_db}' where {column} is null""".format(db_output=db_output,table=table,column=column,$mhsds_db=$mhsds_db)
   print(action)
   spark.sql(action)

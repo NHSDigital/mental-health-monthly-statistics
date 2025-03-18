@@ -152,11 +152,11 @@ unsup_breakdowns_df.createOrReplaceTempView("unsup_breakdowns")
 # COMMAND ----------
 
 #unsuppressed output
-sqlContext.sql(f"UPDATE {db_output}.bbrb_final_raw SET MEASURE_ID = LEFT(MEASURE_ID, length(MEASURE_ID)-1) WHERE LEFT(MEASURE_ID, 4) = 'OAP0'")  #replace OAPs RP-specific MEASURE_IDs with same MEASURE_ID
+sqlContext.sql(f"UPDATE {db_output}.bbrb_final_raw SET MEASURE_ID = LEFT(MEASURE_ID, length(MEASURE_ID)-1) WHERE LEFT(MEASURE_ID, 3) = 'OAP'")  #replace OAPs RP-specific MEASURE_IDs with same MEASURE_ID
   #suppressed output
-sqlContext.sql(f"UPDATE {db_output}.bbrb_final_suppressed SET MEASURE_ID = LEFT(MEASURE_ID, length(MEASURE_ID)-1) WHERE LEFT(MEASURE_ID, 4) = 'OAP0'") #replace OAPs RP-specific MEASURE_IDs with same MEASURE_ID
+sqlContext.sql(f"UPDATE {db_output}.bbrb_final_suppressed SET MEASURE_ID = LEFT(MEASURE_ID, length(MEASURE_ID)-1) WHERE LEFT(MEASURE_ID, 3) = 'OAP'") #replace OAPs RP-specific MEASURE_IDs with same MEASURE_ID
   #final output
-sqlContext.sql(f"UPDATE {db_output}.bbrb_final SET MEASURE_ID = LEFT(MEASURE_ID, length(MEASURE_ID)-1) WHERE LEFT(MEASURE_ID, 4) = 'OAP0'") #replace OAPs RP-specific MEASURE_IDs with same MEASURE_ID
+sqlContext.sql(f"UPDATE {db_output}.bbrb_final SET MEASURE_ID = LEFT(MEASURE_ID, length(MEASURE_ID)-1) WHERE LEFT(MEASURE_ID, 3) = 'OAP'") #replace OAPs RP-specific MEASURE_IDs with same MEASURE_ID
 
 # COMMAND ----------
 

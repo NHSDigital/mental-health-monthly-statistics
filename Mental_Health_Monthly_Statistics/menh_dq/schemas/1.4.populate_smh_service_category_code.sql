@@ -1,6 +1,6 @@
 -- Databricks notebook source
  %md # Note
- 
+
  Reference data for specialised mental health service category codes used by validity measures 53, 54 and 55. This is currently missing from reference_data.datadictionarycodes and will need removing once the data becomes available.
 
 -- COMMAND ----------
@@ -15,7 +15,7 @@
 -- COMMAND ----------
 
  %sql
- 
+
  INSERT OVERWRITE TABLE $db.dq_smh_service_category_code
  VALUES ('' , 'Other', 1429, null),  -- why is this in here if it is excluded in the code anyway
  ('NCBPS05C', 'NCBPS05C/OP_COMMUNICATION', 1429, null), 

@@ -1,20 +1,20 @@
 -- Databricks notebook source
  %python
  import os
- 
+
  # import functions
  from datetime import datetime, date
  from dateutil.relativedelta import relativedelta
  from dsp.common.exports import create_csv_for_download
- 
+
  # from dsp.code_promotion.s3_send import cp_s3_send
  from dsp.code_promotion.mesh_send import cp_mesh_send
- 
+
  # select distinct reporting_period_start,status from menh_analysis.all_products_formatted
- # where source_db like 'mh_v5_pre_pseudo_d1'
+ # where source_db like '$mhsds_db'
  # order by reporting_period_start desc
  # select distinct reporting_period_start,status from menh_analysis.all_products_formatted
- # where source_db like 'mh_pre_pseudo_d1'
+ # where source_db like 'mhsds_db'
  # order by reporting_period_start desc
 
 -- COMMAND ----------
@@ -23,7 +23,7 @@
 
 -- # # databases where the tables to extract from are
 -- # dbutils.widgets.text("db_output", "menh_analysis", "db_output");
--- # dbutils.widgets.text("db_source", "mh_v5_pre_pseudo_d1", "db_source");
+-- # dbutils.widgets.text("db_source", "$mhsds_db", "db_source");
 
 -- # # parameters for non-standard runs
 -- # dbutils.widgets.text("rp_startdate", "2020-12-01", "rp_startdate");
@@ -35,23 +35,23 @@
 
 -- DBTITLE 1,Create widgets
  %python
- 
+
  MonthPeriod = dbutils.widgets.get("MonthPeriod")
  db_output = dbutils.widgets.get("db_output")
  rp_startdate = dbutils.widgets.get("rp_startdate")
  rp_enddate = dbutils.widgets.get("rp_enddate")
  status = dbutils.widgets.get("status")
  db_source = dbutils.widgets.get("db_source")
- 
- 
+
+
  print(f'MonthPeriod is {MonthPeriod}; \
        db_output is {db_output}; \
        rp_startdate is {rp_startdate}; \
        rp_enddate is {rp_enddate}; \
        status is {status}; \
        db_source is {db_source}')
- 
- 
+
+
  if len(status) == 5: # this will spit out Final and Adhoc as they are
    shortstatus = status
  else:
@@ -59,12 +59,12 @@
    
  YYYY = rp_startdate[:4]
  Mname = datetime.strptime(rp_startdate, '%Y-%m-%d').strftime("%b")
- 
+
  file_part_name = f"_{Mname}_{YYYY}_pbi_{shortstatus}.csv"
- 
+
  if db_source == "menh_point_in_time":
    file_part_name = f"_pit_{file_part_name}"
- 
+
  #Prod mail box id
  mailbox_to = 'X26HC004'
  workflow_id = 'GNASH_MHSDS'
@@ -77,7 +77,7 @@
  --this creates a temporary table that is extracted from in the next cell 
  --it's done this way to handle different values of blanks within the data: null, '*' and ''
  --if there is a better way of making this happen, feel free to update!
- 
+
  CREATE OR REPLACE TEMPORARY VIEW CaP_ALL
  AS
  (
@@ -177,14 +177,14 @@
 -- COMMAND ----------
 
 -- DBTITLE 1,CaP output
- 
- 
+
+
  %python
  # local_id = str(datetime.now().date()) +'-menh_analysis' # Confluence doesn't specify which id to pass as it says 'user specified id'. So given date combo with project name # updated to be filename for new LEAD_MESH renaming process
- 
+
  print(f'Second part of file name: {file_part_name}')
- 
- 
+
+
  #######    Monthly_CAP_Mmm_yyyy_pbi_Prf - run for Provisional (Prov)
  df_monthly_cap_pbi = spark.sql("SELECT * FROM CaP_ALL \
                                  WHERE not(ACC02_People_on_CPA_at_the_end_of_the_Reporting_Period = ''  \
@@ -195,12 +195,12 @@
                                  and ACC54_People_at_the_end_of_the_RP_in_settled_accommodation = ''  \
                                  and ACC62_Proportion_of_people_at_the_end_of_the_RP_in_settled_accommodation = '') \
                                  ORDER BY BREAKDOWN, LEVEL, CLUSTER")
- 
+
  #to help with local testing and avoiding the commenting and uncommenting the code
  if(os.environ.get('env') == 'prod'):
    monthly_cap_pbi_file = 'Monthly_CAP' + file_part_name
    local_id = monthly_cap_pbi_file
- 
+
    try:
      request_id = cp_mesh_send(spark, df_monthly_cap_pbi, mailbox_to, workflow_id, monthly_cap_pbi_file, local_id)
      print(f"{monthly_cap_pbi_file} file has been pushed to MESH with request id {request_id}. \n")
@@ -210,6 +210,8 @@
  else:
  #   display(df_monthly_cap_pbi)
    print("df_monthly_cap_pbi rowcount", df_monthly_cap_pbi.count())
+
+
 
 -- COMMAND ----------
 
@@ -274,7 +276,7 @@
  and a.reporting_period_start = '$rp_startdate'
  and a.reporting_period_end = '$rp_enddate'
  and a.SOURCE_DB = '$db_source'
- 
+
  )
 
 -- COMMAND ----------
@@ -282,19 +284,19 @@
 -- DBTITLE 1,CYP output
  %python
  print(f'Second part of file name: {file_part_name}')
- 
- 
+
+
  #######    Monthly_CAP_Mmm_yyyy_pbi_Prf - run for Provisional (Prov)
  df_monthly_cyp_pbi = spark.sql("SELECT * FROM CYP_ALL \
                                  WHERE not(MHS30e_Attended_contacts_in_the_RP_0_to_18_by_consultation_medium    = ''  \
                                  and MHS32a_Referrals_starting_in_Reporting_Period_aged_0_to_18 = ''  \
                                  and MHS58a_Missed_care_contacts_in_the_Reporting_Period_aged_0_to_18_by_DNA_reason = '')")
- 
+
  #to help with local testing and avoiding the commenting and uncommenting the code
  if(os.environ.get('env') == 'prod'):
    monthly_cyp_pbi_file = 'Monthly_CYP' + file_part_name
    local_id = monthly_cyp_pbi_file
- 
+
    try:
      request_id = cp_mesh_send(spark, df_monthly_cyp_pbi, mailbox_to, workflow_id, monthly_cyp_pbi_file, local_id)
      print(f"{monthly_cyp_pbi_file} file has been pushed to MESH with request id {request_id}. \n")
@@ -305,14 +307,15 @@
  #   display(df_monthly_cyp_pbi)
    print("df_monthly_cyp_pbi rowcount", df_monthly_cyp_pbi.count())
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,MHS / MHA Output
  %python
- 
+
  print(f'Second part of file name: {file_part_name}')
- 
- 
+
+
  ########### Monthly_MHS_MHA_Mmm_yyyy_pbi_Prf - just for Performance
  df_mhs_mha_pbi = spark.sql("select distinct '{MonthPeriod}' as Reporting_Period, \
                                      a.BREAKDOWN, \
@@ -338,7 +341,7 @@
  if(os.environ.get('env') == 'prod'):
    mhs_mha_pbi = 'Monthly_MHS_MHA' + file_part_name
    local_id = mhs_mha_pbi
- 
+
    try:
      request_id = cp_mesh_send(spark, df_mhs_mha_pbi, mailbox_to, workflow_id, mhs_mha_pbi, local_id)
      print(f"{mhs_mha_pbi} file has been pushed to MESH with request id {request_id}. \n")
@@ -349,17 +352,19 @@
  #   display(df_mhs_mha_pbi)
    print("df_mhs_mha_pbi rowcount", df_mhs_mha_pbi.count())
 
+
+
 -- COMMAND ----------
 
 -- DBTITLE 1,Only Performance reports
- 
+
  %python
- 
+
  #file_part_name = f"_{Mname}_{YYYY}_{shortstatus}_CPA.csv"
  #print(f'Second part of file name: {file_part_name}')
  #workflow_id = 'GNASH_MHSDS'
- 
- 
+
+
  ##################################################################################################
  #####################    Extract the CSV of ASCOF ## REMOVE THE COMMENTS FROM THE ACTUAL SQLS STATEMENT !!! OTHERWISE IT IS GIVING ERRORS
  #  we dont have few columns here! with available columns are:
@@ -409,10 +414,11 @@
  #else:
  #   display(df_ascof_monthly_csv)
  #  print("df_ascof_monthly_csv rowcount", df_ascof_monthly_csv.count())
- 
+
  #     extract_location = sqlContext.sql(f"SELECT extract_s3_location FROM cp_data_out.s3_send_extract_id WHERE request_id = '{request_id}'").first()[0]
  #     extract_location
  #     extract_df = spark.read.csv(extract_location)
+
 
 -- COMMAND ----------
 

@@ -1,7 +1,7 @@
 -- Databricks notebook source
  %python
  import os
- 
+
  from dsp.code_promotion.s3_send import cp_s3_send
  from dsp.code_promotion.mesh_send import cp_mesh_send
  # dbutils.widgets.removeAll()
@@ -10,7 +10,7 @@
 
 -- DBTITLE 1,Create widgets
  %python
- 
+
  rp_startdate = dbutils.widgets.get("rp_startdate")
  rp_enddate = dbutils.widgets.get("rp_enddate")
  status = dbutils.widgets.get("status")
@@ -18,7 +18,7 @@
  db_source = dbutils.widgets.get("db_source")  
  month_id = dbutils.widgets.get("month_id")
  testrun = dbutils.widgets.get("testrun")
- 
+
  print(f'rp_startdate is {rp_startdate}; \
        rp_enddate is {rp_enddate}; \
        status is {status}; \
@@ -26,28 +26,28 @@
        db_source is {db_source}; \
        month_id is {month_id}')
  print("testrun is: ",testrun)
- 
+
  # import functions
  from datetime import datetime, date
  from dateutil.relativedelta import relativedelta
  from dsp.common.exports import create_csv_for_download
- 
- 
+
+
  if len(status) == 5:
    shortstatus = status
  else:
    shortstatus = status[:4]
  YYYY = rp_startdate[:4]
  Mname = datetime.strptime(rp_startdate, '%Y-%m-%d').strftime("%b")
- 
+
  file_part_name = f"_{Mname}{shortstatus}_{YYYY}" # without csv extension
  ASCOF_file_part_name = f"_{Mname}_{YYYY}_{shortstatus}" # without csv extension
- 
+
  if db_source == "menh_point_in_time":
    file_part_name = f"_pit{file_part_name}"
    
  print(f'Second part of file name: {file_part_name}')
- 
+
  #Prod mail box id
  mailbox_to = 'X26HC004'
  workflow_id = 'GNASH_MHSDS'
@@ -61,31 +61,31 @@
  # rp_enddate =  "2020-12-31"
  # rp_startdate = "2020-12-01"
  # reference_data =  "reference_data"
- 
- 
+
+
  # db_output = 'menh_publications' #dbutils.widgets.get("menh_publications") #----------
- # db_source = 'mhsds_database' #dbutils.widgets.get("mhsds_database") #-----------
- 
- 
- 
+ # db_source = '$mhsds_db' #dbutils.widgets.get("$mhsds_db") #-----------
+
+
+
  # print(f'rp_startdate is {rp_startdate}; \
  #       rp_enddate is {rp_enddate}; \
  #       status is {status}; \
  #       db_output is {db_output}; \
  #       db_source is {db_source}; \
  #       month_id is {month_id}')
- 
- 
+
+
  # # import functions
  # from datetime import datetime, date
  # from dateutil.relativedelta import relativedelta
  # from dsp.common.exports import create_csv_for_download
- 
- 
+
+
  # shortstatus = status[:4]
  # YYYY = rp_startdate[:4]
  # Mname = datetime.strptime(rp_startdate, '%Y-%m-%d').strftime("%b")
- 
+
  # file_part_name = f"_{Mname}_{YYYY}_{shortstatus}" # without csv extension
  # print(f'Second part of file name: {file_part_name}')
 
@@ -93,12 +93,12 @@
 
 -- DBTITLE 1,Only Performance reports - ASCOF RAW for MHSDS Publication Team
  %python
- 
+
  # Updated to reflect the required outputs for MH and Social Care publications
- 
+
  local_id = str(datetime.now().date()) +'-menh_publications' # Confluence doesn't specify which id to pass as it says 'user specified id'. So given date combo with project name
  print(f'Second part of file name: {file_part_name}')
- 
+
  # RAW unrounded file
  df_ascof_monthly_raw_csv = spark.sql("SELECT \
                                    REPORTING_PERIOD_START, \
@@ -121,11 +121,11 @@
                                                                                                                                                rp_enddate = rp_enddate,
                                                                                                                                                status = status,
                                                                                                                                                db_source = db_source))
- 
+
  #to help with local testing and avoiding the commenting and uncommenting the code
  if(os.environ.get('env') == 'prod'):
    ascof_monthly_raw_csv = f'Monthly_FYFV_File{file_part_name}_RAW.csv' 
- 
+
    try:
  #    request_id = cp_mesh_send(spark, df_ascof_monthly_raw_csv, mailbox_to, workflow_id, #ascof_monthly_raw_csv, local_id)
      request_id = cp_mesh_send(spark, df_ascof_monthly_raw_csv, mailbox_to, workflow_id, ascof_monthly_raw_csv, ascof_monthly_raw_csv) # replacing local_id with filename for new renaming)
@@ -135,16 +135,18 @@
  else: 
    display(df_ascof_monthly_raw_csv)
 
+
+
 -- COMMAND ----------
 
 -- DBTITLE 1,Only Performance reports - ASCOF - rounded - for MHSDS Publication Team
  %python
- 
+
  # Updated to reflect the required outputs for MH and Social Care publications
- 
+
  local_id = str(datetime.now().date()) +'-menh_publications' # Confluence doesn't specify which id to pass as it says 'user specified id'. So given date combo with project name
  print(f'Second part of file name: {file_part_name}')
- 
+
  # RAW unrounded file
  df_ascof_monthly_csv = spark.sql("SELECT \
                                    REPORTING_PERIOD_START, \
@@ -168,11 +170,11 @@
                                                                                                                                                rp_enddate = rp_enddate,
                                                                                                                                                status = status,
                                                                                                                                                db_source = db_source))
- 
+
  #to help with local testing and avoiding the commenting and uncommenting the code
  if(os.environ.get('env') == 'prod'):
    ascof_monthly_csv = f'Monthly_FYFV_File{file_part_name}.csv' 
- 
+
    try:
   #   request_id = cp_mesh_send(spark, df_ascof_monthly_csv, mailbox_to, workflow_id, #ascof_monthly_csv, local_id)
      request_id = cp_mesh_send(spark, df_ascof_monthly_csv, mailbox_to, workflow_id, ascof_monthly_csv, ascof_monthly_csv)
@@ -182,6 +184,8 @@
      print(ex, 'MESH exception on SPARK 3 can be ignored, file will be delivered in the destined path') 
  else: 
    display(df_ascof_monthly_csv)
+
+
 
 -- COMMAND ----------
 

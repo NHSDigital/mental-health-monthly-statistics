@@ -1,6 +1,6 @@
 -- Databricks notebook source
  %python
- 
+
  from dsp.udfs import postcode_active_at
  spark.udf.register('PostcodeActiveAt',postcode_active_at)
 
@@ -34,7 +34,7 @@ TRUNCATE TABLE $db_output.dq_stg_validity;
 
 -- DBTITLE 1,Valid NHS Number Flag
  %sql
- 
+
  INSERT INTO $db_output.dq_stg_validity
  SELECT
    --'NHS Number' AS MeasureName,
@@ -62,7 +62,7 @@ TRUNCATE TABLE $db_output.dq_stg_validity;
 -- COMMAND ----------
 
  %sql
- 
+
  drop table if exists $db_output.temp_stg_postcodes_analysis;
  create table $db_output.temp_stg_postcodes_analysis(
    OrgIDProv STRING,
@@ -71,7 +71,7 @@ TRUNCATE TABLE $db_output.dq_stg_validity;
    Invalid int,
    Missing int
  );
- 
+
  insert into $db_output.temp_stg_postcodes_analysis
  SELECT
    OrgIDProv,
@@ -120,8 +120,8 @@ TRUNCATE TABLE $db_output.dq_stg_validity;
 
 -- DBTITLE 1,Valid Postcode Flag - commented out
  %sql
- 
- 
+
+
  --INSERT INTO $db_output.dq_stg_validity
  -- SELECT
  --   --'Postcode Of Usual Address' AS MeasureName,
@@ -158,7 +158,7 @@ TRUNCATE TABLE $db_output.dq_stg_validity;
 
 -- DBTITLE 1,Age of patient at Reporting Period End
  %sql
- 
+
  INSERT INTO $db_output.dq_stg_validity
  SELECT
    --'Person Birth Date' AS MeasureName,
@@ -191,7 +191,7 @@ TRUNCATE TABLE $db_output.dq_stg_validity;
 
 -- DBTITLE 1,Person Stated Gender
  %sql
- 
+
  INSERT INTO $db_output.dq_stg_validity
  SELECT
    --'Person Stated Gender Code' AS MeasureName,
@@ -351,7 +351,7 @@ INSERT INTO $db_output.dq_stg_validity
 
 -- DBTITLE 1,Legal Status Classification Code
  %sql
- 
+
  INSERT INTO $db_output.dq_stg_validity
  SELECT
    --'Mental Health Act Legal Status Classification Code' AS MeasureName,
@@ -392,7 +392,7 @@ INSERT INTO $db_output.dq_stg_validity
 
 -- DBTITLE 1,Treatment Function Code (Mental Health)
  %sql
- 
+
  INSERT INTO $db_output.dq_stg_validity
  SELECT
    --'Treatment Function Code (Mental Health)' AS MeasureName,
@@ -427,7 +427,7 @@ INSERT INTO $db_output.dq_stg_validity
 
 -- DBTITLE 1,Organisation Site Identifier (Of Treatment) (V5 and prior)
  %sql
- 
+
  WITH cte AS
  (SELECT m.*,o.*
  FROM $dbm.mhs502wardstay m
@@ -506,7 +506,7 @@ INSERT INTO $db_output.dq_stg_validity
 
 -- DBTITLE 1,Organisation Site Identifier (Of Ward) (V6 data)
  %sql
- 
+
  WITH cte AS
  (SELECT w.*,m.SiteIDOfWard,o.*
  FROM $dbm.MHS502WardStay w
@@ -586,8 +586,8 @@ INSERT INTO $db_output.dq_stg_validity
 
 -- DBTITLE 1,Primary Reason for Referral (Mental Health)
  %sql
- --  changed to exclude all records where MHS102OtherServiceType.ReferRejectReason = '02' 
- 
+ -- User note changed to exclude all records where MHS102OtherServiceType.ReferRejectReason = '02' 
+
  INSERT INTO $db_output.dq_stg_validity
  SELECT 
    --Primary Reason for Referral (Mental Health)' AS MeasureName,
@@ -624,9 +624,9 @@ INSERT INTO $db_output.dq_stg_validity
 
 -- DBTITLE 1,Care Professional Service or Team Type Associate (Mental Health)
  %sql
- 
- /**  updated codes for CareProfServOrTeamTypeAssoc for v4.1 **/
- 
+
+ /** User note updated codes for CareProfServOrTeamTypeAssoc for v4.1 **/
+
  INSERT INTO $db_output.dq_stg_validity
  SELECT
    --'Care Professional Service or Team Type Association (Mental Health)' AS MeasureName,
@@ -634,8 +634,8 @@ INSERT INTO $db_output.dq_stg_validity
    11 as MeasureId,
    OrgIDProv,
    COUNT(*) AS Denominator,
- 
- 
+
+
  SUM(CASE  WHEN vc.Measure is not null THEN 1
          ELSE 0
       END) AS Valid, 
@@ -673,7 +673,7 @@ INSERT INTO $db_output.dq_stg_validity
  dbm = dbutils.widgets.get("dbm")
  db_output = dbutils.widgets.get("db_output")
  reference_data = dbutils.widgets.get("reference_data")
- 
+
  for m in [('12','MHS101Referral',('VPP00','XMD00','X99998','X99999')),('13','MHS201CareContact',('VPP00','XMD00','R9998','89997')),('14','MHS204IndirectActivity',('VPP00','XMD00')),('15','MHS301GroupSession',('VPP00','XMD00','R9998','89997','89999')),('16','MHS512HospSpellCommAssPer',('VPP00','XMD00')),('17','MHS608AnonSelfAssess',('VPP00','XMD00'))]:
    measureid = str(m[0])
    dbtable = str(m[1])
@@ -687,23 +687,23 @@ INSERT INTO $db_output.dq_stg_validity
 
 -- DBTITLE 1,TO BE DELETED Organisation Identifier (Of Commissioner)
  %python
- 
+
  # month_id = dbutils.widgets.get("month_id")
  # rp_startdate = dbutils.widgets.get("rp_startdate")
  # rp_enddate = dbutils.widgets.get("rp_enddate")
  # dbm = dbutils.widgets.get("dbm")
  # db_output = dbutils.widgets.get("db_output")
  # reference_data = dbutils.widgets.get("reference_data")
- 
- # ## this should probably be changed to pass parameters via a loop into the validity_commissioner notebook - currently rather over-simplified...
- 
+
+ # ## User note: this should probably be changed to pass parameters via a loop into the validity_commissioner notebook - currently rather over-simplified...
+
  # params12 = {'rp_enddate' : rp_enddate, 'rp_startdate' : rp_startdate, 'month_id' : month_id, 'reference_data' : reference_data, 'db_output' : db_output, 'dbm' : dbm, "MeasureId": 12, "DbTable": "MHS101Referral"}
  # params13 = {'rp_enddate' : rp_enddate, 'rp_startdate' : rp_startdate, 'month_id' : month_id, 'reference_data' : reference_data, 'db_output' : db_output, 'dbm' : dbm, "MeasureId": 13, "DbTable": "MHS201CareContact"}
  # params14 = {'rp_enddate' : rp_enddate, 'rp_startdate' : rp_startdate, 'month_id' : month_id, 'reference_data' : reference_data, 'db_output' : db_output, 'dbm' : dbm, "MeasureId": 14, "DbTable": "MHS204IndirectActivity"}         
  # params15 = {'rp_enddate' : rp_enddate, 'rp_startdate' : rp_startdate, 'month_id' : month_id, 'reference_data' : reference_data, 'db_output' : db_output, 'dbm' : dbm, "MeasureId": 15, "DbTable": "MHS301GroupSession"}
  # params16 = {'rp_enddate' : rp_enddate, 'rp_startdate' : rp_startdate, 'month_id' : month_id, 'reference_data' : reference_data, 'db_output' : db_output, 'dbm' : dbm, "MeasureId": 16, "DbTable": "MHS512HospSpellCommAssPer"}    
  # params17 = {'rp_enddate' : rp_enddate, 'rp_startdate' : rp_startdate, 'month_id' : month_id, 'reference_data' : reference_data, 'db_output' : db_output, 'dbm' : dbm, "MeasureId": 17, "DbTable": "MHS608AnonSelfAssess"}
- 
+
  # print(params12)
  # print(params13)
  # print(params14)
@@ -715,8 +715,8 @@ INSERT INTO $db_output.dq_stg_validity
  # # month_id = 1417
  # # rp_startdate = "2018-04-01"
  # # rp_enddate = "2018-04-30"
- # # dbm = "mhsds_database"
- 
+ # # dbm = "$mhsds_db"
+
  # # This calculates the 6 DQ measures to do with "Organisation Identifier (Of Commissioner)", ie MHS-DQM12 - MHS-DQM17. 
  # dbutils.notebook.run("validity_commissioner", 0, params12)
  # dbutils.notebook.run("validity_commissioner", 0, params13)
@@ -729,14 +729,14 @@ INSERT INTO $db_output.dq_stg_validity
 
 -- DBTITLE 1,Organisation Identifier (Of Specialised Responsible Commissioner) - with new default data
  %python
- 
+
  month_id = dbutils.widgets.get("month_id")
  rp_startdate = dbutils.widgets.get("rp_startdate")
  rp_enddate = dbutils.widgets.get("rp_enddate")
  dbm = dbutils.widgets.get("dbm")
  db_output = dbutils.widgets.get("db_output")
  reference_data = dbutils.widgets.get("reference_data")
- 
+
  for m in [('57','MHS101Referral',('VPP00','XMD00','X99998','X99999')),('58','MHS201CareContact',('VPP00','XMD00','R9998','89997')),('59','MHS204IndirectActivity',('VPP00','XMD00')),('60','MHS301GroupSession',('VPP00','XMD00','R9998','89997','89999')),('61','MHS512HospSpellCommAssPer',('VPP00','XMD00')),('62','MHS517SMHExceptionalPackOfCare',('VPP00','XMD00')),('63','MHS608AnonSelfAssess',('VPP00','XMD00'))]:
    measureid = str(m[0])
    dbtable = str(m[1])
@@ -752,9 +752,9 @@ INSERT INTO $db_output.dq_stg_validity
 
 -- DBTITLE 1,Service Or Team Type Referred To (Mental Health)
  %sql
- 
+
  ----V6_Changes (ServiceTeamType in new table MHS902ServiceTeamDetails)
- 
+
  INSERT INTO $db_output.dq_stg_validity
  SELECT
    --'Service Or Team Type Referred To (Mental Health)' AS MeasureName,
@@ -794,9 +794,9 @@ INSERT INTO $db_output.dq_stg_validity
 
 -- DBTITLE 1,Primary Reason for Referral (Mental Health) (Referral received on or after 1st Jan 2016)- V6_data
  %sql
- 
- --changed to exclude all records where MHS102ServiceTypeReferredTo.ReferRejectReason = '02'
- 
+
+ --User note: changed to exclude all records where MHS102ServiceTypeReferredTo.ReferRejectReason = '02'
+
  INSERT INTO $db_output.dq_stg_validity
  SELECT
    --'Primary Reason for Referral (Mental Health) (Referral received on or after 1st Jan 2016)' AS MeasureName,
@@ -810,7 +810,7 @@ INSERT INTO $db_output.dq_stg_validity
          END) AS Valid, 
    0 AS Other,
    0 AS Default,
- 
+
    SUM(CASE
        WHEN vc.Measure is null --28
        AND LTRIM(RTRIM(PrimReasonReferralMH)) <> ''
@@ -839,9 +839,9 @@ INSERT INTO $db_output.dq_stg_validity
 
 -- DBTITLE 1,Primary Reason for Referral (Mental Health) (Referral received on or after 1st Jan 2016)- V5_data (data prior to V6)
  %sql
- 
- --changed to exclude all records where MHS102ServiceTypeReferredTo.ReferRejectReason = '02'
- 
+
+ --User note: changed to exclude all records where MHS102ServiceTypeReferredTo.ReferRejectReason = '02'
+
  INSERT INTO $db_output.dq_stg_validity
  SELECT
    --'Primary Reason for Referral (Mental Health) (Referral received on or after 1st Jan 2016)' AS MeasureName,
@@ -855,7 +855,7 @@ INSERT INTO $db_output.dq_stg_validity
          END) AS Valid, 
    0 AS Other,
    0 AS Default,
- 
+
    SUM(CASE
        WHEN vc.Measure is null --28
        AND LTRIM(RTRIM(PrimReasonReferralMH)) <> ''
@@ -884,7 +884,7 @@ INSERT INTO $db_output.dq_stg_validity
 
 -- DBTITLE 1,Clinical Response Priority Type (Eating Disorder)
  %sql
- 
+
  INSERT INTO $db_output.dq_stg_validity
  SELECT
    --'Clinical Response Priority Type' AS MeasureName,
@@ -921,9 +921,9 @@ INSERT INTO $db_output.dq_stg_validity
 
 -- DBTITLE 1,Hospital Bed Type (Mental Health) (Ward stays started on or after 1st April 2017)
  %sql
- 
+
  ---V6_Changes
- 
+
  INSERT INTO $db_output.dq_stg_validity
  SELECT
    --'Hospital Bed Type (Mental Health)' AS MeasureName,
@@ -959,7 +959,7 @@ INSERT INTO $db_output.dq_stg_validity
 
 -- DBTITLE 1,Out of Area Treatment Reason
  %sql
- 
+
  INSERT INTO $db_output.dq_stg_validity
  SELECT
    --'Referred out of area reason (adult acute mental health)' AS MeasureName,
@@ -991,7 +991,7 @@ INSERT INTO $db_output.dq_stg_validity
 
 -- DBTITLE 1,Ex-British armed forces indicator
  %sql
- 
+
  INSERT INTO $db_output.dq_stg_validity
  SELECT
    --'Ex-British armed forces indicator' AS MeasureName,
@@ -1026,7 +1026,7 @@ INSERT INTO $db_output.dq_stg_validity
 
 -- DBTITLE 1,Source of Referral
  %sql
- 
+
  INSERT INTO $db_output.dq_stg_validity
  SELECT
    --'Source of Referral' AS MeasureName,
@@ -1061,7 +1061,7 @@ INSERT INTO $db_output.dq_stg_validity
 
 -- DBTITLE 1, Consultation Mechanism (Mental Health)
  %sql
- 
+
  INSERT INTO $db_output.dq_stg_validity
  SELECT
    --' Consultation Mechanism (Mental Health)' AS MeasureName,
@@ -1101,7 +1101,7 @@ INSERT INTO $db_output.dq_stg_validity
 
 -- DBTITLE 1,Activity location type code
  %sql
- 
+
  INSERT INTO $db_output.dq_stg_validity
  SELECT
    --'Activity location type code' AS MeasureName,
@@ -1138,7 +1138,7 @@ INSERT INTO $db_output.dq_stg_validity
 
 -- DBTITLE 1,Delayed discharge reason  - V5 and prior data
  %sql
- 
+
  INSERT INTO $db_output.dq_stg_validity
  SELECT
    --'Delayed discharge reason' AS MeasureName,
@@ -1175,7 +1175,7 @@ INSERT INTO $db_output.dq_stg_validity
  FROM $dbm.mhs504delayeddischarge ref
  LEFT JOIN $db_output.validcodes as vc
  ON vc.tablename = 'MHS504DelayedDischarge' and vc.field = 'DelayDischReason' and vc.Measure = 'MHS-DQM38' and vc.type = 'VALID' and upper(ref.DelayDischReason) = vc.ValidValue and $month_id >= vc.FirstMonth and (vc.LastMonth is null or $month_id <= vc.LastMonth)
- 
+
  WHERE UniqMonthID = $month_id
  and UniqMonthID <= 1488
  GROUP BY OrgIDProv;
@@ -1184,9 +1184,9 @@ INSERT INTO $db_output.dq_stg_validity
 
 -- DBTITLE 1,Delayed discharge reason  - V6 data
  %sql
- 
+
  ---V6_Changes
- 
+
  INSERT INTO $db_output.dq_stg_validity
  SELECT
    --'Delayed discharge reason' AS MeasureName,
@@ -1223,7 +1223,7 @@ INSERT INTO $db_output.dq_stg_validity
  FROM $dbm.MHS518ClinReadyforDischarge ref
  LEFT JOIN $db_output.validcodes as vc
  ON vc.tablename = 'MHS518ClinReadyforDischarge' and vc.field = 'ClinReadyforDischDelayReason' and vc.Measure = 'MHS-DQM38' and vc.type = 'VALID' and upper(ref.ClinReadyforDischDelayReason) = vc.ValidValue and $month_id >= vc.FirstMonth and (vc.LastMonth is null or $month_id <= vc.LastMonth)
- 
+
  WHERE UniqMonthID = $month_id
  and UniqMonthID > 1488
  GROUP BY OrgIDProv;
@@ -1232,7 +1232,7 @@ INSERT INTO $db_output.dq_stg_validity
 
 -- DBTITLE 1,Delayed discharge attributable to (V5 data and prior)
  %sql
- 
+
  INSERT INTO $db_output.dq_stg_validity
  SELECT
    --'Delayed discharge attributable to' AS MeasureName,
@@ -1266,7 +1266,7 @@ INSERT INTO $db_output.dq_stg_validity
 
 -- DBTITLE 1,Delayed discharge attributable to (V6 Data onwards)
  %sql
- 
+
  INSERT INTO $db_output.dq_stg_validity
  SELECT
    --'Delayed discharge attributable to' AS MeasureName,
@@ -1300,7 +1300,7 @@ INSERT INTO $db_output.dq_stg_validity
 
 -- DBTITLE 1,Care plan type
  %sql
- 
+
  INSERT INTO $db_output.dq_stg_validity
  SELECT
    --'Care plan type' AS MeasureName,
@@ -1327,7 +1327,7 @@ INSERT INTO $db_output.dq_stg_validity
 
 -- DBTITLE 1,Provisional Diagnosis data (V5 data and prior)
  %sql
- 
+
  INSERT INTO $db_output.dq_stg_validity
  SELECT
    --'Provisional Diagnosis data' AS MeasureName,
@@ -1371,7 +1371,7 @@ INSERT INTO $db_output.dq_stg_validity
 
 -- DBTITLE 1,Presenting Complaint data (V6_Changes)
  %sql
- 
+
  INSERT INTO $db_output.dq_stg_validity
  SELECT
    --'Presenting Complaint data' AS MeasureName,
@@ -1415,7 +1415,7 @@ INSERT INTO $db_output.dq_stg_validity
 
 -- DBTITLE 1,Primary Diagnosis date
  %sql
- 
+
  INSERT INTO $db_output.dq_stg_validity
  SELECT
    --'Primary Diagnosis date' AS MeasureName,
@@ -1461,7 +1461,7 @@ INSERT INTO $db_output.dq_stg_validity
 
 -- DBTITLE 1,Secondary Diagnosis date
  %sql
- 
+
  INSERT INTO $db_output.dq_stg_validity
  SELECT
    --'Secondary Diagnosis date' AS MeasureName,
@@ -1507,7 +1507,7 @@ INSERT INTO $db_output.dq_stg_validity
 
 -- DBTITLE 1,Attend or did not attend
  %sql
- 
+
  INSERT INTO $db_output.dq_stg_validity
  SELECT
    --'Attended or did not attend' AS MeasureName,
@@ -1538,9 +1538,9 @@ INSERT INTO $db_output.dq_stg_validity
 
 -- COMMAND ----------
 
--- DBTITLE 1,Referral closure reason (using ServiceTeamType for all records)
+-- DBTITLE 1,Referral closure reason (V5 data and prior)
  %sql
- 
+
  INSERT INTO $db_output.dq_stg_validity
  SELECT
    --'Referral closure reason' AS MeasureName,
@@ -1567,13 +1567,13 @@ INSERT INTO $db_output.dq_stg_validity
        END) AS Missing
  FROM $db_output.ServiceTeamType
  WHERE UniqMonthID = $month_id and ReferClosureDate is not null
- GROUP BY OrgIDProv;
+ GROUP BY OrgIDProv;  
 
 -- COMMAND ----------
 
 -- DBTITLE 1,Estimated discharge date
  %sql
- 
+
  INSERT INTO $db_output.dq_stg_validity
  SELECT
    --'Estimated discharge date' AS MeasureName,
@@ -1606,7 +1606,7 @@ INSERT INTO $db_output.dq_stg_validity
 
 -- DBTITLE 1,Specialised mental health service code - Referral
  %sql
- 
+
  INSERT INTO $db_output.dq_stg_validity
  SELECT
    --'Specialised mental health service code - Referral' AS MeasureName,
@@ -1637,7 +1637,7 @@ INSERT INTO $db_output.dq_stg_validity
 
 -- DBTITLE 1,Specialised mental health service code - Contact
  %sql
- 
+
  INSERT INTO $db_output.dq_stg_validity
  SELECT
    --'Specialised mental health service code - Contact' AS MeasureName,
@@ -1668,7 +1668,7 @@ INSERT INTO $db_output.dq_stg_validity
 
 -- DBTITLE 1,Specialised mental health service code - Ward Stay
  %sql
- 
+
  INSERT INTO $db_output.dq_stg_validity
  SELECT
    --'Specialised mental health service code - Ward Stay' AS MeasureName,

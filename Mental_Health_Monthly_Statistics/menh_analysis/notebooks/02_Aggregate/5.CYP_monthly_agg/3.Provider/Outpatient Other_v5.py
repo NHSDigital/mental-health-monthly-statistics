@@ -2,8 +2,8 @@
 # DBTITLE 1,MHS30d Provider
  %sql
  /************ MHS30d - Attended care contacts in the RP, 0-18 ************/
- 
- 
+
+
  INSERT INTO $db_output.CYP_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -25,7 +25,7 @@
 # DBTITLE 1,MHS30e Provider
  %sql
  ----- MHS30e -  Attended contacts in the RP, 0-18, by consultation medium -----
- 
+
  INSERT INTO $db_output.CYP_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -287,7 +287,7 @@
 # DBTITLE 1,MHS55a Provider
  %sql
  ----- MHS55a - People attending at least one contact in the RP, 0-18 -----
- 
+
  INSERT INTO $db_output.CYP_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -309,9 +309,9 @@
 # DBTITLE 1,MHS56a - Provider
  %sql
  /*********** MHS56a - People with indirect activity in the RP, 0-18 ****************/
- 
+
  INSERT INTO $db_output.CYP_monthly_unformatted
- 
+
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
              ,'$status' AS STATUS
@@ -332,7 +332,7 @@
 # DBTITLE 1,MHS57a Provider
  %sql
  /*** MHS57a - People discharged from the service in the RP, 0-18 ***/
- 
+
  INSERT INTO $db_output.CYP_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -433,7 +433,7 @@
 # DBTITLE 1,MHS68
  %sql
  /*** MHS68 - Referrals with any SNOMED Codes and valid PERS score from MH Assess Scale Current View completed in RP, aged 0-18***/
- 
+
  INSERT INTO $db_output.CYP_monthly_unformatted		
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -458,7 +458,7 @@
  AND REF.Person_ID IS NOT NULL
  AND CSA.Person_ID IS NOT NULL
  AND REF.ReferralRequestReceivedDate <= '$rp_enddate' -- New Referrals
- 
+
  And  -- pre-v5 column (AssToolCompDate) now mapped to v5 column AssToolCompTimestamp
    (csa.AssToolCompTimestamp between '$rp_startdate' and '$rp_enddate')
  AND REF.AgeServReferRecDate BETWEEN 0 AND 18 -- Age at Ref

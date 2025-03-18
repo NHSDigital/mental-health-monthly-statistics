@@ -1,5 +1,5 @@
 # Databricks notebook source
-# dbutils.widgets.text("db_source","testdata_menh_analysis_mh_v5_pre_pseudo_d1","db_source")
+# dbutils.widgets.text("db_source","testdata_menh_analysis_$mhsds_db","db_source")
 db_source = dbutils.widgets.get("db_source")
 assert db_source
 
@@ -65,46 +65,46 @@ for table, column in tableColumn.items():
 # COMMAND ----------
 
  %sql
- 
+
  -- update only needs doing once
- 
+
  UPDATE $db_source.mhs001mpi
  SET ICRECICB = CONCAT(ICRECCCG, "_icb")
  WHERE ICRECICB is NULL;
- 
+
  UPDATE $db_source.mhs001mpi
  SET ICRECICBName = CONCAT(ICRECCCGNAME, "_icb")
  WHERE ICRECICBName is NULL;
- 
+
  UPDATE $db_source.mhs001mpi
  SET ICRECSUBICB = CONCAT(ICRECCCG, "_subicb")
  WHERE ICRECSUBICB is NULL;
- 
+
  UPDATE $db_source.mhs001mpi
  SET ICRECSUBICBNAME = CONCAT(ICRECCCGNAME, "_subicb")
  WHERE ICRECSUBICBNAME is NULL;
- 
+
  UPDATE $db_source.mhs001mpi
  SET OrgIDICBRes = CONCAT(OrgIDCCGRes, "_icb")
  WHERE OrgIDICBRes is NULL;
- 
+
  UPDATE $db_source.mhs001mpi
  SET RegionICRECSUBICBName = CONCAT(OrgIDCCGRes, "_subicb")
  WHERE RegionICRECSUBICBName is NULL;
- 
+
  UPDATE $db_source.mhs001mpi
  SET RegionICRECSUBICB = CONCAT(RegionICRECCCG, "_subicb")
  WHERE RegionICRECSUBICB is NULL;
- 
+
  UPDATE $db_source.mhs001mpi
  SET RegionICRECSUBICBName = CONCAT(RegionICRECCCG, "_name")
  WHERE RegionICRECSUBICBName is NULL;
- 
- 
+
+
  UPDATE $db_source.mhs002gp
  SET OrgIDICBGPPractice = CONCAT(OrgIDCCGGPPractice, "_icb")
  WHERE OrgIDICBGPPractice is NULL;
- 
+
  UPDATE $db_source.mhs002gp
  SET OrgIDSubICBLocGP = CONCAT(OrgIDCCGGPPractice, "_subicb")
  WHERE OrgIDSubICBLocGP is NULL;
@@ -113,6 +113,6 @@ for table, column in tableColumn.items():
 
 # update only needs doing once
 # for table, column in tableColumn.items():
-#   action = """Update {db_source}.{table} SET {column} = '{mhsds_database}' where {column} is null""".format(db_source=db_source,table=table,column=column,mhsds_database=mhsds_database)
+#   action = """Update {db_source}.{table} SET {column} = '{$mhsds_db}' where {column} is null""".format(db_source=db_source,table=table,column=column,$mhsds_db=$mhsds_db)
 #   print(action)
 #   spark.sql(action)

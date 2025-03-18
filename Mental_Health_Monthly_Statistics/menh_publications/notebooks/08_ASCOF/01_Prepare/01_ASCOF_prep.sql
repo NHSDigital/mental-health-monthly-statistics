@@ -1,6 +1,6 @@
 -- Databricks notebook source
  %md
- 
+
  # direct clone from FYFV from menh_analysis (with removals)
 
 -- COMMAND ----------
@@ -14,9 +14,9 @@
  rp_startdate = dbutils.widgets.get("rp_startdate")
  status = dbutils.widgets.get("status")
  rp_startdate_quarterly = dbutils.widgets.get("rp_startdate_quarterly")
- 
+
  params = {'db_output': db_output, 'db_source': db_source, 'month_id': month_id, 'rp_enddate': rp_enddate, 'rp_startdate': rp_startdate, 'rp_startdate_quarterly': rp_startdate_quarterly, 'status': status}
- 
+
  print(params)
 
 -- COMMAND ----------
@@ -58,14 +58,14 @@ INSERT INTO TABLE $db_output.AMH03e_prep
 -- COMMAND ----------
 
  %python
- 
+
  import os
- 
+
  db_output = dbutils.widgets.get("db_output")
- 
+
  if os.environ['env'] == 'prod':
    spark.sql('OPTIMIZE {db_output}.{table}'.format(db_output=db_output, table='AMH03e_prep'))
- 
+
  spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output, table='AMH03e_prep'))
 
 -- COMMAND ----------
@@ -103,14 +103,14 @@ INNER JOIN $db_output.accommodation_latest AS ACC
 -- COMMAND ----------
 
  %python
- 
+
  import os
- 
+
  db_output = dbutils.widgets.get("db_output")
- 
+
  if os.environ['env'] == 'prod':
    spark.sql('OPTIMIZE {db_output}.{table}'.format(db_output=db_output, table='AMH13e_14e_prep'))
- 
+
  spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output, table='AMH13e_14e_prep'))
 
 -- COMMAND ----------
@@ -157,12 +157,12 @@ LEFT JOIN $db_output.STP_Region_mapping_post_2020 AS stp
 -- COMMAND ----------
 
  %python
- 
+
  import os
- 
+
  db_output = dbutils.widgets.get("db_output")
- 
+
  if os.environ['env'] == 'prod':
    spark.sql('OPTIMIZE {db_output}.{table}'.format(db_output=db_output, table='AMH16e_17e_prep'))
- 
+
  spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output, table='AMH16e_17e_prep'))

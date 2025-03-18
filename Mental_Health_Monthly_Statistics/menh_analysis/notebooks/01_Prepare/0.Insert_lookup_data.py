@@ -1,17 +1,18 @@
 # Databricks notebook source
  %md
- 
+
  # Breakdowns & metrics
- 
+
  When the output tables are populated, the unpopulated metrics should still be in the file, but with a zero value. This requires a list of all the possible metrics. That's why as follows, we have tables with the possible breakdowns/metrics for each product. 
+
 
 # COMMAND ----------
 
 # DBTITLE 1,Collect params for Python
  %python
- 
+
  import os
- 
+
  db_output = dbutils.widgets.get("db_output")
  print(db_output)
  assert db_output
@@ -29,7 +30,7 @@
  --This code has been copied to menh_publications\notebooks\common_objects\02_load_common_ref_data
  TRUNCATE TABLE $db_output.STP_Region_mapping_post_2020;
  INSERT INTO $db_output.STP_Region_mapping_post_2020 
- 
+
  SELECT 
  A.ORG_cODE as STP_CODE, 
  A.NAME as STP_DESCRIPTION, 
@@ -46,11 +47,11 @@
  WHERE
  A.ORG_TYPE_CODE = 'ST'
  AND B.REL_TYPE_CODE is not null
- 
+
  -- added this bit in to get the UNKNOWN row displaying in the output - there may be a better way of doing this!
  UNION ALL
  SELECT DISTINCT
- 
+
  'UNKNOWN' as STP_CODE, 
  'UNKNOWN' as STPD_DESCRIPTION, 
  'UNKNOWN' as CCG_CODE, 
@@ -61,21 +62,24 @@
   
  ORDER BY 1
 
+
+
+
 # COMMAND ----------
 
 # DBTITLE 1,Optimize and vaccum tables
  %python
- 
+
  if os.environ['env'] == 'prod':
    spark.sql('OPTIMIZE {db_output}.{table}'.format(db_output=db_output, table='STP_Region_mapping_post_2020'))
- 
+
  spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output, table='STP_Region_mapping_post_2020'))
 
 # COMMAND ----------
 
 # DBTITLE 1,STP/Region breakdowns April 2019 - static table updated for  April 2019 (keep for running old data)
  %sql
- 
+
  TRUNCATE TABLE $db_output.STP_Region_mapping_post_2018;
  INSERT INTO $db_output.STP_Region_mapping_post_2018 VALUES
  ('07L','E54000029','North East London','1','Y56','London'),
@@ -275,10 +279,10 @@
 
 # DBTITLE 1,Optimize and vaccum tables
  %python
- 
+
  if os.environ['env'] == 'prod':
    spark.sql('OPTIMIZE {db_output}.{table}'.format(db_output=db_output, table='STP_Region_mapping_post_2018'))
- 
+
  spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output, table='STP_Region_mapping_post_2018'))
 
 # COMMAND ----------
@@ -354,11 +358,12 @@
  ('10 Least deprived'),
  ('UNKNOWN');
 
+
 # COMMAND ----------
 
  %sql
  TRUNCATE TABLE $db_output.ConsMechanismMH;
- 
+
  INSERT INTO $db_output.ConsMechanismMH 
  SELECT Code AS Level, Description as Level_description
  FROM $db_output.ConsMechanismMH_dim
@@ -369,9 +374,9 @@
 
 # DBTITLE 1,1. Main monthly
  %sql
- 
+
  -- MHS26 - Delayed Discharges moved to end of this notebook to prevent additional breakdowns breaking everything else :-/
- 
+
  TRUNCATE TABLE $db_output.Main_monthly_breakdown_values;
  INSERT INTO $db_output.Main_monthly_breakdown_values VALUES
  ('England'),
@@ -387,6 +392,7 @@
  ('England; Gender'),
  ('England; IMD Decile'),
  ('England; Sexual Orientation'),
+ ('England; Rural/Urban Classification'),
  ('CCG - GP Practice or Residence'),
  ('CCG - GP Practice or Residence; Age Group'),
  ('CCG - GP Practice or Residence; Attendance'),
@@ -399,10 +405,10 @@
  ('Provider; ConsMechanismMH'),
  ('CASSR'),
  ('CASSR; Provider');
- 
+
  TRUNCATE TABLE $db_output.Main_monthly_level_values_1;
  INSERT INTO $db_output.Main_monthly_level_values_1
- 
+
  --************************************************************************************************************************
  SELECT DISTINCT 
    IC_Rec_CCG as primary_level, 
@@ -411,9 +417,9 @@
    'NONE' as secondary_level_desc,
    'CCG - GP Practice or Residence' as breakdown 
  FROM global_temp.CCG -- WARNING: The data in this view differs depending on each month rp_enddate
- 
+
  union all
- 
+
  SELECT DISTINCT 
    IC_Rec_CCG as primary_level, 
    COALESCE(NAME, "UNKNOWN") as primary_level_desc,
@@ -421,9 +427,9 @@
    AgeGroupName as secondary_level_desc,
    'CCG - GP Practice or Residence; Age Group' as breakdown 
  FROM global_temp.CCG cross join $db_output.RefAgeGroup
- 
+
  union all
- 
+
  SELECT DISTINCT 
    IC_Rec_CCG as primary_level, 
    COALESCE(NAME, "UNKNOWN") as primary_level_desc,
@@ -431,7 +437,7 @@
    level_description as secondary_level_desc,
    'CCG - GP Practice or Residence; ConsMechanismMH' as breakdown 
  FROM global_temp.CCG cross join $db_output.ConsMechanismMH
- 
+
  --************************************************************************************************************************
  union all
  SELECT DISTINCT
@@ -441,9 +447,9 @@
    'NONE' as secondary_level_desc,
    'Provider' as breakdown 
  FROM $db_output.Provider_list -- WARNING: The data in this view differs depending on the month_id
- 
+
  UNION ALL
- 
+
  SELECT DISTINCT 
    ORG_CODE as primary_level, 
    NAME as primary_level_desc,
@@ -477,7 +483,7 @@
    SELECT 'UNKNOWN','UNKNOWN')
    
  union all
- 
+
  SELECT DISTINCT
    ORG_CODE as primary_level, 
    NAME as primary_level_desc,
@@ -485,9 +491,9 @@
    AgeGroupName as secondary_level_desc,
    'Provider; Age Group' as breakdown 
  FROM $db_output.Provider_list cross join $db_output.RefAgeGroup
- 
+
  union all
- 
+
  SELECT DISTINCT
    ORG_CODE as primary_level, 
    NAME as primary_level_desc,
@@ -495,7 +501,7 @@
    level_description as secondary_level_desc,
    'Provider; ConsMechanismMH' as breakdown 
  FROM $db_output.Provider_list cross join $db_output.ConsMechanismMH
- 
+
  --************************************************************************************************************************
  union all
  SELECT DISTINCT
@@ -504,7 +510,7 @@
    'NONE' as secondary_level,
    'NONE' as secondary_level_desc,
    'England' as breakdown
- 
+
  union all
  SELECT DISTINCT
    'England' as primary_level, 
@@ -522,7 +528,7 @@
    level_description as secondary_level_desc,
    'England; ConsMechanismMH' as breakdown
  FROM $db_output.ConsMechanismMH
- 
+
  union all
  SELECT DISTINCT
    'England' as primary_level, 
@@ -572,7 +578,7 @@
  FROM $db_output.RefBedType
    
  union all
- 
+
  SELECT DISTINCT 
    IC_Rec_CCG as primary_level, 
    COALESCE(NAME, "UNKNOWN") as primary_level_desc,
@@ -580,9 +586,9 @@
    BedType as secondary_level_desc,
    'CCG - GP Practice or Residence; Bed Type' as breakdown 
  FROM global_temp.CCG cross join $db_output.RefBedType
- 
+
  union all
- 
+
  SELECT DISTINCT
    ORG_CODE as primary_level, 
    NAME as primary_level_desc,
@@ -590,9 +596,9 @@
    BedType as secondary_level_desc,
    'Provider; Bed Type' as breakdown 
  FROM $db_output.Provider_list cross join $db_output.RefBedType
- 
+
  union all
- 
+
  SELECT DISTINCT
    'England' as primary_level, 
    'England' as primary_level_desc,
@@ -605,7 +611,7 @@
  where ItemName = 'DISABILITY_CODE'
  UNION ALL
  SELECT 'UNKNOWN','UNKNOWN')
- 
+
  union all
  SELECT DISTINCT
    'England' as primary_level, 
@@ -685,7 +691,20 @@
    SELECT 'Person asked and does not know or is not sure' UNION ALL
    SELECT 'UNKNOWN'
  )
- 
+ union all
+ SELECT DISTINCT
+   'England' as primary_level, 
+   'England' as primary_level_desc,
+   RUC11 as secondary_level,
+   RUC11 as secondary_level_desc,
+   'England; Rural/Urban Classification' as breakdown
+ FROM (
+   select distinct RUC11
+   from $reference_data.ONS_RURAL_URBAN_CLASS_LSOA2011
+   UNION ALL
+   SELECT "UNKNOWN"
+ )
+
  --************************************************************************************************************************
  union all
  SELECT DISTINCT
@@ -696,7 +715,7 @@
    'CASSR; Provider' as breakdown 
  FROM $db_output.Provider_list -- WARNING: The data in this view differs depending on the month_id
  cross join global_temp.CASSR_mapping 
- 
+
  union all
  SELECT DISTINCT
    coalesce(CASSR,"UNKNOWN") as primary_level, 
@@ -705,11 +724,16 @@
    'NONE' as secondary_level_desc,
    'CASSR' as breakdown 
  FROM global_temp.CASSR_mapping -- WARNING: The data in this view differs depending on the month_id
- 
+
  ;
- 
+
  --
  --************************************************************************************************************************
+
+
+
+
+
 
 # COMMAND ----------
 
@@ -823,7 +847,7 @@
    , ('MHS32', 'Referrals starting in RP')
    , ('MHS32c', 'Referrals starting in the RP to community mental health services for adult and older adults with severe mental illness')
    , ('MHS32d', 'Referrals starting in the RP to specialist perinatal Mental Health services')
-   , ('MHS33', 'People assigned to an adult MH Care Cluster at end of the reporting period')
+ --  , ('MHS33', 'People assigned to an adult MH Care Cluster at end of the reporting period')
    , ('MHS57', 'People discharged from a referral in the reporting period')
    , ('MHS57b', 'People discharged from a referral in the RP from community mental health services for adult and older adults with severe mental illness')
    , ('MHS57c', 'People discharged from a referral in the RP from specialist perinatal Mental Health services')
@@ -846,12 +870,12 @@
 
 # DBTITLE 1,Optimize and vaccum tables
  %python
- 
+
  if os.environ['env'] == 'prod':
    spark.sql('OPTIMIZE {db_output}.{table}'.format(db_output=db_output, table='Main_monthly_breakdown_values'))
    spark.sql('OPTIMIZE {db_output}.{table}'.format(db_output=db_output, table='Main_monthly_level_values_1'))
    spark.sql('OPTIMIZE {db_output}.{table}'.format(db_output=db_output, table='Main_monthly_metric_values'))
- 
+
  spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output, table='Main_monthly_breakdown_values'))
  spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output, table='Main_monthly_level_values_1'))
  spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output, table='Main_monthly_metric_values'))
@@ -1031,7 +1055,7 @@
 
 # DBTITLE 1,3. CYP 2nd contact
  %sql
- 
+
  TRUNCATE TABLE $db_output.CYP_2nd_contact_breakdown_values;
  INSERT INTO $db_output.CYP_2nd_contact_breakdown_values VALUES
  ('England'),
@@ -1040,7 +1064,7 @@
  ('STP - GP Practice or Residence'),
  ('CCG - GP Practice or Residence'),
  ('CCG - GP Practice or Residence; Provider');
- 
+
  TRUNCATE TABLE $db_output.CYP_2nd_contact_level_values;
  INSERT INTO $db_output.CYP_2nd_contact_level_values
  SELECT DISTINCT 
@@ -1092,7 +1116,7 @@
    'NONE' as secondary_level_desc,
    'STP - GP Practice or Residence' as breakdown
  FROM $db_output.STP_Region_mapping_post_2020;
- 
+
  TRUNCATE TABLE $db_output.CYP_2nd_contact_metric_values;
  INSERT INTO $db_output.CYP_2nd_contact_metric_values VALUES
    ('MHS69', 'The number of children and young people, regardless of when their referral started, receiving at least two contacts (including indirect contacts) and where their first contact occurs before their 18th birthday');
@@ -1101,12 +1125,12 @@
 
 # DBTITLE 1,Optimize and vaccum tables
  %python
- 
+
  if os.environ['env'] == 'prod':
    spark.sql('OPTIMIZE {db_output}.{table}'.format(db_output=db_output, table='CYP_2nd_contact_breakdown_values'))
    spark.sql('OPTIMIZE {db_output}.{table}'.format(db_output=db_output, table='CYP_2nd_contact_level_values'))
    spark.sql('OPTIMIZE {db_output}.{table}'.format(db_output=db_output, table='CYP_2nd_contact_metric_values'))
- 
+
  spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output, table='CYP_2nd_contact_breakdown_values'))
  spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output, table='CYP_2nd_contact_level_values'))
  spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output, table='CYP_2nd_contact_metric_values'))
@@ -1115,13 +1139,13 @@
 
 # DBTITLE 1,4. CaP
  %sql
- 
+
  TRUNCATE TABLE $db_output.CaP_breakdown_values;
  INSERT INTO $db_output.CaP_breakdown_values VALUES
  ('England'),
  ('CCG - GP Practice or Residence'),
  ('Provider');
- 
+
  -- Level values
  TRUNCATE TABLE $db_output.CaP_level_values;
  INSERT INTO $db_output.CaP_level_values
@@ -1141,12 +1165,12 @@
    'England' as level, 
    'England' as level_desc, 
    'England' as breakdown;
- 
+
  -- Cluster values
  TRUNCATE TABLE $db_output.CaP_cluster_values;
  INSERT INTO $db_output.CaP_cluster_values VALUES
  (0),(1),(2),(3),(4),(5),(6),(7),(8),(10),(11),(12),(13),(14),(15),(16),(17),(18),(19),(20),(21);
- 
+
  -- Metric values
  TRUNCATE TABLE $db_output.CaP_metric_values;
  INSERT INTO $db_output.CaP_metric_values VALUES
@@ -1162,13 +1186,13 @@
 
 # DBTITLE 1,Optimize and vaccum tables
  %python
- 
+
  if os.environ['env'] == 'prod':
    spark.sql('OPTIMIZE {db_output}.{table}'.format(db_output=db_output, table='CaP_breakdown_values'))
    spark.sql('OPTIMIZE {db_output}.{table}'.format(db_output=db_output, table='CaP_level_values'))
    spark.sql('OPTIMIZE {db_output}.{table}'.format(db_output=db_output, table='CaP_cluster_values'))
    spark.sql('OPTIMIZE {db_output}.{table}'.format(db_output=db_output, table='CaP_metric_values'))
- 
+
  spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output, table='CaP_breakdown_values'))
  spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output, table='CaP_level_values'))
  spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output, table='CaP_cluster_values'))
@@ -1178,7 +1202,7 @@
 
 # DBTITLE 1,5. CYP monthly
  %sql
- 
+
  TRUNCATE TABLE $db_output.CYP_monthly_breakdown_values;
  INSERT INTO $db_output.CYP_monthly_breakdown_values VALUES
  ('England'),
@@ -1193,7 +1217,7 @@
  ('Provider; ConsMechanismMH'),
  ('Provider; DNA Reason'),
  ('Provider; Referral Source');
- 
+
  TRUNCATE TABLE $db_output.DNA_Reason;
  INSERT INTO $db_output.DNA_Reason VALUES 
    ('2', 'Appointment cancelled by, or on behalf of the patient'),
@@ -1309,9 +1333,9 @@
    'Provider; Referral Source' as breakdown 
  FROM $db_output.Provider_list -- WARNING: The data in this view differs depending on the month_id
  cross join $db_output.Referral_Source;
- 
+
  TRUNCATE TABLE $db_output.CYP_monthly_metric_values;
- 
+
  --Inpatient measures
  INSERT INTO $db_output.CYP_monthly_metric_values VALUES 
  --  ('MHS07a', 'People with an open hospital spell at the end of the reporting period aged 0 to 18'),
@@ -1320,7 +1344,7 @@
      ('MHS24a', 'Under 16 bed days on adult wards in reporting period')
    , ('MHS24b', 'Age 16 bed days on adult wards in reporting period')
    , ('MHS24c', 'Age 17 bed days on adult wards in reporting period');
- 
+
  -- Outpatient Other
  INSERT INTO $db_output.CYP_monthly_metric_values VALUES 
  --  ('MH01a', 'People in contact with mental health services aged 0 to 18 at the end of the reporting period'),
@@ -1351,7 +1375,7 @@
 
 # DBTITLE 1,Optimize and vaccum tables
  %python
- 
+
  if os.environ['env'] == 'prod':
    spark.sql('OPTIMIZE {db_output}.{table}'.format(db_output=db_output, table='CYP_monthly_breakdown_values'))
    spark.sql('OPTIMIZE {db_output}.{table}'.format(db_output=db_output, table='ConsMechanismMH'))
@@ -1359,7 +1383,7 @@
    spark.sql('OPTIMIZE {db_output}.{table}'.format(db_output=db_output, table='Referral_Source'))
    spark.sql('OPTIMIZE {db_output}.{table}'.format(db_output=db_output, table='CYP_monthly_level_values'))
    spark.sql('OPTIMIZE {db_output}.{table}'.format(db_output=db_output, table='CYP_monthly_metric_values'))
- 
+
  spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output, table='CYP_monthly_breakdown_values'))
  spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output, table='ConsMechanismMH'))
  spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output, table='DNA_Reason'))
@@ -1681,7 +1705,7 @@
 
 # DBTITLE 1,7. Ascof
  %sql
- 
+
  TRUNCATE TABLE $db_output.Ascof_breakdown_values;
  INSERT INTO $db_output.Ascof_breakdown_values VALUES
  ('England'),
@@ -1692,7 +1716,7 @@
  ('CASSR; Provider; Gender'),
  ('England; Gender'),
  ('Provider; Gender');
- 
+
  TRUNCATE TABLE $db_output.Ascof_level_values;
  INSERT INTO $db_output.Ascof_level_values
  SELECT DISTINCT
@@ -1722,12 +1746,12 @@
 
 # DBTITLE 1,Optimize and vaccum tables
  %python
- 
+
  if os.environ['env'] == 'prod':
    spark.sql('OPTIMIZE {db_output}.{table}'.format(db_output=db_output, table='Ascof_breakdown_values'))
    spark.sql('OPTIMIZE {db_output}.{table}'.format(db_output=db_output, table='Ascof_level_values'))
    spark.sql('OPTIMIZE {db_output}.{table}'.format(db_output=db_output, table='Ascof_metric_values'))
- 
+
  spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output, table='Ascof_breakdown_values'))
  spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output, table='Ascof_level_values'))
  spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output, table='Ascof_metric_values'))
@@ -1736,15 +1760,15 @@
 
 # DBTITLE 1,8. FYFV Dashboard
  %sql
- 
+
  TRUNCATE TABLE $db_output.FYFV_Dashboard_breakdown_values;
  INSERT INTO $db_output.FYFV_Dashboard_breakdown_values VALUES
  ('England'),
  ('Commissioning Region'),
  ('STP'),
  ('CCG - GP Practice or Residence');
- 
- 
+
+
  TRUNCATE TABLE $db_output.FYFV_Dashboard_level_values;
  INSERT INTO $db_output.FYFV_Dashboard_level_values
  SELECT DISTINCT
@@ -1777,7 +1801,7 @@
    'NONE' as secondary_level_desc,
    'STP' as breakdown
  FROM $db_output.STP_Region_mapping_post_2020;
- 
+
  TRUNCATE TABLE $db_output.FYFV_Dashboard_metric_values;
  INSERT INTO $db_output.FYFV_Dashboard_metric_values VALUES 
    ('AMH03e', 'People in contact with adult mental health services aged 18-69 at the end of the reporting period (AMH03e)')
@@ -1796,12 +1820,12 @@
 # COMMAND ----------
 
  %python
- 
+
  if os.environ['env'] == 'prod':
    spark.sql('OPTIMIZE {db_output}.{table}'.format(db_output=db_output, table='FYFV_Dashboard_breakdown_values'))
    spark.sql('OPTIMIZE {db_output}.{table}'.format(db_output=db_output, table='FYFV_Dashboard_level_values'))
    spark.sql('OPTIMIZE {db_output}.{table}'.format(db_output=db_output, table='FYFV_Dashboard_metric_values'))
- 
+
  spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output, table='FYFV_Dashboard_breakdown_values'))
  spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output, table='FYFV_Dashboard_level_values'))
  spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output, table='FYFV_Dashboard_metric_values'))
@@ -1810,7 +1834,7 @@
 
 # DBTITLE 1,1.1 MHS26 in Main monthly (Delayed Discharge)
  %sql
- 
+
  TRUNCATE TABLE $db_output.DD_breakdown_values;
  INSERT INTO $db_output.DD_breakdown_values VALUES
  ('England'),
@@ -1825,12 +1849,12 @@
  ('Local Authority of Responsibility or Residence'),
  ('Local Authority of Responsibility or Residence; Delayed discharge attributable to'),
  ('Local Authority of Responsibility or Residence; Delayed discharge reason');
- 
+
  --************************************************************************************************************************
- 
+
  TRUNCATE TABLE $db_output.DD_level_values;
  INSERT INTO $db_output.DD_level_values
- 
+
  SELECT DISTINCT 
    IC_Rec_CCG as primary_level, 
    COALESCE(NAME, "UNKNOWN") as primary_level_desc,
@@ -1838,7 +1862,7 @@
    'NONE' as secondary_level_desc,
    'CCG - GP Practice or Residence' as breakdown 
  FROM global_temp.CCG -- WARNING: The data in this view differs depending on each month rp_enddate
- 
+
  union all
  --NB data to be added here for secondary_level
  SELECT DISTINCT 
@@ -1850,7 +1874,7 @@
  FROM global_temp.CCG -- WARNING: The data in this view differs depending on each month rp_enddate
  cross join $db_output.DelayedDischDim dd
  where key = 'att' and '$month_id' >= dd.FirstMonth and (dd.LastMonth is null or '$month_id' <= dd.LastMonth)
- 
+
  union all
  SELECT DISTINCT 
    IC_Rec_CCG as primary_level, 
@@ -1870,7 +1894,7 @@
    'NONE' as secondary_level_desc,
    'Provider' as breakdown 
  FROM $db_output.Provider_list -- WARNING: The data in this view differs depending on the month_id
- 
+
  union all
  SELECT DISTINCT
    ORG_CODE as primary_level, 
@@ -1881,7 +1905,7 @@
  FROM $db_output.Provider_list -- WARNING: The data in this view differs depending on the month_id
  cross join $db_output.DelayedDischDim dd
  where key = 'att' and '$month_id' >= dd.FirstMonth and (dd.LastMonth is null or '$month_id' <= dd.LastMonth)
- 
+
  union all
  SELECT DISTINCT
    ORG_CODE as primary_level, 
@@ -1900,7 +1924,7 @@
    'NONE' as secondary_level,
    'NONE' as secondary_level_desc,
    'England' as breakdown
- 
+
  union all
  SELECT DISTINCT
    'England' as primary_level, 
@@ -1910,7 +1934,7 @@
    'England; Delayed discharge attributable to' as breakdown
  from $db_output.DelayedDischDim dd
  where key = 'att' and '$month_id' >= dd.FirstMonth and (dd.LastMonth is null or '$month_id' <= dd.LastMonth)
- 
+
  union all
  SELECT DISTINCT
    'England' as primary_level, 
@@ -1921,7 +1945,7 @@
    from $db_output.DelayedDischDim dd
    where key = 'reason' and '$month_id' >= dd.FirstMonth and (dd.LastMonth is null or '$month_id' <= dd.LastMonth)
  --************************************************************************************************************************
- 
+
  union all
  SELECT DISTINCT
  LADistrictAuth AS primary_level,
@@ -1930,7 +1954,7 @@
  'NONE' as secondary_level_desc,
  'Local Authority of Responsibility or Residence' as breakdown 
  FROM global_temp.ResponsibleLA_mapping -- WARNING: The data in this view differs depending on the month_id
- 
+
  union all
  SELECT DISTINCT
  LADistrictAuth AS primary_level,
@@ -1957,20 +1981,21 @@
  -- Inpatient measures
  TRUNCATE TABLE $db_output.DD_metric_values;
  INSERT INTO $db_output.DD_metric_values VALUES 
- 
-    ('MHS26', 'Days of delayed discharge in RP')
+
+    ('MHS26', 'Days of delayed discharge, for patients clinically ready for discharge, in the Reporting Period')
  ;
+
 
 # COMMAND ----------
 
 # DBTITLE 1,Optimize and vacuum tables
  %python
- 
+
  if os.environ['env'] == 'prod':
    spark.sql('OPTIMIZE {db_output}.{table}'.format(db_output=db_output, table='DD_breakdown_values'))
    spark.sql('OPTIMIZE {db_output}.{table}'.format(db_output=db_output, table='DD_level_values'))
    spark.sql('OPTIMIZE {db_output}.{table}'.format(db_output=db_output, table='DD_metric_values'))
- 
+
  spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output, table='DD_breakdown_values'))
  spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output, table='DD_level_values'))
  spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output, table='DD_metric_values'))

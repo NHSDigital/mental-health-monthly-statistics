@@ -2,22 +2,22 @@
 # dbutils.widgets.removeAll()
 
 # dbutils.widgets.text("db_output", "menh_publications", "db_output")
-# dbutils.widgets.text("mhsds_database", "mhsds_database", "Input database")
+# dbutils.widgets.text("$mhsds_db", "$mhsds_db", "Input database")
 
 db_output = dbutils.widgets.get("db_output")
 print(db_output)
 assert db_output
 
-mhsds_database = dbutils.widgets.get("mhsds_database")
-print(mhsds_database)
-assert mhsds_database
+$mhsds_db = dbutils.widgets.get("$mhsds_db")
+print($mhsds_db)
+assert $mhsds_db
 
 # COMMAND ----------
 
  %md
- 
+
  # tables created in this notebook
- 
+
  - validcodes
  - referral_dim
 
@@ -26,9 +26,9 @@ assert mhsds_database
 # DBTITLE 1,validcodes
  %sql
  -- populated with valid codes in /notebooks/common_objects/00_version_change_tables
- 
+
  DROP TABLE IF EXISTS $db_output.validcodes;
- 
+
  CREATE TABLE IF NOT EXISTS $db_output.validcodes
  (
    Tablename string,
@@ -44,9 +44,9 @@ assert mhsds_database
 
 # DBTITLE 1,referral_dim
  %sql
- 
+
  -- DROP TABLE IF EXISTS $db_output.referral_dim;
- 
+
  CREATE TABLE IF NOT EXISTS $db_output.referral_dim
  (
    Referral_Source string,
@@ -59,7 +59,7 @@ assert mhsds_database
 
 # DBTITLE 1,ConsMechanismMH_dim
  %sql
- 
+
  CREATE TABLE IF NOT EXISTS $db_output.ConsMechanismMH_dim
  (
    Code string,

@@ -20,7 +20,7 @@ print(db_source)
 
 # DBTITLE 1,Provider type total
  %sql
- 
+
  Insert into $db_output.MHSRestrictiveInterventionCount
    SELECT           '$rp_startdate' AS REPORTING_PERIOD_START
                     ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -43,11 +43,12 @@ print(db_source)
    FROM             $db_output.MHSRestrictiveInterventionRaw
    GROUP BY         DerivedOrgType
 
+
 # COMMAND ----------
 
 # DBTITLE 1,Restrictive Intervention Type per Provider Type
  %sql
- 
+
  Insert into $db_output.MHSRestrictiveInterventionCount
    SELECT           '$rp_startdate' AS REPORTING_PERIOD_START
                     ,'$rp_enddate' AS REPORTING_PERIOD_END

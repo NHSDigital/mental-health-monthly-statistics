@@ -62,6 +62,44 @@ age_band_oaps_bd = {
     F.lit("NONE").alias("secondary_level_desc"),     
   ],
 }
+##MHA_Measures
+age_band_mha_bd = {
+    "breakdown_name": "England; Age Band",
+    "level_tier": 0,
+    "level_tables": ["age_band_desc"],
+    "primary_level": F.col("Age_Band"),
+    "primary_level_desc": F.col("Age_Band"),
+    "secondary_level": F.lit("NONE"),
+    "secondary_level_desc": F.lit("NONE"),
+    "level_list" : [],
+  "lookup_col" : ["Age_Group_MHA"],
+  "level_fields" : [
+    F.lit("England; Age Band").alias("breakdown"),
+    F.col("Age_Group_MHA").alias("primary_level"),
+    F.col("Age_Group_MHA").alias("primary_level_desc"),
+    F.lit("NONE").alias("secondary_level"), 
+    F.lit("NONE").alias("secondary_level_desc"),     
+  ],
+}
+##CYP_Outcome_Measures
+age_band_cyp_bd = {
+    "breakdown_name": "England; Age Band",
+    "level_tier": 0,
+    "level_tables": ["age_band_desc"],
+    "primary_level": F.col("Age_Band"),
+    "primary_level_desc": F.col("Age_Band"),
+    "secondary_level": F.lit("NONE"),
+    "secondary_level_desc": F.lit("NONE"),
+    "level_list" : [],
+  "lookup_col" : ["Age_Group_CYP"],
+  "level_fields" : [
+    F.lit("England; Age Band").alias("breakdown"),
+    F.col("Age_Group_CYP").alias("primary_level"),
+    F.col("Age_Group_CYP").alias("primary_level_desc"),
+    F.lit("NONE").alias("secondary_level"), 
+    F.lit("NONE").alias("secondary_level_desc"),     
+  ],
+}
 gender_bd = {
     "breakdown_name": "England; Gender",
     "level_tier": 0,
@@ -242,6 +280,79 @@ end_bed_type_bd = {
     F.lit("NONE").alias("secondary_level_desc")
   ],
 }
+serv_team_type_ref_to_bd = {
+    "breakdown_name": "England; Service or Team Type Referred To",
+    "level_tier": 0,
+    "level_tables": ["serv_team_type_ref_to_desc"],
+    "primary_level": F.col("ServTeamTypeRefToMH"),
+    "primary_level_desc": F.col("ServTeamTypeRefToMHDesc"),
+    "secondary_level": F.lit("NONE"),
+    "secondary_level_desc": F.lit("NONE"),
+    "level_list" : [],
+  "lookup_col" : ["ServTeamTypeRefToMH"],
+  "level_fields" : [
+    F.lit("England; Service or Team Type Referred To").alias("breakdown"),
+    F.col("ServTeamTypeRefToMH").alias("primary_level"),
+    F.col("ServTeamTypeRefToMHDesc").alias("primary_level_desc"),
+    F.lit("NONE").alias("secondary_level"), 
+    F.lit("NONE").alias("secondary_level_desc")
+  ],
+}
+##MHA_measures_2025
+age_group_higher_bd = {
+    "breakdown_name": "England; Age; Under 18 or 18 and over",
+    "level_tier": 0,
+    "level_tables": ["age_band_desc"],
+    "primary_level": F.col("Age_Group_Higher_Level"),
+    "primary_level_desc": F.col("Age_Group_Higher_Level"),
+    "secondary_level": F.lit("NONE"),
+    "secondary_level_desc": F.lit("NONE"),
+    "level_list" : [],
+  "lookup_col" : ["Age_Group_Higher_Level"],
+  "level_fields" : [
+    F.lit("England; Age; Under 18 or 18 and over").alias("breakdown"),
+    F.col("Age_Group_Higher_Level").alias("primary_level"),
+    F.col("Age_Group_Higher_Level").alias("primary_level_desc"),
+    F.lit("NONE").alias("secondary_level"), 
+    F.lit("NONE").alias("secondary_level_desc"),     
+  ],
+}
+autism_status_bd = {
+    "breakdown_name": "England; Autism Status",
+    "level_tier": 0,
+    "level_tables": ["autism_status_desc"],
+    "primary_level": F.col("AutismStatus"),
+    "primary_level_desc": F.col("AutismStatus_desc"),
+    "secondary_level": F.lit("NONE"),
+    "secondary_level_desc": F.lit("NONE"),
+    "level_list" : [],
+  "lookup_col" : ["AutismStatus", "AutismStatus_desc"],
+  "level_fields" : [
+    F.lit("England; Autism Status").alias("breakdown"),
+    F.col("AutismStatus").alias("primary_level"),
+    F.col("AutismStatus_desc").alias("primary_level_desc"),
+    F.lit("NONE").alias("secondary_level"), 
+    F.lit("NONE").alias("secondary_level_desc")
+  ],  
+}
+ld_status_bd = {
+    "breakdown_name": "England; LD Status",
+    "level_tier": 0,
+    "level_tables": ["ld_status_desc"],
+    "primary_level": F.col("LDStatus"),
+    "primary_level_desc": F.col("LDStatus_desc"),
+    "secondary_level": F.lit("NONE"),
+    "secondary_level_desc": F.lit("NONE"),
+    "level_list" : [],
+  "lookup_col" : ["LDStatus", "LDStatus_desc"],
+  "level_fields" : [
+    F.lit("England; LD Status").alias("breakdown"),
+    F.col("LDStatus").alias("primary_level"),
+    F.col("LDStatus_desc").alias("primary_level_desc"),
+    F.lit("NONE").alias("secondary_level"), 
+    F.lit("NONE").alias("secondary_level_desc")
+  ],  
+}
 
 # COMMAND ----------
 
@@ -303,6 +414,7 @@ receiving_prov_bd = {
  
 sending_prov_age_band_oaps_bd = cross_dict([sending_prov_bd, age_band_oaps_bd])
 sending_prov_lower_eth_bd = cross_dict([sending_prov_bd, lower_eth_bd])
+sending_prov_upper_eth_bd = cross_dict([sending_prov_bd, upper_eth_bd])
 sending_prov_gender_bd = cross_dict([sending_prov_bd, gender_bd])
 sending_prov_imd_decile_bd = cross_dict([sending_prov_bd, imd_decile_bd])
 sending_prov_reason_for_ref_bd = cross_dict([sending_prov_bd, reason_for_ref_bd])
@@ -314,6 +426,7 @@ sending_prov_receiving_prov_bd = cross_dict([sending_prov_bd, receiving_prov_bd]
  
 receiving_prov_age_band_oaps_bd = cross_dict([receiving_prov_bd, age_band_oaps_bd])
 receiving_prov_lower_eth_bd = cross_dict([receiving_prov_bd, lower_eth_bd])
+receiving_prov_upper_eth_bd = cross_dict([receiving_prov_bd, upper_eth_bd])
 receiving_prov_gender_bd = cross_dict([receiving_prov_bd, gender_bd])
 receiving_prov_imd_decile_bd = cross_dict([receiving_prov_bd, imd_decile_bd])
 receiving_prov_reason_for_ref_bd = cross_dict([receiving_prov_bd, reason_for_ref_bd])
@@ -321,6 +434,16 @@ receiving_prov_bed_type_bd = cross_dict([receiving_prov_bd, bed_type_bd])
 receiving_prov_start_bed_type_bd = cross_dict([receiving_prov_bd, start_bed_type_bd])
 receiving_prov_end_bed_type_bd = cross_dict([receiving_prov_bd, end_bed_type_bd])
 receiving_prov_active_bed_type_bd = cross_dict([receiving_prov_bd, active_bed_type_bd])
+
+#MHA_Measures
+prov_age_band_mha_bd = cross_dict([prov_bd, age_band_mha_bd])
+prov_age_group_higher_bd = cross_dict([prov_bd, age_group_higher_bd])
+prov_gender_bd = cross_dict([prov_bd, gender_bd])
+prov_upper_eth_bd = cross_dict([prov_bd, upper_eth_bd])
+prov_lower_eth_bd = cross_dict([prov_bd, lower_eth_bd])
+prov_imd_decile_bd = cross_dict([prov_bd, imd_decile_bd])
+prov_autism_status_bd = cross_dict([prov_bd, autism_status_bd])
+prov_ld_status_bd = cross_dict([prov_bd, ld_status_bd])
 
 # COMMAND ----------
 
@@ -382,6 +505,7 @@ ccg_prac_res_prov_bd = {
  
 ccg_res_age_band_oaps_bd = cross_dict([ccg_res_bd, age_band_oaps_bd])
 ccg_res_lower_eth_bd = cross_dict([ccg_res_bd, lower_eth_bd])
+ccg_res_upper_eth_bd = cross_dict([ccg_res_bd, upper_eth_bd])
 ccg_res_gender_bd = cross_dict([ccg_res_bd, gender_bd])
 ccg_res_imd_decile_bd = cross_dict([ccg_res_bd, imd_decile_bd])
 ccg_res_reason_for_ref_bd = cross_dict([ccg_res_bd, reason_for_ref_bd])
@@ -393,6 +517,7 @@ ccg_res_receiving_prov_bd = cross_dict([ccg_res_bd, receiving_prov_bd])
  
 ccg_prac_res_age_band_oaps_bd = cross_dict([ccg_prac_res_bd, age_band_oaps_bd])
 ccg_prac_res_lower_eth_bd = cross_dict([ccg_prac_res_bd, lower_eth_bd])
+ccg_prac_res_upper_eth_bd = cross_dict([ccg_prac_res_bd, upper_eth_bd])
 ccg_prac_res_gender_bd = cross_dict([ccg_prac_res_bd, gender_bd])
 ccg_prac_res_imd_decile_bd = cross_dict([ccg_prac_res_bd, imd_decile_bd])
 ccg_prac_res_reason_for_ref_bd = cross_dict([ccg_prac_res_bd, reason_for_ref_bd])
@@ -401,6 +526,13 @@ ccg_prac_res_start_bed_type_bd = cross_dict([ccg_prac_res_bd, start_bed_type_bd]
 ccg_prac_res_end_bed_type_bd = cross_dict([ccg_prac_res_bd, end_bed_type_bd])
 ccg_prac_res_active_bed_type_bd = cross_dict([ccg_prac_res_bd, active_bed_type_bd])
 ccg_prac_res_receiving_prov_bd = cross_dict([ccg_prac_res_bd, receiving_prov_bd])
+
+#MHA_Measures
+ccg_prac_res_age_band_mha_bd = cross_dict([ccg_prac_res_bd, age_band_mha_bd])
+ccg_prac_res_age_group_higher_bd = cross_dict([ccg_prac_res_bd, age_group_higher_bd])
+ccg_prac_res_upper_eth_bd = cross_dict([ccg_prac_res_bd, upper_eth_bd])
+ccg_prac_res_autism_status_bd = cross_dict([ccg_prac_res_bd, autism_status_bd])
+ccg_prac_res_ld_status_bd = cross_dict([ccg_prac_res_bd, ld_status_bd])
 
 # COMMAND ----------
 
@@ -445,6 +577,7 @@ stp_prac_res_bd = {
 stp_res_wnw_eth_bd = cross_dict([stp_res_bd, wnw_eth_bd])
 stp_res_age_band_oaps_bd = cross_dict([stp_res_bd, age_band_oaps_bd])
 stp_res_lower_eth_bd = cross_dict([stp_res_bd, lower_eth_bd])
+stp_res_upper_eth_bd = cross_dict([stp_res_bd, upper_eth_bd])
 stp_res_gender_bd = cross_dict([stp_res_bd, gender_bd])
 stp_res_imd_decile_bd = cross_dict([stp_res_bd, imd_decile_bd])
 stp_res_reason_for_ref_bd = cross_dict([stp_res_bd, reason_for_ref_bd])
@@ -456,6 +589,7 @@ stp_res_receiving_prov_bd = cross_dict([stp_res_bd, receiving_prov_bd])
  
 stp_prac_res_wnw_eth_bd = cross_dict([stp_prac_res_bd, wnw_eth_bd])
 stp_prac_res_age_band_oaps_bd = cross_dict([stp_prac_res_bd, age_band_oaps_bd])
+stp_prac_res_upper_eth_bd = cross_dict([stp_prac_res_bd, upper_eth_bd])
 stp_prac_res_lower_eth_bd = cross_dict([stp_prac_res_bd, lower_eth_bd])
 stp_prac_res_gender_bd = cross_dict([stp_prac_res_bd, gender_bd])
 stp_prac_res_imd_decile_bd = cross_dict([stp_prac_res_bd, imd_decile_bd])
@@ -465,6 +599,13 @@ stp_prac_res_start_bed_type_bd = cross_dict([stp_prac_res_bd, start_bed_type_bd]
 stp_prac_res_end_bed_type_bd = cross_dict([stp_prac_res_bd, end_bed_type_bd])
 stp_prac_res_active_bed_type_bd = cross_dict([stp_prac_res_bd, active_bed_type_bd])
 stp_prac_res_receiving_prov_bd = cross_dict([stp_prac_res_bd, receiving_prov_bd])
+
+#MHA_Measures
+stp_prac_res_age_band_mha_bd = cross_dict([stp_prac_res_bd, age_band_mha_bd])
+stp_prac_res_age_group_higher_bd = cross_dict([stp_prac_res_bd, age_group_higher_bd])
+stp_prac_res_upper_eth_bd = cross_dict([stp_prac_res_bd, upper_eth_bd])
+stp_prac_res_autism_status_bd = cross_dict([stp_prac_res_bd, autism_status_bd])
+stp_prac_res_ld_status_bd = cross_dict([stp_prac_res_bd, ld_status_bd])
 
 # COMMAND ----------
 
@@ -490,6 +631,7 @@ comm_region_bd = {
  
 comm_region_age_band_oaps_bd = cross_dict([comm_region_bd, age_band_oaps_bd])
 comm_region_lower_eth_bd = cross_dict([comm_region_bd, lower_eth_bd])
+comm_region_upper_eth_bd = cross_dict([comm_region_bd, upper_eth_bd])
 comm_region_gender_bd = cross_dict([comm_region_bd, gender_bd])
 comm_region_imd_decile_bd = cross_dict([comm_region_bd, imd_decile_bd])
 comm_region_reason_for_ref_bd = cross_dict([comm_region_bd, reason_for_ref_bd])
@@ -498,6 +640,13 @@ comm_region_start_bed_type_bd = cross_dict([comm_region_bd, start_bed_type_bd])
 comm_region_end_bed_type_bd = cross_dict([comm_region_bd, end_bed_type_bd])
 comm_region_active_bed_type_bd = cross_dict([comm_region_bd, active_bed_type_bd])
 comm_region_receiving_prov_bd = cross_dict([comm_region_bd, receiving_prov_bd])
+
+#MHA_Measures
+comm_region_age_band_mha_bd = cross_dict([comm_region_bd, age_band_mha_bd])
+comm_region_age_group_higher_bd = cross_dict([comm_region_bd, age_group_higher_bd])
+comm_region_upper_eth_bd = cross_dict([comm_region_bd, upper_eth_bd])
+comm_region_autism_status_bd = cross_dict([comm_region_bd, autism_status_bd])
+comm_region_ld_status_bd = cross_dict([comm_region_bd, ld_status_bd])
 
 # COMMAND ----------
 
@@ -529,18 +678,54 @@ age_band_oaps_pop_bd = {
   "secondary_level_desc": F.lit("NONE"),
   "aggregate_field": "SUM(POPULATION_COUNT)"
 }
+age_band_mha_pop_bd = {
+  "breakdown_name": "England; Age Band", 
+  "source_table": "age_band_pop", 
+  "primary_level": F.col("Age_Group_MHA"), 
+  "primary_level_desc": F.col("Age_Group_MHA"), 
+  "secondary_level": F.lit("NONE"), 
+  "secondary_level_desc": F.lit("NONE"),
+  "aggregate_field": "SUM(POPULATION_COUNT)"
+}
+age_band_cyp_pop_bd = {
+  "breakdown_name": "England; Age Band", 
+  "source_table": "age_band_pop", 
+  "primary_level": F.col("Age_Group_CYP"), 
+  "primary_level_desc": F.col("Age_Group_CYP"), 
+  "secondary_level": F.lit("NONE"), 
+  "secondary_level_desc": F.lit("NONE"),
+  "aggregate_field": "SUM(POPULATION_COUNT)"
+}
+age_group_higher_pop_bd = {
+  "breakdown_name": "England; Age; Under 18 or 18 and over", 
+  "source_table": "age_band_pop", 
+  "primary_level": F.col("Age_Group_Higher_Level"), 
+  "primary_level_desc": F.col("Age_Group_Higher_Level"), 
+  "secondary_level": F.lit("NONE"), 
+  "secondary_level_desc": F.lit("NONE"),
+  "aggregate_field": "SUM(POPULATION_COUNT)"
+}
 gender_pop_bd = {
   "breakdown_name": "England; Gender", 
   "source_table": "gender_pop", 
   "primary_level": F.col("Der_Gender"), 
-  "primary_level_desc": F.col("Der_Gender"), 
+  "primary_level_desc": F.col("Der_Gender_Desc"), 
+  "secondary_level": F.lit("NONE"), 
+  "secondary_level_desc": F.lit("NONE"),
+  "aggregate_field": "SUM(POPULATION_COUNT)"
+}
+lower_eth_pop_bd = {
+  "breakdown_name": "England; Ethnicity", 
+  "source_table": "eth_pop", 
+  "primary_level": F.col("LowerEthnicityCode"), 
+  "primary_level_desc": F.col("LowerEthnicityName"), 
   "secondary_level": F.lit("NONE"), 
   "secondary_level_desc": F.lit("NONE"),
   "aggregate_field": "SUM(POPULATION_COUNT)"
 }
 upper_eth_pop_bd = {
   "breakdown_name": "England; Upper Ethnicity", 
-  "source_table": "higher_eth_pop", 
+  "source_table": "eth_pop", 
   "primary_level": F.col("UpperEthnicity"), 
   "primary_level_desc": F.col("UpperEthnicity"), 
   "secondary_level": F.lit("NONE"), 
@@ -556,44 +741,112 @@ imd_decile_pop_bd = {
   "secondary_level_desc": F.lit("NONE"),
   "aggregate_field": "SUM(POPULATION_COUNT)"
 }
+imd_quintile_pop_bd = {
+  "breakdown_name": "England; IMD Quintile", 
+  "source_table": "imd_pop", 
+  "primary_level": F.col("IMD_Quintile"), 
+  "primary_level_desc": F.col("IMD_Quintile"), 
+  "secondary_level": F.lit("NONE"), 
+  "secondary_level_desc": F.lit("NONE"),
+  "aggregate_field": "SUM(POPULATION_COUNT)"
+}
+ 
 ccg_res_pop_bd = {
   "breakdown_name": "CCG of Residence", 
-  "source_table": "ccg_pop", 
-  "primary_level": F.col("CCG_successor_CODE"), 
-  "primary_level_desc": F.col("CCG_successor_NAME"), 
+  "source_table": "commissioner_pop", 
+  "primary_level": F.col("CCG_Code"), 
+  "primary_level_desc": F.col("CCG_Name"), 
   "secondary_level": F.lit("NONE"), 
   "secondary_level_desc": F.lit("NONE"),
   "aggregate_field": "SUM(POPULATION_COUNT)"
 }
 ccg_prac_res_pop_bd = {
   "breakdown_name": "CCG of GP Practice or Residence", 
-  "source_table": "ccg_pop", 
-  "primary_level": F.col("CCG_successor_CODE"), 
-  "primary_level_desc": F.col("CCG_successor_NAME"), 
+  "source_table": "commissioner_pop", 
+  "primary_level": F.col("CCG_Code"), 
+  "primary_level_desc": F.col("CCG_Name"), 
   "secondary_level": F.lit("NONE"), 
   "secondary_level_desc": F.lit("NONE"),
   "aggregate_field": "SUM(POPULATION_COUNT)"
 }
+ccg_prac_res_age_band_ips_pop_bd = pop_cross_dict([ccg_prac_res_pop_bd, age_band_ips_pop_bd])
+ccg_prac_res_age_band_oaps_pop_bd = pop_cross_dict([ccg_prac_res_pop_bd, age_band_oaps_pop_bd])
+##MHA_Measures
+ccg_prac_res_age_band_mha_pop_bd = pop_cross_dict([ccg_prac_res_pop_bd, age_band_mha_pop_bd])
+ccg_prac_res_age_group_higher_pop_bd = pop_cross_dict([ccg_prac_res_pop_bd, age_group_higher_pop_bd])
+ccg_prac_res_lower_eth_pop_bd = pop_cross_dict([ccg_prac_res_pop_bd, lower_eth_pop_bd])
+ccg_prac_res_upper_eth_pop_bd = pop_cross_dict([ccg_prac_res_pop_bd, upper_eth_pop_bd])
+ccg_prac_res_gender_pop_bd = pop_cross_dict([ccg_prac_res_pop_bd, gender_pop_bd])
+ccg_prac_res_imd_decile_pop_bd = pop_cross_dict([ccg_prac_res_pop_bd, imd_decile_pop_bd])
+ccg_prac_res_imd_quintile_pop_bd = pop_cross_dict([ccg_prac_res_pop_bd, imd_quintile_pop_bd])
+ 
+stp_prac_res_pop_bd = {
+  "breakdown_name": "STP of GP Practice or Residence", 
+  "source_table": "commissioner_pop", 
+  "primary_level": F.col("STP_Code"), 
+  "primary_level_desc": F.col("STP_Name"), 
+  "secondary_level": F.lit("NONE"), 
+  "secondary_level_desc": F.lit("NONE"),
+  "aggregate_field": "SUM(POPULATION_COUNT)"
+}
+stp_prac_res_age_band_ips_pop_bd = pop_cross_dict([stp_prac_res_pop_bd, age_band_ips_pop_bd])
+stp_prac_res_age_band_oaps_pop_bd = pop_cross_dict([stp_prac_res_pop_bd, age_band_oaps_pop_bd])
+stp_prac_res_lower_eth_pop_bd = pop_cross_dict([stp_prac_res_pop_bd, lower_eth_pop_bd])
+stp_prac_res_upper_eth_pop_bd = pop_cross_dict([stp_prac_res_pop_bd, upper_eth_pop_bd])
+stp_prac_res_gender_pop_bd = pop_cross_dict([stp_prac_res_pop_bd, gender_pop_bd])
+stp_prac_res_imd_decile_pop_bd = pop_cross_dict([stp_prac_res_pop_bd, imd_decile_pop_bd])
+stp_prac_res_imd_quintile_pop_bd = pop_cross_dict([stp_prac_res_pop_bd, imd_quintile_pop_bd])
+##MHA_Measures
+stp_prac_res_age_band_mha_pop_bd = pop_cross_dict([stp_prac_res_pop_bd, age_band_mha_pop_bd])
+stp_prac_res_age_group_higher_pop_bd = pop_cross_dict([stp_prac_res_pop_bd, age_group_higher_pop_bd])
+ 
+comm_region_pop_bd = {
+  "breakdown_name": "Commissioning Region", 
+  "source_table": "commissioner_pop", 
+  "primary_level": F.col("Region_Code"), 
+  "primary_level_desc": F.col("Region_Name"), 
+  "secondary_level": F.lit("NONE"), 
+  "secondary_level_desc": F.lit("NONE"),
+  "aggregate_field": "SUM(POPULATION_COUNT)"
+}
+comm_region_age_band_ips_pop_bd = pop_cross_dict([comm_region_pop_bd, age_band_ips_pop_bd])
+comm_region_age_band_oaps_pop_bd = pop_cross_dict([comm_region_pop_bd, age_band_oaps_pop_bd])
+comm_region_lower_eth_pop_bd = pop_cross_dict([comm_region_pop_bd, lower_eth_pop_bd])
+comm_region_upper_eth_pop_bd = pop_cross_dict([comm_region_pop_bd, upper_eth_pop_bd])
+comm_region_gender_pop_bd = pop_cross_dict([comm_region_pop_bd, gender_pop_bd])
+comm_region_imd_decile_pop_bd = pop_cross_dict([comm_region_pop_bd, imd_decile_pop_bd])
+comm_region_imd_quintile_pop_bd = pop_cross_dict([comm_region_pop_bd, imd_quintile_pop_bd])
+##MHA_Measures
+comm_region_age_band_mha_pop_bd = pop_cross_dict([comm_region_pop_bd, age_band_mha_pop_bd])
+comm_region_age_group_higher_pop_bd = pop_cross_dict([comm_region_pop_bd, age_group_higher_pop_bd])
  
 pop_metadata = {
   "MHSPOPALL": {
     "measure_name": "Mid-year population - All ages",
     "age_group": (F.col("POPULATION_COUNT").isNotNull()),
-    "breakdowns": [eng_pop_bd, age_band_ips_pop_bd, age_band_oaps_pop_bd, gender_pop_bd, upper_eth_pop_bd, imd_decile_pop_bd, ccg_res_pop_bd, ccg_prac_res_pop_bd]
+    "breakdowns": [eng_pop_bd, age_band_ips_pop_bd, age_band_oaps_pop_bd, age_band_mha_pop_bd, age_group_higher_pop_bd, gender_pop_bd, lower_eth_pop_bd, upper_eth_pop_bd, imd_decile_pop_bd, 
+                   ccg_res_pop_bd, 
+                   ccg_prac_res_pop_bd, ccg_prac_res_age_band_oaps_pop_bd, ccg_prac_res_age_band_mha_pop_bd, ccg_prac_res_age_group_higher_pop_bd, ccg_prac_res_lower_eth_pop_bd, ccg_prac_res_upper_eth_pop_bd, 
+                   ccg_prac_res_gender_pop_bd, ccg_prac_res_imd_decile_pop_bd, 
+                   stp_prac_res_pop_bd, stp_prac_res_age_band_oaps_pop_bd, stp_prac_res_age_band_mha_pop_bd, stp_prac_res_age_group_higher_pop_bd, stp_prac_res_lower_eth_pop_bd, stp_prac_res_upper_eth_pop_bd,
+                   stp_prac_res_gender_pop_bd, stp_prac_res_imd_decile_pop_bd,
+                   comm_region_pop_bd, comm_region_age_band_oaps_pop_bd, comm_region_age_band_mha_pop_bd, comm_region_age_group_higher_pop_bd, comm_region_lower_eth_pop_bd, comm_region_upper_eth_pop_bd, 
+                   comm_region_gender_pop_bd, comm_region_imd_decile_pop_bd
+                  ]
   },
   "MHSPOPCYP": {
     "measure_name": "Mid-year population - ages 0 to 17",
-    "age_group": (F.col("AGE_GROUP") == "0-17"),
+    "age_group": (F.col("Age_Group") == "0-17"),
     "breakdowns": [eng_pop_bd, ccg_res_pop_bd, ccg_prac_res_pop_bd]
   },
   "MHSPOPADU": {
     "measure_name": "Mid-year population - ages 18 to 64",
-    "age_group": (F.col("AGE_GROUP") == "18-64"),
+    "age_group": (F.col("Age_Group") == "18-64"),
     "breakdowns": [eng_pop_bd, ccg_res_pop_bd, ccg_prac_res_pop_bd]
   },
   "MHSPOPOAP": {
     "measure_name": "Mid-year population - ages 65 and over",
-    "age_group": (F.col("AGE_GROUP") == "65+"),
+    "age_group": (F.col("Age_Group") == "65+"),
     "breakdowns": [eng_pop_bd, ccg_res_pop_bd, ccg_prac_res_pop_bd]
   },
 }

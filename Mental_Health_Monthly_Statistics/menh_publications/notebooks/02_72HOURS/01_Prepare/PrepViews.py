@@ -1,5 +1,4 @@
 # Databricks notebook source
- 
  %sql
  CREATE OR REPLACE GLOBAL TEMP VIEW Cont AS
  SELECT        c.UniqMonthID
@@ -22,9 +21,9 @@
  WHERE         c.UniqMonthID <= $month_id 
                AND c.AttendStatus IN ('5','6') 
                AND vc.Measure is null -- no right hand side if ConsMechanismMH matches nothing in exclude list
- 
+
  union all
- 
+
  SELECT        i.UniqMonthID 
                ,i.OrgIDProv
                ,i.Person_ID
@@ -59,7 +58,7 @@
 # COMMAND ----------
 
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMP VIEW Bed AS
  SELECT      w.UniqMonthID
              ,w.Person_ID
@@ -87,9 +86,9 @@
    and c.ConsMechanismMH = vc.ValidValue 
    and c.UniqMonthID >= vc.FirstMonth 
    and (vc.LastMonth is null or c.UniqMonthID <= vc.LastMonth)
- 
+
  Union all
- 
+
  SELECT      h.Person_ID
              ,h.OrgIdProv
              ,h.StartDateHospProvSpell AS ContDate
@@ -99,7 +98,7 @@
 # COMMAND ----------
 
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMP VIEW Onward AS
  SELECT DISTINCT   o.Person_ID
                    ,o.UniqServReqID
@@ -124,10 +123,10 @@
 
 # DBTITLE 1,CCG_prep_2months for 2 month period
  %sql
- 
+
  -- Renamed this view as it referenced EIP which is not relevant - the time period is the relevant part
  -- suspect that the limit to most recent good record WITH CCG is not consistenet with other places - likely to be reducing the number of UNKNOWNs
- 
+
  CREATE OR REPLACE GLOBAL TEMP VIEW CCG_prep_2months AS
  SElECT DISTINCT    a.Person_ID
  				   ,max(a.RecordNumber) as recordnumber	
@@ -142,14 +141,14 @@
                        CASE WHEN a.UNIQMONTHID <= 1467 THEN a.OrgIDCCGRes 
                        ELSE a.OrgIDSubICBLocResidence
                        END = c.ORG_CODE
- 
+
  LEFT JOIN          $db_output.RD_CCG_LATEST e on 
                        CASE WHEN b.UNIQMONTHID <= 1467 THEN b.OrgIDCCGGPPractice
                        ELSE b.OrgIDSubICBLocGP
                        END = e.ORG_CODE
                        
  WHERE              (e.ORG_CODE is not null or c.ORG_CODE is not null)
- 
+
                     and a.uniqmonthid between $month_id - 1 AND $month_id
  GROUP BY           a.Person_ID
 
@@ -174,12 +173,12 @@
                     --and b.OrgIDGPPrac <> '-1' -- clause removed, check the methodology page of the publication for further details.
                     and b.EndDateGMPRegistration is null
  INNER JOIN         global_temp.CCG_prep_2months ccg on a.recordnumber = ccg.recordnumber
- 
+
  LEFT JOIN          $db_output.RD_CCG_LATEST c on  
                        CASE WHEN a.UNIQMONTHID <= 1467 THEN a.OrgIDCCGRes 
                        ELSE a.OrgIDSubICBLocResidence
                        END = c.ORG_CODE
- 
+
  LEFT JOIN          $db_output.RD_CCG_LATEST e on 
                        CASE WHEN b.UNIQMONTHID <= 1467 THEN b.OrgIDCCGGPPractice
                        ELSE b.OrgIDSubICBLocGP
@@ -191,7 +190,7 @@
 # COMMAND ----------
 
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMP VIEW Disch AS
  SELECT DISTINCT       
         h.UniqMonthID
@@ -269,7 +268,7 @@
 # COMMAND ----------
 
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMP VIEW Fup AS
  SELECT d.UniqMonthID
        ,d.OrgIDProv
@@ -306,7 +305,7 @@
                  ,h.UniqServReqID
                  ,h.uniqhospprovspellid
                  ,MIN(c.ContDate) AS FirstCont
- 
+
     FROM         global_temp.Disch h
     INNER JOIN 
     (

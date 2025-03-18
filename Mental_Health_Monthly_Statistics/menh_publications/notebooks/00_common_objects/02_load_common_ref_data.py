@@ -1,13 +1,13 @@
 # Databricks notebook source
  %md
- 
+
  # Generic Prep assets used throughout Mental health menh_publications
  -- NP: only cells which have been added for CYP_ED_WT have been noted here
- -- updated to include all tables prepared in this notebook
- 
+ -- User note: updated to include all tables prepared in this notebook
+
  - RD_CCG_LATEST - TABLE
  - CCG_PRAC - view
- - CCG_prep_3months [ changed from ed_CCG_prep as the tables are the same] - view
+ - CCG_prep_3months [User note changed from ed_CCG_prep as the tables are the same] - view
  - CCG_PREP - view
  - CCG - TABLE
  - RD_ORG_DAILY_LATEST - TABLE
@@ -19,10 +19,10 @@
  - org_relationship_daily - view
  - STP_Region_mapping_post_2020 - TABLE
  - MHS101Referral_LATEST - view
- - MHS001_CCG_LATEST - [ changed from ED_CCG_LATEST] - TABLE
+ - MHS001_CCG_LATEST - [User note changed from ED_CCG_LATEST] - TABLE
  - MHS001_PATMRECINRP_201819_F_M - view
  - MHS001MPI_PATMRECINRP_FIX - view
- 
+
  - REFS - view
  - TEAMTYPE - view
  - ward_type_list - view
@@ -31,13 +31,13 @@
  - referral_cats - view
  - MHS101Referral_service_area - TABLE
  - MHS101Referral_open_end_rp - TABLE
- 
+
  - accommodation_latest - TABLE
  - employment_latest - TABLE
- 
+
  - CASSR_mapping
  - GenderCodes
- 
+
  - Ref_GenderCodes - TABLE
  - Ref_EthnicGroup - TABLE
  - Ref_AgeBand - TABLE
@@ -94,14 +94,14 @@
 
 # DBTITLE 1,RD_CCG_LATEST - *new* using only ODSAPI tables
  %sql
- 
+
  -- The code below can be used to replace the cell above once the issue with missing '13T' has been resolved - see DMS001-1132
  -- Removed the need for this fix (which is never going to happen) by introducing another row_number on DateType
- 
+
  TRUNCATE TABLE $db_output.RD_CCG_LATEST;
- 
+
  with mappedCCGs as
- 
+
  (
  SELECT original_ORG_CODE, original_NAME, ORG_CODE 
  FROM
@@ -134,9 +134,9 @@
  )
  WHERE RN1 = 1
  )
- 
+
  INSERT INTO TABLE $db_output.RD_CCG_LATEST
- 
+
  SELECT 
        mappedCCGs.original_ORG_CODE,
        mappedCCGs.original_NAME,
@@ -148,7 +148,7 @@
              row_number() over (partition by rd.OrganisationId order by case when rd.EndDate is null then 1 else 0 end desc, rd.EndDate desc) as RN,
              rd.OrganisationId as ORG_CODE,
              Name as NAME
- 
+
          FROM $reference_data.ODSAPIRoleDetails rd
          LEFT JOIN $reference_data.ODSAPIOrganisationDetails od
          ON rd.OrganisationID = od.OrganisationID and rd.DateType = od.DateType
@@ -169,11 +169,12 @@
            
  ORDER BY original_ORG_CODE
 
+
 # COMMAND ----------
 
 # DBTITLE 1,CCG_PRAC - used by MHA_Monthly
  %sql
- 
+
  CREATE OR REPLACE TEMPORARY VIEW CCG_PRAC AS
  SELECT GP.Person_ID,
        GP.OrgIDCCGGPPractice,
@@ -267,9 +268,9 @@
 
 # DBTITLE 1,CCG - INSERT OVERWRITE
  %sql
- 
+
  INSERT OVERWRITE TABLE $db_output.CCG
- 
+
   FROM CCG_PREP a
   LEFT JOIN $db_output.RD_CCG_LATEST b 
             ON a.IC_Rec_CCG = b.original_ORG_CODE
@@ -284,9 +285,9 @@
  %sql
  --used 02_Expand_output
  /* Org daily latest */
- 
+
  INSERT OVERWRITE TABLE $db_output.RD_ORG_DAILY_LATEST
- 
+
             FROM $reference_data.org_daily
           
            SELECT DISTINCT ORG_CODE, 
@@ -300,9 +301,9 @@
 
 # DBTITLE 1,Provider_list (in month)
  %sql
- 
+
  TRUNCATE TABLE $db_output.Provider_list;
- 
+
  INSERT INTO TABLE $db_output.Provider_list
  SELECT DISTINCT OrgIDProvider as ORG_CODE, x.NAME as NAME
  FROM $db_source.MHS000Header as Z
@@ -310,13 +311,14 @@
      ON Z.OrgIDProvider = X.ORG_CODE
  WHERE Z.Uniqmonthid = $month_id 
 
+
 # COMMAND ----------
 
 # DBTITLE 1,Provider list (rolling quarter)
  %sql
  /* ---------------------------------------------------------------------------------------------------------*/
  /* providers_between_rp_start_end_dates: This is a view used in a lot of the the Provider breakdowns        
- 
+
    This returns the OrgIDProvider codes between the reporting period dates from MHS000Header
                                                                                   */ 
  /* ---------------------------------------------------------------------------------------------------------*/
@@ -335,7 +337,7 @@
  %sql
  /* ---------------------------------------------------------------------------------------------------------*/
  /* providers_between_rp_start_end_dates: This is a view used in a lot of the the Provider breakdowns        
- 
+
    This returns the OrgIDProvider codes between the reporting period dates from MHS000Header
                                                                                   */ 
  /* ---------------------------------------------------------------------------------------------------------*/
@@ -354,12 +356,12 @@
  %sql
  -- Main_monthly_metric_values is also truncated and populated - with 1 rows - in 01_detoc_prepare
  TRUNCATE TABLE $db_output.Main_monthly_metric_values;
- 
+
  INSERT INTO $db_output.Main_monthly_metric_values VALUES 
  ('MHS78', 'Discharges from adult acute beds eligible for 72 hour follow up in the reporting period'),
  ('MHS79', 'Discharges from adult acute beds followed up within 72 hours in the reporting period'),
  ('MHS80', 'Proportion of discharges from adult acute beds eligible for 72 hour follow up - followed up in the reporting period');
- 
+
  -- Main_monthly_breakdown_values is also truncated and populated - with 5 rows - in 01_detoc_prepare
  TRUNCATE TABLE $db_output.Main_monthly_breakdown_values;
  INSERT INTO $db_output.Main_monthly_breakdown_values VALUES
@@ -369,9 +371,9 @@
    ('CASSR'),
    ('CASSR; Provider'),
    ('CCG - GP Practice or Residence; Provider of Responsibility');
- 
+
  TRUNCATE TABLE $db_output.Main_monthly_level_values_1;
- 
+
  INSERT INTO $db_output.Main_monthly_level_values_1
  SELECT DISTINCT 
   IC_Rec_CCG as primary_level, 
@@ -396,14 +398,16 @@
   'NONE' as secondary_level_desc,
   'England' as breakdown
 
+
+
 # COMMAND ----------
 
 # DBTITLE 1,Org_Daily temporary view 
  %sql
  --This view has been copied from menh_analysis\notebooks\01_prepare\0.Generic_prep
- 
+
  /** added as part of the change in STP mapping/derivation for v4.1 **/
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW org_daily AS
  SELECT DISTINCT ORG_CODE,
                  NAME,
@@ -424,8 +428,8 @@
  %sql
  --NP This view has been copied from menh_analysis\notebooks\01_prepare\0.Generic_prep
  /** added as part of the change in STP mapping/derivation for v4.1 **/
- 
- 
+
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW org_relationship_daily AS 
  SELECT 
  REL_TYPE_CODE,
@@ -439,15 +443,17 @@
  (REL_CLOSE_DATE >= '$rp_enddate' OR ISNULL(REL_CLOSE_DATE))              
  AND REL_OPEN_DATE <= '$rp_enddate';
 
+
+
 # COMMAND ----------
 
 # DBTITLE 1,STP/Region breakdowns April 2020 onwards (NP: copied from menh_analysis\notebooks\01_prep_common_objects\0.Insert_lookup_data)
  %sql
  --This code has been copied from in menh_analysis\notebooks\01_Prepare\0.Insert_lookup_data
- 
+
  TRUNCATE TABLE $db_output.STP_Region_mapping_post_2020;
  INSERT INTO $db_output.STP_Region_mapping_post_2020 
- 
+
  SELECT 
  A.ORG_CODE as STP_CODE, 
  A.NAME as STP_DESCRIPTION, 
@@ -464,11 +470,11 @@
  WHERE
  A.ORG_TYPE_CODE = 'ST'
  AND B.REL_TYPE_CODE is not null
- 
+
  --Added this bit in to get the UNKNOWN row displaying in the output
  UNION ALL
  SELECT DISTINCT
- 
+
  'UNKNOWN' as STP_CODE, 
  'UNKNOWN' as STP_DESCRIPTION, 
  'UNKNOWN' as CCG_CODE, 
@@ -477,6 +483,9 @@
  'UNKNOWN' as REGION_DESCRIPTION
   
  ORDER BY 1
+
+
+
 
 # COMMAND ----------
 
@@ -511,7 +520,7 @@
                                                            
    /* ---------------------------------------------------------------------------------------------------------*/
  /* Latest Referrals */
- 
+
  CREATE OR REPLACE GLOBAL TEMP VIEW MHS101Referral_LATEST AS
      SELECT DISTINCT r.Person_ID,
             r.UniqServReqID,
@@ -602,9 +611,9 @@
 # DBTITLE 1,CCG Methodology update
  %sql
  --27-01-2022: renaming from ED_CCG_LATEST to MHS001_CCG_LATEST throughout as this table is used in multiple places and contains the same data!
- 
+
  TRUNCATE TABLE $db_output.MHS001_CCG_LATEST;
- 
+
  INSERT INTO TABLE $db_output.MHS001_CCG_LATEST
  select distinct    a.Person_ID,
  				   CASE WHEN b.UniqMonthID <= 1467 AND b.OrgIDCCGGPPractice IS NOT NULL and e.ORG_CODE is not null THEN b.OrgIDCCGGPPractice
@@ -633,9 +642,9 @@
 # DBTITLE 1,CCG Methodology update 12m
  %sql
  --27-01-2022: renaming from ED_CCG_LATEST to MHS001_CCG_LATEST throughout as this table is used in multiple places and contains the same data!
- 
+
  TRUNCATE TABLE $db_output.MHS001_CCG_LATEST_12m;
- 
+
  INSERT INTO TABLE $db_output.MHS001_CCG_LATEST_12m
  select distinct    a.Person_ID,
  				   CASE WHEN b.UniqMonthID <= 1467 AND b.OrgIDCCGGPPractice IS NOT NULL and e.ORG_CODE is not null THEN b.OrgIDCCGGPPractice
@@ -664,13 +673,13 @@
 # DBTITLE 1,MHS001_PATMRECINRP_201819_F_M
  %sql
  CREATE OR REPLACE GLOBAL TEMP VIEW MHS001_PATMRECINRP_201819_F_M AS
- 
+
  SELECT MPI.Person_ID,
         MPI.UniqSubmissionID,
         MPI.UniqMonthID,
         CASE WHEN x.Person_ID IS NULL THEN False ELSE True END AS  PatMRecInRP_temp
         
- 
+
  FROM   $db_source.mhs001MPI MPI
  LEFT JOIN
  (
@@ -679,27 +688,27 @@
         MAX (UniqSubmissionID) AS UniqSubmissionID
         
  FROM   $db_source.mhs001MPI
- 
+
  WHERE  UniqMonthID IN ('1427', '1428')
- 
+
  GROUP BY Person_ID, UniqMonthID
  ) AS x
  ON MPI.Person_ID = x.Person_ID AND MPI.UniqSubmissionID = x.UniqSubmissionID AND MPI.UniqMonthID = x.UniqMonthID
- 
+
  WHERE MPI.UniqMonthID IN ('1427', '1428');
 
 # COMMAND ----------
 
 # DBTITLE 1,MHS001MPI_PATMRECINRP_FIX
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMP VIEW MHS001MPI_PATMRECINRP_FIX AS
- 
+
  SELECT MPI.*,
         CASE WHEN FIX.Person_ID IS NULL THEN MPI.PatMRecInRP ELSE FIX.PatMRecInRP_temp END AS PatMRecInRP_FIX
- 
+
  FROM $db_source.mhs001MPI MPI
- 
+
  LEFT JOIN global_temp.MHS001_PATMRECINRP_201819_F_M FIX
  ON MPI.Person_ID = FIX.Person_ID AND MPI.UniqSubmissionID = FIX.UniqSubmissionID and MPI.UniqMonthID = FIX.UniqMonthID;
 
@@ -707,9 +716,9 @@
 
 # DBTITLE 1,MHS001MPI_latest_month_data - MPI Table with latest month and latest patient info, with CCG data attached
  %sql
- 
+
  TRUNCATE table $db_output.MHS001MPI_latest_month_data;
- 
+
  INSERT INTO $db_output.MHS001MPI_latest_month_data 
      (SELECT MPI.AgeDeath 
             ,MPI.AgeRepPeriodEnd 
@@ -759,11 +768,11 @@
 
 # DBTITLE 1,REFS
  %sql
- 
+
  /** Added to support code needed for v4.1 when CAMHSTier removed **/
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW REFS AS 
- 
+
  SELECT 
  DISTINCT 
  a.UniqServReqID,
@@ -779,15 +788,16 @@
  LEFT JOIN $db_output.ServiceTeamType S ON A.UNIQSERVREQID = S.UNIQSERVREQID AND A.PERSON_ID = S.PERSON_ID AND S.UNIQMONTHID = $month_id
  WHERE A.UniqMonthID = $month_id
 
+
 # COMMAND ----------
 
 # DBTITLE 1,TEAMTYPE
  %sql
- 
+
  /** Added to support code needed for v4.1 when CAMHSTier removed **/
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW TEAMTYPE AS 
- 
+
  SELECT
  r.UniqCareProfTeamID,
  SUM(CASE WHEN r.UniqServReqID IS NOT NULL THEN 1 ELSE 0 END) AS TotalRefs,
@@ -795,17 +805,18 @@
  (SUM(CASE WHEN r.AgeCat = 'Under 18' THEN 1 ELSE 0 END) / SUM(CASE WHEN r.UniqServReqID IS NOT NULL THEN 1 ELSE 0 END)) *100 AS PRCNT_U18
              
  FROM global_temp.REFS r
- 
+
  GROUP BY r.UniqCareProfTeamID
+
 
 # COMMAND ----------
 
 # DBTITLE 1,ward_type_list
  %sql
- 
+
  /**CODE TO SPLIT THE DIFFERENT SERVICE AREAS FOR WARD STAYS**/
  /** Updated for v4.1 when CAMHSTier removed **/
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW ward_type_list AS
      SELECT  DISTINCT CASE --WHEN CAMHSTier IN ('4','9') THEN 'Y' -- Removed when CAMHSTier was discontinued
  				--	      WHEN WardIntendedClinCareMH IN ('61', '62', '63') THEN NULL
@@ -863,7 +874,7 @@
              
   LEFT JOIN global_temp.TEAMTYPE AS Z 
  			ON D.UniqCareProfTeamID = Z.UniqCareProfTeamID
- 
+
       WHERE	A.UniqMonthID = $month_id
  			AND A.PatMRecInRP = true
  			AND (EndDateWardStay IS NULL OR EndDateWardStay > '$rp_enddate')
@@ -872,7 +883,7 @@
 
 # DBTITLE 1,ward_stay_cats
  %sql
- 
+
  --CREATES A DISTINCT VERSION OF THE SERVICE AREA BREAKDOWNS
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW ward_stay_cats AS
  SELECT  DISTINCT UniqWardStayID
@@ -886,10 +897,10 @@
 
 # DBTITLE 1,referral_list
  %sql
- 
+
  /**CREATES THE SERVICE AREA BREAKDOWN FOR REFERRALS**/
  /** updated for v4.1 when CAMHSTier removed **/
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW referral_list AS
      SELECT	CASE WHEN F.LD = 'Y' THEN 'Y'
  				 WHEN ServTeamTypeRefToMH IN ('E01', 'E02', 'E03', 'E04' , 'B02', 'C01') THEN 'Y'
@@ -946,7 +957,7 @@
               
    LEFT JOIN global_temp.TEAMTYPE AS Z 
  			ON E.UniqCareProfTeamID = Z.UniqCareProfTeamID
- 
+
       WHERE	(D.ServDischDate IS NULL OR D.ServDischDate >'$rp_enddate')
  		    AND D.UniqMonthID = $month_id
 
@@ -954,9 +965,9 @@
 
 # DBTITLE 1,referral_cats
  %sql
- 
+
  --CREATES A DISTINCT VERSION OF THE SERVICE AREA BREAKDOWNS
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW referral_cats AS
  SELECT  DISTINCT UniqServReqID
          ,MIN (LD) AS LD
@@ -1040,11 +1051,11 @@
 
 # DBTITLE 1,MHS101Referral_open_end_rp - Referral table, latest month and open end RP
  %sql
- 
+
  -- Replacing ref.* here with a list of all columns to allow the _v sourced menhprimary_refresh and menh_point_in_time tables to be used as source data too.
- 
+
  TRUNCATE TABLE $db_output.MHS101Referral_open_end_rp;
- 
+
  INSERT INTO $db_output.MHS101Referral_open_end_rp
      SELECT 
      --        ref.AMHServiceRefEndRP
@@ -1096,9 +1107,9 @@
 
 # DBTITLE 1,accommodation_latest
  %sql
- 
+
  TRUNCATE TABLE $db_output.accommodation_latest;
- 
+
  INSERT INTO $db_output.accommodation_latest
      SELECT  AccommodationType,
              AccommodationTypeDate,     
@@ -1128,7 +1139,7 @@
 # DBTITLE 1,Employment_Latest
  %sql
  TRUNCATE TABLE $db_output.employment_latest;
- 
+
  INSERT INTO $db_output.employment_latest
      SELECT  EmployStatus   
              ,EmployStatusEndDate     
@@ -1157,12 +1168,12 @@
 
 # DBTITLE 1,CASSR_mapping
  %sql
- 
+
  --USING ENTITY_CODE THIS SELECTS ALL UNITARY AUTHORITIES, NON-METROPOLITAN DISTRICTS, METROPOLITAN DISTRICTS, AND LONDON BOROUGHS. NON-METROPOLITAN DISTICTS ARE THEN 
  --REPLACED BY THE RELEVANT HIGHER TIER LOCAL AUTHORITY
  --ONE WELSH CODE IS LET THROUGH TO CREATE AN 'UNKNOWN' RECORD
- 
- 
+
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW CASSR_mapping AS
  SELECT case when a.GEOGRAPHY_CODE = "W04000869" THEN "UNKNOWN" ELSE a.GEOGRAPHY_CODE END as LADistrictAuth
        ,case when a.GEOGRAPHY_CODE = "W04000869" THEN "UNKNOWN" ELSE a.GEOGRAPHY_NAME END as LADistrictAuthName
@@ -1177,22 +1188,22 @@
        INNER JOIN $reference_data.ONS_CHD_GEO_LISTINGS as b
          ON b.GEOGRAPHY_CODE = a.PARENT_GEOGRAPHY_CODE
          AND a.ENTITY_CODE IN ('E06', 'E07', 'E08', 'E09','W04')
- 
+
  WHERE ((a.DATE_OF_TERMINATION >= '$rp_enddate' OR ISNULL(a.DATE_OF_TERMINATION))
                  AND a.DATE_OF_OPERATION <= '$rp_enddate')
        AND ((b.DATE_OF_TERMINATION >= '$rp_enddate' OR ISNULL(b.DATE_OF_TERMINATION))
                  AND b.DATE_OF_OPERATION <= '$rp_enddate')
        AND (a.GEOGRAPHY_CODE LIKE "E%" OR B.GEOGRAPHY_CODE LIKE "E%" OR a.GEOGRAPHY_CODE = "W04000869")
- 
+
  ORDER BY CASSR_description
 
 # COMMAND ----------
 
 # DBTITLE 1,GenderCodes
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW GenderCodes AS
- 
+
  select PrimaryCode, Description from $reference_data.DataDictionaryCodes
  where ItemName ='PERSON_STATED_GENDER_CODE'
  and (BusinessEndDate is null OR BusinessEndDate > '$rp_enddate')
@@ -1203,9 +1214,9 @@
 
 # DBTITLE 1,GenderCodes (new methodology)
  %sql
- 
+
  TRUNCATE TABLE $db_output.Ref_GenderCodes;
- 
+
  INSERT INTO $db_output.Ref_GenderCodes
  VALUES
      ('1','Male')

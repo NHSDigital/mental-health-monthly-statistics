@@ -1,9 +1,9 @@
 # Databricks notebook source
 # DBTITLE 1,MHS26 ResponsibleLA
  %sql
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
- 
+
  SELECT   
              '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -38,7 +38,7 @@
 
 # DBTITLE 1,MHS26 ResponsibleLA by AttribToIndic
  %sql
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
  SELECT   
              '$rp_startdate' AS REPORTING_PERIOD_START
@@ -71,14 +71,14 @@
  left outer join $db_output.DelayedDischDim ref
  on ranking.AttribToIndic = ref.Code and ref.key = 'att'
  and '$month_id' >= ref.FirstMonth and (ref.LastMonth is null or '$month_id' <= ref.LastMonth)
- 
+
  group by  ResponsibleLA,AttribToIndic,ref.Description,ResponsibleLA_Name 
 
 # COMMAND ----------
 
 # DBTITLE 1,MHS26 ResponsibleLA by DelayDischReason
  %sql
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
  SELECT   
              '$rp_startdate' AS REPORTING_PERIOD_START
@@ -111,7 +111,7 @@
  left outer join $db_output.DelayedDischDim ref
  on ranking.DelayDischReason = ref.Code and ref.key = 'reason'
  and '$month_id' >= ref.FirstMonth and (ref.LastMonth is null or '$month_id' <= ref.LastMonth)
- 
+
  group by  ResponsibleLA,DelayDischReason,ResponsibleLA_Name,ref.Description
 
 # COMMAND ----------

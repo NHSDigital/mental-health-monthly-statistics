@@ -6,7 +6,7 @@
 # DBTITLE 1,Create Widgets
 # # databases where the tables to extract from are
 # dbutils.widgets.text("db_output", "menh_analysis", "db_output");
-# dbutils.widgets.text("db_source", "mh_v5_pre_pseudo_d1", "db_source");
+# dbutils.widgets.text("db_source", "$mhsds_db", "db_source");
 
 # # parameters for non-standard runs
 # dbutils.widgets.text("rp_startdate", "2020-12-01", "rp_startdate");
@@ -267,7 +267,7 @@ else:
 # COMMAND ----------
 
  %sql
- 
+
  -- remove person level data
- 
+
  TRUNCATE TABLE $db_output.LDA_Data_1;

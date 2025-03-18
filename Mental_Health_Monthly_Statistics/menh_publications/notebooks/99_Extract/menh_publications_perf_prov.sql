@@ -1,7 +1,7 @@
 -- Databricks notebook source
  %python
  import os
- 
+
  from dsp.code_promotion.s3_send import cp_s3_send
  from dsp.code_promotion.mesh_send import cp_mesh_send
 
@@ -9,44 +9,44 @@
 
 -- DBTITLE 1,Create widgets
  %python
- 
+
  rp_startdate = dbutils.widgets.get("rp_startdate")
  rp_enddate = dbutils.widgets.get("rp_enddate")
  status = dbutils.widgets.get("status")
  db_output = dbutils.widgets.get("db_output") # 'menh_publications' #dbutils.widgets.get("menh_publications") #----------
  month_id = dbutils.widgets.get("month_id")
  db_source = dbutils.widgets.get("db_source")
- 
- 
- 
+
+
+
  print(f'rp_startdate is {rp_startdate}; \
        rp_enddate is {rp_enddate}; \
        status is {status}; \
        db_output is {db_output}; \
        db_source is {db_source}; \
        month_id is {month_id}')
- 
- 
+
+
  # import functions
  from datetime import datetime, date
  from dateutil.relativedelta import relativedelta
  from dsp.common.exports import create_csv_for_download
- 
- 
+
+
  if len(status) == 5:
    shortstatus = status
  else:
    shortstatus = status[:4]
  YYYY = rp_startdate[:4]
  Mname = datetime.strptime(rp_startdate, '%Y-%m-%d').strftime("%b")
- 
+
  file_part_name = f"_{Mname}{shortstatus}_{YYYY}" # without csv extension
- 
+
  if db_source == "menh_point_in_time":
    file_part_name = f"_pit{file_part_name}"
- 
+
  print(f'Second part of file name: {file_part_name}')
- 
+
  #Prod mail box id
  mailbox_to = 'X26HC004'
  workflow_id = 'GNASH_MHSDS'
@@ -55,37 +55,37 @@
 
 -- DBTITLE 1,Fabricated param to try the code locally, Uncomment when necessary for testing
  %python
- 
+
  # month_id = "1449"
  # status = "Performance"
  # rp_enddate =  "2020-12-31"
  # rp_startdate = "2020-12-01"
  # reference_data =  "reference_data"
- 
- 
+
+
  # db_output1 = 'menh_publications' #dbutils.widgets.get("menh_publications") #----------
- # menh_publications_source = 'mhsds_database' #dbutils.widgets.get("mhsds_database") #-----------
- 
- 
- 
+ # menh_publications_source = '$mhsds_db' #dbutils.widgets.get("$mhsds_db") #-----------
+
+
+
  # print(f'rp_startdate is {rp_startdate}; \
  #       rp_enddate is {rp_enddate}; \
  #       status is {status}; \
  #       db_output1 is {db_output1}; \
  #       menh_publications_source is {menh_publications_source}; \
  #       month_id is {month_id}')
- 
- 
+
+
  # # import functions
  # from datetime import datetime, date
  # from dateutil.relativedelta import relativedelta
  # from dsp.common.exports import create_csv_for_download
- 
- 
+
+
  # shortstatus = status[:4]
  # YYYY = rp_startdate[:4]
  # Mname = datetime.strptime(rp_startdate, '%Y-%m-%d').strftime("%b")
- 
+
  # file_part_name = f"_{Mname}{shortstatus}_{YYYY}" # without csv extension
  # print(f'Second part of file name: {file_part_name}')
 
@@ -95,7 +95,7 @@
  %python
  local_id = str(datetime.now().date()) +'-menh_pub' # Confluence doesn't specify which id to pass as it says 'user specified id'. So given date combo with project name
  print(f'Second part of file name: {file_part_name}')
- 
+
  ##############################################################
  #              Extract the CSV of most products (MHSDS Data)  ## REMOVE THE COMMENTS FROM THE ACTUAL SQLS STATEMENT !!! OTHERWISE IT IS GIVING ERRORS
  ##############################################################
@@ -120,7 +120,7 @@
                                                                                                                                                            status = status,
                                                                                                                                                            db_output = db_output,
                                                                                                                                                            db_source = db_source))
- 
+
  #to help with local testing and avoiding the commenting and uncommenting the code
  if(os.environ.get('env') == 'prod'):
    mhsds_monthly_csv = f'MHSDS Data{file_part_name}_publications.csv' 
@@ -132,7 +132,7 @@
      print(ex, 'MESH exception on SPARK 3 can be ignored, file will be delivered in the destined path') 
  else:
    display(df_mhsds_monthly_csv)
- 
+
  ##############################################################
  #              Extract the CSV of most products - UNROUNDED ## REMOVE THE COMMENTS FROM THE ACTUAL SQLS STATEMENT !!! OTHERWISE IT IS GIVING ERRORS
  ##############################################################
@@ -205,7 +205,7 @@
                                                                                                                                                            status = status,
                                                                                                                                                            db_output = db_output,
                                                                                                                                                            db_source = db_source))
- 
+
  #to help with local testing and avoiding the commenting and uncommenting the code
  if(os.environ.get('env') == 'prod'):
    mhsds_monthly_raw_csv = f'MHSDS Data{file_part_name}_RAW_publications.csv' 
@@ -217,3 +217,4 @@
      print(ex, 'MESH exception on SPARK 3 can be ignored, file will be delivered in the destined path') 
  else:
    display(df_mhsds_monthly_raw_csv)
+

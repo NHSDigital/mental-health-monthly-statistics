@@ -230,6 +230,28 @@
 # COMMAND ----------
 
  %sql
+ CREATE OR REPLACE TEMPORARY VIEW CCG_quarter_prep AS
+ SELECT DISTINCT    a.Person_ID,
+                    max(a.RecordNumber) as recordnumber                
+ FROM               $db_source.MHS001MPI a
+ LEFT JOIN          $db_source.MHS002GP b 
+                    on a.Person_ID = b.Person_ID 
+                    and a.UniqMonthID = b.UniqMonthID
+                    and a.recordnumber = b.recordnumber
+                    and b.GMPReg NOT IN ('V81999','V81998','V81997')
+                    and b.EndDateGMPRegistration is null                
+ LEFT JOIN          RD_CCG_LATEST c on a.OrgIDCCGRes = c.ORG_CODE
+ LEFT JOIN          RD_CCG_LATEST d on a.OrgIDSubICBLocResidence = d.ORG_CODE
+ LEFT JOIN          RD_CCG_LATEST e on b.OrgIDCCGGPPractice = e.ORG_CODE
+ LEFT JOIN          RD_CCG_LATEST f on b.OrgIDSubICBLocGP = f.ORG_CODE
+ WHERE              (e.ORG_CODE is not null or c.ORG_CODE is not null
+                     or d.ORG_CODE is not null or f.ORG_CODE is not null)
+                    and a.uniqmonthid between '$end_month_id'-2 and '$end_month_id'        
+ GROUP BY           a.Person_ID
+
+# COMMAND ----------
+
+ %sql
  INSERT OVERWRITE TABLE $db_output.bbrb_ccg_in_quarter
  select distinct    a.Person_ID,
                     CASE 
@@ -252,7 +274,7 @@
                     and b.GMPReg NOT IN ('V81999','V81998','V81997')
                     --and b.OrgIDGPPrac <> '-1' 
                     and b.EndDateGMPRegistration is null
- INNER JOIN         CCG_year_prep ccg on a.recordnumber = ccg.recordnumber
+ INNER JOIN         CCG_quarter_prep ccg on a.recordnumber = ccg.recordnumber
  LEFT JOIN          RD_CCG_LATEST c on a.OrgIDCCGRes = c.ORG_CODE
  LEFT JOIN          RD_CCG_LATEST f on a.OrgIDSubICBLocResidence  = f.ORG_CODE
  LEFT JOIN          RD_CCG_LATEST e on b.OrgIDCCGGPPractice = e.ORG_CODE

@@ -12,7 +12,7 @@ dbutils.widgets.text("reference_data","reference_data","reference_data")
 
 # COMMAND ----------
 
- 
+
  %md
  # Main Monthly prep tables:
  - MH01_prep
@@ -48,12 +48,13 @@ dbutils.widgets.text("reference_data","reference_data","reference_data")
  - MH26_ranking
  - AMH59_prep
  - AMH59_prep_prov
- 
+
  The following have been moved to only run for data prior to April 2023:
  - CCR7071_prep
  - CCR7071_prep_prov
  - CCR7273_prep
  - CCR7273_prep_prov
+
 
 # COMMAND ----------
 
@@ -64,9 +65,9 @@ dbutils.widgets.text("reference_data","reference_data","reference_data")
  --/**MH01a - PEOPLE IN CONTACT WITH MENTAL HEALTH SERVICES AT END OF REPORTING PERIOD, AGED 0-18**/
  --/**MH01b - PEOPLE IN CONTACT WITH MENTAL HEALTH SERVICES AT END OF REPORTING PERIOD, AGED 19-64**/
  --/**MH01c - PEOPLE IN CONTACT WITH MENTAL HEALTH SERVICES AT END OF REPORTING PERIOD, AGED 65 AND OVER**/
- 
+
  --DROP VIEW IF EXISTS   $db.MH01_prep;
- 
+
  CREATE OR REPLACE GLOBAL TEMP VIEW MH01_prep AS	  
  SELECT				  MPI.Person_ID
  					  ,IC_Rec_CCG
@@ -85,13 +86,13 @@ dbutils.widgets.text("reference_data","reference_data","reference_data")
 
 # DBTITLE 1,MH01 Intermediate Provider
  %sql
- 
+
  -- MH01 Provider prep tables
  -- MH01 - PEOPLE IN CONTACT WITH MENTAL HEALTH SERVICES AT END OF REPORTING PERIOD
  -- MH01a - PEOPLE IN CONTACT WITH MENTAL HEALTH SERVICES AT END OF REPORTING PERIOD, AGED 0-18
  -- MH01b - PEOPLE IN CONTACT WITH MENTAL HEALTH SERVICES AT END OF REPORTING PERIOD, AGED 19-64
  -- MH01c - PEOPLE IN CONTACT WITH MENTAL HEALTH SERVICES AT END OF REPORTING PERIOD, AGED 65 AND OVER
- 
+
  CREATE OR REPLACE GLOBAL TEMP VIEW MH01_Prov_prep AS
  SELECT				   
  MPI.Person_ID
@@ -118,17 +119,17 @@ dbutils.widgets.text("reference_data","reference_data","reference_data")
 
 # DBTITLE 1,AMH03 National, CCG, CASSR
  %sql
- 
+
  TRUNCATE TABLE $db_output.AMH03_prep;
- 
+
  WITH 
  REFER AS (SELECT Person_id, ROW_NUMBER() OVER (PARTITION BY Person_id ORDER BY Person_id) as rnkr
        FROM $db_output.MHS101Referral_open_end_rp
        WHERE AMHServiceRefEndRP_temp = TRUE),
- 
+
  CPA AS (SELECT Person_id, ROW_NUMBER() OVER (PARTITION BY Person_id ORDER BY Person_Id) as rnkc
         FROM $db_output.MHS701CPACareEpisode_latest)      
- 
+
  INSERT INTO TABLE $db_output.AMH03_prep
  SELECT   PRSN.Person_ID
                  ,CASE 
@@ -166,11 +167,11 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 
 # DBTITLE 1,AMH03 Provider
  %sql
- 
+
  TRUNCATE TABLE $db_output.AMH03_prep_prov;
- 
+
  INSERT INTO TABLE $db_output.AMH03_prep_prov
- 
+
          SELECT   PRSN.Person_ID
                  ,CASE 
                     WHEN GENDER = '1' THEN 'MALE' 
@@ -445,9 +446,9 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 
 # DBTITLE 1,MHS401MHActPeriod_GRD_open_end_rp
  %sql
- 
+
  TRUNCATE TABLE $db_output.MHS401MHActPeriod_GRD_open_end_rp;
- 
+
  INSERT INTO TABLE $db_output.MHS401MHActPeriod_GRD_open_end_rp 
      SELECT	 EndDateMHActLegalStatusClass
              ,EndTimeMHActLegalStatusClass
@@ -473,11 +474,12 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
              ,UniqMHActEpisodeID
              ,UniqMonthID
              ,UniqSubmissionID
- 
+
        FROM	$db_source.MHS401MHActPeriod
       WHERE  UniqMonthID = '$month_id' 
              AND legalstatuscode IN ('35', '36')
       	    AND (EndDateMHActLegalStatusClass IS NULL OR EndDateMHActLegalStatusClass > '$rp_enddate')
+
 
 # COMMAND ----------
 
@@ -495,9 +497,9 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 # DBTITLE 1,MHS11_INTERMEDIATE
  %sql
  /**MHS11 - PEOPLE SUBJECT TO A SHORT TERM ORDER AT END OF REPORTING PERIOD - INTERMEDIATE**/
- 
+
  TRUNCATE TABLE $db_output.MHS11_INTERMEDIATE;
- 
+
  INSERT INTO $db_output.MHS11_INTERMEDIATE
      SELECT	DISTINCT REF.Person_ID
  			,REF.RecordNumber
@@ -529,9 +531,9 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 # DBTITLE 1,MHS10_INTERMEDIATE
  %sql
  /**MHS10 - PEOPLE SUBJECT TO A COMMUNITY TREATMENT ORDER OR ON CONDITIONAL DISCHARGE AT END OF REPORTING PERIOD - INTERMEDIATE**/
- 
+
  TRUNCATE TABLE $db_output.MHS10_INTERMEDIATE;
- 
+
  INSERT INTO $db_output.MHS10_INTERMEDIATE
      SELECT	DISTINCT REF.Person_ID
  			,REF.RecordNumber
@@ -581,9 +583,9 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 # DBTITLE 1,MHS09_INTERMEDIATE
  %sql
  /**MHS09 - PEOPLE SUBJECT TO DETENTION IN HOSPITAL AT END OF REPORTING PERIOD - INTERMEDIATE**/
- 
+
  TRUNCATE TABLE $db_output.MHS09_INTERMEDIATE;
- 
+
  INSERT INTO $db_output.MHS09_INTERMEDIATE
      SELECT	DISTINCT REF.Person_ID
  			,REF.RecordNumber
@@ -639,9 +641,9 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 # DBTITLE 1,MHS11Prov_INTERMEDIATE
  %sql
  /**MHS11 - PEOPLE SUBJECT TO A SHORT TERM ORDER AT END OF REPORTING PERIOD - INTERMEDIATE**/
- 
+
  TRUNCATE TABLE $db_output.MHS11Prov_INTERMEDIATE;
- 
+
  INSERT INTO $db_output.MHS11Prov_INTERMEDIATE
      SELECT	DISTINCT REF.Person_ID
  			,REF.RecordNumber
@@ -675,9 +677,9 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 # DBTITLE 1,MHS10Prov_INTERMEDIATE
  %sql
  /**MHS10 - PEOPLE SUBJECT TO A COMMUNITY TREATMENT ORDER OR ON CONDITIONAL DISCHARGE AT END OF REPORTING PERIOD - INTERMEDIATE**/
- 
+
  TRUNCATE table $db_output.MHS10Prov_INTERMEDIATE;
- 
+
  INSERT INTO $db_output.MHS10Prov_INTERMEDIATE
      SELECT	DISTINCT REF.Person_ID
  			,REF.RecordNumber
@@ -732,9 +734,9 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 # DBTITLE 1,MHS09Prov_INTERMEDIATE
  %sql
  /**MHS09 - PEOPLE SUBJECT TO DETENTION IN HOSPITAL AT END OF REPORTING PERIOD - INTERMEDIATE**/
- 
+
  TRUNCATE table $db_output.MHS09Prov_INTERMEDIATE;
- 
+
  INSERT INTO $db_output.MHS09Prov_INTERMEDIATE
      SELECT	DISTINCT REF.Person_ID
  			,REF.RecordNumber
@@ -797,7 +799,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 # DBTITLE 1,MHS07 intermediate (CCG and National)
  %sql
  /**MHS07 - PEOPLE WITH A HOSPITAL PROVIDER SPELL AT END OF REPORTING PERIOD - INTERMEDIATE**/
- 
+
  CREATE OR REPLACE GLOBAL TEMP VIEW MHS07_prep AS
  SELECT DISTINCT  MPI.Person_ID
                   ,IC_Rec_CCG
@@ -817,7 +819,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 # DBTITLE 1,MHS07 intermediate (Provider)
  %sql
  /**MHS07 - PEOPLE WITH AN OPEN HOSPITAL PROVIDER SPELL AT END OF REPORTING PERIOD, PROVIDER**/
- 
+
  CREATE OR REPLACE GLOBAL TEMP VIEW MHS07_Prov_prep AS
  SELECT DISTINCT   MPI.Person_ID
                    ,MPI.ORGIDProv
@@ -838,7 +840,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 
 # DBTITLE 1,MHS13 National CCG Provider
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMP VIEW MHS13_Prep AS
  SELECT      MPI.Person_ID
              ,IC_Rec_CCG
@@ -851,11 +853,12 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
  WHERE       REF.Person_ID is not NULL
              --AND ACC.Person_ID is not NULL -- not sure if this is necessa
 
+
 # COMMAND ----------
 
 # DBTITLE 1,AMH15 National, CCG and CASSR
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMP VIEW AMH15_prep AS
      SELECT MPI.Person_ID
             ,CASE 
@@ -885,7 +888,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 
 # DBTITLE 1,AMH15 Provider
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMP VIEW AMH15_prep_prov AS
      SELECT MPI.Person_ID
             ,CASE 
@@ -913,9 +916,9 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 
 # DBTITLE 1,AMH14 National, CCG and CASSR
  %sql
- 
+
  TRUNCATE TABLE $db_output.AMH14_prep;
- 
+
  INSERT INTO TABLE $db_output.AMH14_prep
          
      SELECT PREP.Person_ID 
@@ -948,9 +951,9 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 
 # DBTITLE 1,AMH14 Provider
  %sql
- 
+
  TRUNCATE TABLE $db_output.AMH14_prep_prov;
- 
+
  INSERT INTO TABLE $db_output.AMH14_prep_prov
          
      SELECT PREP.Person_ID 
@@ -980,9 +983,9 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 
 # DBTITLE 1,AMH17
  %sql
- 
+
  TRUNCATE TABLE $db_output.AMH17_prep;
- 
+
  INSERT INTO TABLE $db_output.AMH17_prep
          
      SELECT MPI.Person_ID
@@ -1029,9 +1032,9 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 
 # DBTITLE 1,AMH17 Provider
  %sql
- 
+
  TRUNCATE TABLE $db_output.AMH17_prep_prov;
- 
+
  INSERT INTO TABLE $db_output.AMH17_prep_prov
      SELECT MPI.Person_ID
             ,CASE 
@@ -1076,7 +1079,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 
 # DBTITLE 1,AMH18
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMP VIEW AMH18_prep AS
      SELECT MPI.Person_ID
             ,MPI.IC_Rec_CCG
@@ -1100,7 +1103,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 
 # DBTITLE 1,AMH18 Provider
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMP VIEW AMH18_prep_prov AS
      SELECT MPI.Person_ID
             ,MPI.OrgIDProv
@@ -1124,9 +1127,9 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
  %sql
  /**MHS21 - OPEN WARD STAYS AT END OF REPORTING PERIOD**/
  -- cyp21 has scripts for both monthly and camhs monthly output tables 
- 
+
  TRUNCATE table $db_output.MHS21_prep;
- 
+
  INSERT INTO $db_output.MHS21_prep
  SELECT DISTINCT	    WRD.UniqWardStayID
                      ,WRD.Person_ID
@@ -1163,9 +1166,9 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
  %sql
  /**MHS21 - OPEN WARD STAYS AT END OF REPORTING PERIOD**/
  -- cyp21/mhs21a has scripts for both monthly and camhs monthly output tables - only done monthly output for now
- 
+
  TRUNCATE TABLE $db_output.MHS21_Prov_prep;
- 
+
  INSERT INTO $db_output.MHS21_Prov_prep
  SELECT              WRD.Person_ID
                      ,WRD.OrgIDProv
@@ -1201,7 +1204,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 
 # DBTITLE 1,MHS23
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMP VIEW MHS23_prep AS
        SELECT MPI.IC_Rec_CCG
              ,MPI.NAME
@@ -1217,7 +1220,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 
 # DBTITLE 1,MHS23abc_prep
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMP VIEW MHS23abc_prep AS
        SELECT PREP.IC_Rec_CCG
              ,PREP.NAME
@@ -1235,9 +1238,9 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
  CREATE OR REPLACE GLOBAL TEMP VIEW MHS23d_prep AS
        SELECT 
        MPI.NAME
- 
+
        ,MPI.IC_Rec_CCG
- 
+
              ,REF.UniqServReqID
              ,REF.AMHServiceRefEndRP_temp
              ,REF.CYPServiceRefEndRP_temp
@@ -1252,7 +1255,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
                              WHEN MPI.AgeRepPeriodEnd > 64 THEN 'People aged 65 or over'
                              ELSE 'UNKNOWN' END as AgeGroupName
              ,SERV.ServTeamTypeRefToMH
- 
+
   FROM $db_output.MHS101Referral_open_end_rp    AS REF  
  ---------------------------------------------------------------------------------------------------------------  
   INNER JOIN $db_output.tmp_MHMAB_MHS001MPI_latest_month_data    AS MPI
@@ -1264,10 +1267,11 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
              ON REF.UniqServReqID = SERV.UniqServReqID
   WHERE      SERV.ServTeamTypeRefToMH in ('A05','A06','A08','A09','A12','A13','A16','C10');    
 
+
 # COMMAND ----------
 
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMP VIEW MHS23d_prep_prov AS
        SELECT REF.UniqServReqID
              ,REF.AMHServiceRefEndRP_temp
@@ -1459,6 +1463,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
  %md
  - Main_monthly_prep/global_temp.CC001_prep-> Main_monthly_prep/(MHS29d_prep + MHS29f_prep) -> Outpatient_Measures(MHS29d breakdowns + MHS29fbreakdowns)
 
+
 # COMMAND ----------
 
 # DBTITLE 1,MHS29d_prep
@@ -1588,9 +1593,9 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
  --             ON CC.Person_ID = CCG.Person_ID
  --  WHERE      CC.UniqMonthID = '$month_id' 
  --            AND (CareContDate >= '$rp_startdate' AND CareContDate <= '$rp_enddate');
- 
- 
- 
+
+
+
  -- CREATE OR REPLACE GLOBAL TEMP VIEW MHS29d_prep_prov AS
  -- SELECT                CC.UniqCareContID
  --                       ,CCG.NAME
@@ -1620,7 +1625,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
  --                      WHEN CC.AttendOrDNACode IS NULL THEN 'UNKNOWN'
  --                      WHEN CC.AttendOrDNACode IS NOT NULL AND CC.ATT_PrimaryCode IS NULL THEN 'Invalid' END AS Attend_Code 
  --                       ,CASE WHEN CC.ATT_PrimaryCode IS NOT NULL THEN CC.ATT_Desc ELSE 'Invalid' END AS Attend_Name
- 
+
  -- FROM       global_temp.CC001_prep AS CC
  -- INNER JOIN global_temp.CCG AS CCG 
  --             ON CC.Person_ID = CCG.Person_ID
@@ -1628,6 +1633,8 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
  --             ON MPI.Person_ID = CC.Person_ID
  --  WHERE      CC.UniqMonthID = '$month_id' 
  --            AND (CareContDate >= '$rp_startdate' AND CareContDate <= '$rp_enddate');
+
+
 
 # COMMAND ----------
 
@@ -1737,7 +1744,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 
 # DBTITLE 1,AMH59 Intermediate Prov
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMP VIEW AMH59_prep_prov AS
              SELECT WRD.UniqWardStayID,
                     WRD.OrgIDProv

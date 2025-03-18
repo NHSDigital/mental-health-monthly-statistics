@@ -1,6 +1,6 @@
 # Databricks notebook source
  %md
- 
+
  # Collect and cache newly computed data in "all_products_cached"
 
 # COMMAND ----------
@@ -31,7 +31,7 @@ else:
 
 # DBTITLE 1,2.Cache AWT
  %sql
- 
+
  INSERT INTO $db_output.all_products_cached
  SELECT
    2 AS PRODUCT_NO,
@@ -54,7 +54,7 @@ else:
 
 # DBTITLE 1,3.Cache CYP 2nd Contact
  %sql
- 
+
  INSERT INTO $db_output.all_products_cached
  SELECT
    3 AS PRODUCT_NO,

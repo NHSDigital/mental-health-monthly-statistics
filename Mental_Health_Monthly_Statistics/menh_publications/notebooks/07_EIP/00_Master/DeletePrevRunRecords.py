@@ -24,7 +24,7 @@ params = {'db_output': db_output, 'db_source': db_source, 'month_id': month_id, 
 
 # DBTITLE 1,Clean unformatted output table (in case there already is left-over data for this month/status in the table)
  %sql
- 
+
  DELETE FROM $db_output.AWT_unformatted
  WHERE REPORTING_PERIOD_END = '$rp_enddate'
  AND STATUS = '$status'
@@ -36,8 +36,8 @@ params = {'db_output': db_output, 'db_source': db_source, 'month_id': month_id, 
 
 # DBTITLE 1,Optimize output table for performance
  %python
- 
+
  import os
- 
+
  if os.environ['env'] == 'prod':
    spark.sql('OPTIMIZE {db_output}.{table}'.format(db_output=db_output, table='AWT_unformatted'))

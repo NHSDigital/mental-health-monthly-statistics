@@ -2,7 +2,7 @@
 # DBTITLE 1,1F numerator: National
  %sql
  --Further breakdown of AMH17 measure from monthly file
- 
+
  INSERT INTO $db_output.Ascof_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START,
              '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -26,7 +26,7 @@
 # DBTITLE 1,1F numerator: National gender
  %sql
  --Further breakdown of AMH17 measure from monthly file
- 
+
  INSERT INTO $db_output.Ascof_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START,
              '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -51,7 +51,7 @@
 # DBTITLE 1,1F numerator: Provider
  %sql
  --Further breakdown of AMH17 measure from monthly file
- 
+
  INSERT INTO $db_output.Ascof_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -79,7 +79,7 @@
 # DBTITLE 1,1F numerator: Provider gender
  %sql
  --Further breakdown of AMH17 measure from monthly file
- 
+
  INSERT INTO $db_output.Ascof_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -108,7 +108,7 @@
 # DBTITLE 1,1F numerator: CASSR
  %sql
  --Further breakdown of AMH17 measure from monthly file
- 
+
  INSERT INTO $db_output.Ascof_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -134,7 +134,7 @@
 # DBTITLE 1,1F numerator: CASSR gender
  %sql
  --Further breakdown of AMH17 measure from monthly file
- 
+
  INSERT INTO $db_output.Ascof_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -161,7 +161,7 @@
 # DBTITLE 1,1F numerator: CASSR Provider
  %sql
  --Further breakdown of AMH17 measure from monthly file
- 
+
  INSERT INTO $db_output.Ascof_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -195,7 +195,7 @@
 # DBTITLE 1,1F numerator: CASSR Provider gender
  %sql
  --Further breakdown of AMH17 measure from monthly file
- 
+
  INSERT INTO $db_output.Ascof_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -230,7 +230,7 @@
 # DBTITLE 1,1H numerator: National
  %sql
  --Further breakdown of AMH14 measure from monthly file
- 
+
  INSERT INTO $db_output.Ascof_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START,
              '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -252,7 +252,7 @@
 # DBTITLE 1,1H numerator: National gender
  %sql
  --Further breakdown of AMH14 measure from monthly file
- 
+
  INSERT INTO $db_output.Ascof_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START,
              '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -275,7 +275,7 @@
 # DBTITLE 1,1H numerator: Provider
  %sql
  --Further breakdown of AMH14 measure from monthly file
- 
+
  INSERT INTO $db_output.Ascof_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -301,7 +301,7 @@
 # DBTITLE 1,1H numerator: Provider gender
  %sql
  --Further breakdown of AMH14 measure from monthly file
- 
+
  INSERT INTO $db_output.Ascof_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -328,7 +328,7 @@
 # DBTITLE 1,1H numerator: CASSR
  %sql
  --Further breakdown of AMH14 measure from monthly file
- 
+
  INSERT INTO $db_output.Ascof_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -352,7 +352,7 @@
 # DBTITLE 1,1H numerator: CASSR gender
  %sql
  --Further breakdown of AMH14 measure from monthly file
- 
+
  INSERT INTO $db_output.Ascof_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -377,7 +377,7 @@
 # DBTITLE 1,1H numerator: CASSR Provider
  %sql
  --Further breakdown of AMH14 measure from monthly file
- 
+
  INSERT INTO $db_output.Ascof_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -407,7 +407,7 @@
 # DBTITLE 1,1H numerator: CASSR Provider gender
  %sql
  --Further breakdown of AMH14 measure from monthly file
- 
+
  INSERT INTO $db_output.Ascof_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START
              ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -438,7 +438,7 @@
 # DBTITLE 1,Denominator: National
  %sql
  --Further breakdown of AMH03 measure from monthly file
- 
+
  INSERT INTO $db_output.Ascof_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START,
         '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -460,7 +460,7 @@
 # DBTITLE 1,Denominator: National gender
  %sql
  --Further breakdown of AMH03 measure from monthly file
- 
+
  INSERT INTO $db_output.Ascof_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START,
         '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -483,7 +483,7 @@
 # DBTITLE 1,Denominator: Provider
  %sql
  --Further breakdown of AMH03 measure from monthly file
- 
+
  INSERT INTO $db_output.Ascof_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START,
             '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -508,7 +508,7 @@
 # DBTITLE 1,Denominator: Provider gender
  %sql
  --Further breakdown of AMH03 measure from monthly file
- 
+
  INSERT INTO $db_output.Ascof_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START,
             '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -534,7 +534,7 @@
 # DBTITLE 1,Denominator: CASSR
  %sql
  --Further breakdown of AMH03 measure from monthly file
- 
+
  INSERT INTO $db_output.Ascof_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START,
         '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -558,7 +558,7 @@
 # DBTITLE 1,Denominator: CASSR gender
  %sql
  --Further breakdown of AMH03 measure from monthly file
- 
+
  INSERT INTO  $db_output.Ascof_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START,
         '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -583,7 +583,7 @@
 # DBTITLE 1,Denominator: CASSR Provider
  %sql
  --Further breakdown of AMH03 measure from monthly file
- 
+
  INSERT INTO  $db_output.Ascof_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START,
         '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -613,7 +613,7 @@
 # DBTITLE 1,Denominator: CASSR Provider gender
  %sql
  --Further breakdown of AMH03 measure from monthly file
- 
+
  INSERT INTO  $db_output.Ascof_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START,
         '$rp_enddate' AS REPORTING_PERIOD_END,

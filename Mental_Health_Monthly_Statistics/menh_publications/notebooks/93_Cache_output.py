@@ -1,6 +1,6 @@
 # Databricks notebook source
  %md
- 
+
  # Collect and cache newly computed data in "all_products_cached"
 
 # COMMAND ----------
@@ -18,9 +18,9 @@ assert db_source
 # COMMAND ----------
 
  %sql
- 
+
  -- global_temp.Main_monthly_expanded contains the England and Provider data for 72HOURS
- 
+
  INSERT INTO $db_output.all_products_cached 
  SELECT 
  '$month_id' AS MONTH_ID,
@@ -39,6 +39,7 @@ assert db_source
  SOURCE_DB
  FROM 
  global_temp.Main_monthly_expanded
+
 
 # COMMAND ----------
 
@@ -87,24 +88,25 @@ assert db_source
 # COMMAND ----------
 
 # DBTITLE 1,MHA
- %sql
- INSERT INTO $db_output.all_products_cached 
- SELECT 
- '$month_id' AS MONTH_ID,
- STATUS,
- 5 AS PRODUCT_NO, 
- REPORTING_PERIOD_START, 
- REPORTING_PERIOD_END, 
- BREAKDOWN, 
- PRIMARY_LEVEL, 
- PRIMARY_LEVEL_DESCRIPTION, 
- SECONDARY_LEVEL, 
- SECONDARY_LEVEL_DESCRIPTION, 
- METRIC, 
- METRIC_NAME, 
- METRIC_VALUE,
- SOURCE_DB
- FROM global_temp.mha_monthly_expanded
+#%sql
+#MHA metrics moved to menh_bbrb
+#INSERT INTO $db_output.all_products_cached 
+#SELECT 
+#'$month_id' AS MONTH_ID,
+#STATUS,
+#5 AS PRODUCT_NO, 
+#REPORTING_PERIOD_START, 
+#REPORTING_PERIOD_END, 
+#BREAKDOWN, 
+#PRIMARY_LEVEL, 
+#PRIMARY_LEVEL_DESCRIPTION, 
+#SECONDARY_LEVEL, 
+#SECONDARY_LEVEL_DESCRIPTION, 
+#METRIC, 
+#METRIC_NAME, 
+#METRIC_VALUE,
+#SOURCE_DB
+#FROM global_temp.mha_monthly_expanded
 
 # COMMAND ----------
 
@@ -176,7 +178,7 @@ assert db_source
 
 # DBTITLE 1,Cache EIP - 3 monthly figures
  %sql
- 
+
  INSERT INTO $db_output.all_products_cached
  SELECT
   '$month_id' AS MONTH_ID,
@@ -217,11 +219,13 @@ assert db_source
    SOURCE_DB
  FROM global_temp.EIP_expanded_Monthly
 
+
+
 # COMMAND ----------
 
 # DBTITLE 1,ASCOF - changed to accommodate a THIRD_LEVEL
  %sql
- 
+
  INSERT INTO $db_output.third_level_products_cached 
  SELECT 
    '$month_id' AS MONTH_ID,

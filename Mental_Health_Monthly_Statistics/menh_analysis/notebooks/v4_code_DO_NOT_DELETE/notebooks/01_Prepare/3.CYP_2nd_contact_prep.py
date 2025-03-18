@@ -25,7 +25,7 @@
 
 # DBTITLE 1,1. Get all attended contacts (not email or SMS) and indirect activity
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW Cont AS	
      SELECT c.UniqMonthID,
             c.Person_ID,
@@ -40,9 +40,9 @@
  (c.ConsMediumUsed IN ('05','06') and OrgIdProv = 'DFC')
  )
  AND UniqMonthID <= '$month_id'
- 
+
  UNION ALL
- 
+
      SELECT i.UniqMonthID,
             i.Person_ID,
             i.UniqServReqID,
@@ -57,7 +57,7 @@
 
 # DBTITLE 1,2. Link contacts and indirect activity to referral and rank by referral
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW RefCont AS
      SELECT c.UniqMonthID,
             r.Person_ID,
@@ -82,7 +82,7 @@
 
 # DBTITLE 1,3. Get all first contacts where aged 17 or under (1st contact should be before 18th birthday)
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW FirstCont AS
      SELECT r.Person_ID,
             r.UniqServReqID,
@@ -101,7 +101,7 @@
 
 # DBTITLE 1,4. Get all second contacts in the financial year where first contact was before 18th birthday
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW SubCont AS
      SELECT r.Person_ID,
             r.UniqServReqID,
@@ -123,7 +123,7 @@
 
 # DBTITLE 1,5. Get contacts in financial year
  %sql 
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW RefCont_inyear AS
      SELECT c.UniqMonthID,
             r.Person_ID,
@@ -148,7 +148,7 @@
 
 # DBTITLE 1,6. Get all first contacts in financial year where aged 17 or under (1st contact should be before 18th birthday)
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW FirstCont_inyear AS
      SELECT r.Person_ID,
             r.UniqServReqID,
@@ -168,7 +168,7 @@
 
 # DBTITLE 1,7. Get all second contacts in the financial year where the first contact was before 18th birthday
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW SubCont_inyear AS
      SELECT r.Person_ID,
             r.UniqServReqID,
@@ -190,7 +190,7 @@
 
 # DBTITLE 1,8. Aggregates the first contacts
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW first_contacts AS
      SELECT *
        FROM global_temp.FirstCont
@@ -202,7 +202,7 @@
 
 # DBTITLE 1,9. Aggregates the second contacts
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW contacts AS
      SELECT *
        FROM global_temp.SubCont
@@ -216,7 +216,7 @@
 
 # DBTITLE 1,10. Ordering to get the first time 2 contacts for each person (can only be counted once in each quarter)
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW FirstPersQtr AS
      SELECT *,
             ROW_NUMBER () OVER(PARTITION BY Person_ID ORDER BY ContDate ASC, ContID ASC) AS QtrRN
@@ -226,7 +226,7 @@
 
 # DBTITLE 1,11. Choosing the first occurrance of 2 contacts for each person and allocating the quarter (based on second contact date)
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW ContPer AS
      SELECT s.Person_ID,
             s.UniqServReqID,
@@ -250,7 +250,7 @@
 
 # DBTITLE 1,12. Limit to one record per person and get CCG information and only selecting data for the quarter of interest
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW CYPFinal AS
       SELECT c.Person_ID,
              c.UniqServReqID,

@@ -24,7 +24,7 @@ assert month_id
 
 # DBTITLE 1,Provider Total
  %sql
- 
+
  Insert into $db_output.MHSRestrictiveInterventionPeople
    SELECT           '$rp_startdate' AS REPORTING_PERIOD_START
                     ,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -48,11 +48,12 @@ assert month_id
    WHERE            OrgIDProv is not NULL -- exclude zero count
    GROUP BY         OrgIDProv, DerivedOrgIDProvName
 
+
 # COMMAND ----------
 
 # DBTITLE 1,Restrictive Intervention Type per Provider
  %sql
- 
+
  Insert into $db_output.MHSRestrictiveInterventionPeople
    SELECT           '$rp_startdate' AS REPORTING_PERIOD_START
                     ,'$rp_enddate' AS REPORTING_PERIOD_END

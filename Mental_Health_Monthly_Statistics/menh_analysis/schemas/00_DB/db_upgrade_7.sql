@@ -2,12 +2,13 @@
  %md 
  # LDA Output Tables
 
+
 -- COMMAND ----------
 
  %sql
- 
+
  -- DROP TABLE IF EXISTS $db_output.lda_counts ;
- 
+
  CREATE TABLE IF NOT EXISTS $db_output.LDA_Counts 
  (
  PreviousMonthEnd string,
@@ -50,9 +51,9 @@
 -- COMMAND ----------
 
  %sql
- 
+
  DROP TABLE IF EXISTS $db_output.lda_data_1 ;
- 
+
  CREATE TABLE IF NOT EXISTS $db_output.LDA_Data_1
  ( 
          Person_ID string,

@@ -4,7 +4,7 @@
 -- COMMAND ----------
 
  %sql
- 
+
  INSERT OVERWRITE TABLE $db.dq_dimension_type
  VALUES (1, NULL, 'Coverage', 'Data coverage, in the context of HSCIC data quality assurance, is a measure of the degree to which data has been received from all expected sources. For example, if a data asset has been mandated for collection from all NHS-funded Mental Health Providers, then non-submission of the data by any one specific provider needs to be reported.'),
  (2, NULL, 'Completeness', 'Data completeness, in the context of HSCIC data quality assurance, is a measure of the degree to which data received is found to contain blank / null values.  **Not applicable to the MHSDS dataset. Blank / null values are currently reported under VODIM items (Valid, Other, Default, Invalid, Missing) as part of the Validity dimension.**'),
@@ -13,7 +13,7 @@
  (5, NULL, 'Uniqueness', 'Uniqueness, in the context of HSCIC data quality assurance, is a measure of the degree to which data excludes all duplicate records.'),
  (6, NULL, 'Punctuality', 'Punctuality, in the context of HSCIC data quality assurance, is a measure of the proximity between the date and time the HSCIC expects to receive data from data providers and the date and time it actually receives it.  **Not applicable to the MHSDS Dataset.**'),
  (7, 'MHS-DIM', 'Integrity', 'Integrity, in the context of HSCIC data quality assurance, is the degree to which data collected satisfies the set of business rules that govern the relationships between fields, records, activity types and data assets.  ');
- 
+
  ANALYZE TABLE $db.dq_dimension_type COMPUTE STATISTICS FOR COLUMNS DimensionTypeId;
 
 -- COMMAND ----------
@@ -28,7 +28,7 @@
    (2, 'Numerator');
    
  ANALYZE TABLE $db.dq_measure_type COMPUTE STATISTICS FOR COLUMNS MeasureTypeId;
- 
+
  INSERT OVERWRITE TABLE $db.dq_metric_type
  VALUES (1, 3, 'Valid', 'The number of valid records.'),
  (2, 3, 'Other', 'The number of other records.'),
@@ -36,13 +36,13 @@
  (4, 3, 'Invalid', 'The number of invalid records.'),
  (5, 3, 'Missing', 'The number of missing records.'),
  (1, 7, 'Integrity', NULL);
- 
+
  ANALYZE TABLE $db.dq_metric_type COMPUTE STATISTICS FOR COLUMNS DimensionTypeId, MetricTypeId;
 
 -- COMMAND ----------
 
  %sql
- 
+
  INSERT OVERWRITE TABLE $db.dq_measure
  VALUES (1, 3, 'NHS Number', 'The presence of a valid NHS Number is tested using the NHS Number Flag.  ', 'NHS Number'),
  (2, 3, 'Postcode Of Usual Address', 'The presence of a valid Postcode is tested using the Postcode Flag.', 'Postcode'),
@@ -74,14 +74,14 @@
  (28, 3, 'Coded Observation (Clinical Terminology Read Codes CTV2)', 'Observation codes (CTV2) are tested against reference data available on the UK Terminology website http://systems.digital.nhs.uk/data/uktc/readcodes', 'Coded Observation (Clinical Terminology Read Codes CTV2)'),
  (29, 3, 'Coded Observation (Clinical Terminology Read Codes CTV3)', 'Observation codes (CTV3) are tested against reference data available on the UK Terminology website http://systems.digital.nhs.uk/data/uktc/readcodes', 'Coded Observation (Clinical Terminology Read Codes CTV3)'),
  (30, 3, 'Coded Observation (Clinical Terminology Snomed CT)', 'Procedure codes (Snomed CT) are tested against reference data available on the UK Terminology website http://systems.digital.nhs.uk/data/uktc/snomed', 'Coded Observation (Clinical Terminology Snomed CT)'),
- (31, 3, 'Hospital Bed Type (Mental Health)', 'Hospital Bed Type (Mental Health) is tested against the Hospital Bed Type (Mental Health) code list. This is limited to ward stays that started on or after 1st April 2017.', 'Hospital Bed Type (Mental Health)'),
+ (31, 3, 'Mental Health Admitted Patient Classification Type', 'Mental Health Admitted Patient Classification Type is tested against the Mental Health Admitted Patient Classification Type code list. This is limited to ward stays that started on or after 1st April 2017.', 'Mental Health Admitted Patient Classification Type'),
  (32, 3, 'Referred out of area reason (adult acute mental health)', 'Out of Area Treatment Reason is tested against the Out of Area Treatment code list', 'Referred out of area reason (adult acute mental health)'),
  (33, 3, 'Ex-British armed forces indicator', 'Ex-British armed forces indicator is testing against the Ex-British armed forces indicator code list', 'Ex-British armed forces indicator'),
  (34, 3, 'Source of Referral', 'Source of referral is tested against the source of referral codes list', 'Source of referral'),
  (35, 3, 'Consultation Mechanism (Mental Health)', 'Consultation Mechanism (Mental Health) is tested against the Consultation Mechanism (Mental Health) codes list', 'Consultation Mechanism (Mental Health)'),
  (37, 3, 'Activity location type code', 'Activity location type used is tested against the activity location type codes list', 'Activity location type code'),
- (38, 3, 'Delayed discharge reason', 'Delayed discharge reason used is tested against the delayed discharge reason codes list', 'Delayed discharge reason'),
- (39, 3, 'Delayed discharge attributable to', 'Delayed discharge attributable to is tested against the delayed discharge attributable to indication code list', 'Delayed discharge attributable to'),
+ (38, 3, 'Clinically ready for discharge delay reason', 'Clinically ready for discharge delay reason used is tested against the Clinically ready for discharge delay reason codes list', 'Clinically ready for discharge delay reason'),
+ (39, 3, 'Clinically Ready for Discharge Period attributable to', 'Clinically Ready for Discharge Period attributable to is tested against the Clinically Ready for Discharge Period attributable to indication code list', 'Clinically Ready for Discharge Period attributable to'),
  (42, 3, 'Care plan type', 'Care plan type used is tested against the care plan type codes list', 'Care plan type'),
  (45, 3, 'Provisional Diagnosis date', 'Provisional Diagnosis date is tested against the referral start date', 'Provisional Diagnosis date'),
  (46, 3, 'Primary Diagnosis date', 'Primary Diagnosis date is tested against the referral start date', 'Primary Diagnosis date'),
@@ -100,7 +100,7 @@
  (61,3,'Organisation Identifier (code of specialised responsible commissioner) - Hospital Provider Spell Commissioner Assignment Period','The ORGANISATION IDENTIFIER (CODE OF COMMISSIONER) is tested for a valid format and the first character is tested to ensure it represents a valid specialised responsible commissioner trust type - Hospital Provider Spell Commissioner Assignment period','ORGANISATION IDENTIFIER (CODE OF COMMISSIONER)'),
  (62,3,'Organisation Identifier (code of specialised responsible commissioner) - Exceptional Package of Care','The ORGANISATION IDENTIFIER (CODE OF COMMISSIONER) is tested for a valid format and the first character is tested to ensure it represents a valid specialised responsible commissioner trust type - Exceptional Package of Care','ORGANISATION IDENTIFIER (CODE OF COMMISSIONER)'),
  (63,3,'Organisation Identifier (code of specialised responsible commissioner) - Anonymous Self-Assessment','The ORGANISATION IDENTIFIER (CODE OF COMMISSIONER) is tested for a valid format and the first character is tested to ensure it represents a valid specialised responsible commissioner trust type - Anonymous Self-Assessment','ORGANISATION IDENTIFIER (CODE OF COMMISSIONER)'),
- 
+
  -- new measures from CDQA team - start
  (64,3,'Accommodation Type','Accommodation Type is tested against the Accommodation Type code list','Accommodation Type'),
  (65,3,'Employment Status','Employment Status is tested against the Employment Status code list','Employment Status'),
@@ -122,7 +122,7 @@
  -- new measures from CDQA team - end
  (81, 3,'Gender Identity Code' ,'Gender Identity Code is tested against the Gender Identity Code list.','Gender Identity Code'),
  (82, 3,'Gender Identity Same At Birth Indicator Code', 'Gender Identity Same At Birth Indicator Code is tested against the Gender Identity Same At Birth Indicator Code list.','Gender Identity Same At Birth Indicator Code'),
- 
+
  (1, 7, 'Referrals to CYP-MH services starting in RP', 'The number of Service or Team Referrals where the Referral Request Received Date is in the reporting period and service area is CYP-MH', 'Referrals to CYP-MH services starting in RP'),
  (2, 7, 'Referrals to Eating Disorder services starting in RP', 'The number of Referrals where the Referral Request Received Date is in the reporting period, Primary Reason for Referral is Eating Disorder and Age at Service Referral Received Date is under 19', 'Referrals to Eating Disorder services starting in RP'),
  (3, 7, 'Coded Procedure (SNOMED Stop Clock for ED)', 'The number of SNOMED stop clock codes recorded in Procedure code for Eating Disorder referrals where Age at Service Referral Received Date is under 19', 'Coded Procedure (SNOMED Stop Clock for ED)'),
@@ -138,13 +138,13 @@
  (13, 7, 'Referral request received time (Midnight)', 'Referral request received time is tested for a recording at midnight', 'Referral request received time (Midnight)'),
  (14, 7, 'Service discharge time (Hour)', 'Service discharge time is tested for a recording on the hour', 'Service discharge time (Hour)'),
  (15, 7, 'Service discharge time (Midnight)', 'Service discharge time is tested for a recording at midnight', 'Service dischared time (Midnight)');
- 
+
  ANALYZE TABLE $db.dq_measure COMPUTE STATISTICS FOR COLUMNS DimensionTypeId, MeasureId;
 
 -- COMMAND ----------
 
  %sql
- 
+
  INSERT OVERWRITE TABLE $db.dq_measure_description
  VALUES (1, 3, 1, NULL, 'All MHS001MPI records.', '2016-01-01', NULL),
  (1, 3, 2, 1, 'Records where the NHS Number Flag equals Y.', '2016-01-01', NULL),
@@ -403,98 +403,98 @@
  (63, 3, 2, 3, 'Records with an Organisation Identifier (code of Commissioner) equal to VPP00 or XMD00 or YDD82','2021-04-01', NULL),
  (63, 3, 2, 4, 'Records with an Organisation Identifier (code of Commissioner) that could not be matched to an Org Identifier in the ODS Organisational tables or which was matched to an Org Identifier which was closed prior to the day before the start of the reporting period.','2021-04-01', NULL),
  (63, 3, 2, 5, 'Records with no Organisation Identifier (code of Commissioner).','2021-04-01', NULL),
- 
+
  -- new measures from CDQA team - start
  (64,3,1,NULL,'All MHS003AccommStatus Records','2022-03-17',NULL),
  (64,3,2,1,'Records where the Accommodation Type is valid in referance data','2022-03-17',NULL),
  (64,3,2,2,'Records with a Accommodation Type equals 98','2022-03-17',NULL),
  (64,3,2,4,'Records with a Accommodation Type not valid in referance data','2022-03-17',NULL),
  (64,3,2,5,'Records with No Accommodation Type','2022-03-17',NULL),
- 
+
  (65,3,1,NULL,'All MHS004EmpStatus Records','2022-03-17',NULL),
  (65,3,2,1,'Records where the Employment Status equals 01, 02, 03, 04, 05, 06, 07, 08, ZZ','2022-03-17',NULL),
  (65,3,2,4,'Records with a Employment status not 01, 02, 03, 04, 05, 06, 07, 08, ZZ	','2022-03-17',NULL),
  (65,3,2,5,'Records with No Employment Status','2022-03-17',NULL),
- 
+
  (66,3,1,NULL,'All MHS007DisabilityType Records','2022-03-17',NULL),
  (66,3,2,1,'Records where the Disibility Code equals 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, NN, ZZ','2022-03-17',NULL),
  (66,3,2,2,'Records where the Disibility Code equals XX','2022-03-17',NULL),
  (66,3,2,4,'Records with a Disibility Code not 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, NN, ZZ, XX','2022-03-17',NULL),
  (66,3,2,5,'Records with No Disibility Code','2022-03-17',NULL),
- 
+
  (67,3,1,NULL,'All MHS501HospProvSpell Records','2022-03-17',NULL),
  (67,3,2,1,'Records with a valid Decision to Admit Date date which is after the Reporting Period End Date','2022-03-17',NULL),
  (67,3,2,5,'Records with no Decision to Admit Date','2022-03-17',NULL),
- 
+
  (68,3,1,NULL,'All MHS501HospProvSpell records','2022-03-17',NULL),
  (68,3,2,1,'Records with a valid Decision to Admit Time time','2022-03-17',NULL),
  (68,3,2,5,'Records with no valid Decision to Admit Time','2022-03-17',NULL),
- 
+
  (69,3,1,NULL,'All MHS501HospProvSpell records','2022-03-17',NULL),
  (69,3,2,1,'Records where the Admission Source is valid in referance data','2022-03-17',NULL),
  (69,3,2,3,'Records where the Admission Source equals 98, 99','2022-03-17',NULL),
  (69,3,2,4,'Records with a Admission Source not valid in referance data','2022-03-17',NULL),
  (69,3,2,5,'Records with No Admission Source','2022-03-17',NULL),
- 
+
  (70,3,1,NULL,'All MHS501HospProvSpell records','2022-03-17',NULL),
  (70,3,2,1,'Records where the Destination Of Discharge equals is valid in referance data','2022-03-17',NULL),
  (70,3,2,3,'Records where the Destination Of Discharge equals 98, 99','2022-03-17',NULL),
  (70,3,2,4,'Records with a Destination Of Discharge not valid in referance data','2022-03-17',NULL),
  (70,3,2,5,'Records with No Destination Of Discharge','2022-03-17',NULL),
- 
+
  (71,3,1,NULL,'All MHS505RestrictiveInterventInc records','2022-03-17',NULL),
  (71,3,2,1,'Records with a valid Start Time (Restrictive Intervention Incident) time','2022-03-17',NULL),
  (71,3,2,5,'Records with no valid Start Time (Restrictive Intervention Incident)','2022-03-17',NULL),
- 
+
  (72,3,1,NULL,'All MHS505RestrictiveInterventInc records','2022-03-17',NULL),
  (72,3,2,1,'Records where the Restrictive Intervention Reason equals 10, 11, 12, 13, 14, 15, 16, 17, 18, 19','2022-03-17',NULL),
  (72,3,2,2,'Records where the Restrictive Intervention Reason equals 98','2022-03-17',NULL),
  (72,3,2,3,'Records where the Restrictive Intervention Reason equals 99','2022-03-17',NULL),
  (72,3,2,4,'Records where the Restrictive Intervention Reason does not equal 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 98, 99','2022-03-17',NULL),
  (72,3,2,5,'Records with No Restrictive Intervention Reason','2022-03-17',NULL),
- 
+
  (73,3,1,NULL,'All MHS515RestrictiveInterventType Records','2022-03-17',NULL),
  (73,3,2,1,'Records with a valid Start Time (Restrictive Intervention Type) time','2022-03-17',NULL),
  (73,3,2,5,'Records with no Start Time (Restrictive Intervention Type) time','2022-03-17',NULL),
- 
+
  (74,3,1,NULL,'All MHS515RestrictiveInterventType Records','2022-03-17',NULL),
  (74,3,2,1,'Records where the Restrictive Intervention Type equals 01, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17','2022-03-17',NULL),
  (74,3,2,4,'Records where the Restrictive Intervention Type does not equal 01, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17','2022-03-17',NULL),
  (74,3,2,5,'Records with No Restrictive Intervention Type','2022-03-17',NULL),
- 
+
  (75,3,1,NULL,'All MHS502WardStay Records','2022-03-17',NULL),
  (75,3,2,1,'Records where the Ward Setting Type (Mental Health) equals 01, 02, 03, 04, 05, 06','2022-03-17',NULL),
  (75,3,2,4,'Records where the Ward Setting Type (Mental Health) does not equal 01, 02, 03, 04, 05, 06','2022-03-17',NULL),
  (75,3,2,5,'Records with No Valid Ward Setting Type (Mental Health)','2022-03-17',NULL),
- 
+
  (76,3,1,NULL,'All MHS502WardStay Records','2022-03-17',NULL),
  (76,3,2,1,'Records where the Intended Age Group (Mental Health) equals 10, 11, 12, 13, 14, 15','2022-03-17',NULL),
  (76,3,2,2,'Records where the Intended Age Group (Mental Health) equals 99','2022-03-17',NULL),
  (76,3,2,4,'Records where the Intended Age Group (Mental Health) does not equal 10, 11, 12, 13, 14, 15, 99','2022-03-17',NULL),
  (76,3,2,5,'Records with No Valid Intended Age Group (Mental Health)','2022-03-17',NULL),
- 
+
  (77,3,1,NULL,'All MHS502WardStay Records','2022-03-17',NULL),
  (77,3,2,1,'Records where the Sex Of Patients Code (Mental Health) equals 1, 2','2022-03-17',NULL),
  (77,3,2,2,'Records where the Sex Of Patients Code (Mental Health) equals 8','2022-03-17',NULL),
  (77,3,2,4,'Records where the Sex Of Patients Code (Mental Health) does not equal 1, 2, 8','2022-03-17',NULL),
  (77,3,2,5,'Records with No Valid Sex Of Patients Code (Mental Health)','2022-03-17',NULL),
- 
+
  (78,3,1,NULL,'All MHS502WardStay Records','2022-03-17',NULL),
  (78,3,2,1,'Records where the Intended Clinical Care Intensity Code (Mental Health) equals 51, 52, 53, 61, 62, 63','2022-03-17',NULL),
  (78,3,2,4,'Records where the Intended Clinical Care Intensity Code (Mental Health) does not equal 51, 52, 53, 61, 62, 63','2022-03-17',NULL),
  (78,3,2,5,'Records with No Valid Intended Clinical Care Intensity Code (Mental Health)','2022-03-17',NULL),
- 
+
  (79,3,1,NULL,'All MHS502WardStay Records','2022-03-17',NULL),
  (79,3,2,1,'Records where the Ward Security Level equals 0, 1, 2, 3','2022-03-17',NULL),
  (79,3,2,4,'Records where the Ward Security Level does not equal 0, 1, 2, 3','2022-03-17',NULL),
  (79,3,2,5,'Records with No Valid Ward Security Level','2022-03-17',NULL),
- 
+
  (80,3,1,NULL,'All MHS502WardStay Records','2022-03-17',NULL),
  (80,3,2,1,'Records where the Locked Ward Indicator equals Y, N','2022-03-17',NULL),
  (80,3,2,4,'Records where the Locked Ward Indicator does not equal Y, N','2022-03-17',NULL),
  (80,3,2,5,'Records with No Valid Locked Ward Indicator','2022-03-17',NULL),
  -- new measures from CDQA team - end
- 
+
  -- Gender Measures 
  (81,3,1,NULL,'All MHS001MPI records.','2022-04-01',NULL),
  (81,3,2,1,'Records with a Gender Identity Code 1 - 3 or Z..','2022-04-01',NULL),
@@ -502,7 +502,7 @@
  (81,3,2,3,'Records with a Gender Identity Code X','2022-04-01',NULL),
  (81,3,2,4,'Records with a Gender Identity Code not 1 - 4, Z, X and not missing.','2022-04-01',NULL),
  (81,3,2,5,'Records with no Gender Identity Code.','2022-04-01',NULL),
- 
+
  (82,3,1,NULL,'All MHS001MPI records.','2022-04-01',NULL),
  (82,3,2,1,'Records with a Gender Identity Same At Birth Indicator Code Y, N or Z.','2022-04-01',NULL),
  -- (82,3,2,2,N/A,'2022-04-01',NULL),
@@ -510,7 +510,7 @@
  (82,3,2,4,'Records with a Gender Identity Same At Birth Indicator Code not Y, N, 9, X and not missing.','2022-04-01',NULL),
  (82,3,2,5,'Records with no Gender Identity Same At Birth Indicator Code.','2022-04-01',NULL),
  -- Gender Measures - end
- 
+
  -- the rows below this point are INTEGRITY measures, the ones above are VALIDITY measures
  (1, 7, 1, NULL, 'Referrals where the Referral Request Received Date is in the reporting period and person is aged under 19', '2016-08-01', NULL),
  (1, 7, 2, 1, 'Referrals where the Referral Request Received Date is in the reporting period and person is aged under 19 and (CAMHSTier in (1,2,3,4, 9) or ServTeamTypeRefToMH in (''C05'',''C06'',''C07'',''C09'') or Treatment Function = 711 or ward type in (''01'',''02'')', '2016-08-01', NULL),
@@ -542,5 +542,5 @@
  (14, 7, 2, 1, 'Records with a service discharge time that is XX:00', '2019-02-01', NULL),
  (15, 7, 1, NULL, 'All MHS101Referral records with a Discharge date with a service discharge time and where the service discharge time is not null', '2019-02-01', NULL),
  (15, 7, 2, 1, 'Records with a service discharge time that is 00:00', '2019-02-01', NULL);
- 
+
  ANALYZE TABLE $db.dq_measure_description COMPUTE STATISTICS FOR COLUMNS DimensionTypeId, MeasureId, MeasureTypeId, MetricTypeId;

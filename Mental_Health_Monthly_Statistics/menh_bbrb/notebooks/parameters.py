@@ -15,7 +15,11 @@ unsup_breakdowns = ['England',
                     'England; Primary reason for referral',
                     'England; Sexual Orientation',
                     'England; Ethnicity (White British/Non-White British)', 
-                    'England; IMD Decile']
+                    'England; IMD Decile',
+                    'England; Service or Team Type Referred To',
+                    'England; Age; Under 18 or 18 and over',
+                    'England; Autism Status',
+                    'England; LD Status']
 
 # COMMAND ----------
 

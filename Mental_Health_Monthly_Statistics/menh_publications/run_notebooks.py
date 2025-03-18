@@ -1,6 +1,6 @@
 # Databricks notebook source
  %md
- 
+
  # This code base has been updated to be compatible with Spark 3 and will work fine only on Spark3 clusters ( SPARK-3-DBR-10-4-DATA-MANAGERS-1). It might raise exception on Spark 2 clusters.
 
 # COMMAND ----------
@@ -21,10 +21,10 @@
  '''
  In Prod if the scheduler runs the job, at that time only default params which were already configured will be passed. 'rp_startdate' and 'status' are manual entries for parameters during custom job run, these params are passed as widget entry or json values but won't be there during automatic run. So, we need to check presence of these params to determine if this is an Automatic run
  '''
- 
+
  is_rp_start_avail = True
  is_status_avail = True
- 
+
  # Toggle the comments if you want to simulate the run in Ref
  # if(os.environ.get('env') == 'ref'):
  if(os.environ.get('env') == 'prod'):
@@ -32,17 +32,18 @@
      dbutils.widgets.get("rp_startdate")
    except Exception as ex:
      is_rp_start_avail = False
- 
+
    try:
      dbutils.widgets.get("status")
    except Exception as ex:
      is_status_avail = False
  print(f'rp_start parameter availability: {is_rp_start_avail} \nstatus parameter availability: {is_status_avail}')
- 
+
  # It can  be auto run if both fields are not available as in automatic run (means those widgets are not present)
  auto_prov_check = False if (is_rp_start_avail and is_status_avail) else True
  print(f'Provisional check for automatic run: {auto_prov_check}')
    
+
 
 # COMMAND ----------
 
@@ -112,25 +113,25 @@ db = dbutils.widgets.get("db")
 assert db
 
 # this is needed to enable run_notebooks to be run both from run_tests during promotion and directly run
-# needs to use mhsds_v5_database for both but the parameter is fed in from run_tests as the original mhsds_database :o(
+# needs to use $mhsds_db for both but the parameter is fed in from run_tests as the original $mhsds_db :o(
 
 # get the original parameter value (will work in all sitations)
 try:
-  db_source = dbutils.widgets.get("mhsds_v5_database")
+  db_source = dbutils.widgets.get("$mhsds_db")
 except:
-  print('mhsds_v5_database is not defined')
+  print('$mhsds_db is not defined')
 
-# get the new parameter value (will only work in direct run, and will overwrite value for mhsds_database)
+# get the new parameter value (will only work in direct run, and will overwrite value for $mhsds_db)
 try:
-  db_source = dbutils.widgets.get("mhsds_v6_database")
+  db_source = dbutils.widgets.get("$mhsds_db")
 except:
-  print('mhsds_v6_database is not defined')
+  print('$mhsds_db is not defined')
   
 
 # the above replaces this simpler situation!
-# db_source = dbutils.widgets.get("mhsds_database")
+# db_source = dbutils.widgets.get("$mhsds_db")
 # new v5 source
-# db_source = dbutils.widgets.get("mhsds_v5_database")
+# db_source = dbutils.widgets.get("$mhsds_db")
 # assert db_source
 
 reference_data = dbutils.widgets.get("reference_data")
@@ -220,22 +221,22 @@ else:
  %python
  # Determine standard run months>>>>>>>>
  _mhsds_ytd_calendar = submission_calendar(DS.MHSDS_V6, {})
- 
- 
+
+
  today_date = datetime.today()
  submission_window = _mhsds_ytd_calendar.find_last_closed_submission_window(
      today_date, fake_historic_windows=False,
  )
  idx_current_report_month = len(submission_window.reporting_periods) - 1
- 
+
  if(auto_prov_check):
- 
+
    # As the provisional check is passed, we need to get the month id, reporting periods for the provisional months of current date
- 
+
    print('Validity check for the date: {0}\n'.format( today_date))
- 
+
    prov_month_id = submission_window.reporting_periods[idx_current_report_month].unique_month_id
- 
+
    print(f"\
            length of period tuple from Submission Calendar: {len(submission_window.reporting_periods)}\n\
            Submission window opens: {submission_window.opens}\n\
@@ -252,7 +253,7 @@ else:
    print(f'Audit month ID from recent job runs: {audit_month_id}')
  #   audit_month_id = 1461
    source_month_id = spark.sql("SELECT MAX(UniqMonthId) AS sourceMonthId FROM {0}.mhs000header".format(params['db_source'])).collect()[0]['sourceMonthId']; 
- 
+
  #   source_month_id = 1462
    print(f'Recent month id available at source database: {source_month_id}')
    ### CONDITION TO CHECK WHETHER THERE IS SUCCESSFUL RUN FOR PROVISIONAL MONTH AND DATA AVAILABLE FOR PROVISIONAL IN SOURCE DB
@@ -292,13 +293,13 @@ else:
    assert status
    
    # added to be able to add a description for status = 'Adhoc' 
- 
+
    dbutils.widgets.text("adhoc_desc","","adhoc_desc")
    if dbutils.widgets.get("status") == 'Adhoc':
      adhoc_desc = dbutils.widgets.get("adhoc_desc")
    else:
      adhoc_desc = ""
- 
+
    print("adhoc_desc: ",adhoc_desc)
    
    # Calculated few needed parameters to run the custom job
@@ -364,36 +365,37 @@ else:
 
 # DBTITLE 1,Encapsulated block to log the runs
  %python
- 
+
  #run the job only if one of the case is true
  if(params['automatic_run'] or params['custom_run']):
- 
- 
- 
+
+
+
    ###############
    # Please Calculate any common parameters in this block that can be used for both custom or automatic run
    # As we are not passing any values if automatic run turns to false, so those might raise exceptions if you are working on those passed values
    ###############
- 
- 
- 
+
+
+
    print("Params passed to notebooks: {}".format(json.dumps(params,
                                                            indent = 4,
                                                             sort_keys = True)))
- 
- 
+
+
    print('Running the notebooks/run_notebooks_master notebook')
- 
+
    dbutils.notebook.run("notebooks/run_notebooks_master", 0, params)
- 
- 
+
+
  else:
    print(f'Neither Custom run nor Automatic run conditions are met and the job could not run')
+
 
 # COMMAND ----------
 
 # DBTITLE 1,Quick glance at the audit table for runs
- 
+
  %python
  audit_table = spark.sql(f"SELECT * FROM {params['db_output']}.audit_menh_publications ORDER BY RUN_START DESC LIMIT 5")
  display(audit_table)

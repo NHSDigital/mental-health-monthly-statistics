@@ -12,9 +12,9 @@ assert db_output
 # COMMAND ----------
 
  %md
- 
+
  # tables populated in this notebook
- 
+
  - validcodes
  - referral_dim
  - resp_comm_validcodes
@@ -22,21 +22,21 @@ assert db_output
 # COMMAND ----------
 
  %sql
- 
+
  TRUNCATE TABLE $db_output.validcodes;
 
 # COMMAND ----------
 
  %sql
- 
+
  -- SH 21/10 put ClinRespPriorityType ValidValue in quotes
  -- TableName, Field, Measure, Type, ValidValue, FirstMonth, LastMonth
- 
- --  29/11: reordered the population of this table so that the DQ measures are in order for ease of checking and updating
- 
+
+ -- User note 29/11: reordered the population of this table so that the DQ measures are in order for ease of checking and updating
+
  INSERT INTO $db_output.validcodes
  VALUES
- -- MHS-DQM08 entries checked 07-12-2021
+ -- User note: MHS-DQM08 entries checked 07-12-2021
  ('MHS503AssignedCareProf', 'TreatFuncCodeMH', 'MHS-DQM08', 'VALID', '319', 1429, null)
  ,('MHS503AssignedCareProf', 'TreatFuncCodeMH', 'MHS-DQM08', 'VALID', '348', 1459, null)
  ,('MHS503AssignedCareProf', 'TreatFuncCodeMH', 'MHS-DQM08', 'VALID', '656', 1459, null)
@@ -86,7 +86,7 @@ assert db_output
  ,('MHS101Referral', 'PrimReasonReferralMH', 'MHS-DQM10', 'VALID', '29', 1459, null)
  ,('MHS101Referral', 'PrimReasonReferralMH', 'MHS-DQM10', 'VALID', '30', 1459, null)
  ,('MHS101Referral', 'PrimReasonReferralMH', 'MHS-DQM10', 'VALID', '31', 1489, null)                    ----V6_Changes
- -- MHS-DQM11 entries checked 29-11-2021
+ -- User note: MHS-DQM11 entries checked 29-11-2021
  ,('MHS006MHCareCoord', 'CareProfServOrTeamTypeAssoc', 'MHS-DQM11', 'VALID', 'A01', 1429, null)
  ,('MHS006MHCareCoord', 'CareProfServOrTeamTypeAssoc', 'MHS-DQM11', 'VALID', 'A02', 1429, null)
  ,('MHS006MHCareCoord', 'CareProfServOrTeamTypeAssoc', 'MHS-DQM11', 'VALID', 'A03', 1429, 1458)
@@ -140,7 +140,7 @@ assert db_output
  ,('MHS006MHCareCoord', 'CareProfServOrTeamTypeAssoc', 'MHS-DQM11', 'VALID', 'F04', 1459, null)
  ,('MHS006MHCareCoord', 'CareProfServOrTeamTypeAssoc', 'MHS-DQM11', 'VALID', 'F05', 1459, null)
  ,('MHS006MHCareCoord', 'CareProfServOrTeamTypeAssoc', 'MHS-DQM11', 'VALID', 'F06', 1459, null)
- -- MHS-DQM1 entries ch8ecked 07-12-2021 -- unclear why this needs a separate list from the one above that it exactly matches...
+ -- User note: MHS-DQM1 entries ch8ecked 07-12-2021 -- unclear why this needs a separate list from the one above that it exactly matches...
  ---V6_Changes MHS102ServiceTypeReferredTo changed to MHS902ServiceTeamDetails
  ,('MHS902ServiceTeamDetails', 'ServTeamTypeMH', 'MHS-DQM18', 'VALID', 'A01', 1429, null)
  ,('MHS902ServiceTeamDetails', 'ServTeamTypeMH', 'MHS-DQM18', 'VALID', 'A02', 1429, null)
@@ -226,12 +226,12 @@ assert db_output
  ,('MHS101Referral', 'PrimReasonReferralMH', 'MHS-DQM19', 'VALID', '28', 1429, null)
  ,('MHS101Referral', 'PrimReasonReferralMH', 'MHS-DQM19', 'VALID', '29', 1459, null)
  ,('MHS101Referral', 'PrimReasonReferralMH', 'MHS-DQM19', 'VALID', '30', 1459, null)
- -- MHS-DQM20 entries checked 29-11-2021
+ -- User note: MHS-DQM20 entries checked 29-11-2021
  ,('MHS101Referral', 'ClinRespPriorityType', 'MHS-DQM20', 'VALID', '1', 1429, null)
  ,('MHS101Referral', 'ClinRespPriorityType', 'MHS-DQM20', 'VALID', '2', 1429, null)
  ,('MHS101Referral', 'ClinRespPriorityType', 'MHS-DQM20', 'VALID', '3', 1429, null)
  ,('MHS101Referral', 'ClinRespPriorityType', 'MHS-DQM20', 'VALID', '4', 1459, null)
- -- MHS-DQM31 entries checked 08-12-2021
+ -- User note: MHS-DQM31 entries checked 08-12-2021
  ---V6_Changes
  ,('MHS502WardStay', 'MHAdmittedPatientClass', 'MHS-DQM31', 'VALID', '10', 1429, 1488)
  ,('MHS502WardStay', 'MHAdmittedPatientClass', 'MHS-DQM31', 'VALID', '11', 1429, 1488)
@@ -291,7 +291,7 @@ assert db_output
  ,('MHS502WardStay', 'MHAdmittedPatientClass', 'MHS-DQM31', 'VALID', '309', 1489, null)
  ,('MHS502WardStay', 'MHAdmittedPatientClass', 'MHS-DQM31', 'VALID', '310', 1489, null)
  ,('MHS502WardStay', 'MHAdmittedPatientClass', 'MHS-DQM31', 'VALID', '311', 1489, null)
- -- MHS-DQM34 entries checked 02-12-2021
+ -- User note: MHS-DQM34 entries checked 02-12-2021
  ,('MHS101Referral', 'SourceOfReferralMH', 'MHS-DQM34', 'VALID', 'A1', 1429, null)
  ,('MHS101Referral', 'SourceOfReferralMH', 'MHS-DQM34', 'VALID', 'A2', 1429, null)
  ,('MHS101Referral', 'SourceOfReferralMH', 'MHS-DQM34', 'VALID', 'A3', 1429, null)
@@ -332,7 +332,7 @@ assert db_output
  ,('MHS101Referral', 'SourceOfReferralMH', 'MHS-DQM34', 'VALID', 'P1', 1429, null)
  ,('MHS101Referral', 'SourceOfReferralMH', 'MHS-DQM34', 'VALID', 'Q1', 1459, null)
  ,('MHS101Referral', 'SourceOfReferralMH', 'MHS-DQM34', 'VALID', 'Q2', 1489, null)               -----V6_Changes
- -- MHS-DQM35 entries checked 02-12-2021
+ -- User note: MHS-DQM35 entries checked 02-12-2021
  ,('MHS201CareContact', 'ConsMechanismMH', 'MHS-DQM35', 'VALID', '01', 1429, null)
  ,('MHS201CareContact', 'ConsMechanismMH', 'MHS-DQM35', 'VALID', '02', 1429, null)
  ,('MHS201CareContact', 'ConsMechanismMH', 'MHS-DQM35', 'VALID', '03', 1429, 1458)
@@ -345,7 +345,7 @@ assert db_output
  ,('MHS201CareContact', 'ConsMechanismMH', 'MHS-DQM35', 'VALID', '12', 1459, null)
  ,('MHS201CareContact', 'ConsMechanismMH', 'MHS-DQM35', 'VALID', '13', 1459, null)
  -- ,('MHS201CareContact', 'ConsMechanismMH', 'MHS-DQM35', 'OTHER', '98', 1429, null) -- dealt with in the code rather than here
- -- MHS-DQM38 entries checked 07-12-2021 - incorrect
+ -- User note: MHS-DQM38 entries checked 07-12-2021 - incorrect
  ---V6_Changes
  ,('MHS504DelayedDischarge', 'DelayDischReason', 'MHS-DQM38', 'VALID', 'A2', 1429, 1488)
  ,('MHS504DelayedDischarge', 'DelayDischReason', 'MHS-DQM38', 'VALID', 'B1', 1429, 1488)
@@ -424,11 +424,11 @@ assert db_output
 
 # DBTITLE 1,New measures created by CDQA
  %sql
- 
+
  -- TableName, Field, Measure, Type, ValidValue, FirstMonth, LastMonth
- 
+
  -- DQ measures are in order for ease of checking and updating
- 
+
  INSERT INTO $db_output.validcodes
  VALUES
  --MHS003AccommStatus - AccommodationType - DQM64
@@ -510,7 +510,7 @@ assert db_output
  ,('MHS003AccommStatus', 'AccommodationType','MHS-DQM64','VALID','20','1459',null)
  ,('MHS003AccommStatus', 'AccommodationType','MHS-DQM64','VALID','21','1459',null)
  ,('MHS003AccommStatus', 'AccommodationType','MHS-DQM64','OTHER','98','1459',null)
- 
+
  --MHS501HospProvSpell - SourceAdmMHHospProvSpell - DQM69
  ,('MHS501HospProvSpell', 'SourceAdmMHHospProvSpell','MHS-DQM69','VALID','19','1429',null)
  ,('MHS501HospProvSpell', 'SourceAdmMHHospProvSpell','MHS-DQM69','VALID','29','1429',null)
@@ -531,7 +531,7 @@ assert db_output
  ,('MHS501HospProvSpell', 'SourceAdmMHHospProvSpell','MHS-DQM69','VALID','85','1429','1458')
  ,('MHS501HospProvSpell', 'SourceAdmMHHospProvSpell','MHS-DQM69','VALID','87','1429',null)
  ,('MHS501HospProvSpell', 'SourceAdmMHHospProvSpell','MHS-DQM69','VALID','88','1429',null)
- 
+
  --MHS501HospProvSpell - DestOfDischHospProvSpell - DQM70
  ,('MHS501HospProvSpell', 'DestOfDischHospProvSpell','MHS-DQM70','VALID','19','1429',null)
  ,('MHS501HospProvSpell', 'DestOfDischHospProvSpell','MHS-DQM70','VALID','29','1429',null)
@@ -562,7 +562,7 @@ assert db_output
 
 # DBTITLE 1,referral_dim
  %sql
- 
+
  INSERT INTO $db_output.referral_dim
  VALUES ('A', 'Primary Health Care', 1429, null)
  ,('B', 'Self Referral', 1429, null)

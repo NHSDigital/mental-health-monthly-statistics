@@ -1,5 +1,4 @@
 # Databricks notebook source
-
 # dbutils.widgets.text("automatic_run","false","automatic_run")
 # dbutils.widgets.text("adhoc_desc","testing","adhoc_desc")
 
@@ -10,7 +9,7 @@
  import json
  from datetime import datetime, date
  from dateutil.relativedelta import relativedelta
- 
+
  db_source = dbutils.widgets.get("db_source")
  db_output = dbutils.widgets.get("db_output")
  month_id = dbutils.widgets.get("month_id")
@@ -21,14 +20,14 @@
  automatic_run  = dbutils.widgets.get("automatic_run")
  custom_run  = dbutils.widgets.get("custom_run")
  adhoc_desc = dbutils.widgets.get("adhoc_desc")
- 
+
  startdateasdate = datetime.strptime(rp_startdate, "%Y-%m-%d")
  month_period = startdateasdate.strftime('%B')[:3] + '-' + rp_enddate[:4][-2:] 
- 
+
  # Datatype conversion need to happen as they are being passed as strings
  automatic_run = True if(automatic_run == 'true') else False
  custom_run = True if(custom_run == 'true') else False
- 
+
  params = {
      "db_source": db_source,
      "db_output": db_output,
@@ -44,25 +43,26 @@
      "rp_startdate_quarterly" : '',
      #IsQuarterly Report required
      "is_quarter" : False #Defaulting to false state 
- 
+
  }
- 
- 
+
+
  if(status not in ['Final','Performance','Provisional','Adhoc'] or #Not a valid status
    startdateasdate >  datetime.now()):       # No future dates allowed
    raise Exception ('Not a valid values passed')
- 
- 
+
+
  print(json.dumps(params,
                    indent = 4,
                    sort_keys = True)); 
- 
+
  print(f"Data type of custom_run value : {type(params['custom_run'])}")
+
 
 # COMMAND ----------
 
 # DBTITLE 1,Function used for Date Conversions (Do Not Remove) 
-# not actually used at the moment?
+#User note not actually used at the moment?
 
 import datetime
 import math
@@ -96,7 +96,7 @@ def convert_date(inputdate:str):
    '00_Master/1.Run_Main_monthly',
    '00_Master/2.Run_AWT',
    '00_Master/3.Run_CYP_2nd_contact',
-   '00_Master/4.Run_CAP',
+ #  '00_Master/4.Run_CAP',
    '00_Master/5.Run_CYP_monthly',
  #  '00_Master/7.Run_Ascof',
    
@@ -104,7 +104,7 @@ def convert_date(inputdate:str):
    '02_Aggregate/90a.Pre_April_2023_Measures'
  ]
    
- 
+
  aggregate_steps = [
    '02_Aggregate/91.List_possible_metrics',
    '02_Aggregate/92.Expand_output',
@@ -113,38 +113,38 @@ def convert_date(inputdate:str):
    '02_Aggregate/95.Round_output',
    '02_Aggregate/96.Update_raw_outputs_ICB'
  ]
- 
+
  quarter_books = [  
  #   Quarterly notebooks that should run on quarter basis
    #'00_Master/9.Run_CCGOIS', - no longer needed (since CCGs ceased to exist in June 2022)
    '00_Master/8.Run_FYFV'
  ]
- 
+
    
  '''This 02_Aggregate/90.Pre_April_2021_Measures notebook is being run on if condition for both provisional and performance (possible for custom run but that is ages ago though!) so removing it from the list based on condition monthid condition is which is there before'''
- 
+
  if int(params['month_id']) <= 1452:
    print('We are keeping the notebook 02_Aggregate/90.Pre_April_2021_Measures')
- 
+
  else:
    print('The following measures have been decommissioned for ' + str(month_id) + ': ACC02, CYP02, AMH02, AMH03, ACC53, AMH15, AMH04, AMH18, AMH05, AMH06, MHS02. So, we dont need to run 02_Aggregate/90.Pre_April_2021_Measures')
    if('02_Aggregate/90.Pre_April_2021_Measures' in notebooks_list):
      notebooks_list.remove('02_Aggregate/90.Pre_April_2021_Measures')
      
- 
+
  '''This 02_Aggregate/90a.Pre_April_2023_Measures notebook is being run on if condition for both provisional and performance (possible for custom run but that is ages ago though!) so removing it from the list based on condition monthid condition is which is there before'''
- 
+
  if int(params['month_id']) <= 1476:
    print('We are keeping the notebook 02_Aggregate/90a.Pre_April_2023_Measures')
- 
+
  else:
    print('The following measures have been decommissioned for ' + str(month_id) + ': CCR70, CCR70a, CCR70b, CCR71, CCR71a, CCR71b, CCR72, CCR72a, CCR72b, CCR73, CCR73a, CCR73b. So, we dont need to run 02_Aggregate/90a.Pre_April_2023_Measures')
    if('02_Aggregate/90a.Pre_April_2023_Measures' in notebooks_list):
      notebooks_list.remove('02_Aggregate/90a.Pre_April_2023_Measures')
- 
- 
- 
- 
+
+
+
+
  print('Main Notebooks to run : ', *notebooks_list, sep = '\n')
  print('Quarter Notebooks : ', *quarter_books, sep = '\n')
  print('Aggregation Notebooks : ', *aggregate_steps, sep = '\n')
@@ -163,9 +163,9 @@ def convert_date(inputdate:str):
 # COMMAND ----------
 
 # DBTITLE 1,This function logs the Job run params to the audit_menh_analysis table
- 
+
  %python
- 
+
  # 01/03/2022: Create audit table
  def auditInsertLog(params, runStart, runEnd):
    try:
@@ -184,11 +184,12 @@ def convert_date(inputdate:str):
    except Exception as ex:
      print(ex, ' Failed to log to audit_menh_analysis') 
 
+
 # COMMAND ----------
 
 # DBTITLE 1,Block manages both custom and automatic run
  %python
- 
+
  # this is the automated run code (where widget parameters NOT filled in)
  from datetime import datetime, date
  from dateutil.relativedelta import relativedelta
@@ -196,12 +197,12 @@ def convert_date(inputdate:str):
  import os
  import json
  print(f"Data type of custom_run value : {type(params['custom_run'])}")
- 
- 
- 
- 
+
+
+
+
  try:
- 
+
    for run in jobs:
      now = datetime.now()
      runStart = datetime.timestamp(now)
@@ -210,7 +211,7 @@ def convert_date(inputdate:str):
    ############################## Some manipulation to pass the performance parameters from the submission calendar #############################################
    # Assuming run made it upto here means, we have supplied performance parameters too. so we can access them now, if it is custom run those parameters are not introduced in the params section
    # As the provisional run completed with values rp_startdate, rp_enddate, monthId, rp_startdate_quarterly. Now we need to assign the same parameter keys with Provisional values as the same parameter names are being passed in the notebooks
- 
+
      if(run == 'Performance'):
         
          #This if condition helps in tailoring the performance paramters during the auto run process
@@ -234,7 +235,7 @@ def convert_date(inputdate:str):
      print("Params for {0} run are: {1}".format(run,
                                                json.dumps(params,
                                                          indent = 4)))
- 
+
      for book in notebooks_list:
        dbutils.notebook.run(f"{book}", 0, params)
        print(f'{book} run complete\n')
@@ -244,14 +245,14 @@ def convert_date(inputdate:str):
        for book in quarter_books:
          dbutils.notebook.run(f"{book}", 0, params)
          print(f'{book} quarter book run complete\n')
- 
+
      for book in aggregate_steps:
        dbutils.notebook.run(f"{book}", 0, params)
        print(f'{book} run complete\n')
- 
+
      print(f'{run} completed.\n')
- 
- 
+
+
    # (advised) To Keep different notebooks rather than single note book with multiple if conditions on statuses and quarterly 
    # flag to ease the code writing and spotting based on statuses. 
    # NB, you can't run the report section out of this 'try' block as we are assigning the performance parameters during a second loop. (Old code used to call on the params rp_startdate, rp_enddate, month_id names so used the same names to call for performance)
@@ -260,7 +261,7 @@ def convert_date(inputdate:str):
  #     if(os.environ.get('env') == 'ref'):
    #       dbutils.notebook.run("Publication_csvs", 0, params); # old one when reports are all in single book
    #       print(f'Publication_csvs run complete\n')
- 
+
    #      Performance and Provisional (sometimes 'Final') reports, This report runs in all possible cases (both automatic and custom run so no need of if checks)
        dbutils.notebook.run("03_Extract/01_menh_analysis_csvs_perf_prov", 0, params);
        print(f'01_menh_analysis_csvs_perf_prov report run complete\n')
@@ -278,11 +279,11 @@ def convert_date(inputdate:str):
  #         print(f'02_menh_analysis_csvs_perf report run complete\n')
  #         dbutils.notebook.run("03_Extract/03_LDA_Monthly_Outputs", 0, params);
  #         print(f'03_LDA_Monthly_Outputs report run complete\n')
- 
+
  #         if(params['is_quarter']):
  #           dbutils.notebook.run("03_Extract/04_menh_analysis_csvs_quarter", 0, params); # running quarterly only in cases of performance status
  #           print(f'04_menh_analysis_csvs_quarter report run complete\n')
- 
+
      print('Run complete after the for loop')
      now = datetime.now()
      runEnd = datetime.timestamp(now)
@@ -297,6 +298,11 @@ def convert_date(inputdate:str):
    # using exception block escapes the show of'Failure' tag for Code Promotion notebooks even if there is an error in the notebooks.(Instead it shows as 'Success' even in case of errors and very misleading). So, need to raise the error here after logging to audit table as it is the entry point
    ## DO NOT USE TRY-EXCEPT BLOCKS ANYWHERE INSIDE THE CALLING NOTEBOOKS
    assert False
+
+
+
+
+
 
 # COMMAND ----------
 

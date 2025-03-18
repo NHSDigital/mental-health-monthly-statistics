@@ -5,9 +5,9 @@
 # COMMAND ----------
 
  %sql
- 
+
  DROP TABLE IF EXISTS $db_output.rd_ccg_latest;
- 
+
  CREATE TABLE IF NOT EXISTS 
  $db_output.rd_ccg_latest 
  (original_ORG_CODE STRING,
@@ -19,9 +19,9 @@
 # COMMAND ----------
 
  %sql
- 
+
  -- DROP TABLE IF EXISTS $db_output.Provider_list; 
- 
+
  CREATE TABLE IF NOT EXISTS $db_output.Provider_list
   (ORG_CODE          STRING,
    NAME              STRING)
@@ -30,9 +30,9 @@
 # COMMAND ----------
 
  %sql
- 
+
  -- DROP TABLE IF EXISTS $db_output.BED_DAYS_IN_RP;
- 
+
  CREATE TABLE IF NOT EXISTS $db_output.BED_DAYS_IN_RP
      (LEVEL                           STRING,
       IC_Rec_CCG                      STRING,
@@ -48,9 +48,9 @@
 # COMMAND ----------
 
  %sql
- 
+
  -- DROP TABLE IF EXISTS $db_output.MHS701CPACareEpisode_latest;
- 
+
  CREATE TABLE IF NOT EXISTS $db_output.MHS701CPACareEpisode_latest
      (CPAEpisodeId                                                STRING,
       EndDateCPA                                                  DATE,
@@ -74,7 +74,7 @@
  %sql
  --remove
  -- DROP TABLE IF EXISTS $db_output.AMH03_prep;
- 
+
  CREATE TABLE IF NOT EXISTS $db_output.AMH03_prep
      (Person_ID                                  STRING,
       GENDER                                     STRING,
@@ -84,12 +84,13 @@
       CASSR_description                          STRING)
  USING delta 
 
+
 # COMMAND ----------
 
  %sql
  --remove
  -- DROP TABLE IF EXISTS $db_output.AMH03_prep_prov;
- 
+
  CREATE TABLE IF NOT EXISTS $db_output.AMH03_prep_prov
      (Person_ID                         STRING,
       GENDER                            STRING,
@@ -99,13 +100,13 @@
 # COMMAND ----------
 
  %sql
- 
+
  DROP TABLE IF EXISTS $db_output.amh14_prep;
- 
+
  -- NB just changing the name of a field here will not work as a v5 change: DMS001-1117
  -- also need to ensure the table is dropped to force the change to happen
  -- DROP TABLE command reinstated - this is ok in this case because this prep table gets truncated and replaced each run anyway.  THIS IS NOT THE ANSWER for a persisted DATA table.
- 
+
  CREATE TABLE IF NOT EXISTS $db_output.AMH14_prep 
      (Person_ID                                   STRING,
       GENDER                                      STRING,
@@ -122,20 +123,21 @@
  %sql
  --remove
  -- DROP TABLE IF EXISTS $db_output.AMH14_prep_prov;
- 
- 
+
+
  CREATE TABLE IF NOT EXISTS $db_output.AMH14_prep_prov 
      (Person_ID                         STRING,
       GENDER                            STRING,
       OrgIDProv                         STRING)
  USING delta 
 
+
 # COMMAND ----------
 
  %sql
  --remove
  -- DROP TABLE IF EXISTS $db_output.MHS001_CCG_LATEST;
- 
+
  CREATE TABLE IF NOT EXISTS $db_output.MHS001_CCG_LATEST 
          (Person_ID            STRING,
           IC_Rec_CCG           STRING)
@@ -147,7 +149,7 @@
  %sql
  --remove
  -- DROP TABLE IF EXISTS $db_output.AMH17_prep;
- 
+
  CREATE TABLE IF NOT EXISTS $db_output.AMH17_prep
      (Person_ID                              STRING,
       GENDER                                 STRING,
@@ -158,12 +160,13 @@
       CASSR_description                      STRING)
  USING delta 
 
+
 # COMMAND ----------
 
  %sql
  --remove
  -- DROP TABLE IF EXISTS $db_output.AMH17_prep_prov;
- 
+
  CREATE TABLE IF NOT EXISTS $db_output.AMH17_prep_prov
      (Person_ID                                   STRING,
       GENDER                                      STRING,
@@ -177,7 +180,7 @@
  %sql
  --remove
  -- DROP TABLE IF EXISTS $db_output.AMH03e_prep;
- 
+
  CREATE TABLE IF NOT EXISTS $db_output.AMH03e_prep
          (Person_ID                               STRING,
           IC_Rec_CCG                              STRING,
@@ -188,16 +191,17 @@
           STP_description                         STRING)
  USING delta 
 
+
 # COMMAND ----------
 
  %sql
- 
+
  DROP TABLE IF EXISTS $db_output.amh13e_14e_prep;
- 
+
  -- NB just changing the name of a field here will not work as a v5 change: DMS001-1117
  -- also need to ensure the table is dropped to force the change to happen
  -- DROP TABLE command reinstated - this is ok in this case because this prep table gets truncated and replaced each run anyway.  THIS IS NOT THE ANSWER for a persisted DATA table.
- 
+
  CREATE TABLE IF NOT EXISTS $db_output.AMH13e_14e_prep
      (Person_ID                                          STRING,
       IC_Rec_CCG                                         STRING,
@@ -217,7 +221,7 @@
  %sql
  --remove
  -- DROP TABLE IF EXISTS $db_output.AMH16e_17e_prep;
- 
+
  CREATE TABLE IF NOT EXISTS $db_output.AMH16e_17e_prep
       (Person_ID                                       STRING,
        IC_Rec_CCG                                      STRING,
@@ -235,11 +239,11 @@
 # COMMAND ----------
 
  %sql
- 
+
  -- DROP TABLE is used here to DROP a column that is no longer needed - is there a better way of doing this??
- 
+
  DROP TABLE IF EXISTS $db_output.cypfinal_2nd_contact_quarterly;
- 
+
  CREATE TABLE IF NOT EXISTS $db_output.CYPFinal_2nd_contact_Quarterly
      (Person_ID                                          STRING,
       UniqServReqID                                      STRING,
@@ -260,7 +264,7 @@
 
  %sql
  -- DROP TABLE IF EXISTS $db_output.MHS401MHActPeriod_GRD_open_end_rp;
- 
+
  CREATE TABLE IF NOT EXISTS $db_output.MHS401MHActPeriod_GRD_open_end_rp
      (EndDateMHActLegalStatusClass                                      DATE,
       EndTimeMHActLegalStatusClass                                      TIMESTAMP,
@@ -288,17 +292,18 @@
       UniqSubmissionID                                                  BIGINT)
  USING delta 
 
+
 # COMMAND ----------
 
 # DBTITLE 1,# EIP measures moved to menh_publications
  %sql
  --check if this can be removed
- 
+
  -- 1) is the table being dropped and recreated here to add the extra column 'NHSEthnicity'?  Is this the best way of doing this?  SHould we not instead be using ALTER TABLE in a later notebook??
  -- 2) This is a temporary table and this table gets truncated everytime a run happens and hence safe to drop and recreate for adding new column. However, it has to be set off next time onwards.
- 
+
  DROP TABLE IF EXISTS $db_output.eip01_common;
- 
+
  -- # EIP measures moved to menh_publications
  -- CREATE TABLE IF NOT EXISTS $db_output.EIP01_common
  --     (AGE_GROUP                           STRING,
@@ -313,9 +318,9 @@
 
 # DBTITLE 1,# EIP measures moved to menh_publications
  %sql
- 
+
  DROP TABLE IF EXISTS $db_output.eip01_common_prov;
- 
+
  -- # EIP measures moved to menh_publications
  -- CREATE TABLE IF NOT EXISTS $db_output.EIP01_common_prov
  --     (AGE_GROUP                                                   STRING,
@@ -330,9 +335,9 @@
 
 # DBTITLE 1,# EIP measures moved to menh_publications
  %sql
- 
+
  DROP TABLE IF EXISTS $db_output.eip23d_common;
- 
+
  -- # EIP measures moved to menh_publications
  -- CREATE TABLE IF NOT EXISTS $db_output.EIP23d_common
  --       (AGE_GROUP                                        STRING,
@@ -347,9 +352,9 @@
 
 # DBTITLE 1,# EIP measures moved to menh_publications
  %sql
- 
+
  DROP TABLE IF EXISTS $db_output.eip23d_common_prov;
- 
+
  -- # EIP measures moved to menh_publications
  -- CREATE TABLE IF NOT EXISTS $db_output.EIP23d_common_Prov 
  --      (AGE_GROUP                                          STRING,
@@ -364,9 +369,9 @@
 
 # DBTITLE 1,# EIP measures moved to menh_publications
  %sql
- 
+
  DROP TABLE IF EXISTS $db_output.eip32_ed32_common;
- 
+
  -- # EIP measures moved to menh_publications
  -- CREATE TABLE IF NOT EXISTS $db_output.EIP32_ED32_common
  --     (UniqServReqID                                        STRING,
@@ -381,9 +386,9 @@
 
 # DBTITLE 1,# EIP measures moved to menh_publications
  %sql
- 
+
  DROP TABLE IF EXISTS $db_output.eip63_common;
- 
+
  -- # EIP measures moved to menh_publications
  -- CREATE TABLE IF NOT EXISTS $db_output.EIP63_common
  --     (UniqServReqID                                     STRING,
@@ -398,10 +403,10 @@
 
 # DBTITLE 1,DelayedDischDim (candidate for REF_DATA)
  %sql
- 
+
  -- table needs to be dropped in order to change structure - adding FirstMonth & LastMonth fields
  DROP TABLE IF EXISTS $db_output.delayeddischdim;
- 
+
  CREATE TABLE IF NOT EXISTS $db_output.DelayedDischDim(
    key STRING,
    code STRING,

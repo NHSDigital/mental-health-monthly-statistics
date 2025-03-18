@@ -20,13 +20,14 @@
  - ACC02_CCG
  - ACC54_CCG
 
+
 # COMMAND ----------
 
 # DBTITLE 1,MHS803CareCluster_common
  %sql
- 
+
  TRUNCATE table $db_output.MHS803CareCluster_common;
- 
+
  INSERT INTO $db_output.MHS803CareCluster_common
      select UniqClustID,
             OrgIDProv, 
@@ -92,7 +93,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 
 # DBTITLE 1,MHS803UniqIDMAX
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW MHS803UniqIDMAX AS 
      SELECT CCT.Person_ID
  		   ,MAX (CC.MHS803UniqID) AS MHS803UniqIDMAX		
@@ -111,7 +112,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 
 # DBTITLE 1,StartDateCareClustMaxProv
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW StartDateCareClustMaxProv AS 
      SELECT REF.Person_ID
  		   ,REF.OrgIDProv
@@ -130,7 +131,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 
 # DBTITLE 1,MHS803UniqIDMAXProv
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW MHS803UniqIDMAXProv AS 
      SELECT CCT.Person_ID
  		   ,CCT.OrgIDProv
@@ -153,7 +154,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 
 # DBTITLE 1,ACC33
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW ACC33 AS 
      SELECT 'England' AS BREAKDOWN
  		   ,'England' AS LEVEL
@@ -176,7 +177,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 
 # DBTITLE 1,ACC36
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW ACC36 AS 
      SELECT	'England' AS BREAKDOWN
  			,'England' AS LEVEL
@@ -211,7 +212,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 
 # DBTITLE 1,ACC33_PROVIDER
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW ACC33_PROVIDER AS 
      SELECT 'Provider' AS BREAKDOWN
             ,CCT.OrgIDProv as LEVEL
@@ -236,7 +237,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 
 # DBTITLE 1,ACC36_PROVIDER
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW ACC36_PROVIDER AS 
  SELECT 'Provider' AS BREAKDOWN
        ,CCT.OrgIDProv AS LEVEL
@@ -273,7 +274,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 
 # DBTITLE 1,ACC33_CCG
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW ACC33_CCG AS 
      SELECT	'CCG - GP Practice or Residence' AS BREAKDOWN
  			,CAST (CCG.IC_Rec_CCG AS STRING) AS LEVEL
@@ -300,7 +301,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 
 # DBTITLE 1,ACC36_CCG
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW ACC36_CCG AS 
      SELECT	'CCG - GP Practice or Residence' AS BREAKDOWN
  			,CAST (CCG.IC_Rec_CCG AS STRING) AS LEVEL
@@ -339,7 +340,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 
 # DBTITLE 1,ACC02
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW ACC02 AS
      SELECT	'England' AS BREAKDOWN
  			,'England' AS LEVEL
@@ -367,7 +368,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 
 # DBTITLE 1,ACC54
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW ACC54 AS
      SELECT	'England' AS BREAKDOWN
  			,'England' AS LEVEL
@@ -397,7 +398,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 
 # DBTITLE 1,ACC02_PROVIDER
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW ACC02_PROVIDER AS
  SELECT 'Provider' AS BREAKDOWN
        ,REF.OrgIDProv AS LEVEL
@@ -427,7 +428,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 
 # DBTITLE 1,ACC54_PROVIDER
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW ACC54_PROVIDER AS
                    SELECT	'Provider' AS BREAKDOWN
  				            ,REF.OrgIDProv as LEVEL
@@ -459,7 +460,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 
 # DBTITLE 1,ACC02_CCG
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW ACC02_CCG AS
      SELECT	'CCG - GP Practice or Residence' AS BREAKDOWN
  			,PRSN.IC_Rec_CCG AS LEVEL
@@ -490,7 +491,7 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 
 # DBTITLE 1,ACC54_CCG
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW ACC54_CCG AS
      SELECT	'CCG - GP Practice or Residence' AS BREAKDOWN
  			,PRSN.IC_Rec_CCG AS LEVEL

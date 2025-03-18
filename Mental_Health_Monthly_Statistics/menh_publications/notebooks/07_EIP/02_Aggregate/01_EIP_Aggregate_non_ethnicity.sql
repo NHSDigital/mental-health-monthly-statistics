@@ -7,7 +7,7 @@
  AWT_unformatted table. 
  */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted
    select '$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
            '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -28,11 +28,12 @@
    FROM $db_output.EIP01_common as A
    GROUP BY A.AGE_GROUP
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP01 national national
  %sql
- 
+
  /* ---------------------------------------------------------------------------------------------------------*/
  /* EIP01 national national aggregation - this counts the number of distinct UniqServReqIDs in EIP01_common 
  to make the national EIP01 (age agnostic), and then inserts this into the
@@ -53,6 +54,7 @@
            
    FROM $db_output.EIP01_common as A
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP01 CCG age groups
@@ -62,7 +64,7 @@
  EIP01_common to make CCG EIP01a, b and c metrics (for each age bracket), and then inserts this into the
  AWT_unformatted table.  */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted
  SELECT			'$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -83,6 +85,7 @@
  FROM			$db_output.EIP01_common AS A
  GROUP BY		A.AGE_GROUP, LEVEL
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP01 CCG national
@@ -92,7 +95,7 @@
  EIP01_common to make the CCG EIP01 metrics (age agnostic), and then inserts this into the
  AWT_unformatted table. */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted
  SELECT        '$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
                '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -118,7 +121,7 @@
  EIP01_common to make the provider EIP01a, b and c metrics (for each age bracket), and then inserts this into the
  AWT_unformatted table. */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted
  SELECT			'$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -148,7 +151,7 @@
  EIP01_common to make the provider EIP01 metric (age agnostic), and then inserts this into the
  AWT_unformatted table. */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted
  SELECT			'$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -165,6 +168,7 @@
  FROM			$db_output.EIP01_common_prov AS A
  GROUP BY		A.OrgIDProv
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP23a National Age Groups
@@ -174,7 +178,7 @@
  to make the national EIP23aa, b and c metrics (for each age bracket), and then inserts this into the
  AWT_unformatted table. */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted
     select '$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
            '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -195,6 +199,7 @@
     FROM  $db_output.EIP23a_common A
     GROUP BY A.AGE_GROUP
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP23a National National
@@ -204,7 +209,7 @@
  to make the national EIP23a (age agnostic), and then inserts this into the
  AWT_unformatted table. */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted
     select '$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
            '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -229,7 +234,7 @@
  to make the CCG EIP23aa, b and c metrics (for each age bracket), and then inserts this into the
  AWT_unformatted table. */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted
  SELECT			'$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -259,7 +264,7 @@
  to make the CCG EIP23a metric (age agnostic), and then inserts this into the
  AWT_unformatted table. */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted
  SELECT			'$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -276,6 +281,7 @@
  FROM $db_output.EIP23a_common as  A
  GROUP BY LEVEL
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP23a Provider Age Groups
@@ -285,7 +291,7 @@
  to make the provider EIP23aa, b and c metrics (for each age bracket), and then inserts this into the
  AWT_unformatted table. */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
       SELECT '$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
              '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -306,6 +312,7 @@
         FROM $db_output.EIP23a_common_Prov A
     GROUP BY A.AGE_GROUP, A.OrgIDProv
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP23a Provider National
@@ -315,7 +322,7 @@
  to make the provider EIP23a metric (age agnostic), and then inserts this into the
  AWT_unformatted table. */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
       SELECT '$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
              '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -332,6 +339,7 @@
         FROM $db_output.EIP23a_common_Prov A
     GROUP BY A.OrgIDProv
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP23b National Age Groups
@@ -341,7 +349,7 @@
  to make the national EIP23ba, b and c metrics (for each age bracket), and then inserts this into the
  AWT_unformatted table. */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
     select '$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
            '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -363,6 +371,7 @@
     WHERE A.days_between_ReferralRequestReceivedDate <= 14
     GROUP BY A.AGE_GROUP
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP23b National National
@@ -372,7 +381,7 @@
  to make the national EIP23b metric (age agnostic), and then inserts this into the
  AWT_unformatted table. */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
     select '$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
            '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -389,6 +398,7 @@
     FROM  $db_output.EIP23a_common A
     WHERE A.days_between_ReferralRequestReceivedDate <= 14
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP23b CCG Age Groups
@@ -398,7 +408,7 @@
  to make the CCG EIP23ba, b and c metrics (for each age bracket), and then inserts this into the
  AWT_unformatted table. */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
  SELECT			'$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -420,6 +430,7 @@
  WHERE A.days_between_ReferralRequestReceivedDate <= 14
  GROUP BY A.AGE_GROUP, LEVEL
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP23b CCG National
@@ -429,7 +440,7 @@
  to make the CCG EIP23b metric (age agnostic), and then inserts this into the
  AWT_unformatted table. */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
  SELECT    '$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
            '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -447,6 +458,7 @@
  WHERE     A.days_between_ReferralRequestReceivedDate <= 14
  GROUP BY  LEVEL
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP23b Provider Age Groups
@@ -456,7 +468,7 @@
  to make the provider EIP23ba, b and c metrics (for each age bracket), and then inserts this into the
  AWT_unformatted table. */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
       SELECT '$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
              '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -478,6 +490,7 @@
        WHERE A.days_between_ReferralRequestReceivedDate <= 14   
     GROUP BY A.AGE_GROUP, A.OrgIDProv
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP23b Provider National
@@ -487,7 +500,7 @@
  to make the provider EIP23b metric (age agnostic), and then inserts this into the
  AWT_unformatted table. */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
       SELECT '$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
              '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -505,6 +518,7 @@
        WHERE A.days_between_ReferralRequestReceivedDate <= 14   
     GROUP BY A.OrgIDProv
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP23c National Age Groups
@@ -514,7 +528,7 @@
  to make the national EIP23ca, b and c metrics (for each age bracket), and then inserts this into the
  AWT_unformatted table. */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted
     select '$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
            '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -536,6 +550,7 @@
    WHERE A.days_between_ReferralRequestReceivedDate > 14
   GROUP BY A.AGE_GROUP
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP23c National National
@@ -545,7 +560,7 @@
  to make the national EIP23c metric (age agnostic), and then inserts this into the
  AWT_unformatted table. */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
     select '$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
            '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -562,6 +577,7 @@
     FROM  $db_output.EIP23a_common A
    WHERE A.days_between_ReferralRequestReceivedDate > 14
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP23c CCG Age Groups
@@ -571,7 +587,7 @@
  to make the CCG EIP23ca, b and c metrics (for each age bracket), and then inserts this into the
  AWT_unformatted table. */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
  SELECT			'$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -593,6 +609,7 @@
  WHERE A.days_between_ReferralRequestReceivedDate > 14
  GROUP BY A.AGE_GROUP, LEVEL
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP23c CCG National
@@ -602,7 +619,7 @@
  to make the CCG EIP23c metric (age agnostic), and then inserts this into the
  AWT_unformatted table. */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted
  SELECT			'$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -620,6 +637,7 @@
  WHERE A.days_between_ReferralRequestReceivedDate > 14
  GROUP BY LEVEL
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP23c Provider Age Groups
@@ -629,7 +647,7 @@
  to make the provider EIP23ca, b and c metrics (for each age bracket), and then inserts this into the
  AWT_unformatted table. */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
       SELECT '$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
              '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -651,6 +669,7 @@
        WHERE A.days_between_ReferralRequestReceivedDate > 14   
     GROUP BY A.AGE_GROUP, A.OrgIDProv
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP23c Provider National
@@ -660,7 +679,7 @@
  to make the provider EIP23c metric (age agnostic), and then inserts this into the
  AWT_unformatted table. */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
       SELECT '$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
              '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -678,6 +697,7 @@
        WHERE A.days_between_ReferralRequestReceivedDate > 14   
     GROUP BY A.OrgIDProv
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP23d National Age Groups
@@ -687,7 +707,7 @@
  to make the national EIP23ca, b and c metrics (for each age bracket), and then inserts this into the
  AWT_unformatted table. */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
     select '$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
            '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -708,6 +728,7 @@
         FROM $db_output.EIP23d_common A
        GROUP BY A.AGE_GROUP
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP23d National National
@@ -717,7 +738,7 @@
  to make the national EIP23c metrics (age agnostic), and then inserts this into the
  AWT_unformatted table. */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
     select '$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
            '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -733,17 +754,18 @@
            
         FROM $db_output.EIP23d_common A
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP23d CCG Age Groups
  %sql
- 
+
  /* ---------------------------------------------------------------------------------------------------------*/
  /* EIP23d CCG age groups aggregation - this counts the number of distinct UniqServReqIDs for each CCG in 
  EIP23d_common to make CCG EIP23da, b and c metrics (for each age bracket), and then inserts this into the
  AWT_unformatted table. */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
  SELECT			'$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -764,17 +786,18 @@
  FROM			$db_output.EIP23d_common AS A
  GROUP BY		A.AGE_GROUP, LEVEL
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP23d CCG National
  %sql
- 
+
  /* ---------------------------------------------------------------------------------------------------------*/
  /* EIP23d CCG national aggregation - this counts the number of distinct UniqServReqIDs for each CCG in 
  EIP23d_common to make CCG EIP23d metrics (age agnostic), and then inserts this into the
  AWT_unformatted table. */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
  SELECT			'$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -791,6 +814,7 @@
  FROM			$db_output.EIP23d_common AS A
  GROUP BY		LEVEL
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP23d Provider Age Groups
@@ -800,7 +824,7 @@
  EIP23d_common to make the provider EIP23da, b and c metrics (for each age bracket), and then inserts this into the
  AWT_unformatted table. */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
  SELECT			'$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -821,6 +845,7 @@
  FROM			$db_output.EIP23d_common_prov AS A
  GROUP BY		 A.AGE_GROUP, A.OrgIDProv
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP23d Provider National
@@ -830,7 +855,7 @@
  EIP23d_common to make the provider EIP23d metrics (age agnostic), and then inserts this into the
  AWT_unformatted table. */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
  SELECT			'$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -847,6 +872,7 @@
  FROM			$db_output.EIP23d_common_prov AS A
  GROUP BY		 A.OrgIDProv
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP23e  National Age Groups
@@ -856,7 +882,7 @@
  to make the national EIP23ea, b and c metrics (for each age bracket), and then inserts this into the
  AWT_unformatted table.  */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
     select '$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
            '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -878,6 +904,7 @@
        WHERE A.days_between_endate_ReferralRequestReceivedDate <= 14      
        GROUP BY A.AGE_GROUP
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP23e  National National
@@ -887,7 +914,7 @@
  to make the national EIP23e metrics (age agnostic), and then inserts this into the
  AWT_unformatted table.  */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
     select '$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
            '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -904,6 +931,7 @@
         FROM $db_output.EIP23d_common A
        WHERE A.days_between_endate_ReferralRequestReceivedDate <= 14      
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP23e CCG Age Groups
@@ -913,7 +941,7 @@
  EIP23d_common to make CCG EIP23ea, b and c metrics (for each age bracket), and then inserts this into the
  AWT_unformatted table. */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
  SELECT			'$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -935,6 +963,7 @@
  WHERE A.days_between_endate_ReferralRequestReceivedDate <= 14
  GROUP BY		A.AGE_GROUP, LEVEL
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP23e CCG National
@@ -944,7 +973,7 @@
  EIP23d_common to make CCG EIP23e metrics (age agnostic), and then inserts this into the
  AWT_unformatted table. */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted
  SELECT			'$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -962,6 +991,7 @@
  WHERE A.days_between_endate_ReferralRequestReceivedDate <= 14
  GROUP BY LEVEL
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP23e Provider Age Groups
@@ -971,7 +1001,7 @@
  EIP23d_common to make the provider EIP23ea, b and c metrics (for each age bracket), and then inserts this into the
  AWT_unformatted table. */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
        SELECT    '$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -993,6 +1023,7 @@
        WHERE     A.days_between_endate_ReferralRequestReceivedDate <= 14
        GROUP BY  A.AGE_GROUP, A.OrgIDProv
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP23e Provider National
@@ -1002,7 +1033,7 @@
  EIP23d_common to make the provider EIP23e metrics (age agnostic), and then inserts this into the
  AWT_unformatted table. */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
        SELECT    '$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -1020,6 +1051,7 @@
        WHERE     A.days_between_endate_ReferralRequestReceivedDate <= 14
        GROUP BY  A.OrgIDProv
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP23f National Age Groups
@@ -1029,7 +1061,7 @@
  to make the national EIP23fa, b and c metrics (for each age bracket), and then inserts this into the
  AWT_unformatted table. */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
     select '$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
            '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -1061,7 +1093,7 @@
  to make the national EIP23f metrics (age agnostic), and then inserts this into the
  AWT_unformatted table. */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
     select '$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
            '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -1078,6 +1110,7 @@
         FROM $db_output.EIP23d_common A
         WHERE A.days_between_endate_ReferralRequestReceivedDate > 14     
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP23f CCG Age Groups
@@ -1087,7 +1120,7 @@
  EIP01_common to make CCG EIP23fa, b and c metrics (for each age bracket), and then inserts this into the
  AWT_unformatted table. */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
  SELECT			'$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -1109,6 +1142,7 @@
  WHERE           A.days_between_endate_ReferralRequestReceivedDate > 14
  GROUP BY		A.AGE_GROUP, LEVEL
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP23f CCG National
@@ -1118,7 +1152,7 @@
  EIP01_common to make CCG EIP23f metrics (age agnostic), and then inserts this into the
  AWT_unformatted table.  */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
  SELECT			'$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -1136,6 +1170,7 @@
  WHERE           A.days_between_endate_ReferralRequestReceivedDate > 14
  GROUP BY		LEVEL
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP23f Provider Age Groups
@@ -1145,7 +1180,7 @@
  EIP23d_common to make the provider EIP23fa, b and c metrics (for each age bracket), and then inserts this into the
  AWT_unformatted table. */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
      SELECT		'$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -1167,6 +1202,7 @@
        WHERE     A.days_between_endate_ReferralRequestReceivedDate > 14
        GROUP BY  A.AGE_GROUP, A.OrgIDProv
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP23f Provider Groups
@@ -1176,7 +1212,7 @@
  EIP23d_common to make the provider EIP23f metrics (age agnostic), and then inserts this into the
  AWT_unformatted table. */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
      SELECT		'$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -1194,6 +1230,7 @@
        WHERE     A.days_between_endate_ReferralRequestReceivedDate > 14
        GROUP BY  A.OrgIDProv
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP23g National
@@ -1203,7 +1240,7 @@
  EIP23g_common to make the provider EIP23g metrics (age agnostic), and then inserts this into the
  AWT_unformatted table. */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
         SELECT '$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -1219,6 +1256,7 @@
                  
          FROM  global_temp.EIP23g_common A
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP23g Provider
@@ -1228,7 +1266,7 @@
  EIP23g_common to make the provider EIP23g metrics (age agnostic), and then inserts this into the
  AWT_unformatted table. */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
       SELECT '$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
              '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -1255,7 +1293,7 @@
  EIP23g_common to make the provider EIP23g metrics (age agnostic), and then inserts this into the
  AWT_unformatted table. */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
       SELECT '$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
              '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -1272,6 +1310,7 @@
         FROM  global_temp.EIP23g_common as A
     GROUP BY LEVEL
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP23h National
@@ -1281,7 +1320,7 @@
  EIP23h_common to make the provider EIP23h metrics (age agnostic), and then inserts this into the
  AWT_unformatted table. */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
         SELECT '$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -1297,6 +1336,7 @@
                  
          FROM  global_temp.EIP23h_common A
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP23h Provider
@@ -1306,7 +1346,7 @@
  EIP23h_common to make the provider EIP23h metrics (age agnostic), and then inserts this into the
  AWT_unformatted table. */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
       SELECT '$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
              '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -1323,6 +1363,7 @@
         FROM global_temp.EIP23h_common_Prov A
     GROUP BY A.OrgIDProv
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP23h CCG
@@ -1332,7 +1373,7 @@
  EIP23h_common to make the provider EIP23h metrics (age agnostic), and then inserts this into the
  AWT_unformatted table. */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
       SELECT '$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
              '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -1362,7 +1403,7 @@
      - EIP23a metric = total referrals on EIP pathway entering treatment)
  This is then inserted into the AWT_unformatted table. */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
       SELECT '$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
              '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -1386,7 +1427,7 @@
              AND A.SECONDARY_LEVEL = B.SECONDARY_LEVEL
              AND A.METRIC = 'EIP23a' 
              AND B.METRIC = 'EIP23b'
- 
+
  WHERE       A.REPORTING_PERIOD_START = '$rp_startdate_quarterly'
              AND A.REPORTING_PERIOD_END = '$rp_enddate'
              AND A.STATUS = '$status'
@@ -1404,7 +1445,7 @@
      - EIP23a age metric = total referrals on EIP pathway entering treatment)
  This is then inserted into the AWT_unformatted table. */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
       SELECT '$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
              '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -1436,7 +1477,7 @@
                 OR (A.METRIC = 'EIP23ab' AND B.METRIC = 'EIP23bb')
                 OR (A.METRIC = 'EIP23ac' AND B.METRIC = 'EIP23bc')
                   )
- 
+
  WHERE       A.REPORTING_PERIOD_START = '$rp_startdate_quarterly'
              AND A.REPORTING_PERIOD_END = '$rp_enddate'
              AND A.STATUS = '$status'
@@ -1455,7 +1496,7 @@
      - EIP23d metric = number of open referrals at end of reporting period
  This is then inserted into the AWT_unformatted table. */  
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
       SELECT '$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
              '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -1479,12 +1520,13 @@
              AND A.SECONDARY_LEVEL = B.SECONDARY_LEVEL
              AND A.METRIC = 'EIP23d' 
              AND B.METRIC = 'EIP23f'
- 
+
  WHERE       A.REPORTING_PERIOD_START = '$rp_startdate_quarterly'
              AND A.REPORTING_PERIOD_END = '$rp_enddate'
              AND A.STATUS = '$status'
              AND A.SOURCE_DB = '$db_source'
              AND B.SOURCE_DB = '$db_source'
+
 
 -- COMMAND ----------
 
@@ -1497,7 +1539,7 @@
      - EIP23d metric = open referrals at end of reporting period
  This is then inserted into the AWT_unformatted table.  */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
       SELECT '$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
              '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -1529,7 +1571,7 @@
                 OR (A.METRIC = 'EIP23db' AND B.METRIC = 'EIP23fb')
                 OR (A.METRIC = 'EIP23dc' AND B.METRIC = 'EIP23fc')
                   )
- 
+
  WHERE       A.REPORTING_PERIOD_START = '$rp_startdate_quarterly'
              AND A.REPORTING_PERIOD_END = '$rp_enddate'
              AND A.STATUS = '$status'
@@ -1544,7 +1586,7 @@
  /* EIP32 national aggregation - this aggregates the EIP32_ED32_common table based on the requirements of EIP32
    across the whole country. */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
         SELECT '$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -1562,6 +1604,7 @@
          WHERE PrimReasonReferralMH = '12'
                AND (AgeServReferRecDate <=18 AND AgeServReferRecDate >=0)
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,ED32 CCG
@@ -1570,7 +1613,7 @@
  /* EIP32 CCG - this aggregates the EIP32_ED32_common table based on the requirements of EIP32
    for each CCG. */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
     SELECT '$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
            '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -1589,6 +1632,7 @@
            AND (AgeServReferRecDate <=18 AND AgeServReferRecDate >=0)
      GROUP BY LEVEL
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,ED32 Provider
@@ -1597,7 +1641,7 @@
  /* EIP32 Provider - this aggregates the EIP32_ED32_common table based on the requirements of EIP32
    for each Provider. */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
     SELECT '$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
            '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -1616,6 +1660,7 @@
            AND (AgeServReferRecDate <=18 AND AgeServReferRecDate >=0)
      GROUP BY A.OrgIDProv
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP32 National
@@ -1624,7 +1669,7 @@
  /* ED32 national aggregation - this aggregates the EIP32_ED32_common table based on the requirements of ED32
    across the whole country. */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
         SELECT '$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -1641,6 +1686,7 @@
          FROM  $db_output.EIP32_ED32_common A
          WHERE PrimReasonReferralMH = '01'
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP32 CCG
@@ -1649,7 +1695,7 @@
  /* ED32 CCG - this aggregates the EIP32_ED32_common table based on the requirements of ED32
    for each CCG. */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
     SELECT '$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
            '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -1667,6 +1713,7 @@
      WHERE PrimReasonReferralMH = '01'
      GROUP BY LEVEL
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP32 Provider
@@ -1675,7 +1722,7 @@
  /* ED32 Provider - this aggregates the EIP32_ED32_common table based on the requirements of ED32
    for each Provider. */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
     SELECT '$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
            '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -1693,11 +1740,12 @@
      WHERE PrimReasonReferralMH = '01'
      GROUP BY A.OrgIDProv
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,MHS32 National
  %sql
- 
+
  Insert into $db_output.AWT_unformatted 
  SELECT			'$rp_startdate_quarterly' AS REPORTING_PERIOD_START
  				,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -1720,7 +1768,7 @@
 
 -- DBTITLE 1,MHS32 CCG
  %sql
- 
+
  Insert into $db_output.AWT_unformatted 
  SELECT			'$rp_startdate_quarterly' AS REPORTING_PERIOD_START
  				,'$rp_enddate' AS REPORTING_PERIOD_END
@@ -1745,7 +1793,7 @@
 
 -- DBTITLE 1,MHS32 Provider
  %sql
- 
+
  Insert into $db_output.AWT_unformatted 
  SELECT			'$rp_startdate_quarterly' AS REPORTING_PERIOD_START
  				, '$rp_enddate' AS REPORTING_PERIOD_END
@@ -1773,7 +1821,7 @@
  /* EIP63 National Age Groups - Denormalised the EIP63 metric data to 
  also include CCG fields - this can be used for the CCG extract and summed to provide national extract. */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
    select '$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
            '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -1795,6 +1843,7 @@
    FROM $db_output.EIP63_common as A
    GROUP BY A.AGE_GROUP
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP63 National National
@@ -1803,7 +1852,7 @@
  /* EIP63 National National - Denormalised the EIP63 metric data to 
  also include CCG fields - this can be used for the CCG extract and the national extract. */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
    select '$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
            '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -1819,6 +1868,7 @@
            
    FROM $db_output.EIP63_common as A
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP63 CCG age groups
@@ -1827,7 +1877,7 @@
  /* EIP63 CCG Age Groups - this is the aggregate calculation of EIP63 CCG breakdown. Denormalised the EIP63 metric data to 
  also include CCG fields - this can be used for the CCG extract and summed to provide national extract. */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
  SELECT			'$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -1848,6 +1898,7 @@
  FROM			$db_output.EIP63_common AS A
  GROUP BY		A.AGE_GROUP, LEVEL
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP63 CCG National
@@ -1856,7 +1907,7 @@
  /* EIP63 CCG National - this is the aggregate calculation of EIP63 CCG breakdown. Denormalised the EIP63 metric data to 
  also include CCG fields - this can be used for the CCG extract and summed to provide national extract. */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
  SELECT			'$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -1872,6 +1923,7 @@
                  
  FROM			$db_output.EIP63_common AS A
  GROUP BY		LEVEL
+
 
 -- COMMAND ----------
 
@@ -1900,6 +1952,7 @@
  FROM			$db_output.EIP63_common AS A
  GROUP BY		 A.AGE_GROUP, A.OrgIDProv
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP63 Provider National
@@ -1923,6 +1976,7 @@
  FROM			$db_output.EIP63_common AS A
  GROUP BY	    A.OrgIDProv
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP64 National Age Group
@@ -1931,7 +1985,7 @@
  /* EIP64a/64 National Age Group - This aggregates the EIP64abc_common table to to produce the EIP64 national
    metric  for each age group. */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
    select '$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
            '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -1952,6 +2006,7 @@
    FROM $db_output.EIP64abc_common as A
    GROUP BY A.AGE_GROUP
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP64 National National
@@ -1960,7 +2015,7 @@
  /* EIP64a/64 National National - This aggregates the EIP64abc_common table to to produce the EIP64 national
    metric over all age groups. */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
    select '$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
            '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -1976,6 +2031,7 @@
            
    FROM $db_output.EIP64abc_common as A
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP64 CCG Age Groups
@@ -1983,7 +2039,7 @@
  /* ---------------------------------------------------------------------------------------------------------*/
  /* EIP64 CCG Age Groups - this is the aggregate calculation of EIP64 CCG breakdown from EIP64abc_common. */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
  SELECT			'$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -2004,6 +2060,7 @@
  FROM			$db_output.EIP64abc_common AS A
  GROUP BY		A.AGE_GROUP, LEVEL
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP64 CCG National
@@ -2012,7 +2069,7 @@
  /* EIP64 CCG National - this is the aggregate calculation of EIP64 CCG breakdown from EIP64abc_common. Across
    all age groups. */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
  SELECT			'$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -2028,6 +2085,7 @@
                  
  FROM			$db_output.EIP64abc_common AS A
  GROUP BY		LEVEL
+
 
 -- COMMAND ----------
 
@@ -2056,6 +2114,7 @@
  FROM			$db_output.EIP64abc_common AS A
  GROUP BY		 A.AGE_GROUP, A.OrgIDProv
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP64 Provider National
@@ -2079,6 +2138,7 @@
  FROM			$db_output.EIP64abc_common AS A
  GROUP BY		A.OrgIDProv
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP64b/65 National Age Group
@@ -2087,7 +2147,7 @@
  /* EIP64b/65 National Age Group - This aggregates the EIP64abc_common table to to produce the EIP65 national
    metric for each age group. */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
    select
            '$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
@@ -2110,6 +2170,7 @@
    WHERE ABS(DATEDIFF (CLOCK_STOP,A.ReferralRequestReceivedDate)) > 14
    GROUP BY A.AGE_GROUP
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP65 National National
@@ -2118,7 +2179,7 @@
  /* EIP64b/65 National National - This aggregates the EIP64abc_common table to to produce the EIP65 national
    metric over all age groups. */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
    select '$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
            '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -2135,6 +2196,7 @@
    FROM $db_output.EIP64abc_common as A
    WHERE ABS(DATEDIFF (CLOCK_STOP,A.ReferralRequestReceivedDate)) > 14
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP65 CCG Age Groups
@@ -2142,7 +2204,7 @@
  /* ---------------------------------------------------------------------------------------------------------*/
  /* EIP64b/65 CCG Age Groups - this is the aggregate calculation of EIP64b/65 CCG breakdown from EIP64abc_common.*/ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
  SELECT			'$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -2164,6 +2226,7 @@
  WHERE ABS(DATEDIFF (CLOCK_STOP,A.ReferralRequestReceivedDate)) > 14
  GROUP BY		A.AGE_GROUP, LEVEL
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP65 CCG National
@@ -2172,7 +2235,7 @@
  /* EIP64b/65 CCG Age Groups - this is the aggregate calculation of EIP64b/65 CCG breakdown from EIP64abc_common.
    This is across all age groups. */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
  SELECT			'$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -2189,6 +2252,7 @@
  FROM			$db_output.EIP64abc_common AS A
  WHERE ABS(DATEDIFF (CLOCK_STOP,A.ReferralRequestReceivedDate)) > 14
  GROUP BY		LEVEL
+
 
 -- COMMAND ----------
 
@@ -2218,6 +2282,7 @@
  WHERE ABS(DATEDIFF (CLOCK_STOP,A.ReferralRequestReceivedDate)) > 14
  GROUP BY		 A.AGE_GROUP, A.OrgIDProv
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP65 Provider National
@@ -2242,6 +2307,7 @@
  WHERE ABS(DATEDIFF (CLOCK_STOP,A.ReferralRequestReceivedDate)) > 14
  GROUP BY	    A.OrgIDProv
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP64c/66 National Age Group
@@ -2250,7 +2316,7 @@
  /* EIP64c/66 National Age Group - This aggregates the EIP64abc_common table to to produce the EIP66 national
    metric for each age group. */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
    select '$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
            '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -2272,6 +2338,7 @@
    WHERE ABS(DATEDIFF (CLOCK_STOP,A.ReferralRequestReceivedDate)) <= 14
    GROUP BY A.AGE_GROUP
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP64c/66 National National
@@ -2280,7 +2347,7 @@
  /* EIP64c/66 National National - This aggregates the EIP64abc_common table to to produce the EIP66 national
    metric over all age groups. */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
    select '$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
            '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -2297,6 +2364,7 @@
    FROM $db_output.EIP64abc_common as A
    WHERE ABS(DATEDIFF (CLOCK_STOP,A.ReferralRequestReceivedDate)) <= 14
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP64c/66 CCG Age Groups
@@ -2304,7 +2372,7 @@
  /* ---------------------------------------------------------------------------------------------------------*/
  /* EIP64c/66 CCG Age Groups - this is the aggregate calculation of EIP64c/66 CCG breakdown from EIP64abc_common. */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
  SELECT			'$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -2326,6 +2394,7 @@
  WHERE ABS(DATEDIFF (CLOCK_STOP,A.ReferralRequestReceivedDate)) <= 14
  GROUP BY		A.AGE_GROUP, LEVEL
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP64c/66 CCG National
@@ -2334,7 +2403,7 @@
  /* EIP64c/66 CCG National - this is the aggregate calculation of EIP64c/66 CCG breakdown from EIP64abc_common,
    across all age groups. */ 
  /* ---------------------------------------------------------------------------------------------------------*/
- 
+
  Insert into $db_output.AWT_unformatted 
  SELECT			'$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
                  '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -2351,6 +2420,7 @@
  FROM			$db_output.EIP64abc_common AS A
  WHERE ABS(DATEDIFF (CLOCK_STOP,A.ReferralRequestReceivedDate)) <= 14
  GROUP BY		LEVEL
+
 
 -- COMMAND ----------
 
@@ -2380,6 +2450,7 @@
  WHERE ABS(DATEDIFF (CLOCK_STOP,A.ReferralRequestReceivedDate)) <= 14
  GROUP BY		 A.AGE_GROUP, A.OrgIDProv
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP64c/66 Provider National
@@ -2404,11 +2475,12 @@
  WHERE ABS(DATEDIFF (CLOCK_STOP,A.ReferralRequestReceivedDate)) <= 14
  GROUP BY		A.OrgIDProv
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,EIP67 - All
  %sql
- 
+
  Insert into $db_output.AWT_unformatted 
       SELECT '$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
              '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -2432,7 +2504,7 @@
              AND A.SECONDARY_LEVEL = B.SECONDARY_LEVEL
              AND A.METRIC = 'EIP64' 
              AND B.METRIC = 'EIP66'
- 
+
  WHERE       A.REPORTING_PERIOD_START = '$rp_startdate_quarterly'
              AND A.REPORTING_PERIOD_END = '$rp_enddate'
              AND A.STATUS = '$status'
@@ -2443,7 +2515,7 @@
 
 -- DBTITLE 1,EIP67a - All
  %sql
- 
+
  Insert into $db_output.AWT_unformatted 
       SELECT '$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
              '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -2467,7 +2539,7 @@
               AND A.SECONDARY_LEVEL = B.SECONDARY_LEVEL
              AND A.METRIC = 'EIP64a' 
              AND B.METRIC = 'EIP66a'
- 
+
  WHERE       A.REPORTING_PERIOD_START = '$rp_startdate_quarterly'
              AND A.REPORTING_PERIOD_END = '$rp_enddate'
              AND A.STATUS = '$status'
@@ -2478,7 +2550,7 @@
 
 -- DBTITLE 1,EIP67b - All
  %sql
- 
+
  Insert into $db_output.AWT_unformatted 
       SELECT '$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
              '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -2502,7 +2574,7 @@
               AND A.SECONDARY_LEVEL = B.SECONDARY_LEVEL
              AND A.METRIC = 'EIP64b' 
              AND B.METRIC = 'EIP66b'
- 
+
  WHERE       A.REPORTING_PERIOD_START = '$rp_startdate_quarterly'
              AND A.REPORTING_PERIOD_END = '$rp_enddate'
              AND A.STATUS = '$status'
@@ -2513,7 +2585,7 @@
 
 -- DBTITLE 1,EIP67c - All
  %sql
- 
+
  Insert into $db_output.AWT_unformatted 
       SELECT '$rp_startdate_quarterly' AS REPORTING_PERIOD_START, 
              '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -2537,7 +2609,7 @@
               AND A.SECONDARY_LEVEL = B.SECONDARY_LEVEL
              AND A.METRIC = 'EIP64c' 
              AND B.METRIC = 'EIP66c'
- 
+
  WHERE       A.REPORTING_PERIOD_START = '$rp_startdate_quarterly'
              AND A.REPORTING_PERIOD_END = '$rp_enddate'
              AND A.STATUS = '$status'

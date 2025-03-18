@@ -34,7 +34,7 @@ spark.udf.register("get_provider_type", get_provider_type)
  %sql
  -- Combination of all categories to report on even when count is 0
  TRUNCATE TABLE $db_output.RestrictiveInterventionCategories;
- 
+
  INSERT INTO TABLE $db_output.RestrictiveInterventionCategories
  SELECT
  int.key,
@@ -52,13 +52,14 @@ spark.udf.register("get_provider_type", get_provider_type)
  CROSS JOIN       $db_output.AgeBandsDim as ab
  CROSS JOIN       $db_output.ProviderTypeDim as pt
 
+
 # COMMAND ----------
 
 # DBTITLE 1,RestrictiveInterventionCategoriesProvider
  %sql
  -- Combination of all categories and providers to report on even when count is 0
  TRUNCATE TABLE $db_output.RestrictiveInterventionCategoriesProvider;
- 
+
  INSERT INTO TABLE $db_output.RestrictiveInterventionCategoriesProvider
  SELECT
  ri.RestrictiveIntTypeKey,
@@ -74,7 +75,7 @@ spark.udf.register("get_provider_type", get_provider_type)
  org.OrgIDProvider,
  org.Name
  FROM             $db_output.RestrictiveInterventionCategories as ri
- 
+
  CROSS JOIN
  ((select distinct h.OrgIDProvider from $db_source.mhs000header as h inner join $db_source.mhs501hospprovspell as hps 
      on h.UniqMonthID = hps.UniqMonthID and h.OrgIDProvider = hps.OrgIDProv where h.UniqMonthID = '$month_id') as o
@@ -91,7 +92,7 @@ spark.udf.register("get_provider_type", get_provider_type)
  %sql
  --Insert one row for each MHS505Restrictiveintervention row in in the period of interest. Derive all fields required for aggresgations
  TRUNCATE TABLE $db_output.MHSRestrictiveInterventionRaw;
- 
+
  INSERT INTO TABLE $db_output.MHSRestrictiveInterventionRaw
  SELECT
       res.MHS505UniqID
@@ -160,5 +161,5 @@ spark.udf.register("get_provider_type", get_provider_type)
                   and cat.AgeBand = res.DerivedAgeBand
                   and cat.ProviderType = res.DerivedOrgType
                   and cat.OrgIDProvider = res.OrgIDProv
- 
+
          

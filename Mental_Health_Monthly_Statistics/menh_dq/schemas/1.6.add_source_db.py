@@ -3,12 +3,12 @@ db = dbutils.widgets.get("db")
 print(db)
 assert db
 
-# only needed for the addition of SOURCE_DB column to existing tables - no longer needed
-# commenting out as the new source db is $mhsds_database anyway (so if needed would need to change)
+# User note: only needed for the addition of SOURCE_DB column to existing tables - no longer needed
+# User note: commenting out as the new source db is menh_v5_pre_clear anyway (so if needed would need to change)
 
-# mhsds_database = dbutils.widgets.get("mhsds_database")
-# print(mhsds_database)
-# assert mhsds_database
+# $mhsds_db = dbutils.widgets.get("$mhsds_db")
+# print($mhsds_db)
+# assert $mhsds_db
 
 
 # COMMAND ----------
@@ -173,7 +173,7 @@ for table, column in tableColumn.items():
 # DBTITLE 1,Set SOURCE_DB to source database
 # update only needs doing once - DONE
 # for table, column in tableColumn.items():
-#   action = """Update {db}.{table} SET {column} = '{mhsds_database}' where {column} is null""".format(db=db,table=table,column=column,mhsds_database=mhsds_database)
+#   action = """Update {db}.{table} SET {column} = '{$mhsds_db}' where {column} is null""".format(db=db,table=table,column=column,$mhsds_db=$mhsds_db)
 #   print(action)
 #   spark.sql(action)
 

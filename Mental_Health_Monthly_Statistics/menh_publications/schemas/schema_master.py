@@ -14,9 +14,9 @@ reload_ref_data = dbutils.widgets.get("reload_ref_data")
 print(reload_ref_data)
 assert reload_ref_data
 
-mhsds_database = dbutils.widgets.get("mhsds_database")
-print(mhsds_database)
-assert mhsds_database
+$mhsds_db = dbutils.widgets.get("$mhsds_db")
+print($mhsds_db)
+assert $mhsds_db
 
 # COMMAND ----------
 
@@ -25,7 +25,7 @@ params = {
   "product"        : product,
   "reference_data"  : reference_data,
   "reload_ref_data": reload_ref_data,
-  "mhsds_database"   : mhsds_database
+  "$mhsds_db"   : $mhsds_db
 }
 params
 

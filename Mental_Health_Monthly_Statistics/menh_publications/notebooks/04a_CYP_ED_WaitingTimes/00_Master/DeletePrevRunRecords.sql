@@ -18,6 +18,7 @@
  ;
  VACUUM $db_output.cyp_ed_wt_step4 RETAIN 8 HOURS;
 
+
 -- COMMAND ----------
 
  %sql

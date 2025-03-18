@@ -1,24 +1,25 @@
 # Databricks notebook source
  %md
- 
+
  # Breakdowns & metrics
- 
+
  When the output tables are populated, the unpopulated metrics should still be in the file, but with a zero value. This requires a list of all the possible metrics. That's why as follows, we have tables with the possible breakdowns/metrics for each product. 
+
 
 # COMMAND ----------
 
 # DBTITLE 1,Collect params for Python
  %python
- 
+
  import os
- 
+
  db_output = dbutils.widgets.get("db_output")
 
 # COMMAND ----------
 
 # DBTITLE 1, Access and Waiting Times
  %sql
- 
+
  TRUNCATE TABLE $db_output.AWT_breakdown_values;
  INSERT INTO $db_output.AWT_breakdown_values VALUES
  ('England'),
@@ -29,7 +30,7 @@
  ('Provider; Ethnicity'),
  ('STP - GP Practice or Residence'),
  ('Commissioning Region');
- 
+
  TRUNCATE TABLE $db_output.AWT_level_values;
  INSERT INTO $db_output.AWT_level_values
  SELECT DISTINCT
@@ -84,7 +85,7 @@
  SELECT 'England' as level, 'England' as level_desc, 'Not Stated' as secondary_level, 'Not Stated' as secondary_level_desc, 'England; Ethnicity' as breakdown
  UNION ALL
  SELECT 'England' as level, 'England' as level_desc, 'Unknown' as secondary_level, 'Unknown' as secondary_level_desc, 'England; Ethnicity' as breakdown
- 
+
  -- Added below for CCG level breakdown of Ethnicity
  UNION ALL
  SELECT DISTINCT IC_Rec_CCG as level, COALESCE(NAME, "UNKNOWN") as level_desc, 'White' as secondary_level, 'White' as secondary_level_desc, 'CCG - GP Practice or Residence; Ethnicity' as breakdown FROM $db_output.CCG
@@ -100,7 +101,7 @@
  SELECT DISTINCT IC_Rec_CCG as level, COALESCE(NAME, "UNKNOWN") as level_desc, 'Not Stated' as secondary_level, 'Not Stated' as secondary_level_desc, 'CCG - GP Practice or Residence; Ethnicity' as breakdown FROM $db_output.CCG
  UNION ALL
  SELECT DISTINCT IC_Rec_CCG as level, COALESCE(NAME, "UNKNOWN") as level_desc, 'Unknown' as secondary_level, 'Unknown' as secondary_level_desc, 'CCG - GP Practice or Residence; Ethnicity' as breakdown FROM $db_output.CCG
- 
+
  -- Added below for Provider level breakdown of Ethnicity
  UNION ALL  
  SELECT DISTINCT ORG_CODE as level, NAME as level_desc, 'White' as secondary_level, 'White' as secondary_level_desc, 'Provider; Ethnicity' as breakdown FROM $db_output.providers_between_rp_start_end_dates
@@ -116,8 +117,8 @@
  SELECT DISTINCT ORG_CODE as level, NAME as level_desc, 'Not Stated' as secondary_level, 'Not Stated' as secondary_level_desc, 'Provider; Ethnicity' as breakdown FROM $db_output.providers_between_rp_start_end_dates
  UNION ALL
  SELECT DISTINCT ORG_CODE as level, NAME as level_desc, 'Unknown' as secondary_level, 'Unknown' as secondary_level_desc, 'Provider; Ethnicity' as breakdown FROM $db_output.providers_between_rp_start_end_dates;
- 
- 
+
+
  TRUNCATE TABLE $db_output.AWT_metric_values;
  INSERT INTO $db_output.AWT_metric_values VALUES 
    ('ED32', 'New referrals with eating disorder issues, aged 0 to 18')
@@ -190,7 +191,7 @@
  %sql
  TRUNCATE TABLE $db_output.EIP_Nice_Snomed;
  INSERT INTO $db_output.EIP_Nice_Snomed VALUES 
- 
+
    ('718026005',  'Cognitive behavioural therapy for psychosis')
  	,('1097161000000100',  'Referral for cognitive behavioural therapy for psychosis')
  	,('985451000000105',  'Family intervention for psychosis')
@@ -346,12 +347,12 @@
 
 # DBTITLE 1,Optimize and vaccum tables
  %python
- 
+
  if os.environ['env'] == 'prod':
    spark.sql('OPTIMIZE {db_output}.{table}'.format(db_output=db_output, table='AWT_breakdown_values'))
    spark.sql('OPTIMIZE {db_output}.{table}'.format(db_output=db_output, table='AWT_level_values'))
    spark.sql('OPTIMIZE {db_output}.{table}'.format(db_output=db_output, table='AWT_metric_values'))
- 
+
  spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output, table='AWT_breakdown_values'))
  spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output, table='AWT_level_values'))
  spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output, table='AWT_metric_values'))

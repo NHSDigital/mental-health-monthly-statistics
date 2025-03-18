@@ -76,7 +76,7 @@
 
  %sql
  CREATE OR REPLACE TEMP VIEW oaps_wardstay_prep AS
- 
+
  select a.UniqWardStayID,
         CASE 
            WHEN $end_month_id > 1488 AND MHAdmittedPatientClass = 10 THEN 200
@@ -126,6 +126,7 @@
         a.RecordEndDate
        
  from $db_source.mhs502wardstay as a
+
 
 # COMMAND ----------
 
@@ -257,7 +258,7 @@
          oaps.UniqMonthID,
          oaps.Person_ID,
          oaps.OrgIDProv,        
-         ccg.SubICBGPRes,
+         ccg.IC_REC_CCG as SubICBGPRes,
          COALESCE(stp.CCG_Code, 'UNKNOWN') as CCG_Code,
          COALESCE(stp.CCG_Name, 'UNKNOWN') as CCG_Name,
          COALESCE(stp.STP_Code, 'UNKNOWN') as STP_Code,
@@ -270,7 +271,7 @@
          coalesce(ab.Age_Group_OAPs, "UNKNOWN") as Age_Band,
          coalesce(eth.LowerEthnicityCode, "UNKNOWN") as LowerEthnicityCode,
          coalesce(eth.LowerEthnicityName, "UNKNOWN") as LowerEthnicityName,
- --         coalesce(eth.UpperEthnicity, "UNKNOWN") as UpperEthnicity,
+         coalesce(eth.UpperEthnicity, "UNKNOWN") as UpperEthnicity,
          coalesce(imd.IMD_Decile, "UNKNOWN") as IMD_Decile,
          coalesce(oaps.ReasonOAT, "UNKNOWN") as ReasonOAT,
          coalesce(dd_reasonoat.Description, "UNKNOWN") as ReasonOATName,
@@ -409,14 +410,14 @@
    and oaps.OrgIDProv = onw.OrgIDProv
    and onw.UniqMonthID = "$end_month_id"
    
- left join $db_output.bbrb_ccg_in_year ccg
+ left join $db_output.bbrb_ccg_in_month ccg
    on mpi.Person_ID = ccg.Person_ID
    
  left join $db_output.OAPS_In_Scope isc
    on LEFT(OAPs.OrgIDReferring,3) = isc.ORG_CODE
    
  left join $db_output.bbrb_stp_mapping stp
-   on ccg.SubICBGPRes = stp.CCG_Code
+   on ccg.IC_Rec_CCG = stp.CCG_Code
    
  left join $db_output.bbrb_org_daily rec_prov
    on oaps.OrgIDProv = rec_prov.ORG_CODE
@@ -474,7 +475,7 @@
          coalesce(ab.Age_Group_OAPs, "UNKNOWN") as Age_Band,
          coalesce(eth.LowerEthnicityCode, "UNKNOWN") as LowerEthnicityCode,
          coalesce(eth.LowerEthnicityName, "UNKNOWN") as LowerEthnicityName,
- --         coalesce(eth.UpperEthnicity, "UNKNOWN") as UpperEthnicity,
+         coalesce(eth.UpperEthnicity, "UNKNOWN") as UpperEthnicity,
          coalesce(imd.IMD_Decile, "UNKNOWN") as IMD_Decile,
          coalesce(oaps.ReasonOAT, "UNKNOWN") as ReasonOAT,
          coalesce(dd_reasonoat.Description, "UNKNOWN") as ReasonOATName,
@@ -609,7 +610,7 @@
    and oaps.OrgIDProv = onw.OrgIDProv
    and onw.UniqMonthID  between $end_month_id-2 and $end_month_id
    
- left join $db_output.bbrb_ccg_in_year ccg
+ left join $db_output.bbrb_ccg_in_quarter ccg
    on mpi.Person_ID = ccg.Person_ID
    
  left join $db_output.OAPS_In_Scope isc
@@ -674,7 +675,7 @@
          coalesce(ab.Age_Group_OAPs, "UNKNOWN") as Age_Band,
          coalesce(eth.LowerEthnicityCode, "UNKNOWN") as LowerEthnicityCode,
          coalesce(eth.LowerEthnicityName, "UNKNOWN") as LowerEthnicityName,
- --         coalesce(eth.UpperEthnicity, "UNKNOWN") as UpperEthnicity,
+         coalesce(eth.UpperEthnicity, "UNKNOWN") as UpperEthnicity,
          coalesce(imd.IMD_Decile, "UNKNOWN") as IMD_Decile,
          coalesce(oaps.ReasonOAT, "UNKNOWN") as ReasonOAT,
          coalesce(dd_reasonoat.Description, "UNKNOWN") as ReasonOATName,
@@ -858,3 +859,295 @@
  OPTIMIZE $db_output.oaps_month;
  OPTIMIZE $db_output.oaps_quarter;
  OPTIMIZE $db_output.oaps_year;
+
+# COMMAND ----------
+
+ %sql
+ INSERT OVERWRITE TABLE $db_output.oaps_all_admissions_month
+ select  hs.UniqMonthID,
+         hs.UniqHospProvSpellID,
+         ws.UniqWardStayID,
+         COALESCE(stp.CCG_Code, 'UNKNOWN') as CCG_Code,
+         COALESCE(stp.CCG_Name, 'UNKNOWN') as CCG_Name,
+         COALESCE(stp.STP_Code, 'UNKNOWN') as STP_Code,
+         COALESCE(stp.STP_Name, 'UNKNOWN') as STP_Name,
+         COALESCE(stp.Region_Code, 'UNKNOWN') as Region_Code,
+         COALESCE(stp.Region_Name, 'UNKNOWN') as Region_Name,
+         coalesce(gen.Der_Gender, "UNKNOWN") AS Der_Gender,
+         coalesce(gen.Der_Gender_Desc, "UNKNOWN") as Der_Gender_Desc,
+         mpi.AgeRepPeriodEnd,
+         coalesce(ab.Age_Group_OAPs, "UNKNOWN") as Age_Band,
+         coalesce(eth.LowerEthnicityCode, "UNKNOWN") as LowerEthnicityCode,
+         coalesce(eth.LowerEthnicityName, "UNKNOWN") as LowerEthnicityName,
+         coalesce(eth.UpperEthnicity, "UNKNOWN") as UpperEthnicity,
+         coalesce(imd.IMD_Decile, "UNKNOWN") as IMD_Decile,        
+         CASE WHEN HS.UniqHospProvSpellID is NULL THEN 'No Hospital Spell'
+                WHEN WS.UniqHospProvSpellID is not NULL THEN WS.MHAdmittedPatientClass
+                ELSE 'UNKNOWN' END AS MHAdmittedPatientClass
+          ,CASE WHEN HS.UniqHospProvSpellID is NULL THEN 'No Hospital Spell'
+                WHEN WS.UniqHospProvSpellID is not NULL THEN WS.MHAdmittedPatientClassName
+                ELSE 'UNKNOWN'
+                END AS MHAdmittedPatientClassName
+          ,CASE WHEN HS.UniqHospProvSpellID is NULL THEN 'No Hospital Spell'
+                WHEN WS.UniqHospProvSpellID is not NULL THEN WS.Acute_Bed
+                ELSE 'UNKNOWN'
+                END AS Acute_Bed,
+         ws.StartDateWardStay,
+         ws.EndDateWardStay,
+         CASE WHEN hs.UniqHospProvSpellID is NULL THEN 0
+              ELSE ward_stay_bed_days_rp(ws.UniqWardStayID, ws.EndDateWardStay, '$rp_enddate', ws.StartDateWardStay, '$rp_startdate_1m') END as Bed_Days_Month_WS,
+         CASE WHEN hs.UniqHospProvSpellID is NULL THEN 0
+              ELSE ward_stay_bed_days_rp(ws.UniqWardStayID, ws.EndDateWardStay, '$rp_enddate', ws.StartDateWardStay, '$rp_startdate_qtr') END as Bed_Days_Qtr_WS,
+         CASE WHEN hs.UniqHospProvSpellID is NULL THEN 0
+              ELSE ward_stay_bed_days_rp(ws.UniqWardStayID, ws.EndDateWardStay, '$rp_enddate', ws.StartDateWardStay, '$rp_startdate_12m') END as Bed_Days_Yr_WS,
+         hs.StartDateHospProvSpell,
+         hs.DischDateHospProvSpell,
+         CASE WHEN hs.UniqHospProvSpellID is NULL THEN 0
+              ELSE hosp_spell_bed_days_rp(DischDateHospProvSpell, '$rp_enddate', StartDateHospProvSpell, '$rp_startdate_1m') END as Bed_Days_Month_HS,
+         CASE WHEN hs.UniqHospProvSpellID is NULL THEN 0
+              ELSE hosp_spell_bed_days_rp(DischDateHospProvSpell, '$rp_enddate', StartDateHospProvSpell, '$rp_startdate_qtr') END as Bed_Days_Qtr_HS,
+         CASE WHEN hs.UniqHospProvSpellID is NULL THEN 0
+              ELSE hosp_spell_bed_days_rp(DischDateHospProvSpell, '$rp_enddate', StartDateHospProvSpell, '$rp_startdate_12m') END as Bed_Days_Yr_HS,
+         dense_rank() OVER (PARTITION BY HS.UniqHospProvSpellID ORDER BY WS.UniqWardStayID DESC) AS RANK,
+          CASE WHEN hs.StartDateHospProvSpell between "$rp_startdate_1m" and "$rp_enddate" THEN 1 ELSE 0 END as Received_In_RP,
+         CASE WHEN hs.ReportingPeriodStartDate between "$rp_startdate_1m" and "$rp_enddate" THEN 1 ELSE 0 END as Submitted_In_RP,
+         CASE WHEN hs.DischDateHospProvSpell between "$rp_startdate_1m" and "$rp_enddate" THEN 1 ELSE 0 END as Ended_In_RP,
+         CASE WHEN (hs.DischDateHospProvSpell is null or hs.DischDateHospProvSpell > '$rp_enddate') and hs.UniqMonthID = '$end_month_id' THEN 1 ELSE 0 END as Active_End
+  
+ from (select * from $db_output.oaps_hospprovspell where UniqMonthID = "$end_month_id") hs 
+  
+ left join (select *
+            from $db_source.MHS001MPI
+            where UniqMonthID = "$end_month_id"
+            and PatMRecInRP = 'true'
+            and (RECORDENDDATE IS NULL OR RECORDENDDATE >= '$rp_enddate')
+            and (RECORDSTARTDATE < '$rp_enddate')                             --Added recordestartdate to ensure record isn't from after the reporting period
+            ) as mpi  -- WT question #1: all these joins are back to the sending provider when expected to be a mix of sender and receiver linked by person ID...?
+    on hs.Person_ID = mpi.Person_ID
+  
+ left join $db_output.oaps_WardStay as WS
+    on HS.UniqHospProvSpellID = WS.UniqHospProvSpellID 
+    and HS.OrgIDProv = WS.OrgIDProv
+    and WS.UniqMonthID = '$end_month_id'
+    
+ left join $db_output.bbrb_ccg_in_year ccg
+   on mpi.Person_ID = ccg.Person_ID
+     
+ left join $db_output.bbrb_stp_mapping stp
+   on ccg.SubICBGPRes = stp.CCG_Code
+    
+ left join $reference_data.english_indices_of_dep_v02 imd_ref
+   on mpi.LSOA2011 = imd_ref.LSOA_CODE_2011 
+   and imd_ref.IMD_YEAR = '2019' 
+   
+ left join $db_output.imd_desc imd
+   on imd_ref.DECI_IMD = imd.IMD_Number and '$end_month_id' >= imd.FirstMonth and (imd.LastMonth is null or '$end_month_id' <= imd.LastMonth)
+   
+ left join $db_output.age_band_desc ab
+   on mpi.AgeRepPeriodEnd = ab.AgeRepPeriodEnd and '$end_month_id' >= ab.FirstMonth and (ab.LastMonth is null or '$end_month_id' <= ab.LastMonth)
+    
+ left join $db_output.gender_desc gen
+   on CASE WHEN mpi.GenderIDCode IN ('1','2','3','4') THEN mpi.GenderIDCode
+              WHEN mpi.Gender IN ('1','2','9') THEN mpi.Gender
+               ELSE 'UNKNOWN' END = gen.Der_Gender
+   and '$end_month_id' >= gen.FirstMonth and (gen.LastMonth is null or '$end_month_id' <= gen.LastMonth)
+   
+ left join $db_output.ethnicity_desc eth
+   on mpi.NHSDEthnicity = eth.LowerEthnicityCode and '$end_month_id' >= eth.FirstMonth and (eth.LastMonth is null or '$end_month_id' <= eth.LastMonth)
+
+# COMMAND ----------
+
+ %sql
+ INSERT OVERWRITE TABLE $db_output.oaps_all_admissions_quarter
+ select  hs.UniqMonthID,
+         hs.UniqHospProvSpellID,
+         ws.UniqWardStayID,
+         COALESCE(stp.CCG_Code, 'UNKNOWN') as CCG_Code,
+         COALESCE(stp.CCG_Name, 'UNKNOWN') as CCG_Name,
+         COALESCE(stp.STP_Code, 'UNKNOWN') as STP_Code,
+         COALESCE(stp.STP_Name, 'UNKNOWN') as STP_Name,
+         COALESCE(stp.Region_Code, 'UNKNOWN') as Region_Code,
+         COALESCE(stp.Region_Name, 'UNKNOWN') as Region_Name,
+         coalesce(gen.Der_Gender, "UNKNOWN") AS Der_Gender,
+         coalesce(gen.Der_Gender_Desc, "UNKNOWN") as Der_Gender_Desc,
+         mpi.AgeRepPeriodEnd,
+         coalesce(ab.Age_Group_OAPs, "UNKNOWN") as Age_Band,
+         coalesce(eth.LowerEthnicityCode, "UNKNOWN") as LowerEthnicityCode,
+         coalesce(eth.LowerEthnicityName, "UNKNOWN") as LowerEthnicityName,
+         coalesce(eth.UpperEthnicity, "UNKNOWN") as UpperEthnicity,
+         coalesce(imd.IMD_Decile, "UNKNOWN") as IMD_Decile,        
+         CASE WHEN HS.UniqHospProvSpellID is NULL THEN 'No Hospital Spell'
+                WHEN WS.UniqHospProvSpellID is not NULL THEN WS.MHAdmittedPatientClass
+                ELSE 'UNKNOWN' END AS MHAdmittedPatientClass
+          ,CASE WHEN HS.UniqHospProvSpellID is NULL THEN 'No Hospital Spell'
+                WHEN WS.UniqHospProvSpellID is not NULL THEN WS.MHAdmittedPatientClassName
+                ELSE 'UNKNOWN'
+                END AS MHAdmittedPatientClassName
+          ,CASE WHEN HS.UniqHospProvSpellID is NULL THEN 'No Hospital Spell'
+                WHEN WS.UniqHospProvSpellID is not NULL THEN WS.Acute_Bed
+                ELSE 'UNKNOWN'
+                END AS Acute_Bed,
+         ws.StartDateWardStay,
+         ws.EndDateWardStay,
+         CASE WHEN hs.UniqHospProvSpellID is NULL THEN 0
+              ELSE ward_stay_bed_days_rp(ws.UniqWardStayID, ws.EndDateWardStay, '$rp_enddate', ws.StartDateWardStay, '$rp_startdate_1m') END as Bed_Days_Month_WS,
+         CASE WHEN hs.UniqHospProvSpellID is NULL THEN 0
+              ELSE ward_stay_bed_days_rp(ws.UniqWardStayID, ws.EndDateWardStay, '$rp_enddate', ws.StartDateWardStay, '$rp_startdate_qtr') END as Bed_Days_Qtr_WS,
+         CASE WHEN hs.UniqHospProvSpellID is NULL THEN 0
+              ELSE ward_stay_bed_days_rp(ws.UniqWardStayID, ws.EndDateWardStay, '$rp_enddate', ws.StartDateWardStay, '$rp_startdate_12m') END as Bed_Days_Yr_WS,
+         hs.StartDateHospProvSpell,
+         hs.DischDateHospProvSpell,
+         CASE WHEN hs.UniqHospProvSpellID is NULL THEN 0
+              ELSE hosp_spell_bed_days_rp(DischDateHospProvSpell, '$rp_enddate', StartDateHospProvSpell, '$rp_startdate_1m') END as Bed_Days_Month_HS,
+         CASE WHEN hs.UniqHospProvSpellID is NULL THEN 0
+              ELSE hosp_spell_bed_days_rp(DischDateHospProvSpell, '$rp_enddate', StartDateHospProvSpell, '$rp_startdate_qtr') END as Bed_Days_Qtr_HS,
+         CASE WHEN hs.UniqHospProvSpellID is NULL THEN 0
+              ELSE hosp_spell_bed_days_rp(DischDateHospProvSpell, '$rp_enddate', StartDateHospProvSpell, '$rp_startdate_12m') END as Bed_Days_Yr_HS,
+         dense_rank() OVER (PARTITION BY HS.UniqHospProvSpellID ORDER BY WS.UniqWardStayID DESC) AS RANK,
+         CASE WHEN hs.StartDateHospProvSpell between "$rp_startdate_qtr" and "$rp_enddate" THEN 1 ELSE 0 END as Received_In_RP,
+         CASE WHEN hs.ReportingPeriodStartDate between "$rp_startdate_qtr" and "$rp_enddate" THEN 1 ELSE 0 END as Submitted_In_RP,
+         CASE WHEN hs.DischDateHospProvSpell between "$rp_startdate_qtr" and "$rp_enddate" THEN 1 ELSE 0 END as Ended_In_RP,
+         CASE WHEN (hs.DischDateHospProvSpell is null or hs.DischDateHospProvSpell > '$rp_enddate') and hs.UniqMonthID = '$end_month_id' THEN 1 ELSE 0 END as Active_End
+  
+ from (select * from $db_output.oaps_hospprovspell where UniqMonthID between $end_month_id-2 and $end_month_id) hs 
+  
+ left join (select *
+            from $db_source.MHS001MPI
+            where UniqMonthID between $end_month_id-2 and $end_month_id
+            and PatMRecInRP = 'true'
+            and (RECORDENDDATE IS NULL OR RECORDENDDATE >= '$rp_enddate')
+            and (RECORDSTARTDATE < '$rp_enddate')                             --Added recordestartdate to ensure record isn't from after the reporting period
+            ) as mpi  -- WT question #1: all these joins are back to the sending provider when expected to be a mix of sender and receiver linked by person ID...?
+    on hs.Person_ID = mpi.Person_ID
+  
+ left join $db_output.oaps_WardStay as WS
+    on HS.UniqHospProvSpellID = WS.UniqHospProvSpellID 
+    and HS.OrgIDProv = WS.OrgIDProv
+    and WS.UniqMonthID between $end_month_id-2 and $end_month_id
+    
+ left join $db_output.bbrb_ccg_in_year ccg
+   on mpi.Person_ID = ccg.Person_ID
+     
+ left join $db_output.bbrb_stp_mapping stp
+   on ccg.SubICBGPRes = stp.CCG_Code
+    
+ left join $reference_data.english_indices_of_dep_v02 imd_ref
+   on mpi.LSOA2011 = imd_ref.LSOA_CODE_2011 
+   and imd_ref.IMD_YEAR = '2019' 
+   
+ left join $db_output.imd_desc imd
+   on imd_ref.DECI_IMD = imd.IMD_Number and '$end_month_id' >= imd.FirstMonth and (imd.LastMonth is null or '$end_month_id' <= imd.LastMonth)
+   
+ left join $db_output.age_band_desc ab
+   on mpi.AgeRepPeriodEnd = ab.AgeRepPeriodEnd and '$end_month_id' >= ab.FirstMonth and (ab.LastMonth is null or '$end_month_id' <= ab.LastMonth)
+    
+ left join $db_output.gender_desc gen
+   on CASE WHEN mpi.GenderIDCode IN ('1','2','3','4') THEN mpi.GenderIDCode
+              WHEN mpi.Gender IN ('1','2','9') THEN mpi.Gender
+               ELSE 'UNKNOWN' END = gen.Der_Gender
+   and '$end_month_id' >= gen.FirstMonth and (gen.LastMonth is null or '$end_month_id' <= gen.LastMonth)
+   
+ left join $db_output.ethnicity_desc eth
+   on mpi.NHSDEthnicity = eth.LowerEthnicityCode and '$end_month_id' >= eth.FirstMonth and (eth.LastMonth is null or '$end_month_id' <= eth.LastMonth)
+
+# COMMAND ----------
+
+ %sql
+ INSERT OVERWRITE TABLE $db_output.oaps_all_admissions_year
+ select  hs.UniqMonthID,
+         hs.UniqHospProvSpellID,
+         ws.UniqWardStayID,
+         COALESCE(stp.CCG_Code, 'UNKNOWN') as CCG_Code,
+         COALESCE(stp.CCG_Name, 'UNKNOWN') as CCG_Name,
+         COALESCE(stp.STP_Code, 'UNKNOWN') as STP_Code,
+         COALESCE(stp.STP_Name, 'UNKNOWN') as STP_Name,
+         COALESCE(stp.Region_Code, 'UNKNOWN') as Region_Code,
+         COALESCE(stp.Region_Name, 'UNKNOWN') as Region_Name,
+         coalesce(gen.Der_Gender, "UNKNOWN") AS Der_Gender,
+         coalesce(gen.Der_Gender_Desc, "UNKNOWN") as Der_Gender_Desc,
+         mpi.AgeRepPeriodEnd,
+         coalesce(ab.Age_Group_OAPs, "UNKNOWN") as Age_Band,
+         coalesce(eth.LowerEthnicityCode, "UNKNOWN") as LowerEthnicityCode,
+         coalesce(eth.LowerEthnicityName, "UNKNOWN") as LowerEthnicityName,
+         coalesce(eth.UpperEthnicity, "UNKNOWN") as UpperEthnicity,
+         coalesce(imd.IMD_Decile, "UNKNOWN") as IMD_Decile,        
+         CASE WHEN HS.UniqHospProvSpellID is NULL THEN 'No Hospital Spell'
+                WHEN WS.UniqHospProvSpellID is not NULL THEN WS.MHAdmittedPatientClass
+                ELSE 'UNKNOWN' END AS MHAdmittedPatientClass
+          ,CASE WHEN HS.UniqHospProvSpellID is NULL THEN 'No Hospital Spell'
+                WHEN WS.UniqHospProvSpellID is not NULL THEN WS.MHAdmittedPatientClassName
+                ELSE 'UNKNOWN'
+                END AS MHAdmittedPatientClassName
+          ,CASE WHEN HS.UniqHospProvSpellID is NULL THEN 'No Hospital Spell'
+                WHEN WS.UniqHospProvSpellID is not NULL THEN WS.Acute_Bed
+                ELSE 'UNKNOWN'
+                END AS Acute_Bed,
+         ws.StartDateWardStay,
+         ws.EndDateWardStay,
+         CASE WHEN hs.UniqHospProvSpellID is NULL THEN 0
+              ELSE ward_stay_bed_days_rp(ws.UniqWardStayID, ws.EndDateWardStay, '$rp_enddate', ws.StartDateWardStay, '$rp_startdate_1m') END as Bed_Days_Month_WS,
+         CASE WHEN hs.UniqHospProvSpellID is NULL THEN 0
+              ELSE ward_stay_bed_days_rp(ws.UniqWardStayID, ws.EndDateWardStay, '$rp_enddate', ws.StartDateWardStay, '$rp_startdate_qtr') END as Bed_Days_Qtr_WS,
+         CASE WHEN hs.UniqHospProvSpellID is NULL THEN 0
+              ELSE ward_stay_bed_days_rp(ws.UniqWardStayID, ws.EndDateWardStay, '$rp_enddate', ws.StartDateWardStay, '$rp_startdate_12m') END as Bed_Days_Yr_WS,
+         hs.StartDateHospProvSpell,
+         hs.DischDateHospProvSpell,
+         CASE WHEN hs.UniqHospProvSpellID is NULL THEN 0
+              ELSE hosp_spell_bed_days_rp(DischDateHospProvSpell, '$rp_enddate', StartDateHospProvSpell, '$rp_startdate_1m') END as Bed_Days_Month_HS,
+         CASE WHEN hs.UniqHospProvSpellID is NULL THEN 0
+              ELSE hosp_spell_bed_days_rp(DischDateHospProvSpell, '$rp_enddate', StartDateHospProvSpell, '$rp_startdate_qtr') END as Bed_Days_Qtr_HS,
+         CASE WHEN hs.UniqHospProvSpellID is NULL THEN 0
+              ELSE hosp_spell_bed_days_rp(DischDateHospProvSpell, '$rp_enddate', StartDateHospProvSpell, '$rp_startdate_12m') END as Bed_Days_Yr_HS,
+         dense_rank() OVER (PARTITION BY HS.UniqHospProvSpellID ORDER BY WS.UniqWardStayID DESC) AS RANK,
+         CASE WHEN hs.StartDateHospProvSpell between "$rp_startdate_12m" and "$rp_enddate" THEN 1 ELSE 0 END as Received_In_RP,
+         CASE WHEN hs.ReportingPeriodStartDate between "$rp_startdate_12m" and "$rp_enddate" THEN 1 ELSE 0 END as Submitted_In_RP,        
+         CASE WHEN hs.DischDateHospProvSpell between "$rp_startdate_12m" and "$rp_enddate" THEN 1 ELSE 0 END as Ended_In_RP,
+         CASE WHEN (hs.DischDateHospProvSpell is null or hs.DischDateHospProvSpell > '$rp_enddate') and hs.UniqMonthID = '$end_month_id' THEN 1 ELSE 0 END as Active_End
+  
+ from (select * from $db_output.oaps_hospprovspell where UniqMonthID between $end_month_id-11 and $end_month_id) hs 
+  
+ left join (select *
+            from $db_source.MHS001MPI
+            where UniqMonthID between $end_month_id-11 and $end_month_id
+            and PatMRecInRP = 'true'
+            and (RECORDENDDATE IS NULL OR RECORDENDDATE >= '$rp_enddate')
+            and (RECORDSTARTDATE < '$rp_enddate')                             --Added recordestartdate to ensure record isn't from after the reporting period
+            ) as mpi  -- WT question #1: all these joins are back to the sending provider when expected to be a mix of sender and receiver linked by person ID...?
+    on hs.Person_ID = mpi.Person_ID
+  
+ left join $db_output.oaps_WardStay as WS
+    on HS.UniqHospProvSpellID = WS.UniqHospProvSpellID 
+    and HS.OrgIDProv = WS.OrgIDProv
+    and WS.UniqMonthID between $end_month_id-11 and $end_month_id
+    
+ left join $db_output.bbrb_ccg_in_year ccg
+   on mpi.Person_ID = ccg.Person_ID
+     
+ left join $db_output.bbrb_stp_mapping stp
+   on ccg.SubICBGPRes = stp.CCG_Code
+    
+ left join $reference_data.english_indices_of_dep_v02 imd_ref
+   on mpi.LSOA2011 = imd_ref.LSOA_CODE_2011 
+   and imd_ref.IMD_YEAR = '2019' 
+   
+ left join $db_output.imd_desc imd
+   on imd_ref.DECI_IMD = imd.IMD_Number and '$end_month_id' >= imd.FirstMonth and (imd.LastMonth is null or '$end_month_id' <= imd.LastMonth)
+   
+ left join $db_output.age_band_desc ab
+   on mpi.AgeRepPeriodEnd = ab.AgeRepPeriodEnd and '$end_month_id' >= ab.FirstMonth and (ab.LastMonth is null or '$end_month_id' <= ab.LastMonth)
+    
+ left join $db_output.gender_desc gen
+   on CASE WHEN mpi.GenderIDCode IN ('1','2','3','4') THEN mpi.GenderIDCode
+              WHEN mpi.Gender IN ('1','2','9') THEN mpi.Gender
+               ELSE 'UNKNOWN' END = gen.Der_Gender
+   and '$end_month_id' >= gen.FirstMonth and (gen.LastMonth is null or '$end_month_id' <= gen.LastMonth)
+   
+ left join $db_output.ethnicity_desc eth
+   on mpi.NHSDEthnicity = eth.LowerEthnicityCode and '$end_month_id' >= eth.FirstMonth and (eth.LastMonth is null or '$end_month_id' <= eth.LastMonth)
+
+# COMMAND ----------
+
+ %sql
+ OPTIMIZE $db_output.oaps_all_admissions_month;
+ OPTIMIZE $db_output.oaps_all_admissions_quarter;
+ OPTIMIZE $db_output.oaps_all_admissions_year;

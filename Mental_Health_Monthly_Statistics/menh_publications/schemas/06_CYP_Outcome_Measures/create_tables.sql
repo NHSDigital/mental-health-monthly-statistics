@@ -8,19 +8,19 @@
  db_output=dbutils.widgets.get("db_output")
  print(db_output)
  assert db_output
- mhsds_database=dbutils.widgets.get("mhsds_database")
- print(mhsds_database)
- assert mhsds_database
+ $mhsds_db=dbutils.widgets.get("$mhsds_db")
+ print($mhsds_db)
+ assert $mhsds_db
 
 -- COMMAND ----------
 
  %sql
  DROP TABLE IF EXISTS $db_output.peri_breakdown_values;
  CREATE TABLE IF NOT EXISTS $db_output.peri_breakdown_values (breakdown string) USING DELTA;
- 
+
  DROP TABLE IF EXISTS $db_output.peri_level_values_1;
  CREATE TABLE IF NOT EXISTS $db_output.peri_level_values (primary_level string, primary_level_desc string, secondary_level string, secondary_level_desc string, breakdown string) USING DELTA; --See above.
- 
+
  DROP TABLE IF EXISTS $db_output.peri_metric_values;
  CREATE TABLE IF NOT EXISTS $db_output.peri_metric_values (metric string, metric_name string) USING DELTA;
 
@@ -247,7 +247,7 @@ USING DELTA
 
 -- DBTITLE 1,MHA91 - Create CCG_MAPPING_2021 table for reference data
  %sql
- 
+
  CREATE TABLE IF NOT EXISTS $db_output.CCG_MAPPING_2021 
  (
    CCG_UNMAPPED STRING, 
@@ -267,11 +267,11 @@ USING DELTA
 
 -- DBTITLE 1,MHA91 - Create MH_ASS table for reference data
  %sql
- 
+
  -- this table is recreated with a longer name IN THIS NOTEBOOK and this MH_ASS version is not used anywhere else other than being populated with nearly duplicate data
- 
+
  DROP TABLE IF EXISTS $db_output.mh_ass; 
- 
+
  -- CREATE TABLE IF NOT EXISTS $db_output.MH_ASS 
  -- ( Category STRING,
  --   Assessment_Tool_Name STRING,
@@ -289,7 +289,7 @@ USING DELTA
 -- COMMAND ----------
 
  %sql
- 
+
  CREATE TABLE IF NOT EXISTS $db_output.MHS95_Main 
  ( 
  UniqMonthID bigint,

@@ -9,7 +9,7 @@
 # db_output  = dbutils.widgets.get("db_output")
 # assert db_output
  
-# dbutils.widgets.text("db_source", "mhsds_v5_database", "db_source")
+# dbutils.widgets.text("db_source", "$mhsds_db", "db_source")
 # db_source = dbutils.widgets.get("db_source")
 # assert db_source
  

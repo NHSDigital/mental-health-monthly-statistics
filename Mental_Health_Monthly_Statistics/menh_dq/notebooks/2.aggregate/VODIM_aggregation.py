@@ -3,7 +3,7 @@
 
 
 # dbutils.widgets.text("db_output" , "menh_dq", "db_output")
-# dbutils.widgets.text("dbm" , "testdata_menh_dq_mhsds_v5_database", "dbm")
+# dbutils.widgets.text("dbm" , "testdata_menh_dq_$mhsds_db", "dbm")
 
 # dbutils.widgets.text("month_id", "1449", "month_id")
 # dbutils.widgets.text("reference_data", "reference_data", "reference_data")
@@ -40,7 +40,7 @@ assert month_id
 
 # DBTITLE 1,Denominator
  %sql
- 
+
  WITH InventoryList
  AS
  (
@@ -88,7 +88,7 @@ assert month_id
 # COMMAND ----------
 
  %sql
- 
+
  DROP TABLE IF EXISTS $db_output.dq_stg_inventorylist;
  CREATE TABLE IF NOT EXISTS $db_output.dq_stg_inventorylist
  AS 
@@ -97,7 +97,7 @@ assert month_id
  UNION SELECT DimensionTypeId, MeasureId, OrgIDProv, 'Default' AS MetricTypeName, Default AS Value FROM $db_output.dq_stg_validity
  UNION SELECT DimensionTypeId, MeasureId, OrgIDProv, 'Invalid' AS MetricTypeName, Invalid AS Value FROM $db_output.dq_stg_validity
  UNION SELECT DimensionTypeId, MeasureId, OrgIDProv, 'Missing' AS MetricTypeName, Missing AS Value FROM $db_output.dq_stg_validity;
- 
+
  DROP TABLE IF EXISTS $db_output.dq_stg_inventorylistsource;
  CREATE TABLE $db_output.dq_stg_inventorylistsource
  AS
@@ -122,9 +122,9 @@ assert month_id
 # COMMAND ----------
 
  %sql
- 
+
  -- Valid, Other, Default, Invalid, Missing  re-coding to get around an issue in PROD
- 
+
  MERGE INTO $db_output.dq_inventory AS target
  USING $db_output.dq_stg_inventoryListSource AS source ON target.UniqMonthID = source.UniqMonthID
    AND target.DimensionTypeId = source.DimensionTypeId

@@ -1,6 +1,6 @@
 # Databricks notebook source
  %sql
- DROP TABLE IF EXISTS $db_output.cmh_4ww_referrals; 
+ -- DROP TABLE IF EXISTS $db_output.cmh_4ww_referrals; 
  CREATE TABLE IF NOT EXISTS $db_output.cmh_4ww_referrals 
  (
  ReportingPeriodStartDate date,
@@ -29,7 +29,7 @@
 # COMMAND ----------
 
  %sql
- DROP TABLE IF EXISTS $db_output.cmh_4ww_dates;
+ -- DROP TABLE IF EXISTS $db_output.cmh_4ww_dates;
  CREATE TABLE IF NOT EXISTS $db_output.cmh_4ww_dates 
  (
  Person_ID string,
@@ -42,7 +42,7 @@
 # COMMAND ----------
 
  %sql
- DROP TABLE IF EXISTS $db_output.cmh_4ww_cumf; 
+ -- DROP TABLE IF EXISTS $db_output.cmh_4ww_cumf; 
  CREATE TABLE IF NOT EXISTS $db_output.cmh_4ww_cumf 
  (
  Person_ID string, 
@@ -54,7 +54,7 @@
 # COMMAND ----------
 
  %sql
- DROP TABLE IF EXISTS $db_output.cmh_4ww_groups; 
+ -- DROP TABLE IF EXISTS $db_output.cmh_4ww_groups; 
  CREATE TABLE IF NOT EXISTS $db_output.cmh_4ww_groups
  (
  Person_ID string,
@@ -69,7 +69,7 @@
 # COMMAND ----------
 
  %sql
- DROP TABLE IF EXISTS $db_output.cmh_4ww_spell_rank; 
+ -- DROP TABLE IF EXISTS $db_output.cmh_4ww_spell_rank; 
  CREATE TABLE IF NOT EXISTS $db_output.cmh_4ww_spell_rank 
  (
  Person_ID string,
@@ -85,7 +85,7 @@
 # COMMAND ----------
 
  %sql
- DROP TABLE IF EXISTS $db_output.cmh_4ww_subs; 
+ -- DROP TABLE IF EXISTS $db_output.cmh_4ww_subs; 
  CREATE TABLE IF NOT EXISTS $db_output.cmh_4ww_subs 
  (
  Person_ID string,
@@ -100,7 +100,7 @@
 # COMMAND ----------
 
  %sql
- DROP TABLE IF EXISTS $db_output.cmh_4ww_subs_ranked; 
+ -- DROP TABLE IF EXISTS $db_output.cmh_4ww_subs_ranked; 
  CREATE TABLE IF NOT EXISTS $db_output.cmh_4ww_subs_ranked 
  (
  Person_ID string,
@@ -145,8 +145,12 @@
  Person_ID string,
  OrgIDProv string,
  Provider_Name string,
+ CCG_Code string,
+ CCG_Name string,
  STP_Code string,
  STP_Name string,
+ Region_Code string,
+ Region_Name string,
  SpellID string, 
  StartDate date,
  EndDate date,
@@ -181,7 +185,7 @@
 # COMMAND ----------
 
  %sql
- DROP TABLE IF EXISTS $db_output.cyp_4ww_referrals; 
+ -- DROP TABLE IF EXISTS $db_output.cyp_4ww_referrals; 
  CREATE TABLE IF NOT EXISTS $db_output.cyp_4ww_referrals 
  (
  ReportingPeriodStartDate date,
@@ -210,7 +214,7 @@
 # COMMAND ----------
 
  %sql
- DROP TABLE IF EXISTS $db_output.cyp_4ww_dates; 
+ -- DROP TABLE IF EXISTS $db_output.cyp_4ww_dates; 
  CREATE TABLE IF NOT EXISTS $db_output.cyp_4ww_dates 
  (
  Person_ID string,
@@ -223,7 +227,7 @@
 # COMMAND ----------
 
  %sql
- DROP TABLE IF EXISTS $db_output.cyp_4ww_cumf; 
+ -- DROP TABLE IF EXISTS $db_output.cyp_4ww_cumf; 
  CREATE TABLE IF NOT EXISTS $db_output.cyp_4ww_cumf 
  (
  Person_ID string, 
@@ -235,7 +239,7 @@
 # COMMAND ----------
 
  %sql
- DROP TABLE IF EXISTS $db_output.cyp_4ww_groups; 
+ -- DROP TABLE IF EXISTS $db_output.cyp_4ww_groups; 
  CREATE TABLE IF NOT EXISTS $db_output.cyp_4ww_groups
  (
  Person_ID string,
@@ -250,7 +254,7 @@
 # COMMAND ----------
 
  %sql
- DROP TABLE IF EXISTS $db_output.cyp_4ww_spell_contacts; 
+ -- DROP TABLE IF EXISTS $db_output.cyp_4ww_spell_contacts; 
  CREATE TABLE IF NOT EXISTS $db_output.cyp_4ww_spell_contacts 
  (
  Der_Activity_Type string,
@@ -266,7 +270,7 @@
 # COMMAND ----------
 
  %sql
- DROP TABLE IF EXISTS $db_output.cyp_4ww_indirect_activity; 
+ -- DROP TABLE IF EXISTS $db_output.cyp_4ww_indirect_activity; 
  CREATE TABLE IF NOT EXISTS $db_output.cyp_4ww_indirect_activity 
  (
  Person_ID string,
@@ -280,7 +284,7 @@
 # COMMAND ----------
 
  %sql
- DROP TABLE IF EXISTS $db_output.cyp_4ww_spell_rank; 
+ -- DROP TABLE IF EXISTS $db_output.cyp_4ww_spell_rank; 
  CREATE TABLE IF NOT EXISTS $db_output.cyp_4ww_spell_rank 
  (
  Person_ID string,
@@ -296,7 +300,7 @@
 # COMMAND ----------
 
  %sql
- DROP TABLE IF EXISTS $db_output.cyp_4ww_subs; 
+ -- DROP TABLE IF EXISTS $db_output.cyp_4ww_subs; 
  CREATE TABLE IF NOT EXISTS $db_output.cyp_4ww_subs 
  (
  Person_ID string,
@@ -311,7 +315,7 @@
 # COMMAND ----------
 
  %sql
- DROP TABLE IF EXISTS $db_output.cyp_4ww_subs_ranked; 
+ -- DROP TABLE IF EXISTS $db_output.cyp_4ww_subs_ranked; 
  CREATE TABLE IF NOT EXISTS $db_output.cyp_4ww_subs_ranked 
  (
  Person_ID string,
@@ -354,8 +358,12 @@
  Person_ID string,
  OrgIDProv string,
  Provider_Name string,
+ CCG_Code string,
+ CCG_Name string,
  STP_Code string,
  STP_Name string,
+ Region_Code string,
+ Region_Name string,
  SpellID string, 
  StartDate date,
  EndDate date,
@@ -379,4 +387,25 @@
  With_Intervention_or_CP int,
  Clock_stop_in_RP int,
  With_clock_stop int
+ ) USING DELTA
+
+# COMMAND ----------
+
+ %sql
+ DROP TABLE IF EXISTS $db_output.snomed_4ww_refset; 
+ CREATE TABLE IF NOT EXISTS $db_output.snomed_4ww_refset
+ ( 
+ Ref_Group string,
+ Reference_Set string,
+ RefSetID string,
+ RefSet_EffectiveStartTime date,
+ Concept_EffectiveStartTime date,
+ RefSet_Active int,
+ ConceptID string,
+ Concept_Active int,
+ RefSet_EffectiveEndTime date,
+ Concept_EffectiveEndTime date,
+ Der_Active int,
+ Der_EffectiveStartTime date,
+ Der_EffectiveEndTime date
  ) USING DELTA

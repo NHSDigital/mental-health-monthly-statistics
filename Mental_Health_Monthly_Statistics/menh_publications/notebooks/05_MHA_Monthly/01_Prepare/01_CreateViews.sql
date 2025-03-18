@@ -19,6 +19,7 @@
  print(reference_data)
  assert(reference_data)
 
+
 -- COMMAND ----------
 
 -- DBTITLE 1,Create MHA_RD_ORG_DAILY_LATEST 

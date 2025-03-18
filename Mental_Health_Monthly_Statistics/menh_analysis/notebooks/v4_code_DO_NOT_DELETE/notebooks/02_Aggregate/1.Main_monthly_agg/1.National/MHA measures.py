@@ -2,7 +2,7 @@
 # DBTITLE 1,MHS08 - National Level
  %sql
  --MHS08 - PEOPLE SUBJECT TO MENTAL HEALTH ACT AT END OF REPORTING PERIOD
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START,
              '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -32,7 +32,7 @@
 # DBTITLE 1,MHS08a - National Level
  %sql
  --MHS08a - PEOPLE SUBJECT TO MENTAL HEALTH ACT AT END OF REPORTING PERIOD, AGED 0-17
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START,
              '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -205,7 +205,7 @@
 # DBTITLE 1,MH09 National
  %sql
  --MH09 - PEOPLE SUBJECT TO DETENTION IN HOSPITAL (MENTAL HEALTH SERVICES) AT END OF REPORTING PERIOD - FINAL
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START,
              '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -341,7 +341,7 @@
 # DBTITLE 1,MHS10 - National Level
  %sql
  --MHS10 - PEOPLE SUBJECT TO A COMMUNITY TREATMENT ORDER OR ON CONDITIONAL DISCHARGE AT END OF REPORTING PERIOD - FINAL
- 
+
  INSERT INTO $db_output.Main_monthly_unformatted
      SELECT '$rp_startdate' AS REPORTING_PERIOD_START,
              '$rp_enddate' AS REPORTING_PERIOD_END,
@@ -469,6 +469,7 @@
              ON MHS11.Person_ID = MHS09.Person_ID
        WHERE MHS09.Person_ID IS NULL
 
+
 # COMMAND ----------
 
 # DBTITLE 1,MHS11a - National Level
@@ -491,6 +492,7 @@
              ON MHS11.Person_ID = MHS09.Person_ID
        WHERE MHS09.Person_ID IS NULL
  			AND MHS11.AgeRepPeriodEnd <= 17
+
 
 # COMMAND ----------
 

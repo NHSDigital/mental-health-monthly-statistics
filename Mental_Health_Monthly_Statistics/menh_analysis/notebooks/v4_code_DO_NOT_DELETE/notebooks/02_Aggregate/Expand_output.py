@@ -1,8 +1,8 @@
 # Databricks notebook source
  %md
- 
+
  # Expand output for each product to cover all possible metrics
- 
+
  By RIGHT JOINing the unformatted output to the list of possible metrics, and using COALESCE we can 
  fill in any metrics which didn't emerge from the submitted data.
 
@@ -41,9 +41,9 @@
 
 # DBTITLE 1,1. Expand Main monthly
   %sql
-  -- reinstated this SQL version now that the need to restrict outputs for Provisional & Final has dropped
+  --User note reinstated this SQL version now that the need to restrict outputs for Provisional & Final has dropped
  --also Final is now Performance anyway!
- 
+
  CREATE OR REPLACE GLOBAL TEMP VIEW Main_monthly_expanded AS
  SELECT  
    COALESCE(m.REPORTING_PERIOD_START, '$rp_startdate') as REPORTING_PERIOD_START,
@@ -69,7 +69,7 @@
    AND m.REPORTING_PERIOD_END = '$rp_enddate'
    AND m.STATUS = '$status'
  AND m.SOURCE_DB = '$db_source'
- 
+
  WHERE (
          (
            p.BREAKDOWN NOT IN ('CASSR; Provider', 'CASSR')
@@ -86,7 +86,7 @@
        )
        
  union all
- 
+
  select 
    COALESCE(a.REPORTING_PERIOD_START, '$rp_startdate') as REPORTING_PERIOD_START, 
    COALESCE(a.REPORTING_PERIOD_END, '$rp_enddate') as REPORTING_PERIOD_END, 
@@ -114,11 +114,12 @@
            AND a.STATUS = '$status'
            AND a.SOURCE_DB = '$db_source'
 
+
 # COMMAND ----------
 
 # DBTITLE 1,2. Expand AWT (Access and Waiting Times)
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMP VIEW AWT_expanded AS
  SELECT DISTINCT 
    COALESCE(m.REPORTING_PERIOD_START, '$rp_startdate_quarterly') as REPORTING_PERIOD_START,
@@ -135,7 +136,7 @@
    COALESCE(m.SOURCE_DB, '$db_source') AS SOURCE_DB
    
  FROM $db_output.AWT_unformatted as m
- --  added in the SECONDARY_LEVEL line here becasue I think it's needed...
+ -- User note added in the SECONDARY_LEVEL line here becasue I think it's needed...
  RIGHT OUTER JOIN global_temp.AWT_possible_metrics as p
    ON m.BREAKDOWN = p.BREAKDOWN
    AND m.LEVEL = p.LEVEL
@@ -150,7 +151,7 @@
 
 # DBTITLE 1,3. Expand CYP 2nd contact
  %sql
- 
+
  CREATE OR REPLACE GLOBAL TEMP VIEW CYP_2nd_contact_expanded AS
  SELECT  
    COALESCE(m.REPORTING_PERIOD_START, '$rp_startdate') as REPORTING_PERIOD_START,
@@ -211,10 +212,10 @@
 
 # DBTITLE 1,4. Expand CAP
  %sql
- 
- -- reinstated this SQL version now that the need to restrict outputs for Provisional & Final has dropped
+
+ --User note reinstated this SQL version now that the need to restrict outputs for Provisional & Final has dropped
  --also Final is now Performance anyway!
- 
+
  CREATE OR REPLACE GLOBAL TEMP VIEW CAP_expanded AS 
  SELECT COALESCE(m.REPORTING_PERIOD_START, '$rp_startdate') as REPORTING_PERIOD_START, 
  COALESCE(m.REPORTING_PERIOD_END, '$rp_enddate') as REPORTING_PERIOD_END,
@@ -226,7 +227,7 @@
  p.METRIC_NAME AS METRIC_NAME, 
  m.METRIC_VALUE AS METRIC_VALUE,  
  COALESCE(m.SOURCE_DB, '$db_source') AS SOURCE_DB
- 
+
  FROM $db_output.CAP_Unformatted as m 
  RIGHT JOIN global_temp.CaP_possible_metrics as p 
  ON m.METRIC = p.METRIC 
@@ -264,10 +265,10 @@
 
 # DBTITLE 1,5. CYP Monthly expanded
  %sql
- -- reinstated this SQL version now that the need to restrict outputs for Provisional & Final has dropped
+ --User note reinstated this SQL version now that the need to restrict outputs for Provisional & Final has dropped
  --also Final is now Performance anyway!
- 
- 
+
+
  CREATE OR REPLACE GLOBAL TEMP VIEW CYP_monthly_expanded AS
  SELECT  
    COALESCE(m.REPORTING_PERIOD_START, '$rp_startdate') as REPORTING_PERIOD_START,
@@ -338,10 +339,10 @@
 
 # DBTITLE 1,7. Expand Ascof
  %sql
- 
- -- reinstated this SQL version now that the need to restrict outputs for Provisional & Final has dropped
+
+ --User note reinstated this SQL version now that the need to restrict outputs for Provisional & Final has dropped
  --also Final is now Performance anyway!
- 
+
  CREATE OR REPLACE GLOBAL TEMP VIEW Ascof_expanded AS
  SELECT  
    COALESCE(m.REPORTING_PERIOD_START, '$rp_startdate') as REPORTING_PERIOD_START,
@@ -358,7 +359,7 @@
    p.METRIC_NAME AS METRIC_NAME,
    m.METRIC_VALUE AS METRIC_VALUE, 
  COALESCE(m.SOURCE_DB, '$db_source') AS SOURCE_DB
- 
+
  FROM $db_output.Ascof_unformatted as m
  RIGHT OUTER JOIN global_temp.ascof_possible_metrics as p
    ON m.BREAKDOWN = p.BREAKDOWN
@@ -402,9 +403,9 @@ else:
 
 # DBTITLE 1,8. Expand FYFV - commented out
  %sql
- 
+
  --need to add in a condition so that this only runs when month_id is divisible by 3 with no remainder
- 
+
  -- CREATE OR REPLACE GLOBAL TEMP VIEW FYFV_expanded AS
  -- SELECT  
  --   COALESCE(m.REPORTING_PERIOD_START, '$rp_startdate') as REPORTING_PERIOD_START,

@@ -16,9 +16,9 @@
 # COMMAND ----------
 
  %sql
- 
+
  INSERT INTO $db_output.CCGOIS_unformatted
- 
+
  --create or replace temp view CCGOIS as
  (
  SELECT			'$rp_startdate' AS REPORTING_PERIOD

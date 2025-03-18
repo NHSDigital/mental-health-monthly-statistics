@@ -24,7 +24,7 @@ assert month_id
 
 # DBTITLE 1,England
  %sql
- 
+
  Insert into $db_output.MHSRestrictiveInterventionCount
    SELECT           '$rp_startdate' AS REPORTING_PERIOD_START
                     ,'$rp_enddate' AS REPORTING_PERIOD_END

@@ -3,30 +3,31 @@
  db_output=dbutils.widgets.get("db_output")
  print(db_output)
  assert db_output
- mhsds_database=dbutils.widgets.get("mhsds_database")
- print(mhsds_database)
- assert mhsds_database
+ $mhsds_db=dbutils.widgets.get("$mhsds_db")
+ print($mhsds_db)
+ assert $mhsds_db
 
 -- COMMAND ----------
 
  %sql
  DROP TABLE IF EXISTS $db_output.cyp_ed_wt_breakdown_values;
  CREATE TABLE IF NOT EXISTS $db_output.cyp_ed_wt_breakdown_values (breakdown string) USING DELTA;
- 
+
  DROP TABLE IF EXISTS $db_output.cyp_ed_wt_level_values_1;
  CREATE TABLE IF NOT EXISTS $db_output.cyp_ed_wt_level_values_1 (primary_level string, primary_level_desc string, secondary_level string, secondary_level_desc string, breakdown string) USING DELTA; --See above.
- 
+
  DROP TABLE IF EXISTS $db_output.cyp_ed_wt_metric_values;
  CREATE TABLE IF NOT EXISTS $db_output.cyp_ed_wt_metric_values (metric string, metric_name string) USING DELTA;
+
 
 -- COMMAND ----------
 
 -- DBTITLE 1,create table cyp_ed_wt_step4
  %sql
- 
+
  -- table can be dropped safely as it is truncated each run and holds no persisted data
  DROP TABLE IF EXISTS $db_output.cyp_ed_wt_step4;
- 
+
  CREATE TABLE IF NOT EXISTS $db_output.cyp_ed_wt_step4
  (
    UniqMonthID int,
@@ -41,18 +42,18 @@
    SOURCE_DB string,
    SubmissionMonthID int
  )
- 
- 
+
+
  USING DELTA;
 
 -- COMMAND ----------
 
 -- DBTITLE 1,create table cyp_ed_wt_STEP6
  %sql
- 
+
  -- table can be dropped safely as it is truncated each run and holds no persisted data
  DROP TABLE IF EXISTS $db_output.cyp_ed_wt_step6;
- 
+
  CREATE TABLE IF NOT EXISTS $db_output.cyp_ed_wt_step6
  (
    UniqMonthID int,
@@ -68,8 +69,8 @@
    SOURCE_DB string,
    SubmissionMonthID int
  )
- 
- 
+
+
  USING DELTA;
 
 -- COMMAND ----------
@@ -135,6 +136,6 @@ PARTITIONED BY (REPORTING_PERIOD_END, STATUS);
 -- # # update only needs doing once - DONE
 
 -- # for table, column in tableColumn.items():
--- #   action = """Update {db_output}.{table} SET {column} = '{mhsds_database}' where {column} is null""".format(db_output=db_output,table=table,column=column,mhsds_database=mhsds_database)
+-- #   action = """Update {db_output}.{table} SET {column} = '{$mhsds_db}' where {column} is null""".format(db_output=db_output,table=table,column=column,$mhsds_db=$mhsds_db)
 -- #   print(action)
 -- #   spark.sql(action)

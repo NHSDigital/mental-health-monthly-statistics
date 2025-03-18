@@ -17,7 +17,7 @@ assert db_source
 
 # DBTITLE 1,People suppression
  %sql
- 
+
  Insert into $db_output.MHSRestrictiveInterventionPeopleSuppressed
    SELECT           REPORTING_PERIOD_START
                     ,REPORTING_PERIOD_END

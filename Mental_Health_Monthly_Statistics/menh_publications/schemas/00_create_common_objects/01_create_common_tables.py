@@ -2,23 +2,23 @@
 db_output = dbutils.widgets.get("db_output")
 print(db_output)
 assert db_output
-mhsds_database = dbutils.widgets.get("mhsds_database")
-print(mhsds_database)
-assert mhsds_database
+$mhsds_db = dbutils.widgets.get("$mhsds_db")
+print($mhsds_db)
+assert $mhsds_db
 
 # COMMAND ----------
 
  %md
- 
+
  # tables created in this notebook
- 
+
  - main_monthly_unformatted_new
  - all_products_cached
  - third_level_products_cached
  - All_products_formatted
  - third_level_products_formatted
- 
- 
+
+
    - Main_monthly_breakdown_values
    - Main_monthly_level_values_1
    - Main_monthly_metric_values
@@ -28,15 +28,15 @@ assert mhsds_database
  - RD_ORG_DAILY_LATEST
  - rd_ccg_latest
  - STP_Region_mapping_post_2020
- 
+
  - MHS001_CCG_LATEST
  - MHS001MPI_latest_month_data
  - MHS101Referral_service_area
  - MHS101Referral_open_end_rp
- 
+
  - Accommodation_latest
  - Employment_latest
- 
+
  - Ref_GenderCodes
  - Ref_EthnicGroup
  - Ref_AgeBand
@@ -72,7 +72,7 @@ assert mhsds_database
 # DBTITLE 1,all_products_cached
  %sql
  -- DROP TABLE IF EXISTS $db_output.all_products_cached;
- 
+
  CREATE TABLE IF NOT EXISTS $db_output.all_products_cached (
     MONTH_ID INT, 
     STATUS STRING,
@@ -96,7 +96,7 @@ assert mhsds_database
 
 # DBTITLE 1,third_level_products_cached
  %sql
- 
+
  -- DROP TABLE IF EXISTS $db_output.third_level_products_cached;
  CREATE TABLE IF NOT EXISTS $db_output.third_level_products_cached (
      MONTH_ID INT, 
@@ -147,7 +147,7 @@ assert mhsds_database
 
 # DBTITLE 1,third_level_products_formatted
  %sql
- 
+
  -- DROP TABLE IF EXISTS $db_output.third_level_products_formatted;
  CREATE TABLE IF NOT EXISTS $db_output.third_level_products_formatted (
      MONTH_ID INT, 
@@ -176,10 +176,10 @@ assert mhsds_database
  %sql
  -- DROP TABLE IF EXISTS $db_output.main_monthly_breakdown_values;
  CREATE TABLE IF NOT EXISTS $db_output.Main_monthly_breakdown_values (breakdown string) USING DELTA;
- 
+
  -- DROP TABLE IF EXISTS $db_output.main_monthly_level_values_1;
  CREATE TABLE IF NOT EXISTS $db_output.Main_monthly_level_values_1 (primary_level string, primary_level_desc string, secondary_level string, secondary_level_desc string, breakdown string) USING DELTA; --See above.
- 
+
  -- DROP TABLE IF EXISTS $db_output.main_monthly_metric_values;
  CREATE TABLE IF NOT EXISTS $db_output.Main_monthly_metric_values (metric string, metric_name string) USING DELTA;
 
@@ -187,9 +187,9 @@ assert mhsds_database
 
 # DBTITLE 1,Provider_list
  %sql
- 
+
  -- DROP TABLE IF EXISTS $db_output.provider_list; 
- 
+
  CREATE TABLE IF NOT EXISTS $db_output.Provider_list
   (ORG_CODE          STRING,
    NAME              STRING)
@@ -198,9 +198,9 @@ assert mhsds_database
 # COMMAND ----------
 
  %sql
- 
+
  -- DROP TABLE IF EXISTS $db_output.provider_list; 
- 
+
  CREATE TABLE IF NOT EXISTS $db_output.providers_between_rp_start_end_dates
   (ORG_CODE          STRING,
    NAME              STRING)
@@ -209,9 +209,9 @@ assert mhsds_database
 # COMMAND ----------
 
  %sql
- 
+
  -- DROP TABLE IF EXISTS $db_output.provider_list; 
- 
+
  CREATE TABLE IF NOT EXISTS $db_output.providers_between_rp_start_end_dates_12m
   (ORG_CODE          STRING,
    NAME              STRING)
@@ -245,16 +245,16 @@ assert mhsds_database
 # DBTITLE 1,ed_ccg_latest
  %sql
  -- drop table IF EXISTS $db_output.ed_ccg_latest;
- 
+
  -- drop table IF EXISTS $db_output.rd_ccg_latest;
- 
+
  -- these tables were duplicates with different names - this is just a clear out - new table created below
 
 # COMMAND ----------
 
 # DBTITLE 1,rd_ccg_latest
  %sql
- 
+
  CREATE TABLE IF NOT EXISTS 
  $db_output.rd_ccg_latest 
  (original_ORG_CODE STRING,
@@ -267,18 +267,18 @@ assert mhsds_database
 
 # DBTITLE 1,STP/Region breakdowns April 2020
  %sql
- 
+
  -- DROP TABLE IF EXISTS $db_output.stp_region_mapping_post_2020;
- 
+
  CREATE TABLE IF NOT EXISTS $db_output.STP_Region_mapping_post_2020 (STP_code string, STP_description string, CCG_code string, CCG_description string, Region_code string, Region_description string) USING DELTA;
 
 # COMMAND ----------
 
 # DBTITLE 1,MHS001_CCG_LATEST 
  %sql
- 
+
  --DROP TABLE IF EXISTS $db_output.mhs001_ccg_latest;
- 
+
  CREATE TABLE IF NOT EXISTS $db_output.MHS001_CCG_LATEST 
          (Person_ID            STRING,
           IC_Rec_CCG           STRING)
@@ -287,9 +287,9 @@ assert mhsds_database
 # COMMAND ----------
 
  %sql
- 
+
  --DROP TABLE IF EXISTS $db_output.mhs001_ccg_latest_12m;
- 
+
  CREATE TABLE IF NOT EXISTS $db_output.MHS001_CCG_LATEST_12m
          (Person_ID            STRING,
           IC_Rec_CCG           STRING)
@@ -299,13 +299,13 @@ assert mhsds_database
 
 # DBTITLE 1,MHS001MPI_latest_month_data
  %sql
- 
+
  -- DROP TABLE IF EXISTS $db_output.mhs001mpi_latest_month_data;
- 
+
  -- NB just changing the name of a field here will not work as a v5 change
  -- also need to ensure the table is dropped to force the change to happen
  -- DROP TABLE command reinstated - this is ok in this case because this prep table gets truncated and replaced each run anyway.  THIS IS NOT THE ANSWER for a persisted DATA table.
- 
+
  CREATE TABLE IF NOT EXISTS $db_output.MHS001MPI_latest_month_data
   (AgeDeath              BIGINT,
    AgeRepPeriodEnd       BIGINT,
@@ -346,13 +346,15 @@ assert mhsds_database
  USING delta
  PARTITIONED BY (UniqMonthID)
 
+
+
 # COMMAND ----------
 
 # DBTITLE 1,MHS101Referral_service_area
  %sql
- 
+
  DROP TABLE IF EXISTS $db_output.mhs101referral_service_area ;
- 
+
  CREATE TABLE IF NOT EXISTS $db_output.MHS101Referral_service_area 
       (  
        AgeServReferDischDate                                              bigint, 
@@ -411,12 +413,13 @@ assert mhsds_database
  USING delta 
  PARTITIONED BY (UniqMonthID)
 
+
 # COMMAND ----------
 
 # DBTITLE 1,MHS101Referral_open_end_rp
  %sql
  DROP TABLE IF EXISTS $db_output.mhs101referral_open_end_rp;
- 
+
  CREATE TABLE IF NOT EXISTS $db_output.MHS101Referral_open_end_rp 
   (
    AgeServReferDischDate                        BIGINT,
@@ -460,14 +463,15 @@ assert mhsds_database
  USING delta 
  PARTITIONED BY (UniqMonthID)
 
+
 # COMMAND ----------
 
 # DBTITLE 1,Accommodation_latest
  %sql
- 
- 
+
+
  DROP TABLE IF EXISTS $db_output.accommodation_latest;
- 
+
  CREATE TABLE IF NOT EXISTS $db_output.accommodation_latest 
       (AccommodationType                                          string, 
        AccommodationTypeDate                                      date,     
@@ -489,12 +493,13 @@ assert mhsds_database
  USING delta 
  PARTITIONED BY (UniqMonthID)
 
+
 # COMMAND ----------
 
 # DBTITLE 1,Employment_Latest
  %sql
  DROP TABLE IF EXISTS $db_output.employment_latest;
- 
+
  CREATE TABLE IF NOT EXISTS $db_output.employment_latest 
       (
        EmployStatus                                          string,   
@@ -520,7 +525,7 @@ assert mhsds_database
 
 # DBTITLE 1,Audit table to log the monthly runs
  %sql
- 
+
  CREATE TABLE IF NOT EXISTS $db_output.audit_menh_publications (
    MONTH_ID int,
    STATUS string,
@@ -531,6 +536,7 @@ assert mhsds_database
    RUN_END timestamp,
    ADHOC_DESC string
  ) USING DELTA PARTITIONED BY (MONTH_ID, STATUS)
+
 
 # COMMAND ----------
 

@@ -371,17 +371,17 @@ def access_filter_for_breakdown(prep_df: df, breakdown_name: str) -> df:
   """ 
   if breakdown_name == "Provider" or parent_breakdown(breakdown_name) == "Provider":
     rn_field = "AccessProvRN"
-  elif (breakdown_name == "CCG of Residence" or parent_breakdown(breakdown_name) == "CCG of Residence") and breakdown_name != "CCG of Residence; Provider":
+  elif (breakdown_name == "CCG of GP Practice or Residence" or parent_breakdown(breakdown_name) == "CCG of GP Practice or Residence") and breakdown_name != "CCG of GP Practice or Residence; Provider":
     rn_field = "AccessCCGRN"
   elif (breakdown_name == "CCG - Registration or Residence" or parent_breakdown(breakdown_name) == "CCG - Registration or Residence") and breakdown_name != "CCG - Registration or Residence; Provider":
     rn_field = "AccessCCGRN"
-  elif breakdown_name == "STP of Residence" or parent_breakdown(breakdown_name) == "STP of Residence":
+  elif breakdown_name == "STP of GP Practice or Residence" or parent_breakdown(breakdown_name) == "STP of GP Practice or Residence":
     rn_field = "AccessSTPRN"
   elif breakdown_name == "Commissioning Region" or parent_breakdown(breakdown_name) == "Commissioning Region":
     rn_field = "AccessRegionRN"
   elif breakdown_name == "LA/UA":
     rn_field = "AccessLARN"
-  elif breakdown_name == "CCG of Residence; Provider":
+  elif breakdown_name == "CCG of GP Practice or Residence; Provider":
     rn_field = "AccessCCGProvRN"  
   else:
     rn_field = "AccessEngRN"
@@ -402,9 +402,9 @@ def fy_access_filter_for_breakdown(prep_df: df, breakdown_name: str) -> df:
   """ 
   if breakdown_name == "Provider":
     rn_field = "FYAccessRNProv"
-  elif breakdown_name == "CCG of Residence":
+  elif breakdown_name == "CCG of GP Practice or Residence":
     rn_field = "FYAccessCCGRN"
-  elif breakdown_name == "STP of Residence":
+  elif breakdown_name == "STP of GP Practice or Residence":
     rn_field = "FYAccessSTPRN"
   elif breakdown_name == "Commissioning Region":
     rn_field = "FYAccessRegionRN"
@@ -723,6 +723,50 @@ def produce_filter_oaps_bed_days_agg_df(
     
     return agg_df
   
+def produce_filter_bed_days_agg_df(
+  db_output: str,  
+  db_source: str,
+  table_name: str,
+  filter_clause: Column,
+  rp_startdate: str, 
+  rp_enddate: str, 
+  primary_level: Column, 
+  primary_level_desc: Column, 
+  secondary_level: Column, 
+  secondary_level_desc: Column,
+  aggregation_field: str,    
+  breakdown: str,
+  status: str,
+  measure_id: str, 
+  numerator_id: str,  
+  denominator_id: str,
+  measure_name: str,
+  column_order: list
+) -> df:
+    """  This function produces the aggregation output dataframe from a defined preparation table
+    for all measures and breakdowns according to the mhsds_measure_metadata dictionary 
+    """  
+    prep_df = spark.table(f"{db_output}.{table_name}")
+    
+    if "Bed Type" in breakdown_name:
+      if measure_id[-2] == "a": ###all oaps measures in acute beds exclusively have 'a' after measure i.e. OAP02 is bed days OAP02a is bed days in Adult Acute Beds
+        filter_clause = (F.col("Acute_Bed") == "Y")
+        aggregation_field = aggregation_field.replace("_HS", "_WS")
+      else:
+        filter_clause = (F.col("UniqHospProvSpellID").isNotNull())
+        aggregation_field = aggregation_field.replace("_HS", "_WS")
+      
+    
+    prep_filter_df = (
+      prep_df.filter(filter_clause)
+    )
+        
+    agg_df = create_agg_df(prep_filter_df, db_source, rp_startdate, rp_enddate, 
+                           primary_level, primary_level_desc, secondary_level, secondary_level_desc,
+                           aggregation_field, breakdown, status, measure_id, measure_name, column_order)
+    
+    return agg_df
+  
 def insert_unsup_agg(agg_df: df, db_output: str, unsup_columns: list, output_table: str) -> None:
   """
   This function uses the aggregation dataframe produced in the different aggregation functions 
@@ -943,6 +987,29 @@ def cross_dict(list1):
     list1[1]["level_fields"][1].alias("secondary_level"), 
     list1[1]["level_fields"][2].alias("secondary_level_desc")]
   }  
+  return dict1
+ 
+def pop_cross_dict(list1):
+  # input list of up to 4 single level dictionaries -> output cross join dictionary
+  # please do not use double / triple level dictionaries as inputs
+  len1 = len(list1)
+  lln = [d["primary_level"] for d in list1]
+  lld = [d["primary_level_desc"] for d in list1]
+  llf = [d["source_table"] for d in list1]
+ 
+  breakdown_name = "; ".join([d["breakdown_name"] for d in list1])
+  breakdown_name = breakdown_name.replace("England; ", "")
+ 
+  dict1 = {
+    "breakdown_name": breakdown_name,
+    "source_table": llf[1],
+    "primary_level": lln[0],
+    "primary_level_desc": lld[0],
+    "secondary_level": lln[1],
+    "secondary_level_desc": lld[1],
+    "aggregate_field": "SUM(POPULATION_COUNT)"
+  }
+  
   return dict1
 
 # COMMAND ----------

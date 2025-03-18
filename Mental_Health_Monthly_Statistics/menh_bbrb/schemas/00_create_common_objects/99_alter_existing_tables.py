@@ -1,6 +1,6 @@
 # Databricks notebook source
  %md
- 
+
  ## functions and lists to allow alterations to existing tables that cannot be dropped and recreated because they contain data that needs to be persisted
 
 # COMMAND ----------
@@ -64,7 +64,7 @@ for table, column in tableColumn.items():
 # DBTITLE 1,Set SOURCE_DB to source database
 # update only needs doing once
 # for table, column in tableColumn.items():
-#   action = """Update {db_output}.{table} SET {column} = '{$mhsds_database}' where {column} is null""".format(db_output=db_output,table=table,column=column,$mhsds_database=$mhsds_database)
+#   action = """Update {db_output}.{table} SET {column} = '{$mhsds_db}' where {column} is null""".format(db_output=db_output,table=table,column=column,$mhsds_db=$mhsds_db)
 #   print(action)
 #   spark.sql(action)
 

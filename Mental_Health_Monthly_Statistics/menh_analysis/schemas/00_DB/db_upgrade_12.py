@@ -1,6 +1,6 @@
 # Databricks notebook source
 # dbutils.widgets.text("db_output","","db_output")
-# dbutils.widgets.text("db_source","testdata_menh_analysis_mh_v5_pre_pseudo_d1","db_source")
+# dbutils.widgets.text("db_source","testdata_menh_analysis_$mhsds_db","db_source")
 
 # COMMAND ----------
 
@@ -32,7 +32,7 @@
 
  %sql
  DROP TABLE IF EXISTS $db_output.tmp_mhmab_mhs001mpi_latest_month_data; 
- 
+
  CREATE TABLE if not exists $db_output.tmp_mhmab_mhs001mpi_latest_month_data (
  AgeDeath bigint
  ,AgeRepPeriodEnd	bigint
@@ -83,6 +83,7 @@
  ,DisabCode	string
  ,DisabCode_Desc	string
  ,Sex_Orient	string
+ ,RuralUrbanClassName string
  ) USING DELTA PARTITIONED BY (UniqMonthID)
 
 # COMMAND ----------
@@ -223,7 +224,8 @@
  EmployStatus_Desc	string,
  DisabCode	string,
  DisabCode_Desc	string,
- Sex_Orient	string
+ Sex_Orient	string,
+ RuralUrbanClassName string
  ) USING DELTA
 
 # COMMAND ----------
@@ -343,7 +345,8 @@
  EmployStatus_Desc	string,
  DisabCode	string,
  DisabCode_Desc	string,
- Sex_Orient	string
+ Sex_Orient	string,
+ RuralUrbanClassName string
  ) USING DELTA
 
 # COMMAND ----------
@@ -409,7 +412,8 @@
  EmployStatus_Desc	string,
  DisabCode	string,
  DisabCode_Desc	string,
- Sex_Orient	string) USING DELTA
+ Sex_Orient	string,
+ RuralUrbanClassName  string) USING DELTA
 
 # COMMAND ----------
 
@@ -465,6 +469,7 @@
  %sql
  DROP TABLE IF EXISTS $db_output.RefAgeBand;
  CREATE TABLE IF NOT EXISTS $db_output.RefAgeBand (AgeBand string);
+
 
 # COMMAND ----------
 

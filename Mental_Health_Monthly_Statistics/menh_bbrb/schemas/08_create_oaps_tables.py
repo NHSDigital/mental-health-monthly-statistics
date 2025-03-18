@@ -37,7 +37,7 @@
 # COMMAND ----------
 
  %sql
- DROP TABLE IF EXISTS $db_output.oaps_wardstay;
+ -- DROP TABLE IF EXISTS $db_output.oaps_wardstay;
  CREATE TABLE IF NOT EXISTS $db_output.oaps_wardstay
  (
  UniqWardStayID STRING,
@@ -59,7 +59,7 @@
 # COMMAND ----------
 
  %sql
- DROP TABLE IF EXISTS $db_output.oaps_referrals;
+ -- DROP TABLE IF EXISTS $db_output.oaps_referrals;
  CREATE TABLE IF NOT EXISTS $db_output.oaps_referrals
  (
  UniqServReqID STRING,
@@ -134,6 +134,7 @@
  Age_Group_Lower_Level STRING,
  LowerEthnicityCode STRING,
  LowerEthnicityName STRING,
+ UpperEthnicity STRING,
  IMD_Decile STRING,
  ReasonOAT STRING,
  ReasonOATName STRING,
@@ -186,6 +187,7 @@
  Age_Band STRING,
  LowerEthnicityCode STRING,
  LowerEthnicityName STRING,
+ UpperEthnicity STRING,
  IMD_Decile STRING,
  ReasonOAT STRING,
  ReasonOATName STRING,
@@ -254,6 +256,7 @@
  Age_Band STRING,
  LowerEthnicityCode STRING,
  LowerEthnicityName STRING,
+ UpperEthnicity STRING,
  IMD_Decile STRING,
  ReasonOAT STRING,
  ReasonOATName STRING,
@@ -322,6 +325,7 @@
  Age_Band STRING,
  LowerEthnicityCode STRING,
  LowerEthnicityName STRING,
+ UpperEthnicity STRING,
  IMD_Decile STRING,
  ReasonOAT STRING,
  ReasonOATName STRING,
@@ -360,6 +364,135 @@
  Bed_Days_Yr_HS INT,
  RANK INT,
  InScope STRING,
+ Received_In_RP INT,
+ Submitted_In_RP INT,
+ Ended_In_RP INT,
+ Active_End INT
+ ) USING DELTA
+
+# COMMAND ----------
+
+ %sql
+ DROP TABLE IF EXISTS $db_output.oaps_all_admissions_month;
+ CREATE TABLE IF NOT EXISTS $db_output.oaps_all_admissions_month
+ (
+ UniqMonthID BIGINT,
+ UniqHospProvSpellID STRING,
+ UniqWardStayID STRING,
+ CCG_Code STRING,
+ CCG_Name STRING,
+ STP_Code STRING,
+ STP_Name STRING,
+ Region_Code STRING,
+ Region_Name STRING,
+ Der_Gender STRING,
+ Der_Gender_Desc STRING,
+ AgeRepPeriodEnd INT,
+ Age_Band STRING,
+ LowerEthnicityCode STRING,
+ LowerEthnicityName STRING,
+ UpperEthnicity STRING,
+ IMD_Decile STRING,        
+ MHAdmittedPatientClass STRING,
+ MHAdmittedPatientClassName  STRING,
+ Acute_Bed STRING,
+ StartDateWardStay DATE,
+ EndDateWardStay DATE,
+ Bed_Days_Month_WS INT,
+ Bed_Days_Qtr_WS INT,
+ Bed_Days_Yr_WS INT,
+ StartDateHospProvSpell DATE,
+ DischDateHospProvSpell DATE,
+ Bed_Days_Month_HS INT,
+ Bed_Days_Qtr_HS INT,
+ Bed_Days_Yr_HS INT,
+ RANK INT,
+ Received_In_RP INT,
+ Submitted_In_RP INT,
+ Ended_In_RP INT,
+ Active_End INT
+ ) USING DELTA
+
+# COMMAND ----------
+
+ %sql
+ DROP TABLE IF EXISTS $db_output.oaps_all_admissions_quarter;
+ CREATE TABLE IF NOT EXISTS $db_output.oaps_all_admissions_quarter
+ (
+ UniqMonthID BIGINT,
+ UniqHospProvSpellID STRING,
+ UniqWardStayID STRING,
+ CCG_Code STRING,
+ CCG_Name STRING,
+ STP_Code STRING,
+ STP_Name STRING,
+ Region_Code STRING,
+ Region_Name STRING,
+ Der_Gender STRING,
+ Der_Gender_Desc STRING,
+ AgeRepPeriodEnd INT,
+ Age_Band STRING,
+ LowerEthnicityCode STRING,
+ LowerEthnicityName STRING,
+ UpperEthnicity STRING,
+ IMD_Decile STRING,        
+ MHAdmittedPatientClass STRING,
+ MHAdmittedPatientClassName  STRING,
+ Acute_Bed STRING,
+ StartDateWardStay DATE,
+ EndDateWardStay DATE,
+ Bed_Days_Month_WS INT,
+ Bed_Days_Qtr_WS INT,
+ Bed_Days_Yr_WS INT,
+ StartDateHospProvSpell DATE,
+ DischDateHospProvSpell DATE,
+ Bed_Days_Month_HS INT,
+ Bed_Days_Qtr_HS INT,
+ Bed_Days_Yr_HS INT,
+ RANK INT,
+ Received_In_RP INT,
+ Submitted_In_RP INT,
+ Ended_In_RP INT,
+ Active_End INT
+ ) USING DELTA
+
+# COMMAND ----------
+
+ %sql
+ DROP TABLE IF EXISTS $db_output.oaps_all_admissions_year;
+ CREATE TABLE IF NOT EXISTS $db_output.oaps_all_admissions_year
+ (
+ UniqMonthID BIGINT,
+ UniqHospProvSpellID STRING,
+ UniqWardStayID STRING,
+ CCG_Code STRING,
+ CCG_Name STRING,
+ STP_Code STRING,
+ STP_Name STRING,
+ Region_Code STRING,
+ Region_Name STRING,
+ Der_Gender STRING,
+ Der_Gender_Desc STRING,
+ AgeRepPeriodEnd INT,
+ Age_Band STRING,
+ LowerEthnicityCode STRING,
+ LowerEthnicityName STRING,
+ UpperEthnicity STRING,
+ IMD_Decile STRING,        
+ MHAdmittedPatientClass STRING,
+ MHAdmittedPatientClassName  STRING,
+ Acute_Bed STRING,
+ StartDateWardStay DATE,
+ EndDateWardStay DATE,
+ Bed_Days_Month_WS INT,
+ Bed_Days_Qtr_WS INT,
+ Bed_Days_Yr_WS INT,
+ StartDateHospProvSpell DATE,
+ DischDateHospProvSpell DATE,
+ Bed_Days_Month_HS INT,
+ Bed_Days_Qtr_HS INT,
+ Bed_Days_Yr_HS INT,
+ RANK INT,
  Received_In_RP INT,
  Submitted_In_RP INT,
  Ended_In_RP INT,

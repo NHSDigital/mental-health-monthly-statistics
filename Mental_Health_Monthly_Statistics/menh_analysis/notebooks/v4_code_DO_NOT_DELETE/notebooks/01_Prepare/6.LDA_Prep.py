@@ -19,9 +19,9 @@
 # DBTITLE 1,RD_ORG_DAILY_LATEST_LDA
  %sql
  /* This is similar to the generic prep RD_ORG_DAILY_LATEST, however it is broader and has an extra column. Possible to combine?*/
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW RD_ORG_DAILY_LATEST_LDA AS
- 
+
  SELECT DISTINCT                          
         ORG_CODE,                          
         NAME,                      
@@ -51,7 +51,7 @@
  %sql
  ------------------- THIS REFERENCE TABLE HAS ALL THE CCGS/TCPS AND COMMISSIONING REGIONS -------------------
  ----------------------- FOR THE RELEVANT REPORTING MONTH, IT IS DYNAMIC AND DEALS WITH NEW ORGS ------------
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW commissioners AS
  select case when O3.NAME like '%HUB%' then 'HUB' 
              when O3.NAME like '%CCG%' then 'CCG' 
@@ -108,14 +108,14 @@
  %sql
  ---------- This is to try and speed up the code so that the joins dont have to be done repeatedly on each join. In theory this table holds all of the information required for the LD cohort.
  ---------- The problem to use in some circumstances (eg. Average LOS *No longer included*) is that some Hospital spells have multiple ward stays. This produces mutiple lines per one hospital spell in this table.
- 
+
  ---------- For any new measures where the raw data is not in this table add it in using a left join to the appropriate table. Then add the field required to both the SELECT and GROUP BY.
  ---------- Ensure any new joins have the UniqmonthID in any join (** IC_UseSubmissionFlag previously needed in V3**). 
- 
+
  ---------- In some cases it is easier to have a second raw data table if the calculations used in the measures are particularly complex (eg. MHA)
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW LDA_data AS 
- 
+
  SELECT  M.Person_ID,
  		M.AgeRepPeriodEnd,
  		M.Gender,
@@ -310,24 +310,25 @@
               END,
  		RES.MHS505UniqID ;
 
+
 # COMMAND ----------
 
 # DBTITLE 1,LDA Data - Transformed Tables
  %sql
  --- THESE TEMP TABLES TRANSFORM THE LIST OF PATIENTS NEEDED FOR REPORTING TO INCLUDE VARIOUS COMMISSIONER FIELDS NEEDED FOR SSRS REPORTING--
- 
+
  -------------- Join the name of the provider onto LDA_Data to make the provider split easier.
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW LDA_Data_P AS
- 
+
  SELECT LD.*
          ,O.name,o.ORG_TYPE_CODE AS ORG_TYPE_CODE_PROV
  FROM global_temp.LDA_Data LD
  LEFT JOIN global_temp.RD_ORG_DAILY_LATEST_LDA O 
  on LD.combinedprovider = O.ORG_CODE;
- 
+
  ----- get the right commissioner in here -----
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW LDA_Data_C AS
  select L.*
         ,case WHEN O4.ORG_CODE is null and O5.ORG_CODE is null then 'Unknown'
@@ -347,7 +348,7 @@
        on O5.ORG_CODE = left(L.CombinedCommissioner,3) ;
   
  ---- join to the correct TCP/Region -------
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW LDA_Data_T AS
  Select L.*
         ,case when TCP_Code IS null then 'No TCP Mapping' 
@@ -363,11 +364,11 @@
  from global_temp.LDA_Data_C L
  left join global_temp.COMMISSIONERS C
        on C.ORG_CODE = L.OrgCode;
- 
+
  ----- Convert all the commissioner groupings --------
      
  TRUNCATE TABLE $db_output.LDA_Data_1;
- 
+
  INSERT INTO $db_output.LDA_Data_1 
  (select L.*,R.ORG_TYPE_CODE AS ORG_TYPE_ORG_R,R.ORG_CODE AS ORG_CODE_R, R.NAME AS ORG_NAME_R
        ,case when R.ORG_TYPE_CODE IS NULL then 'Invalid' 
@@ -385,7 +386,7 @@
  %sql
  -- creates table needed to create prov no ips table
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW LDA_data_prov AS
- 
+
  SELECT LD.*,O.NAME
  FROM global_temp.LDA_Data LD
  LEFT JOIN global_temp.RD_ORG_DAILY_LATEST_LDA O on LD.combinedprovider = O.ORG_CODE
@@ -394,11 +395,11 @@
 
 # DBTITLE 1,ProvNoIPs
  %sql 
- 
+
  ---- This table below creates a list of Provider Orgs that DO NOT have any inpatients  ---------
- 
+
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW ProvNoIPs AS
- 
+
  select REF_OrgCodeProv as OrgCode
  from global_temp.LDA_Data_Prov
  where UniqHospProvSpellNum is not null
@@ -411,7 +412,7 @@
  %sql
  -- needed to calculate all hospital spells measures
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW HSP_Spells AS
- 
+
  SELECT 
  UniqHospProvSpellNum,
  LD.AgeRepPeriodEnd,
@@ -430,7 +431,7 @@
  %sql
  -- needed to create all ward spells measures
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW WARD_Spells AS
- 
+
  SELECT 
  UniqWardStayID,
  LD.AgeRepPeriodEnd,
@@ -452,7 +453,7 @@
  %sql
  -- needed to create MHA measures
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW MHA AS
- 
+
  SELECT
  A.Person_ID,
  B.UniqHospProvSpellNum,

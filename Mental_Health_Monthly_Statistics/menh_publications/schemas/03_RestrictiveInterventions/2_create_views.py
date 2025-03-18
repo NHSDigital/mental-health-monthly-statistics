@@ -17,6 +17,7 @@ assert reference_data
  UNION
  (SELECT 'UNKNOWN', 'UNKNOWN')
 
+
 # COMMAND ----------
 
 # DBTITLE 1,RestrictiveIntTypeDim_Extended
@@ -34,6 +35,7 @@ assert reference_data
  CREATE OR REPLACE VIEW $db_output.NHSDEthnicityDim_Extended AS
  SELECT key, id, description from $db_output.NHSDEthnicityDim
  union (select 'UNKNOWN', 'UNKNOWN', 'UNKNOWN')
+
 
 # COMMAND ----------
 

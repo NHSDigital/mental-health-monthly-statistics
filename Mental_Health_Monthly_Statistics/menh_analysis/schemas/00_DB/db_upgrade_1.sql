@@ -1,15 +1,15 @@
 -- Databricks notebook source
  %md
- 
+
  # Permanent Tables
  These tables will not be regularly created and destroyed, but will persist.
- 
+
  If changes are made to the structure of the tables in this script they should be made by an alter table statement in a later script, or the code here should include a "DROP TABLE IF EXISTS <table_name>" statement.  In later scripts the drop table statements have been added so structural table changes can be made in the create table statement as a matter of routine.
- 
+
  If a decision is made to not truncate the tables in the running code and persist previously run statistics then the drop tables should be removed and alter table be included instead.
- 
+
  If a structure is altered without a drop table it will be that later code will not work if the old version of the table aready exists in the database selected.
- 
+
  The following tables are created in this notebook:
  - All_products_formatted
  - Ascof_formatted
@@ -83,7 +83,7 @@ PARTITIONED BY (REPORTING_PERIOD_END, STATUS)
 -- COMMAND ----------
 
  %md
- 
+
  ## Breakdowns & metrics tables
 
 -- COMMAND ----------

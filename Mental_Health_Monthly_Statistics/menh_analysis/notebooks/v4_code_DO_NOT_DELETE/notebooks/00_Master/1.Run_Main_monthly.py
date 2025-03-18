@@ -15,7 +15,7 @@ print(params)
 
 # DBTITLE 1,Clean unformatted output table (in case there already is left-over data for this month/status in the table)
  %sql
- 
+
  DELETE FROM $db_output.Main_monthly_unformatted
  WHERE REPORTING_PERIOD_END = '$rp_enddate'
  AND STATUS = '$status'
@@ -48,8 +48,8 @@ dbutils.notebook.run("../02_Aggregate/1.Main_monthly_agg/4.LA-CASSR/Outpatient-O
 
 # DBTITLE 1,Optimize output table for performance
  %python
- 
+
  import os
- 
+
  if os.environ['env'] == 'prod':
    spark.sql('OPTIMIZE {db_output}.{table}'.format(db_output=db_output, table='Main_monthly_unformatted'))

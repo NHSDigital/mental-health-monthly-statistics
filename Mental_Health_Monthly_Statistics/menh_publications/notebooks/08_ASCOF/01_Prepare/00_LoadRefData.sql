@@ -1,7 +1,7 @@
 -- Databricks notebook source
 -- DBTITLE 1,Breakdown, Level and Metric values
  %sql
- 
+
  TRUNCATE TABLE $db_output.ascof_breakdown_values;
  INSERT INTO $db_output.ascof_breakdown_values VALUES
  ('England'),
@@ -12,10 +12,10 @@
  ('CASSR;Provider;Gender'),
  ('England;Gender'),
  ('Provider;Gender');
- 
+
  TRUNCATE TABLE $db_output.ascof_level_values;
  INSERT INTO $db_output.ascof_level_values
- 
+
  SELECT 
    'England' as Level, 
    'England' as level_desc, 
@@ -23,7 +23,7 @@
    'NONE' as secondary_level_desc,
    'NONE' as third_level,
    'England' as breakdown
- 
+
  union all
  SELECT DISTINCT
    coalesce(CASSR,"UNKNOWN") as primary_level, 
@@ -33,7 +33,7 @@
    'NONE' as third_level,
    'CASSR' as breakdown 
  FROM global_temp.CASSR_mapping
- 
+
  union all
  SELECT DISTINCT
    ORG_CODE as primary_level, 
@@ -43,7 +43,7 @@
    'NONE' as third_level,
    'Provider' as breakdown 
  FROM $db_output.Provider_list
- 
+
  union all
  SELECT DISTINCT
    coalesce(CASSR,"UNKNOWN") as primary_level,
@@ -54,7 +54,7 @@
    'CASSR;Provider' as breakdown 
  FROM $db_output.Provider_list -- WARNING: The data in this view differs depending on the month_id
  cross join global_temp.CASSR_mapping 
- 
+
  union all
  SELECT DISTINCT
    coalesce(CASSR,"UNKNOWN") as primary_level,
@@ -65,7 +65,7 @@
    'CASSR;Gender' as breakdown 
  FROM global_temp.CASSR_mapping
  cross join global_temp.GenderCodes 
- 
+
  union all
  SELECT DISTINCT
    coalesce(CASSR,"UNKNOWN") as primary_level,
@@ -77,7 +77,7 @@
  FROM $db_output.Provider_list -- WARNING: The data in this view differs depending on the month_id
  cross join global_temp.CASSR_mapping 
  cross join global_temp.GenderCodes 
- 
+
  union all
  SELECT DISTINCT
    'England' as Level, 
@@ -87,7 +87,7 @@
    PrimaryCode as third_level,
    'England;Gender' as breakdown 
  FROM global_temp.GenderCodes 
- 
+
  union all
  SELECT DISTINCT
    ORG_CODE as primary_level, 
@@ -113,15 +113,15 @@
 
 -- DBTITLE 1,Optimize and vaccum tables
  %python
- 
+
  import os
  db_output = dbutils.widgets.get("db_output")
- 
+
  if os.environ['env'] == 'prod':
    spark.sql('OPTIMIZE {db_output}.{table}'.format(db_output=db_output, table='ascof_breakdown_values'))
    spark.sql('OPTIMIZE {db_output}.{table}'.format(db_output=db_output, table='ascof_level_values'))
    spark.sql('OPTIMIZE {db_output}.{table}'.format(db_output=db_output, table='ascof_metric_values'))
- 
+
  spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output, table='ascof_breakdown_values'))
  spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output, table='ascof_level_values'))
  spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output, table='ascof_metric_values'))
