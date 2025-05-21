@@ -12,9 +12,9 @@
  rp_enddate  = dbutils.widgets.get("rp_enddate")
  print(rp_enddate)
  assert rp_enddate
- # reference_data  = dbutils.widgets.get("reference_data")
- # print(reference_data)
- # assert reference_data
+ # $reference_data  = dbutils.widgets.get("$reference_data")
+ # print($reference_data)
+ # assert $reference_data
  month_id  = dbutils.widgets.get("month_id")
  print(month_id)
  assert month_id
@@ -68,7 +68,7 @@ TRUNCATE TABLE $db_output.dq_stg_integrity;
 
 -- COMMAND ----------
 
-/** User note: added to support code needed for v4.1 when CAMHSTier removed **/
+/** User: added to support code needed for v4.1 when CAMHSTier removed **/
 
 CREATE OR REPLACE GLOBAL TEMPORARY VIEW REFS AS 
  
@@ -90,7 +90,7 @@ WHERE a.UniqMonthID = '$month_id'
 
 -- COMMAND ----------
 
-/** User note: added to support code needed for v4.1 when CAMHSTier removed **/
+/** User: added to support code needed for v4.1 when CAMHSTier removed **/
 
 CREATE OR REPLACE GLOBAL TEMPORARY VIEW TEAMTYPE AS
  
@@ -107,7 +107,7 @@ GROUP BY r.UniqCareProfTeamID
 -- COMMAND ----------
 
 -- DBTITLE 1,Referrals to CYP-MH services starting in RP
-/** User note: updated for v4.1 when CAMHSTier removed **/
+/** User: updated for v4.1 when CAMHSTier removed **/
 
 WITH Referral
 AS
@@ -210,12 +210,20 @@ AS
     r.OrgIDProv,
     r.UniqServReqID,
     (CASE
-      WHEN ca.Procedure IN ('51484002', '304891004', '444175001', '443730003', '984421000000104') THEN 1                      ---V6_Changes
+      WHEN vc.ValidValue IS NOT null THEN 1
       ELSE 0
     END) AS Integrity
   FROM $dbm.mhs101referral r
   LEFT OUTER JOIN $dbm.mhs201carecontact cc ON r.UniqServReqID = cc.UniqServReqID AND cc.UniqMonthID = '$month_id'
   LEFT OUTER JOIN $dbm.mhs202careactivity ca ON cc.UniqCareContID = ca.UniqCareContID AND ca.UniqMonthID = '$month_id'
+  LEFT JOIN $db_output.validcodes as vc ON vc.tablename = 'MHS202CareActivity' AND vc.field = 'Procedure' AND vc.Measure = 'MHS-DIM03' AND vc.type = 'include' 
+        AND CASE
+              WHEN CHARINDEX(':', ca.Procedure) > 0 
+              THEN RTRIM(LEFT(ca.Procedure, CHARINDEX(':',ca.Procedure) -1))
+              ELSE ca.Procedure        
+              END = vc.ValidValue 
+        AND ca.UniqMonthID >= vc.FirstMonth 
+        AND (vc.LastMonth is null or ca.UniqMonthID <= vc.LastMonth)
   WHERE r.UniqMonthID = '$month_id'
   AND r.PrimReasonReferralMH = '12'
   AND r.AgeServReferRecDate < 19
@@ -480,6 +488,123 @@ WHERE UniqMonthID = '$month_id'
 AND ServDischDate IS NOT NULL
 AND ServDischTime IS NOT NULL
 GROUP BY OrgIDProv;
+
+-- COMMAND ----------
+
+-- DBTITLE 1,MHA Missing or invalid ethnicity (Proportion)
+INSERT INTO $db_output.dq_stg_integrity
+ 
+SELECT
+  7 AS DimensionTypeId,
+  16 AS MeasureId,  
+  a.OrgIDProv,
+  COUNT(*) AS Denominator,
+  SUM (CASE  
+        WHEN b.EthnicCategory IS NULL OR b.EthnicCategory NOT IN ('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'P', 'R', 'S', 'Z', '99') THEN 1 
+        ELSE 0
+        END) AS Integrity
+FROM $dbm.mhs401mhactperiod a
+LEFT JOIN $dbm.mhs001mpi b
+ON a.RecordNumber = b.RecordNumber
+AND a.Person_ID = b.Person_ID
+WHERE a.UniqMonthID ='$month_id'
+GROUP BY  a.OrgIDProv 
+
+-- COMMAND ----------
+
+-- DBTITLE 1,MHA Episodes starting at midnight (StartTimeMHActLegalStatusClass)
+INSERT INTO $db_output.dq_stg_integrity
+ 
+SELECT
+  --'MHA Start time (Midnight)' AS MeasureName,
+  7 AS DimensionTypeId,
+  17 AS MeasureId,  
+  OrgIDProv,
+  COUNT(*) AS Denominator,
+  SUM(CASE
+        WHEN HOUR(StartTimeMHActLegalStatusClass) = 0
+        AND MINUTE(StartTimeMHActLegalStatusClass) = 0 THEN 1
+        ELSE 0
+      END) AS Integrity
+FROM $dbm.mhs401mhactperiod
+WHERE UniqMonthID = '$month_id'
+AND StartDateMHActLegalStatusClass IS NOT NULL
+AND StartTimeMHActLegalStatusClass IS NOT NULL
+GROUP BY OrgIDProv;
+
+-- COMMAND ----------
+
+-- DBTITLE 1,MHA Episodes starting at midday
+INSERT INTO $db_output.dq_stg_integrity
+ 
+SELECT
+  --'MHA Start time (Midday)' AS MeasureName,
+  7 AS DimensionTypeId,
+  18 AS MeasureId,  
+  OrgIDProv,
+  COUNT(*) AS Denominator,
+  SUM(CASE
+        WHEN HOUR(StartTimeMHActLegalStatusClass) = 12
+        AND MINUTE(StartTimeMHActLegalStatusClass) = 0 THEN 1
+        ELSE 0
+      END) AS Integrity
+FROM $dbm.mhs401mhactperiod
+WHERE UniqMonthID = '$month_id'
+AND StartDateMHActLegalStatusClass IS NOT NULL
+AND StartTimeMHActLegalStatusClass IS NOT NULL
+GROUP BY OrgIDProv;
+
+-- COMMAND ----------
+
+-- DBTITLE 1,MHA starting on the hour
+INSERT INTO $db_output.dq_stg_integrity
+ 
+SELECT
+  --'MHA Starting on the hour' AS MeasureName,
+  7 AS DimensionTypeId,
+  19 AS MeasureId,  
+  OrgIDProv,
+  COUNT(*) AS Denominator,
+  SUM(CASE
+        WHEN MINUTE(StartTimeMHActLegalStatusClass) = 0 THEN 1
+        ELSE 0
+      END) AS Integrity
+FROM $dbm.mhs401mhactperiod
+WHERE UniqMonthID = '$month_id'
+AND StartDateMHActLegalStatusClass IS NOT NULL
+AND StartTimeMHActLegalStatusClass IS NOT NULL
+GROUP BY OrgIDProv;
+
+-- COMMAND ----------
+
+CREATE OR REPLACE GLOBAL TEMPORARY VIEW mhs401mhact AS 
+ 
+SELECT *
+FROM $dbm.mhs401mhactperiod 
+WHERE UniqMonthID = '$month_id'
+
+-- COMMAND ----------
+
+-- DBTITLE 1,MHA becoming inactive
+INSERT INTO $db_output.dq_stg_integrity
+ 
+SELECT
+  --'MHA becoming inactive' AS MeasureName,
+  7 AS DimensionTypeId,
+  20 AS MeasureId,  
+  a.OrgIDProv,
+  COUNT(*) AS Denominator,
+   SUM(CASE
+        WHEN b.UniqMHActEpisodeID IS NULL THEN 1
+        ELSE 0
+      END) AS Integrity
+FROM $dbm.mhs401mhactperiod a 
+LEFT JOIN global_temp.mhs401mhact b on a.UniqMHActEpisodeID = b.UniqMHActEpisodeID 
+WHERE a. UniqMonthID = '$month_id'-1
+AND a.StartDateMHActLegalStatusClass IS NOT NULL
+AND a.StartTimeMHActLegalStatusClass IS NOT NULL
+AND a.EndDateMHActLegalStatusClass IS NULL
+GROUP BY a.OrgIDProv;
 
 -- COMMAND ----------
 

@@ -212,12 +212,12 @@ def get_financial_yr_start(rp_startdate: str) -> str:
   
 def get_year_of_count(rp_startdate):
   '''
-  This function returns the year_of_count which should be used to extract data from reference_data.ONS_POPULATION_V2.  
-  If the financial_yr_start is greater than the existing max(current_year) in reference_data.ONS_POPULATION_V2 then use
+  This function returns the year_of_count which should be used to extract data from $reference_data.ONS_POPULATION_V2.  
+  If the financial_yr_start is greater than the existing max(current_year) in $reference_data.ONS_POPULATION_V2 then use
   current_year = max(current_year).
   '''
   current_year = get_financial_yr_start(rp_startdate)[0:4]
-  max_year_of_count = spark.sql(f"select max(year_of_count) AS year_of_count from reference_data.ONS_POPULATION_V2 where GEOGRAPHIC_GROUP_CODE = 'E38'")
+  max_year_of_count = spark.sql(f"select max(year_of_count) AS year_of_count from $reference_data.ONS_POPULATION_V2 where GEOGRAPHIC_GROUP_CODE = 'E38'")
   max_year_of_count_value = max_year_of_count.first()["year_of_count"]
   year_of_count = current_year
   if (year_of_count > max_year_of_count_value):
@@ -244,7 +244,7 @@ class MHRunParameters:
   rp_startdate_12m: str = field(init=False)
   financial_year_start: str = field(init=False)
   year_of_count: int = field(init=False)
-  reference_data: str = "reference_data"
+  $reference_data: str = "$reference_data"
    
   def __post_init__(self):
     self.pub_month = get_pub_month(self.rp_startdate, self.status)

@@ -9,9 +9,9 @@ Code is left here for easy copying to other notebooks!  or for cases where widge
 dbutils.widgets.removeAll() above can be run to annihilate the existing widgets and then run these to create new ones'''
 
 # dbutils.widgets.text("db", "menh_bbrb", "Target database")
-# dbutils.widgets.text("$mhsds_db", "testdata_menh_bbrb_$mhsds_db", "Input database")
+# dbutils.widgets.text("$mhsds", "testdata_menh_bbrb_$mhsds", "Input database")
 # dbutils.widgets.text("status", "Performance", "status")
-# dbutils.widgets.text("reference_data", "reference_data", "reference_data")
+# dbutils.widgets.text("$reference_data", "$reference_data", "$reference_data")
 # dbutils.widgets.text(name='rp_startdate', defaultValue='2021-10-01', label='Reporting period start date')
 # dbutils.widgets.text("product","","product")
 
@@ -59,21 +59,21 @@ import json
 db_output = dbutils.widgets.get("db")
 assert db_output
 
-# the parameter name of any source database(s) for a cp project is the same as the database name, i.e. the $mhsds_db parameter is named $mhsds_db!
+# the parameter name of any source database(s) for a cp project is the same as the database name, i.e. the $mhsds parameter is named $mhsds!
 # here this is renamed to the standard db_source for familiarity/consistency with other projects
 try:
-  db_source = dbutils.widgets.get("$mhsds_db")
+  db_source = dbutils.widgets.get("$mhsds")
 except:
-  print('$mhsds_db is not defined')
+  print('$mhsds is not defined')
   
 try:
-  db_source = dbutils.widgets.get("$mhsds_db")
+  db_source = dbutils.widgets.get("$mhsds")
 except:
-  print('$mhsds_db is not defined')
+  print('$mhsds is not defined')
 
-###dbutils.widgets.text("reference_data","reference_data","Source Ref Database")
-reference_data = dbutils.widgets.get("reference_data")
-assert reference_data
+###dbutils.widgets.text("$reference_data","$reference_data","Source Ref Database")
+$reference_data = dbutils.widgets.get("$reference_data")
+assert $reference_data
 
 ####
 # here a parameter is defined and assigned no value - this makes it an optional parameter - it doesn't need to be added at run time because it will be added here with no value if it doesn't already exist.
@@ -94,7 +94,7 @@ else:
 params = {
   'db_source' : db_source, 
   'db_output' : db_output, 
-  'reference_data': reference_data,
+  '$reference_data': $reference_data,
   'rp_enddate' : '', 
   'rp_startdate' : '', 
   'month_id' : '', 
@@ -398,7 +398,7 @@ def auditInsertLog(params, runStart, runEnd, notes):
 if(os.environ.get('env') == 'prod'):
   from dsp.code_promotion.email_send import cp_email_send
   template_name = 'menh_bbrb_reports.json' # the template name must be the full name and include the .json extension
-  recipients = "gillian.birk-telford@nhs.net|obiageli.chiwetalu1@nhs.net".split("|") # an iterable list of recipients to send the email to
+  recipients = "".split("|") # an iterable list of recipients to send the email to
 
   content_data = {
     "reporting_period": "menh_bbrb data is available for"

@@ -32,6 +32,9 @@
      A.ReferralRequestReceivedDate,
      A.ServDischDate,
      A.Person_ID,
+     CASE WHEN vc_urgent.type IS NULL AND vc_routine.type = "include" THEN 'Routine'
+          WHEN vc_routine.type IS NULL AND vc_urgent.type = "include" THEN 'Urgent'
+          ELSE NULL END AS Priority_Type,
      A.UniqMonthID
  FROM global_temp.MHS101Referral_LATEST AS A
   LEFT OUTER JOIN global_temp.MHS001MPI_PATMRECINRP_FIX AS E
@@ -49,6 +52,15 @@
  --     join updated to evaluate validity at time of data rather than reporting month
      ON vc.tablename = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'CYP_ED_WT' and vc.type = 'include' and A.ClinRespPriorityType = vc.ValidValue
      and A.UniqMonthID >= vc.FirstMonth and (vc.LastMonth is null or A.UniqMonthID <= vc.LastMonth)
+     
+ LEFT JOIN $db_output.validcodes as vc_routine
+ ON vc_routine.tablename = 'mhs101referral' and vc_routine.field = 'ClinRespPriorityType' and vc_routine.Measure = 'ED87_90' and vc_routine.type = 'include' and a.ClinRespPriorityType = vc_routine.ValidValue 
+ and a.UniqMonthID >= vc_routine.FirstMonth and (vc_routine.LastMonth is null or a.UniqMonthID <= vc_routine.LastMonth)
+
+ LEFT JOIN $db_output.validcodes as vc_urgent
+ ON vc_urgent.tablename = 'mhs101referral' and vc_urgent.field = 'ClinRespPriorityType' and vc_urgent.Measure = 'ED86_89' and vc_urgent.type = 'include' and a.ClinRespPriorityType = vc_urgent.ValidValue 
+ and a.UniqMonthID >= vc_urgent.FirstMonth and (vc_urgent.LastMonth is null or a.UniqMonthID <= vc_urgent.LastMonth)
+     
  WHERE A.ReferralRequestReceivedDate <= '$rp_enddate'
      And A.ReferralRequestReceivedDate >= '2016-01-01'  
      And vc.Measure is not null
@@ -72,6 +84,7 @@
      step1.ServDischDate,
      cc.CareContDate,
      case when vc.ValidValue is not null then 1 else 0 end as IsConsMechanismMH,
+     step1.Priority_Type,
      step1.UniqMonthID                          -- ADDED TO ALLOW VALIDCODES TO COMPARE WITH SUBMISSION MONTH
  FROM  global_temp.CYP_ED_WT_STEP1 step1 
 
@@ -109,6 +122,7 @@ select
     ServDischDate,
     CareContDate,
     ReferralRequestReceivedDate,
+    Priority_Type,
     UniqMonthID,                          -- ADDED TO ALLOW VALIDCODES TO COMPARE WITH SUBMISSION MONTH
     ROW_NUMBER() OVER (PARTITION BY UniqServReqID ORDER BY CareContDate ASC) as rnk 
 FROM global_temp.CYP_ED_WT_STEP2;
@@ -136,7 +150,9 @@ SELECT
     ClinRespPriorityType,
     CareContDate,
     ReferralRequestReceivedDate,
+    Priority_Type,
     DATEDIFF(CareContDate,ReferralRequestReceivedDate)/7 as waiting_time,
+    DATEDIFF(CareContDate,ReferralRequestReceivedDate) as waiting_time_days,
     '$db_source' as SOURCE_DB,
     UniqMonthID AS SubmissionMonthID                -- ADDED TO ALLOW VALIDCODES TO COMPARE WITH SUBMISSION MONTH
 from global_temp.CYP_ED_WT_STEP3;
@@ -155,6 +171,7 @@ SELECT
     step1.AgeServReferRecDate,
     step1.ReferralRequestReceivedDate,
     step1.ServDischDate,
+    step1.Priority_Type,
     step1.UniqMonthID                          -- ADDED TO ALLOW VALIDCODES TO COMPARE WITH SUBMISSION MONTH
 FROM  global_temp.CYP_ED_WT_STEP1 step1 
 left outer join global_temp.CYP_ED_WT_STEP2 step2
@@ -175,7 +192,9 @@ select
     IC_Rec_CCG,
     ReferralRequestReceivedDate,
     ServDischDate,
+    Priority_Type,
     DATEDIFF('$rp_enddate',ReferralRequestReceivedDate)/7 as waiting_time,
+    DATEDIFF('$rp_enddate',ReferralRequestReceivedDate) as waiting_time_days,
     '$db_source' as SOURCE_DB,
     UniqMonthID AS SubmissionMonthID                -- ADDED TO ALLOW VALIDCODES TO COMPARE WITH SUBMISSION MONTH
 from global_temp.CYP_ED_WT_STEP5;

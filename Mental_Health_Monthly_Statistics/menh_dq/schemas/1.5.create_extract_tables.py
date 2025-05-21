@@ -42,6 +42,7 @@
    SOURCE_DB string
  ) USING DELTA;
 
+
 # COMMAND ----------
 
  %sql
@@ -57,6 +58,7 @@
    PERIOD_END_DATE STRING,
    SOURCE_DB string
  ) USING DELTA;
+
 
 # COMMAND ----------
 
@@ -77,6 +79,7 @@
    SOURCE_DB string
  ) USING DELTA;
 
+
 # COMMAND ----------
 
  %sql
@@ -94,6 +97,7 @@
    Percentage STRING,
    SOURCE_DB string
  ) USING DELTA;
+
 
 # COMMAND ----------
 
@@ -131,6 +135,7 @@
    SOURCE_DB string
  ) USING DELTA;
 
+
 # COMMAND ----------
 
  %sql
@@ -147,6 +152,7 @@
    Denominator INT,
    SOURCE_DB string
  ) USING DELTA;
+
 
 # COMMAND ----------
 

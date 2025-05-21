@@ -47,6 +47,9 @@
      A.ReferralRequestReceivedDate,
      A.ServDischDate,
      A.Person_ID,
+     CASE WHEN vc_urgent.type IS NULL AND vc_routine.type = "include" THEN 'Routine'
+          WHEN vc_routine.type IS NULL AND vc_urgent.type = "include" THEN 'Urgent'
+          ELSE NULL END AS Priority_Type,
      A.UniqMonthID,
      A.RecordNumber
  -- LOOK AT THE POSSIBILITY OF CHANGING GLOBAL_TEMPS AND ADDING FUNCTIONALITY TO RUN 3 MONTH AND 12 MONTH RPS
@@ -72,6 +75,15 @@
      ON vc.tablename = 'mhs101referral' and vc.field = 'ClinRespPriorityType' and vc.Measure = 'CYP_ED_WT' and vc.type = 'include' and A.ClinRespPriorityType = vc.ValidValue
      and A.UniqMonthID >= vc.FirstMonth and (vc.LastMonth is null or A.UniqMonthID <= vc.LastMonth)
  --ADD INPATIENT AND SPOA / MHST TABLES TO REMOVE THOSE REFERRALS
+
+ LEFT JOIN $db_output.validcodes as vc_routine
+ ON vc_routine.tablename = 'mhs101referral' and vc_routine.field = 'ClinRespPriorityType' and vc_routine.Measure = 'ED87_90' and vc_routine.type = 'include' and a.ClinRespPriorityType = vc_routine.ValidValue 
+ and a.UniqMonthID >= vc_routine.FirstMonth and (vc_routine.LastMonth is null or a.UniqMonthID <= vc_routine.LastMonth)
+
+ LEFT JOIN $db_output.validcodes as vc_urgent
+ ON vc_urgent.tablename = 'mhs101referral' and vc_urgent.field = 'ClinRespPriorityType' and vc_urgent.Measure = 'ED86_89' and vc_urgent.type = 'include' and a.ClinRespPriorityType = vc_urgent.ValidValue 
+ and a.UniqMonthID >= vc_urgent.FirstMonth and (vc_urgent.LastMonth is null or a.UniqMonthID <= vc_urgent.LastMonth)
+
  WHERE A.ReferralRequestReceivedDate <= '$rp_enddate'
      And A.ReferralRequestReceivedDate >= '2016-01-01'  
      And vc.Measure is not null
@@ -97,6 +109,7 @@
      step1.ServDischDate,
      cc.CareContDate,
      case when vc.ValidValue is not null then 1 else 0 end as IsConsMechanismMH,
+     step1.Priority_Type,
      step1.UniqMonthID,                          -- ADDED TO ALLOW VALIDCODES TO COMPARE WITH SUBMISSION MONTH
      step1.RecordNumber
  FROM  global_temp.CYP_ED_WT_STEP1 step1 
@@ -150,6 +163,7 @@ select
     ServDischDate,
     CareContDate,
     ReferralRequestReceivedDate,
+    Priority_Type,
     UniqMonthID,                          -- ADDED TO ALLOW VALIDCODES TO COMPARE WITH SUBMISSION MONTH
     ROW_NUMBER() OVER (PARTITION BY UniqServReqID ORDER BY CareContDate ASC) as rnk 
 FROM global_temp.CYP_ED_WT_STEP2;
@@ -177,7 +191,9 @@ SELECT
     ClinRespPriorityType,
     CareContDate,
     ReferralRequestReceivedDate,
+    Priority_Type,
     DATEDIFF(CareContDate,ReferralRequestReceivedDate)/7 as waiting_time,
+    DATEDIFF(CareContDate,ReferralRequestReceivedDate) as waiting_time_days,
     '$db_source' as SOURCE_DB,
     UniqMonthID AS SubmissionMonthID                -- ADDED TO ALLOW VALIDCODES TO COMPARE WITH SUBMISSION MONTH
 from global_temp.CYP_ED_WT_STEP3;
@@ -195,7 +211,8 @@ SELECT
     step1.IC_Rec_CCG,
     step1.AgeServReferRecDate,
     step1.ReferralRequestReceivedDate,
-    step1.ServDischDate, 
+    step1.ServDischDate,
+    step1.Priority_Type,
     step1.UniqMonthID,
     step1.RecordNumber 
    -- ADDED TO ALLOW VALIDCODES TO COMPARE WITH SUBMISSION MONTH
@@ -211,6 +228,7 @@ AND M.AgeRepPeriodEnd < 19;
 
 -- COMMAND ----------
 
+-- DBTITLE 1,CYP_ED_WT_STEP6
 INSERT INTO $db_output.CYP_ED_WT_STEP6
 select 
    '$month_id' AS UniqMonthID,
@@ -222,7 +240,44 @@ select
     IC_Rec_CCG,
     ReferralRequestReceivedDate,
     ServDischDate,
+    Priority_Type,
     DATEDIFF('$rp_enddate',ReferralRequestReceivedDate)/7 as waiting_time,
+    DATEDIFF('$rp_enddate',ReferralRequestReceivedDate) as waiting_time_days,
     '$db_source' as SOURCE_DB,
     UniqMonthID AS SubmissionMonthID                -- ADDED TO ALLOW VALIDCODES TO COMPARE WITH SUBMISSION MONTH
 from global_temp.CYP_ED_WT_STEP5;
+
+-- COMMAND ----------
+
+-- DBTITLE 1,CYP_ED_WT_STEP7
+--STEP 7 -  Cohort which received their second contact for an Eating Disorder for the first time in the reporting quarter
+CREATE OR REPLACE GLOBAL TEMP VIEW CYP_ED_WT_STEP7 as
+select * from global_temp.CYP_ED_WT_STEP3_prep 
+where rnk = 2
+and (CareContDate BETWEEN '$rp_startdate_run' AND  '$rp_enddate');
+
+-- COMMAND ----------
+
+-- DBTITLE 1,CYP_ED_WT_STEP8
+-- STEP 8 - Waiting time between first and second contact for an Eating Disorder, for referrals that have received a second contact for the first time, in the RP
+-- Get first contact from step 3 prep (first contact can have taken place at any point, not just during the rp) and second contact from step 7 (received second contact in the RP)
+-- Calculate waiting time between first and second contact
+
+INSERT INTO $db_output.CYP_ED_WT_STEP8
+SELECT 
+    '$month_id' AS UniqMonthID,
+    '$status' AS Status,
+    c2.UniqServReqID,
+    c2.OrgIDProv,
+    c2.Person_ID,
+    c2.ClinRespPriorityType,
+    c1.CareContDate as FirstCareContDate,
+    c2.CareContDate as SecondCareContDate,
+    c2.ReferralRequestReceivedDate,
+    c2.Priority_Type,
+    DATEDIFF(c2.CareContDate,c1.CareContDate)/7 as waiting_time,
+    DATEDIFF(c2.CareContDate,c1.CareContDate) as waiting_time_days,
+    '$db_source' as SOURCE_DB,
+    c2.UniqMonthID AS SubmissionMonthID                -- ADDED TO ALLOW VALIDCODES TO COMPARE WITH SUBMISSION MONTH
+FROM global_temp.CYP_ED_WT_STEP7 c2
+INNER JOIN (SELECT * FROM global_temp.CYP_ED_WT_STEP3_prep WHERE rnk = 1) c1 ON c2.UniqServReqID = c1.UniqServReqID --join to get first contact for the referral

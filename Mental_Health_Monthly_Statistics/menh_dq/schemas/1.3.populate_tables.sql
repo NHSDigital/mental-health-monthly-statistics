@@ -137,7 +137,13 @@
  (12, 7, 'Referral request received time (Hour)', 'Referral request received time is tested for a recording on the hour', 'Referral request received time (Hour)'),
  (13, 7, 'Referral request received time (Midnight)', 'Referral request received time is tested for a recording at midnight', 'Referral request received time (Midnight)'),
  (14, 7, 'Service discharge time (Hour)', 'Service discharge time is tested for a recording on the hour', 'Service discharge time (Hour)'),
- (15, 7, 'Service discharge time (Midnight)', 'Service discharge time is tested for a recording at midnight', 'Service dischared time (Midnight)');
+ (15, 7, 'Service discharge time (Midnight)', 'Service discharge time is tested for a recording at midnight', 'Service dischared time (Midnight)'),
+ -- new measures for MHA
+ (16, 7, 'Mental Health Act - Ethnicity recording', 'Mental Health Act record is tested for missing or invalid ethnicity', 'Mental Health Act - Ethnicity recording'),
+ (17, 7, 'Mental Health Act - Start time (Midnight)', 'Start Time (Mental Health Act Legal Status Classification Assignment Period) is tested for a recording at midnight', 'Start Time - Mental Health Act Legal Status Classification Assignment Period (Midnight)'),
+ (18, 7, 'Mental Health Act - Start time (Midday)', 'Start Time (Mental Health Act Legal Status Classification Assignment Period) is tested for a recording at midday', 'Start Time - Mental Health Act Legal Status Classification Assignment Period (Midday)'),
+ (19, 7, 'Mental Health Act - Start time (Hour)', 'Start Time (Mental Health Act Legal Status Classification Assignment Period) is tested for a recording on the hour', 'Start Time - Mental Health Act Legal Status Classification Assignment Period (Hour)'),
+ (20, 7, 'Mental Health Act - episodes becoming inactive', 'The number of Mental Health Act Legal Status Classification Assignment Period records from previous reporting period becoming inactive in the current reporing period', 'End Date (Mental Health Act Legal Status Classification Assignment Period)');
 
  ANALYZE TABLE $db.dq_measure COMPUTE STATISTICS FOR COLUMNS DimensionTypeId, MeasureId;
 
@@ -541,6 +547,17 @@
  (14, 7, 1, NULL, 'All MHS101Referral records with a Discharge date with a service discharge time and where the service discharge time is not null', '2019-02-01', NULL),
  (14, 7, 2, 1, 'Records with a service discharge time that is XX:00', '2019-02-01', NULL),
  (15, 7, 1, NULL, 'All MHS101Referral records with a Discharge date with a service discharge time and where the service discharge time is not null', '2019-02-01', NULL),
- (15, 7, 2, 1, 'Records with a service discharge time that is 00:00', '2019-02-01', NULL);
+ (15, 7, 2, 1, 'Records with a service discharge time that is 00:00', '2019-02-01', NULL),
+ --mha new measures
+ (16, 7, 1, NULL, 'All MHS401 records submitted in the reporting period', '2024-04-01', NULL),
+ (16, 7, 2, 1, 'Records where ethnicity not recorded or is invalid', '2024-04-01', NULL),
+ (17, 7, 1, NULL, 'All MHS401MHActPeriod records with a Mental Health Act Legal Status Classification Assignment Period start date and start time and where the start time is not null', '2024-04-01', NULL),
+ (17, 7, 2, 1, 'Records with a Mental Health Act Legal Status Classification Assignment Period start time that is 00:00', '2024-04-01', NULL),
+ (18, 7, 1, NULL, 'All MHS401MHActPeriod records with a Mental Health Act Legal Status Classification Assignment Period start date and start time and where the start time is not null', '2024-04-01', NULL),
+ (18, 7, 2, 1, 'Records with a Mental Health Act Legal Status Classification Assignment Period start time that is 12:00', '2024-04-01', NULL),
+ (19, 7, 1, NULL, 'All MHS401MHActPeriod records with a Mental Health Act Legal Status Classification Assignment Period start date and start time and where the start time is not null', '2024-04-01', NULL),
+ (19, 7, 2, 1, 'Records with a Mental Health Act Legal Status Classification Assignment Period start time that is XX:00', '2024-04-01', NULL),
+ (20, 7, 1, NULL, 'All MHS401MHActPeriod records from previous reporting period with a Mental Health Act Legal Status Classification Assignment Period end date as null', '2024-04-01', NULL),
+ (20, 7, 2, 1, 'MHS401MHActPeriod records becoming inactive in the reporting period', '2024-04-01', NULL);
 
  ANALYZE TABLE $db.dq_measure_description COMPUTE STATISTICS FOR COLUMNS DimensionTypeId, MeasureId, MeasureTypeId, MetricTypeId;

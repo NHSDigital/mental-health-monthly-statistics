@@ -2,7 +2,7 @@
  %sql
  CREATE OR REPLACE TEMPORARY VIEW RD_CCG_LATEST AS
  SELECT DISTINCT ORG_TYPE_CODE, ORG_CODE, NAME
- FROM reference_data.ORG_DAILY
+ FROM $reference_data.ORG_DAILY
  WHERE (BUSINESS_END_DATE >= '$rp_enddate' OR BUSINESS_END_DATE IS NULL)
    AND BUSINESS_START_DATE <= '$rp_enddate'
      AND ORG_TYPE_CODE = "CC"
@@ -29,12 +29,12 @@
                  row_number() over (partition by rd.OrganisationId order by rd.DateType ) as RN1,
                  COALESCE(odssd.TargetOrganisationID, rd.OrganisationID) as ORG_CODE
                  
-         FROM $reference_data.ODSAPIRoleDetails rd
+         FROM $$reference_data.ODSAPIRoleDetails rd
          
-         LEFT JOIN $reference_data.ODSAPIOrganisationDetails od
+         LEFT JOIN $$reference_data.ODSAPIOrganisationDetails od
          ON rd.OrganisationID = od.OrganisationID and rd.DateType = od.DateType
          
-         LEFT JOIN $reference_data.ODSAPISuccessorDetails as odssd
+         LEFT JOIN $$reference_data.ODSAPISuccessorDetails as odssd
          ON rd.OrganisationID = odssd.OrganisationID and odssd.Type = 'Successor' and odssd.StartDate <= '$rp_enddate'
          
          WHERE 
@@ -66,8 +66,8 @@
              rd.OrganisationId as ORG_CODE,
              Name as NAME
   
-         FROM $reference_data.ODSAPIRoleDetails rd
-         LEFT JOIN $reference_data.ODSAPIOrganisationDetails od
+         FROM $$reference_data.ODSAPIRoleDetails rd
+         LEFT JOIN $$reference_data.ODSAPIOrganisationDetails od
          ON rd.OrganisationID = od.OrganisationID and rd.DateType = od.DateType
          
         WHERE 
@@ -340,7 +340,7 @@
  ,COALESCE(DEC.IMD_Decile,'UNKNOWN') AS IMD_Decile
   
  FROM $db_source.MHS001MPI MPI
- LEFT JOIN $reference_data.ENGLISH_INDICES_OF_DEP_V02 IMD 
+ LEFT JOIN $$reference_data.ENGLISH_INDICES_OF_DEP_V02 IMD 
                      on MPI.LSOA2011 = IMD.LSOA_CODE_2011 
                      and IMD.imd_year = '2019'
  LEFT JOIN $db_output.bbrb_org_daily_past_12_months_mhsds_providers OD on MPI.OrgIDProv = OD.ORG_CODE

@@ -1,7 +1,7 @@
 -- Databricks notebook source
  %md # Note
 
- Reference data for specialised mental health service category codes used by validity measures 53, 54 and 55. This is currently missing from reference_data.datadictionarycodes and will need removing once the data becomes available.
+ Reference data for specialised mental health service category codes used by validity measures 53, 54 and 55. This is currently missing from $reference_data.datadictionarycodes and will need removing once the data becomes available.
 
 -- COMMAND ----------
 
@@ -9,7 +9,7 @@
 
 -- SELECT
 -- *
--- FROM $reference_data.datadictionarycodes
+-- FROM $$reference_data.datadictionarycodes
 -- WHERE ItemName = 'SPECIALISED MENTAL HEALTH SERVICE CATEGORY CODE'; and 
 
 -- COMMAND ----------

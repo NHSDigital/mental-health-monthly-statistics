@@ -6,26 +6,26 @@ db_output = dbutils.widgets.get("db_output")
 print(db_output)
 assert db_output
 
-reference_data = dbutils.widgets.get("reference_data")
-print(reference_data)
-assert reference_data
+$reference_data = dbutils.widgets.get("$reference_data")
+print($reference_data)
+assert $reference_data
 
 reload_ref_data = dbutils.widgets.get("reload_ref_data")
 print(reload_ref_data)
 assert reload_ref_data
 
-$mhsds_db = dbutils.widgets.get("$mhsds_db")
-print($mhsds_db)
-assert $mhsds_db
+$mhsds = dbutils.widgets.get("$mhsds")
+print($mhsds)
+assert $mhsds
 
 # COMMAND ----------
 
 params = {
   "db_output"      : db_output, 
   "product"        : product,
-  "reference_data"  : reference_data,
+  "$reference_data"  : $reference_data,
   "reload_ref_data": reload_ref_data,
-  "$mhsds_db"   : $mhsds_db
+  "$mhsds"   : $mhsds
 }
 params
 

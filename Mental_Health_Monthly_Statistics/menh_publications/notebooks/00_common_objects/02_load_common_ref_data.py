@@ -3,11 +3,11 @@
 
  # Generic Prep assets used throughout Mental health menh_publications
  -- NP: only cells which have been added for CYP_ED_WT have been noted here
- -- User note: updated to include all tables prepared in this notebook
+ -- User: updated to include all tables prepared in this notebook
 
  - RD_CCG_LATEST - TABLE
  - CCG_PRAC - view
- - CCG_prep_3months [User note changed from ed_CCG_prep as the tables are the same] - view
+ - CCG_prep_3months [User changed from ed_CCG_prep as the tables are the same] - view
  - CCG_PREP - view
  - CCG - TABLE
  - RD_ORG_DAILY_LATEST - TABLE
@@ -19,7 +19,7 @@
  - org_relationship_daily - view
  - STP_Region_mapping_post_2020 - TABLE
  - MHS101Referral_LATEST - view
- - MHS001_CCG_LATEST - [User note changed from ED_CCG_LATEST] - TABLE
+ - MHS001_CCG_LATEST - [User changed from ED_CCG_LATEST] - TABLE
  - MHS001_PATMRECINRP_201819_F_M - view
  - MHS001MPI_PATMRECINRP_FIX - view
 
@@ -55,10 +55,10 @@
 # (SELECT DISTINCT od.ORG_CODE as original_ORG_CODE,
 #                 od.NAME as original_NAME,
 #                 COALESCE(odssd.TargetOrganisationID, od.ORG_CODE) as ORG_CODE
-#         FROM $reference_data.org_daily od
+#         FROM $$reference_data.org_daily od
 
          
-#         LEFT JOIN $reference_data.ODSAPISuccessorDetails as odssd
+#         LEFT JOIN $$reference_data.ODSAPISuccessorDetails as odssd
 #         ON od.ORG_CODE = odssd.OrganisationID and odssd.Type = 'Successor' and odssd.StartDate <= '$rp_enddate'
         
 #            WHERE (od.BUSINESS_END_DATE >= add_months('$rp_enddate', 1) OR ISNULL(od.BUSINESS_END_DATE))
@@ -80,7 +80,7 @@
 #             row_number() over (partition by ORG_CODE order by case when ORG_CLOSE_DATE is null then 1 else 0 end desc, case when BUSINESS_END_DATE is null then 1 else 0 end desc, ORG_CLOSE_DATE desc) as RN,
 #             ORG_CODE,
 #             NAME
-#             FROM $reference_data.org_daily
+#             FROM $$reference_data.org_daily
                     
 #             WHERE ORG_OPEN_DATE <= '$rp_enddate'
 #             ) od1
@@ -112,12 +112,12 @@
                  row_number() over (partition by rd.OrganisationId order by rd.DateType ) as RN1,
                  COALESCE(odssd.TargetOrganisationID, rd.OrganisationID) as ORG_CODE
                  
-         FROM $reference_data.ODSAPIRoleDetails rd
+         FROM $$reference_data.ODSAPIRoleDetails rd
          
-         LEFT JOIN $reference_data.ODSAPIOrganisationDetails od
+         LEFT JOIN $$reference_data.ODSAPIOrganisationDetails od
          ON rd.OrganisationID = od.OrganisationID and rd.DateType = od.DateType
          
-         LEFT JOIN $reference_data.ODSAPISuccessorDetails as odssd
+         LEFT JOIN $$reference_data.ODSAPISuccessorDetails as odssd
          ON rd.OrganisationID = odssd.OrganisationID and odssd.Type = 'Successor' and odssd.StartDate <= '$rp_enddate'
          
          WHERE 
@@ -149,8 +149,8 @@
              rd.OrganisationId as ORG_CODE,
              Name as NAME
 
-         FROM $reference_data.ODSAPIRoleDetails rd
-         LEFT JOIN $reference_data.ODSAPIOrganisationDetails od
+         FROM $$reference_data.ODSAPIRoleDetails rd
+         LEFT JOIN $$reference_data.ODSAPIOrganisationDetails od
          ON rd.OrganisationID = od.OrganisationID and rd.DateType = od.DateType
          
         WHERE 
@@ -288,7 +288,7 @@
 
  INSERT OVERWRITE TABLE $db_output.RD_ORG_DAILY_LATEST
 
-            FROM $reference_data.org_daily
+            FROM $$reference_data.org_daily
           
            SELECT DISTINCT ORG_CODE, 
                  NAME
@@ -416,7 +416,7 @@
                  ORG_CLOSE_DATE, 
                  BUSINESS_START_DATE, 
                  BUSINESS_END_DATE
-            FROM $reference_data.org_daily
+            FROM $$reference_data.org_daily
            WHERE (BUSINESS_END_DATE >= add_months('$rp_enddate', 1) OR ISNULL(BUSINESS_END_DATE))
                  AND BUSINESS_START_DATE <= add_months('$rp_enddate', 1)	
                  AND (ORG_CLOSE_DATE >= '$rp_enddate' OR ISNULL(ORG_CLOSE_DATE))              
@@ -438,7 +438,7 @@
  REL_OPEN_DATE,
  REL_CLOSE_DATE
  FROM 
- $reference_data.ORG_RELATIONSHIP_DAILY
+ $$reference_data.ORG_RELATIONSHIP_DAILY
  WHERE
  (REL_CLOSE_DATE >= '$rp_enddate' OR ISNULL(REL_CLOSE_DATE))              
  AND REL_OPEN_DATE <= '$rp_enddate';
@@ -1184,8 +1184,8 @@
              WHEN a.ENTITY_CODE in ('E07')  THEN b.GEOGRAPHY_NAME
              ELSE a.GEOGRAPHY_NAME END as CASSR_description
                
- FROM  $reference_data.ONS_CHD_GEO_LISTINGS as a
-       INNER JOIN $reference_data.ONS_CHD_GEO_LISTINGS as b
+ FROM  $$reference_data.ONS_CHD_GEO_LISTINGS as a
+       INNER JOIN $$reference_data.ONS_CHD_GEO_LISTINGS as b
          ON b.GEOGRAPHY_CODE = a.PARENT_GEOGRAPHY_CODE
          AND a.ENTITY_CODE IN ('E06', 'E07', 'E08', 'E09','W04')
 
@@ -1204,7 +1204,7 @@
 
  CREATE OR REPLACE GLOBAL TEMPORARY VIEW GenderCodes AS
 
- select PrimaryCode, Description from $reference_data.DataDictionaryCodes
+ select PrimaryCode, Description from $$reference_data.DataDictionaryCodes
  where ItemName ='PERSON_STATED_GENDER_CODE'
  and (BusinessEndDate is null OR BusinessEndDate > '$rp_enddate')
  -- all values for BusinessStartDate in this table are null for these items - so no startdate filter is included at present...

@@ -43,7 +43,7 @@ assert MonthPeriod
         ORG_CLOSE_DATE, 
         BUSINESS_END_DATE, 
         ROW_NUMBER() OVER (PARTITION BY Org_Code ORDER BY IFNULL(Business_End_Date,CURRENT_DATE()) DESC, IFNULL(Org_Close_Date, CURRENT_DATE())DESC) AS RN
- FROM $reference_data.org_daily) n 
+ FROM $$reference_data.org_daily) n 
  ON CASE WHEN a.OrgIDProvider IS NULL THEN b.OrgIDProvider ELSE a.OrgIDProvider END = n.ORG_CODE 
     AND n.RN = 1 
     AND (n.BUSINESS_END_DATE IS NULL OR n.BUSINESS_END_DATE >= '$rp_enddate') 
@@ -96,12 +96,13 @@ assert MonthPeriod
 
  LEFT JOIN
  (SELECT Org_Code, NAME,ORG_CLOSE_DATE, BUSINESS_END_DATE, ROW_NUMBER() OVER (PARTITION BY Org_Code ORDER BY IFNULL(Business_End_Date,CURRENT_DATE()) DESC, IFNULL(Org_Close_Date, CURRENT_DATE()) DESC) AS RN
- FROM $reference_data.org_daily) n ON v.OrgIDProv = n.ORG_CODE AND n.RN = 1 AND (n.BUSINESS_END_DATE IS NULL OR n.BUSINESS_END_DATE >='$rp_enddate') AND (n.ORG_CLOSE_DATE IS NULL OR n.ORG_CLOSE_DATE >='$rp_enddate')
+ FROM $$reference_data.org_daily) n ON v.OrgIDProv = n.ORG_CODE AND n.RN = 1 AND (n.BUSINESS_END_DATE IS NULL OR n.BUSINESS_END_DATE >='$rp_enddate') AND (n.ORG_CLOSE_DATE IS NULL OR n.ORG_CLOSE_DATE >='$rp_enddate')
  WHERE v.UniqMonthID = '$month_id'  AND v.MetricTypeId = 1 AND v.DimensionTypeID = 3
  GROUP BY v.OrgIdProv,
        n.NAME, 
        mes.MeasureName
  ORDER BY v.OrgIdProv, mes.MeasureName
+
 
 # COMMAND ----------
 

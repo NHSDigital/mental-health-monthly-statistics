@@ -14,8 +14,8 @@
 # COMMAND ----------
 
 # spark_version = "6.6.x-scala2.11"
-spark_version = "9.1.x-scala2.12"
-
+# spark_version = "9.1.x-scala2.12"
+spark_version = "10.4.x-scala2.12"
 
 # COMMAND ----------
 

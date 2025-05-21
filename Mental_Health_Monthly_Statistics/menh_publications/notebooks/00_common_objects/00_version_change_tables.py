@@ -189,6 +189,7 @@
  VALUES ('mhs201carecontact', 'ConsMechanismMH', 'CYP_ED_WaitingTimes', 'include', '01', 1390, null)
  ,('mhs201carecontact', 'ConsMechanismMH', 'CYP_ED_WaitingTimes', 'include', '02', 1390, null)
  ,('mhs201carecontact', 'ConsMechanismMH', 'CYP_ED_WaitingTimes', 'include', '03', 1390, 1458)
+ ,('mhs201carecontact', 'ConsMechanismMH', 'CYP_ED_WaitingTimes', 'include', '04', 1501, null)
  ,('mhs201carecontact', 'ConsMechanismMH', 'CYP_ED_WaitingTimes', 'include', '11', 1459, null)
 
  ,('mhs201carecontact', 'ConsMechanismMH', '72HOURS_FOLLOWUP', 'include', '01', 1390, null)
@@ -244,14 +245,16 @@
 
  INSERT INTO $db_output.validcodes
  VALUES ('MHS202CareActivity', 'Procedure', 'CYP_ED_WaitingTimes', 'include', '51484002', 1390, null)
- ,('MHS202CareActivity', 'Procedure', 'CYP_ED_WaitingTimes', 'include', '1111811000000109', 1390, null)
+ ,('MHS202CareActivity', 'Procedure', 'CYP_ED_WaitingTimes', 'include', '1111811000000109', 1390, 1500)
  ,('MHS202CareActivity', 'Procedure', 'CYP_ED_WaitingTimes', 'include', '443730003', 1390, null)
  ,('MHS202CareActivity', 'Procedure', 'CYP_ED_WaitingTimes', 'include', '444175001', 1390, null)
  ,('MHS202CareActivity', 'Procedure', 'CYP_ED_WaitingTimes', 'include', '718023002', 1390, 1488)
  ,('MHS202CareActivity', 'Procedure', 'CYP_ED_WaitingTimes', 'include', '984421000000104', 1390, 1488)
  ,('MHS202CareActivity', 'Procedure', 'CYP_ED_WaitingTimes', 'include', '1323681000000103', 1477, null)
  ,('MHS202CareActivity', 'Procedure', 'CYP_ED_WaitingTimes', 'include', '1362001000000104', 1477, null)
- ,('MHS202CareActivity', 'Procedure', 'CYP_ED_WaitingTimes', 'include', '301781000000101', 1477, null)
+ ,('MHS202CareActivity', 'Procedure', 'CYP_ED_WaitingTimes', 'include', '301781000000101', 1477, 1500)
+ ,('MHS202CareActivity', 'Procedure', 'CYP_ED_WaitingTimes', 'include', '1833251000000107', 1501, null)
+ ,('MHS202CareActivity', 'Procedure', 'CYP_ED_WaitingTimes', 'include', '1833011000000101', 1501, null)
 
 # COMMAND ----------
 

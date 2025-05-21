@@ -259,7 +259,7 @@
  TRUNCATE TABLE $db_output.SCT_Concepts;
  INSERT INTO $db_output.SCT_Concepts
  SELECT *
- FROM $reference_data.snomed_sct2_concept_full
+ FROM $$reference_data.snomed_sct2_concept_full
 
 # COMMAND ----------
 
@@ -267,7 +267,7 @@
  TRUNCATE TABLE $db_output.SCT_Descriptions;
  INSERT INTO $db_output.SCT_Descriptions
  SELECT *
- FROM $reference_data.snomed_sct2_description_full
+ FROM $$reference_data.snomed_sct2_description_full
 
 # COMMAND ----------
 
@@ -275,7 +275,7 @@
  TRUNCATE TABLE $db_output.SCT_Language;
  INSERT INTO $db_output.SCT_Language
  SELECT DSS_KEY,ID, EFFECTIVETIME ,ACTIVE ,MODULEID ,REFSETID ,REFERENCEDCOMPONENTID,ACCEPTABILITY ,DSS_SYSTEM_CREATED_DATE 
- FROM $reference_data.snomed_sct2_language_full
+ FROM $$reference_data.snomed_sct2_language_full
 
 # COMMAND ----------
 

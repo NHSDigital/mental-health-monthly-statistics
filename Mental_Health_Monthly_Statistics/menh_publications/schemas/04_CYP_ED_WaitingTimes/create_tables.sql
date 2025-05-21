@@ -3,9 +3,9 @@
  db_output=dbutils.widgets.get("db_output")
  print(db_output)
  assert db_output
- $mhsds_db=dbutils.widgets.get("$mhsds_db")
- print($mhsds_db)
- assert $mhsds_db
+ $mhsds=dbutils.widgets.get("$mhsds")
+ print($mhsds)
+ assert $mhsds
 
 -- COMMAND ----------
 
@@ -38,7 +38,9 @@
    ClinRespPriorityType string,
    CareContDate date,
    ReferralRequestReceivedDate date,
+   Priority_Type string,
    waiting_time float,
+   waiting_time_days float,
    SOURCE_DB string,
    SubmissionMonthID int
  )
@@ -65,13 +67,41 @@
    IC_Rec_CCG string,
    ReferralRequestReceivedDate date,
    ServDischDate date,
+   Priority_Type string,
    waiting_time float,
+   waiting_time_days float,
    SOURCE_DB string,
    SubmissionMonthID int
  )
 
 
  USING DELTA;
+
+-- COMMAND ----------
+
+-- DBTITLE 1,create table cyp_ed_wt_STEP8
+ %sql
+
+ -- table can be dropped safely as it is truncated each run and holds no persisted data
+ DROP TABLE IF EXISTS $db_output.cyp_ed_wt_step8;
+ CREATE TABLE IF NOT EXISTS $db_output.cyp_ed_wt_step8
+ (
+   UniqMonthID int,
+   Status string,
+   UniqServReqID string,
+   OrgIDProv string,
+   Person_ID string,
+   ClinRespPriorityType string,
+   FirstCareContDate date,
+   SecondCareContDate date,
+   ReferralRequestReceivedDate date,
+   Priority_Type string,
+   waiting_time float,
+   waiting_time_days float,
+   SOURCE_DB string,
+   SubmissionMonthID int
+ )
+  USING DELTA;
 
 -- COMMAND ----------
 
@@ -136,6 +166,6 @@ PARTITIONED BY (REPORTING_PERIOD_END, STATUS);
 -- # # update only needs doing once - DONE
 
 -- # for table, column in tableColumn.items():
--- #   action = """Update {db_output}.{table} SET {column} = '{$mhsds_db}' where {column} is null""".format(db_output=db_output,table=table,column=column,$mhsds_db=$mhsds_db)
+-- #   action = """Update {db_output}.{table} SET {column} = '{$mhsds}' where {column} is null""".format(db_output=db_output,table=table,column=column,$mhsds=$mhsds)
 -- #   print(action)
 -- #   spark.sql(action)

@@ -7,9 +7,9 @@
  c.EffectiveTime as Concept_EffectiveTime,
  c.active as Concept_Active,
  ROW_NUMBER() OVER (PARTITION BY c.ID ORDER BY c.effectiveTime desc) as Concept_RN
- FROM reference_data.snomed_sct2_concept_full c
+ FROM $reference_data.snomed_sct2_concept_full c
  INNER JOIN (
-   select distinct ReferencedComponentID from reference_data.snomed_sct2_refset_full
+   select distinct ReferencedComponentID from $reference_data.snomed_sct2_refset_full
    where RefSetID IN 
    ('1853441000000109', --Mental Health Services Data Set assessment procedures simple reference set
    '1853461000000105', --Mental Health Services Data Set psychological therapies simple reference set
@@ -23,7 +23,7 @@
  CREATE OR REPLACE TEMP VIEW SNOMED_4ww_RefSets AS
  SELECT DISTINCT r.RefSetID, r.ReferencedComponentID as ConceptID, r.effectiveTime as RefSet_EffectiveTime, r.Active as RefSet_Active,
  ROW_NUMBER() OVER (PARTITION BY r.ReferencedComponentID ORDER BY r.effectiveTime desc) as RefSet_RN
- from reference_data.snomed_sct2_refset_full r
+ from $reference_data.snomed_sct2_refset_full r
    where RefSetID IN 
    ('1853441000000109', --Mental Health Services Data Set assessment procedures simple reference set
    '1853461000000105', --Mental Health Services Data Set psychological therapies simple reference set
@@ -369,7 +369,7 @@
   
  INNER JOIN $db_output.cmh_4ww_referrals r ON ass.RecordNumber = r.RecordNumber AND ass.UniqServReqid = r.UniqServReqID
   
- INNER JOIN $db_output.mh_ass m ON ass.CodedAssToolType = m.Active_Concept_ID_SNOMED
+ INNER JOIN $db_output.mh_ass m ON ass.CodedAssToolType = m.Active_Concept_ID_SNOMED AND m.Assessment_Tool_Name <> 'Current View'
   
  GROUP BY g.Person_ID, g.SpellID, g.StartDate, g.Der_EndDate
 
@@ -396,7 +396,7 @@
   
  INNER JOIN $db_source.MHS607CodedScoreAssessmentAct ass ON c.RecordNumber = ass.RecordNumber AND c.UniqCareContID = ass.UniqCareContID
   
- INNER JOIN $db_output.mh_ass m ON ass.CodedAssToolType = m.Active_Concept_ID_SNOMED
+ INNER JOIN $db_output.mh_ass m ON ass.CodedAssToolType = m.Active_Concept_ID_SNOMED AND m.Assessment_Tool_Name <> 'Current View'
   
  GROUP BY g.Person_ID, g.SpellID, g.StartDate, g.Der_EndDate
 
@@ -421,7 +421,7 @@
   
  INNER JOIN $db_source.MHS802ClusterAssess ass ON ct.UniqClustID = ass.UniqClustID AND ct.RecordNumber = ass.RecordNumber 
   
- INNER JOIN $db_output.mh_ass m ON ass.CodedAssToolType = m.Active_Concept_ID_SNOMED 
+ INNER JOIN $db_output.mh_ass m ON ass.CodedAssToolType = m.Active_Concept_ID_SNOMED AND m.Assessment_Tool_Name <> 'Current View'
   
  GROUP BY g.Person_ID, g.SpellID, g.StartDate, g.Der_EndDate
 
@@ -903,7 +903,7 @@
   
  INNER JOIN $db_output.cyp_4ww_referrals r ON ass.RecordNumber = r.RecordNumber AND r.UniqServReqID = ass.UniqServReqID
   
- INNER JOIN $db_output.mh_ass m ON ass.CodedAssToolType = m.Active_Concept_ID_SNOMED
+ INNER JOIN $db_output.mh_ass m ON ass.CodedAssToolType = m.Active_Concept_ID_SNOMED AND m.Assessment_Tool_Name <> 'Current View'
   
  GROUP BY g.Person_ID, g.SpellID, g.StartDate, g.Der_EndDate
 
@@ -930,7 +930,7 @@
   
  INNER JOIN $db_source.MHS607CodedScoreAssessmentAct ass ON c.UniqCareContID = ass.UniqCareContID AND c.RecordNumber = ass.RecordNumber
   
- INNER JOIN $db_output.mh_ass m ON ass.CodedAssToolType = m.Active_Concept_ID_SNOMED 
+ INNER JOIN $db_output.mh_ass m ON ass.CodedAssToolType = m.Active_Concept_ID_SNOMED AND m.Assessment_Tool_Name <> 'Current View'
   
  GROUP BY g.Person_ID, g.SpellID, g.StartDate, g.Der_EndDate
 
@@ -955,7 +955,7 @@
   
  INNER JOIN $db_source.MHS802ClusterAssess ass ON ct.UniqClustID = ass.UniqClustID AND ct.RecordNumber = ass.RecordNumber 
   
- INNER JOIN $db_output.mh_ass m ON ass.CodedAssToolType = m.Active_Concept_ID_SNOMED 
+ INNER JOIN $db_output.mh_ass m ON ass.CodedAssToolType = m.Active_Concept_ID_SNOMED AND m.Assessment_Tool_Name <> 'Current View'
   
  GROUP BY g.Person_ID, g.SpellID, g.StartDate, g.Der_EndDate
 

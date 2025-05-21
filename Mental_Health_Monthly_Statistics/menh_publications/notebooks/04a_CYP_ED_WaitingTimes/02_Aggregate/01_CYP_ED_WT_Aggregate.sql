@@ -1604,3 +1604,816 @@ INNER JOIN $db_output.cyp_ed_wt_unformatted DEN
         (NUM.METRIC = 'ED90b' and DEN.METRIC = 'ED90') OR
         (NUM.METRIC = 'ED90c' and DEN.METRIC = 'ED90') OR
         (NUM.METRIC = 'ED90d' and DEN.METRIC = 'ED90') )
+
+-- COMMAND ----------
+
+-- DBTITLE 1,ED91 & ED92 - National
+-- ED91 Median waiting time between referral and first contact, first contact in the RP, routine
+-- ED92 Median waiting time between referral and first contact, first contact in the RP, urgent
+
+INSERT INTO $db_output.cyp_ed_wt_unformatted
+select 
+       '$month_id' AS MONTH_ID
+       ,'$status' AS STATUS
+       ,'$rp_startdate_run' AS REPORTING_PERIOD_START
+       ,'$rp_enddate' AS REPORTING_PERIOD_END
+       ,'England' AS BREAKDOWN
+       ,'England' AS PRIMARY_LEVEL
+       ,'England' AS PRIMARY_LEVEL_DESCRIPTION
+       ,'NONE' AS SECONDARY_LEVEL
+       ,'NONE' AS SECONDARY_LEVEL_DESCRIPTION
+       ,CASE WHEN Priority_Type = 'Routine' THEN 'ED91'
+             WHEN Priority_Type = 'Urgent' THEN 'ED92'
+             END AS METRIC
+        ,PERCENTILE(waiting_time_days, 0.5)
+       ,SOURCE_DB
+from $db_output.CYP_ED_WT_STEP4 as step4
+where UniqMonthID = '$month_id' AND Status = '$status' and SOURCE_DB = '$db_source'
+and Priority_Type IS NOT NULL
+group by SOURCE_DB, METRIC
+
+-- COMMAND ----------
+
+-- DBTITLE 1,ED91 & ED92 - Provider
+-- ED91 Median waiting time between referral and first contact, first contact in the RP, routine
+-- ED92 Median waiting time between referral and first contact, first contact in the RP, urgent
+
+INSERT INTO $db_output.cyp_ed_wt_unformatted
+select 
+       '$month_id' AS MONTH_ID
+       ,'$status' AS STATUS
+       ,'$rp_startdate_run' AS REPORTING_PERIOD_START
+       ,'$rp_enddate' AS REPORTING_PERIOD_END
+       ,'Provider' AS BREAKDOWN
+       ,Coalesce(OrgIDProv,NULL) AS PRIMARY_LEVEL
+       ,'NONE' AS PRIMARY_LEVEL_DESCRIPTION
+       ,'NONE' AS SECONDARY_LEVEL
+       ,'NONE' AS SECONDARY_LEVEL_DESCRIPTION
+       ,CASE WHEN Priority_Type = 'Routine' THEN 'ED91'
+             WHEN Priority_Type = 'Urgent' THEN 'ED92'
+             END AS METRIC
+       ,PERCENTILE(waiting_time_days, 0.5) as METRIC_VALUE
+       ,SOURCE_DB
+from $db_output.CYP_ED_WT_STEP4 
+where UniqMonthID = '$month_id' AND Status = '$status' and SOURCE_DB = '$db_source'
+and Priority_Type IS NOT NULL
+group by orgidprov,SOURCE_DB, METRIC
+order by PRIMARY_LEVEL, METRIC
+
+-- COMMAND ----------
+
+-- DBTITLE 1,ED91 & ED92 - CCG (sub-ICB)
+-- ED91 Median waiting time between referral and first contact, first contact in the RP, routine
+-- ED92 Median waiting time between referral and first contact, first contact in the RP, urgent
+
+INSERT INTO $db_output.cyp_ed_wt_unformatted
+select 
+       '$month_id' AS MONTH_ID
+       ,'$status' AS STATUS
+       ,'$rp_startdate_run' AS REPORTING_PERIOD_START
+       ,'$rp_enddate' AS REPORTING_PERIOD_END
+       ,'CCG - GP Practice or Residence' AS BREAKDOWN
+       ,Coalesce(ccg.IC_Rec_CCG,NULL) AS PRIMARY_LEVEL
+       ,'NONE' AS PRIMARY_LEVEL_DESCRIPTION
+       ,'NONE' AS SECONDARY_LEVEL
+       ,'NONE' AS SECONDARY_LEVEL_DESCRIPTION
+       ,CASE WHEN Priority_Type = 'Routine' THEN 'ED91'
+             WHEN Priority_Type = 'Urgent' THEN 'ED92'
+             END AS METRIC
+       ,PERCENTILE(waiting_time_days, 0.5) as METRIC_VALUE
+       ,SOURCE_DB
+from $db_output.CYP_ED_WT_STEP4 step4
+LEFT JOIN $db_output.MHS001_CCG_LATEST ccg ON step4.Person_ID = ccg.Person_ID
+where UniqMonthID = '$month_id' AND Status = '$status' and SOURCE_DB = '$db_source'
+and Priority_Type IS NOT NULL
+group by ccg.IC_Rec_CCG, SOURCE_DB, METRIC
+order by PRIMARY_LEVEL, METRIC
+
+-- COMMAND ----------
+
+-- DBTITLE 1,ED91 & ED92 - STP (ICB)
+-- ED91 Median waiting time between referral and first contact, first contact in the RP, routine
+-- ED92 Median waiting time between referral and first contact, first contact in the RP, urgent
+
+INSERT INTO $db_output.cyp_ed_wt_unformatted
+select 
+       '$month_id' AS MONTH_ID
+       ,'$status' AS STATUS
+       ,'$rp_startdate_run' AS REPORTING_PERIOD_START
+       ,'$rp_enddate' AS REPORTING_PERIOD_END
+       ,'STP - GP Practice or Residence' AS BREAKDOWN
+       ,Coalesce(stp.STP_Code,NULL) AS PRIMARY_LEVEL
+       ,'NONE' AS PRIMARY_LEVEL_DESCRIPTION
+       ,'NONE' AS SECONDARY_LEVEL
+       ,'NONE' AS SECONDARY_LEVEL_DESCRIPTION
+       ,CASE WHEN Priority_Type = 'Routine' THEN 'ED91'
+             WHEN Priority_Type = 'Urgent' THEN 'ED92'
+             END AS METRIC
+       ,PERCENTILE(waiting_time_days, 0.5) as METRIC_VALUE
+       ,SOURCE_DB
+from $db_output.CYP_ED_WT_STEP4 step4
+
+LEFT JOIN $db_output.MHS001_CCG_LATEST ccg ON step4.Person_ID = ccg.Person_ID
+LEFT JOIN $db_output.STP_Region_mapping_post_2020 stp ON ccg.IC_Rec_CCG = stp.CCG_CODE 
+
+where UniqMonthID = '$month_id' AND Status = '$status' and SOURCE_DB = '$db_source'
+and Priority_Type IS NOT NULL
+group by stp.STP_CODE, SOURCE_DB, METRIC
+order by PRIMARY_LEVEL, METRIC
+
+-- COMMAND ----------
+
+-- DBTITLE 1,ED93 & ED94 - National
+-- ED93: 90th percentile waiting time between referral and first contact, first contact in the RP, routine
+-- ED94: 90th percentile waiting time between referral and first contact, first contact in the RP, urgent
+
+INSERT INTO $db_output.cyp_ed_wt_unformatted
+select 
+       '$month_id' AS MONTH_ID
+       ,'$status' AS STATUS
+       ,'$rp_startdate_run' AS REPORTING_PERIOD_START
+       ,'$rp_enddate' AS REPORTING_PERIOD_END
+       ,'England' AS BREAKDOWN
+       ,'England' AS PRIMARY_LEVEL
+       ,'England' AS PRIMARY_LEVEL_DESCRIPTION
+       ,'NONE' AS SECONDARY_LEVEL
+       ,'NONE' AS SECONDARY_LEVEL_DESCRIPTION
+       ,CASE WHEN Priority_Type = 'Routine' THEN 'ED93'
+             WHEN Priority_Type = 'Urgent' THEN 'ED94'
+             END AS METRIC
+       ,PERCENTILE(waiting_time_days, 0.9) as METRIC_VALUE
+       ,SOURCE_DB
+from $db_output.CYP_ED_WT_STEP4
+where UniqMonthID = '$month_id' AND Status = '$status' and SOURCE_DB = '$db_source'
+and Priority_Type IS NOT NULL
+group by SOURCE_DB, METRIC
+
+-- COMMAND ----------
+
+-- DBTITLE 1,ED93 & ED94 - Provider
+-- ED93: 90th percentile waiting time between referral and first contact, first contact in the RP, routine
+-- ED94: 90th percentile waiting time between referral and first contact, first contact in the RP, urgent
+
+INSERT INTO $db_output.cyp_ed_wt_unformatted
+select 
+       '$month_id' AS MONTH_ID
+       ,'$status' AS STATUS
+       ,'$rp_startdate_run' AS REPORTING_PERIOD_START
+       ,'$rp_enddate' AS REPORTING_PERIOD_END
+       ,'Provider' AS BREAKDOWN
+       ,Coalesce(OrgIDProv,NULL) AS PRIMARY_LEVEL
+       ,'NONE' AS PRIMARY_LEVEL_DESCRIPTION
+       ,'NONE' AS SECONDARY_LEVEL
+       ,'NONE' AS SECONDARY_LEVEL_DESCRIPTION
+       ,CASE WHEN Priority_Type = 'Routine' THEN 'ED93'
+             WHEN Priority_Type = 'Urgent' THEN 'ED94'
+             END AS METRIC
+       ,PERCENTILE(waiting_time_days, 0.9) as METRIC_VALUE
+       ,SOURCE_DB
+from $db_output.CYP_ED_WT_STEP4 
+where UniqMonthID = '$month_id' AND Status = '$status' and SOURCE_DB = '$db_source'
+and Priority_Type IS NOT NULL
+group by orgidprov,SOURCE_DB, METRIC
+order by PRIMARY_LEVEL, METRIC
+
+-- COMMAND ----------
+
+-- DBTITLE 1,ED93 & ED94 - CCG (sub-ICB)
+-- ED93: 90th percentile waiting time between referral and first contact, first contact in the RP, routine
+-- ED94: 90th percentile waiting time between referral and first contact, first contact in the RP, urgent
+
+INSERT INTO $db_output.cyp_ed_wt_unformatted
+select 
+       '$month_id' AS MONTH_ID
+       ,'$status' AS STATUS
+       ,'$rp_startdate_run' AS REPORTING_PERIOD_START
+       ,'$rp_enddate' AS REPORTING_PERIOD_END
+       ,'CCG - GP Practice or Residence' AS BREAKDOWN
+       ,Coalesce(ccg.IC_Rec_CCG,NULL) AS PRIMARY_LEVEL
+       ,'NONE' AS PRIMARY_LEVEL_DESCRIPTION
+       ,'NONE' AS SECONDARY_LEVEL
+       ,'NONE' AS SECONDARY_LEVEL_DESCRIPTION
+       ,CASE WHEN Priority_Type = 'Routine' THEN 'ED93'
+             WHEN Priority_Type = 'Urgent' THEN 'ED94'
+             END AS METRIC
+       ,PERCENTILE(waiting_time_days, 0.9) as METRIC_VALUE
+       ,SOURCE_DB
+from $db_output.CYP_ED_WT_STEP4 step4
+
+LEFT JOIN $db_output.MHS001_CCG_LATEST ccg ON step4.Person_ID = ccg.Person_ID
+
+where UniqMonthID = '$month_id' AND Status = '$status' and SOURCE_DB = '$db_source'
+and Priority_Type IS NOT NULL
+group by ccg.IC_Rec_CCG, SOURCE_DB, METRIC
+order by PRIMARY_LEVEL, METRIC
+
+-- COMMAND ----------
+
+-- DBTITLE 1,ED93 & ED94 - STP (ICB)
+-- ED93: 90th percentile waiting time between referral and first contact, first contact in the RP, routine
+-- ED94: 90th percentile waiting time between referral and first contact, first contact in the RP, urgent
+
+INSERT INTO $db_output.cyp_ed_wt_unformatted
+select 
+       '$month_id' AS MONTH_ID
+       ,'$status' AS STATUS
+       ,'$rp_startdate_run' AS REPORTING_PERIOD_START
+       ,'$rp_enddate' AS REPORTING_PERIOD_END
+       ,'STP - GP Practice or Residence' AS BREAKDOWN
+       ,Coalesce(stp.STP_Code,NULL) AS PRIMARY_LEVEL
+       ,'NONE' AS PRIMARY_LEVEL_DESCRIPTION
+       ,'NONE' AS SECONDARY_LEVEL
+       ,'NONE' AS SECONDARY_LEVEL_DESCRIPTION
+       ,CASE WHEN Priority_Type = 'Routine' THEN 'ED93'
+             WHEN Priority_Type = 'Urgent' THEN 'ED94'
+             END AS METRIC
+       ,PERCENTILE(waiting_time_days, 0.9) as METRIC_VALUE
+       ,SOURCE_DB
+from $db_output.CYP_ED_WT_step4 step4
+
+LEFT JOIN $db_output.MHS001_CCG_LATEST ccg ON step4.Person_ID = ccg.Person_ID
+LEFT JOIN $db_output.STP_Region_mapping_post_2020 stp ON ccg.IC_Rec_CCG = stp.CCG_CODE 
+
+where UniqMonthID = '$month_id' AND Status = '$status' and SOURCE_DB = '$db_source'
+and Priority_Type IS NOT NULL
+group by stp.STP_CODE, SOURCE_DB, METRIC
+order by PRIMARY_LEVEL, METRIC
+
+-- COMMAND ----------
+
+-- DBTITLE 1,ED95 & ED96 - National
+--ED95: median days waiting for those still waiting for treatment, routine
+--ED96: median days waiting for those still waiting for treatment, urgent
+
+INSERT INTO $db_output.cyp_ed_wt_unformatted
+select 
+       '$month_id' AS MONTH_ID
+       ,'$status' AS STATUS
+       ,'$rp_startdate_run' AS REPORTING_PERIOD_START
+       ,'$rp_enddate' AS REPORTING_PERIOD_END
+       ,'England' AS BREAKDOWN
+       ,'England' AS PRIMARY_LEVEL
+       ,'England' AS PRIMARY_LEVEL_DESCRIPTION
+       ,'NONE' AS SECONDARY_LEVEL
+       ,'NONE' AS SECONDARY_LEVEL_DESCRIPTION
+       ,CASE WHEN Priority_Type = 'Routine' THEN 'ED95'
+             WHEN Priority_Type = 'Urgent' THEN 'ED96'
+             END AS METRIC
+       ,PERCENTILE(waiting_time_days, 0.5) as METRIC_VALUE
+       ,SOURCE_DB
+from $db_output.CYP_ED_WT_STEP6 
+where UniqMonthID = '$month_id' AND Status = '$status' and SOURCE_DB = '$db_source'
+and Priority_Type IS NOT NULL
+group by SOURCE_DB, METRIC
+order by PRIMARY_LEVEL, METRIC
+
+-- COMMAND ----------
+
+-- DBTITLE 1,ED95 & ED96 - Provider
+--ED95: median days waiting for those still waiting for treatment, routine
+--ED96: median days waiting for those still waiting for treatment, urgent
+
+INSERT INTO $db_output.cyp_ed_wt_unformatted
+select 
+       '$month_id' AS MONTH_ID
+       ,'$status' AS STATUS
+       ,'$rp_startdate_run' AS REPORTING_PERIOD_START
+       ,'$rp_enddate' AS REPORTING_PERIOD_END
+       ,'Provider' AS BREAKDOWN
+       ,COALESCE(OrgIDProv, NULL) AS PRIMARY_LEVEL
+       ,'NONE' AS PRIMARY_LEVEL_DESCRIPTION
+       ,'NONE' AS SECONDARY_LEVEL
+       ,'NONE' AS SECONDARY_LEVEL_DESCRIPTION
+       ,CASE WHEN Priority_Type = 'Routine' THEN 'ED95'
+             WHEN Priority_Type = 'Urgent' THEN 'ED96'
+             END AS METRIC
+       ,PERCENTILE(waiting_time_days, 0.5) as METRIC_VALUE
+       ,SOURCE_DB
+from $db_output.CYP_ED_WT_STEP6 
+where UniqMonthID = '$month_id' AND Status = '$status' and SOURCE_DB = '$db_source'
+and Priority_Type IS NOT NULL
+group by OrgIDProv, SOURCE_DB, METRIC
+order by PRIMARY_LEVEL, METRIC
+
+-- COMMAND ----------
+
+-- DBTITLE 1,ED95 & ED96 - CCG (sub-ICB)
+--ED95: median days waiting for those still waiting for treatment, routine
+--ED96: median days waiting for those still waiting for treatment, urgent
+
+INSERT INTO $db_output.cyp_ed_wt_unformatted
+select 
+       '$month_id' AS MONTH_ID
+       ,'$status' AS STATUS
+       ,'$rp_startdate_run' AS REPORTING_PERIOD_START
+       ,'$rp_enddate' AS REPORTING_PERIOD_END
+       ,'CCG - GP Practice or Residence' AS BREAKDOWN
+       ,COALESCE(ccg.IC_Rec_CCG, NULL) AS PRIMARY_LEVEL
+       ,'NONE' AS PRIMARY_LEVEL_DESCRIPTION
+       ,'NONE' AS SECONDARY_LEVEL
+       ,'NONE' AS SECONDARY_LEVEL_DESCRIPTION
+       ,CASE WHEN Priority_Type = 'Routine' THEN 'ED95'
+             WHEN Priority_Type = 'Urgent' THEN 'ED96'
+             END AS METRIC
+       ,PERCENTILE(waiting_time_days, 0.5) as METRIC_VALUE
+       ,SOURCE_DB
+from $db_output.CYP_ED_WT_STEP6 as step6
+LEFT JOIN $db_output.MHS001_CCG_LATEST ccg ON step6.Person_ID = ccg.Person_ID
+where UniqMonthID = '$month_id' AND Status = '$status' and SOURCE_DB = '$db_source'
+and Priority_Type IS NOT NULL
+group by ccg.IC_Rec_CCG, SOURCE_DB, METRIC
+order by PRIMARY_LEVEL, METRIC
+
+-- COMMAND ----------
+
+-- DBTITLE 1,ED95 & ED96 - STP (ICB)
+--ED95: median days waiting for those still waiting for treatment, routine
+--ED96: median days waiting for those still waiting for treatment, urgent
+
+INSERT INTO $db_output.cyp_ed_wt_unformatted
+select 
+       '$month_id' AS MONTH_ID
+       ,'$status' AS STATUS
+       ,'$rp_startdate_run' AS REPORTING_PERIOD_START
+       ,'$rp_enddate' AS REPORTING_PERIOD_END
+       ,'STP - GP Practice or Residence' AS BREAKDOWN
+       ,COALESCE(stp.STP_CODE, NULL) AS PRIMARY_LEVEL
+       ,'NONE' AS PRIMARY_LEVEL_DESCRIPTION
+       ,'NONE' AS SECONDARY_LEVEL
+       ,'NONE' AS SECONDARY_LEVEL_DESCRIPTION
+      ,CASE WHEN Priority_Type = 'Routine' THEN 'ED95'
+             WHEN Priority_Type = 'Urgent' THEN 'ED96'
+             END AS METRIC
+       ,PERCENTILE(waiting_time_days, 0.5) as METRIC_VALUE
+       ,SOURCE_DB
+from $db_output.CYP_ED_WT_STEP6 as step6
+LEFT JOIN $db_output.MHS001_CCG_LATEST ccg ON step6.Person_ID = ccg.Person_ID
+LEFT JOIN $db_output.STP_Region_mapping_post_2020 stp ON ccg.IC_Rec_CCG = stp.CCG_CODE
+where UniqMonthID = '$month_id' AND Status = '$status' and SOURCE_DB = '$db_source'
+and Priority_Type IS NOT NULL
+group by stp.STP_CODE, SOURCE_DB, METRIC
+order by PRIMARY_LEVEL, METRIC
+
+-- COMMAND ----------
+
+-- DBTITLE 1,ED97 & ED98 - National
+--ED97: 90th percentile days waiting for those still waiting for treatment, routine
+--ED98: 90th percentile days waiting for those still waiting for treatment, urgent
+
+INSERT INTO $db_output.cyp_ed_wt_unformatted
+select 
+       '$month_id' AS MONTH_ID
+       ,'$status' AS STATUS
+       ,'$rp_startdate_run' AS REPORTING_PERIOD_START
+       ,'$rp_enddate' AS REPORTING_PERIOD_END
+       ,'England' AS BREAKDOWN
+       ,'England' AS PRIMARY_LEVEL
+       ,'England' AS PRIMARY_LEVEL_DESCRIPTION
+       ,'NONE' AS SECONDARY_LEVEL
+       ,'NONE' AS SECONDARY_LEVEL_DESCRIPTION
+       ,CASE WHEN Priority_Type = 'Routine' THEN 'ED97'
+             WHEN Priority_Type = 'Urgent' THEN 'ED98'
+             END AS METRIC
+       ,PERCENTILE(waiting_time_days, 0.9) as METRIC_VALUE
+       ,SOURCE_DB
+from $db_output.CYP_ED_WT_STEP6 
+where UniqMonthID = '$month_id' AND Status = '$status' and SOURCE_DB = '$db_source'
+and Priority_Type IS NOT NULL
+group by SOURCE_DB, METRIC
+order by PRIMARY_LEVEL, METRIC
+
+-- COMMAND ----------
+
+-- DBTITLE 1,ED97 & ED98 - Provider
+--ED97: 90th percentile days waiting for those still waiting for treatment, routine
+--ED98: 90th percentile days waiting for those still waiting for treatment, urgent
+
+INSERT INTO $db_output.cyp_ed_wt_unformatted
+select 
+       '$month_id' AS MONTH_ID
+       ,'$status' AS STATUS
+       ,'$rp_startdate_run' AS REPORTING_PERIOD_START
+       ,'$rp_enddate' AS REPORTING_PERIOD_END
+       ,'Provider' AS BREAKDOWN
+       ,COALESCE(OrgIDProv, NULL) AS PRIMARY_LEVEL
+       ,'NONE' AS PRIMARY_LEVEL_DESCRIPTION
+       ,'NONE' AS SECONDARY_LEVEL
+       ,'NONE' AS SECONDARY_LEVEL_DESCRIPTION
+       ,CASE WHEN Priority_Type = 'Routine' THEN 'ED97'
+             WHEN Priority_Type = 'Urgent' THEN 'ED98'
+             END AS METRIC
+       ,PERCENTILE(waiting_time_days, 0.9) as METRIC_VALUE
+       ,SOURCE_DB
+from $db_output.CYP_ED_WT_STEP6 
+where UniqMonthID = '$month_id' AND Status = '$status' and SOURCE_DB = '$db_source'
+and Priority_Type IS NOT NULL
+group by OrgIDProv, SOURCE_DB, METRIC
+order by PRIMARY_LEVEL, METRIC
+
+-- COMMAND ----------
+
+-- DBTITLE 1,ED97 & ED98 - CCG (sub-ICB)
+--ED97: 90th percentile days waiting for those still waiting for treatment, routine
+--ED98: 90th percentile days waiting for those still waiting for treatment, urgent
+
+INSERT INTO $db_output.cyp_ed_wt_unformatted
+select 
+       '$month_id' AS MONTH_ID
+       ,'$status' AS STATUS
+       ,'$rp_startdate_run' AS REPORTING_PERIOD_START
+       ,'$rp_enddate' AS REPORTING_PERIOD_END
+       ,'CCG - GP Practice or Residence' AS BREAKDOWN
+       ,COALESCE(ccg.IC_Rec_CCG, NULL) AS PRIMARY_LEVEL
+       ,'NONE' AS PRIMARY_LEVEL_DESCRIPTION
+       ,'NONE' AS SECONDARY_LEVEL
+       ,'NONE' AS SECONDARY_LEVEL_DESCRIPTION
+       ,CASE WHEN Priority_Type = 'Routine' THEN 'ED97'
+             WHEN Priority_Type = 'Urgent' THEN 'ED98'
+             END AS METRIC
+       ,PERCENTILE(waiting_time_days, 0.9) as METRIC_VALUE
+       ,SOURCE_DB
+from $db_output.CYP_ED_WT_STEP6 as step6
+LEFT JOIN $db_output.MHS001_CCG_LATEST ccg ON step6.Person_ID = ccg.Person_ID
+where UniqMonthID = '$month_id' AND Status = '$status' and SOURCE_DB = '$db_source'
+and Priority_Type IS NOT NULL
+group by ccg.IC_Rec_CCG, SOURCE_DB, METRIC
+order by PRIMARY_LEVEL, METRIC
+
+-- COMMAND ----------
+
+-- DBTITLE 1,ED97 & ED98 - STP (ICB)
+--ED97: 90th percentile days waiting for those still waiting for treatment, routine
+--ED98: 90th percentile days waiting for those still waiting for treatment, urgent
+
+INSERT INTO $db_output.cyp_ed_wt_unformatted
+select 
+       '$month_id' AS MONTH_ID
+       ,'$status' AS STATUS
+       ,'$rp_startdate_run' AS REPORTING_PERIOD_START
+       ,'$rp_enddate' AS REPORTING_PERIOD_END
+       ,'STP - GP Practice or Residence' AS BREAKDOWN
+       ,COALESCE(stp.STP_CODE, NULL) AS PRIMARY_LEVEL
+       ,'NONE' AS PRIMARY_LEVEL_DESCRIPTION
+       ,'NONE' AS SECONDARY_LEVEL
+       ,'NONE' AS SECONDARY_LEVEL_DESCRIPTION
+       ,CASE WHEN Priority_Type = 'Routine' THEN 'ED97'
+             WHEN Priority_Type = 'Urgent' THEN 'ED98'
+             END AS METRIC
+       ,PERCENTILE(waiting_time_days, 0.9) as METRIC_VALUE
+       ,SOURCE_DB
+from $db_output.CYP_ED_WT_STEP6 as step6
+LEFT JOIN $db_output.MHS001_CCG_LATEST ccg ON step6.Person_ID = ccg.Person_ID
+LEFT JOIN $db_output.STP_Region_mapping_post_2020 stp ON ccg.IC_Rec_CCG = stp.CCG_CODE
+where UniqMonthID = '$month_id' AND Status = '$status' and SOURCE_DB = '$db_source'
+and Priority_Type IS NOT NULL
+group by stp.STP_CODE, SOURCE_DB, METRIC
+order by PRIMARY_LEVEL, METRIC
+
+-- COMMAND ----------
+
+-- DBTITLE 1,ED99 & ED100 - National
+--ED99: Number of referrals recieving a second contact in the RP, with ED, categorized as routine, aged 0-18
+--ED100: Number of referrals recieving a second contact in the RP, with ED, categorized as urgent, aged 0-18
+
+INSERT INTO $db_output.cyp_ed_wt_unformatted
+select 
+       '$month_id' AS MONTH_ID
+       ,'$status' AS STATUS
+       ,'$rp_startdate_run' AS REPORTING_PERIOD_START
+       ,'$rp_enddate' AS REPORTING_PERIOD_END
+       ,'England' AS BREAKDOWN
+       ,'England' AS PRIMARY_LEVEL
+       ,'England' AS PRIMARY_LEVEL_DESCRIPTION
+       ,'NONE' AS SECONDARY_LEVEL
+       ,'NONE' AS SECONDARY_LEVEL_DESCRIPTION
+       ,CASE WHEN Priority_Type = 'Routine' THEN 'ED99'
+             WHEN Priority_Type = 'Urgent' THEN 'ED100'
+             END AS METRIC
+       ,COUNT(DISTINCT UniqServReqID) as METRIC_VALUE
+       ,SOURCE_DB
+from $db_output.CYP_ED_WT_STEP8 
+where UniqMonthID = '$month_id' AND Status = '$status' and SOURCE_DB = '$db_source'
+and Priority_Type IS NOT NULL
+group by SOURCE_DB, METRIC
+order by PRIMARY_LEVEL, METRIC
+
+-- COMMAND ----------
+
+-- DBTITLE 1,ED99 & ED100 - Provider
+--ED99: Number of referrals recieving a second contact in the RP, with ED, categorized as routine, aged 0-18
+--ED100: Number of referrals recieving a second contact in the RP, with ED, categorized as urgent, aged 0-18
+
+INSERT INTO $db_output.cyp_ed_wt_unformatted
+select 
+       '$month_id' AS MONTH_ID
+       ,'$status' AS STATUS
+       ,'$rp_startdate_run' AS REPORTING_PERIOD_START
+       ,'$rp_enddate' AS REPORTING_PERIOD_END
+       ,'Provider' AS BREAKDOWN
+       ,COALESCE(OrgIDProv, NULL) AS PRIMARY_LEVEL
+       ,'NONE' AS PRIMARY_LEVEL_DESCRIPTION
+       ,'NONE' AS SECONDARY_LEVEL
+       ,'NONE' AS SECONDARY_LEVEL_DESCRIPTION
+       ,CASE WHEN Priority_Type = 'Routine' THEN 'ED99'
+             WHEN Priority_Type = 'Urgent' THEN 'ED100'
+             END AS METRIC
+       ,COUNT(DISTINCT UniqServReqID) as METRIC_VALUE
+       ,SOURCE_DB
+from $db_output.CYP_ED_WT_STEP8
+where UniqMonthID = '$month_id' AND Status = '$status' and SOURCE_DB = '$db_source'
+and Priority_Type IS NOT NULL
+group by SOURCE_DB, OrgIDProv, METRIC
+order by PRIMARY_LEVEL, METRIC
+
+-- COMMAND ----------
+
+-- DBTITLE 1,ED99 & ED100 - CCG (sub-ICB)
+--ED99: Number of referrals recieving a second contact in the RP, with ED, categorized as routine, aged 0-18
+--ED100: Number of referrals recieving a second contact in the RP, with ED, categorized as urgent, aged 0-18
+
+INSERT INTO $db_output.cyp_ed_wt_unformatted
+select 
+       '$month_id' AS MONTH_ID
+       ,'$status' AS STATUS
+       ,'$rp_startdate_run' AS REPORTING_PERIOD_START
+       ,'$rp_enddate' AS REPORTING_PERIOD_END
+       ,'CCG - GP Practice or Residence' AS BREAKDOWN
+       ,COALESCE(ccg.IC_Rec_CCG, NULL) AS PRIMARY_LEVEL
+       ,'NONE' AS PRIMARY_LEVEL_DESCRIPTION
+       ,'NONE' AS SECONDARY_LEVEL
+       ,'NONE' AS SECONDARY_LEVEL_DESCRIPTION
+       ,CASE WHEN Priority_Type = 'Routine' THEN 'ED99'
+             WHEN Priority_Type = 'Urgent' THEN 'ED100'
+             END AS METRIC
+       ,COUNT(DISTINCT UniqServReqID) as METRIC_VALUE
+       ,SOURCE_DB
+from $db_output.CYP_ED_WT_STEP8 as step8
+LEFT JOIN $db_output.MHS001_CCG_LATEST ccg ON step8.Person_ID = ccg.Person_ID
+where UniqMonthID = '$month_id' AND Status = '$status' and SOURCE_DB = '$db_source'
+and Priority_Type IS NOT NULL
+group by SOURCE_DB, ccg.IC_Rec_CCG, METRIC
+order by PRIMARY_LEVEL, METRIC
+
+-- COMMAND ----------
+
+-- DBTITLE 1,ED99 & ED100 - STP (ICB)
+--ED99: Number of referrals recieving a second contact in the RP, with ED, categorized as routine, aged 0-18
+--ED100: Number of referrals recieving a second contact in the RP, with ED, categorized as urgent, aged 0-18
+
+INSERT INTO $db_output.cyp_ed_wt_unformatted
+select 
+       '$month_id' AS MONTH_ID
+       ,'$status' AS STATUS
+       ,'$rp_startdate_run' AS REPORTING_PERIOD_START
+       ,'$rp_enddate' AS REPORTING_PERIOD_END
+       ,'STP - GP Practice or Residence' AS BREAKDOWN
+       ,COALESCE(stp.STP_CODE, NULL) AS PRIMARY_LEVEL
+       ,'NONE' AS PRIMARY_LEVEL_DESCRIPTION
+       ,'NONE' AS SECONDARY_LEVEL
+       ,'NONE' AS SECONDARY_LEVEL_DESCRIPTION
+       ,CASE WHEN Priority_Type = 'Routine' THEN 'ED99'
+             WHEN Priority_Type = 'Urgent' THEN 'ED100'
+             END AS METRIC
+       ,COUNT(DISTINCT UniqServReqID) as METRIC_VALUE
+       ,SOURCE_DB
+from $db_output.CYP_ED_WT_STEP8 as step8
+
+LEFT JOIN $db_output.MHS001_CCG_LATEST ccg ON step8.Person_ID = ccg.Person_ID
+LEFT JOIN $db_output.STP_Region_mapping_post_2020 stp ON ccg.IC_Rec_CCG = stp.CCG_CODE
+
+where UniqMonthID = '$month_id' AND Status = '$status' and SOURCE_DB = '$db_source'
+and Priority_Type IS NOT NULL
+group by SOURCE_DB, stp.STP_CODE, METRIC
+order by PRIMARY_LEVEL, METRIC
+
+-- COMMAND ----------
+
+-- DBTITLE 1,ED101 & ED102 - National
+--ED101: Median waiting time from first to second contact for referrals receiving a second contact in the RP, with ED, categorized as routine, aged 0-18
+--ED102: Median waiting time from first to second contact for referrals receiving a second contact in the RP, with ED, categorized as urgent, aged 0-18
+
+INSERT INTO $db_output.cyp_ed_wt_unformatted
+select 
+       '$month_id' AS MONTH_ID
+       ,'$status' AS STATUS
+       ,'$rp_startdate_run' AS REPORTING_PERIOD_START
+       ,'$rp_enddate' AS REPORTING_PERIOD_END
+       ,'England' AS BREAKDOWN
+       ,'England' AS PRIMARY_LEVEL
+       ,'England' AS PRIMARY_LEVEL_DESCRIPTION
+       ,'NONE' AS SECONDARY_LEVEL
+       ,'NONE' AS SECONDARY_LEVEL_DESCRIPTION
+       ,CASE WHEN Priority_Type = 'Routine' THEN 'ED101'
+             WHEN Priority_Type = 'Urgent' THEN 'ED102'
+             END AS METRIC
+       ,PERCENTILE(waiting_time_days, 0.5) as METRIC_VALUE
+       ,SOURCE_DB
+from $db_output.CYP_ED_WT_STEP8 
+where UniqMonthID = '$month_id' AND Status = '$status' and SOURCE_DB = '$db_source'
+and Priority_Type IS NOT NULL
+group by SOURCE_DB, METRIC
+order by PRIMARY_LEVEL, METRIC
+
+-- COMMAND ----------
+
+-- DBTITLE 1,ED101 & ED102 - Provider
+--ED101: Median waiting time from first to second contact for referrals receiving a second contact in the RP, with ED, categorized as routine, aged 0-18
+--ED102: Median waiting time from first to second contact for referrals receiving a second contact in the RP, with ED, categorized as urgent, aged 0-18
+
+INSERT INTO $db_output.cyp_ed_wt_unformatted
+select 
+       '$month_id' AS MONTH_ID
+       ,'$status' AS STATUS
+       ,'$rp_startdate_run' AS REPORTING_PERIOD_START
+       ,'$rp_enddate' AS REPORTING_PERIOD_END
+       ,'Provider' AS BREAKDOWN
+       ,COALESCE(OrgIDProv, NULL) AS PRIMARY_LEVEL
+       ,'NONE' AS PRIMARY_LEVEL_DESCRIPTION
+       ,'NONE' AS SECONDARY_LEVEL
+       ,'NONE' AS SECONDARY_LEVEL_DESCRIPTION
+       ,CASE WHEN Priority_Type = 'Routine' THEN 'ED101'
+             WHEN Priority_Type = 'Urgent' THEN 'ED102'
+             END AS METRIC
+       ,PERCENTILE(waiting_time_days, 0.5) as METRIC_VALUE
+       ,SOURCE_DB
+from $db_output.CYP_ED_WT_STEP8 as step8
+where UniqMonthID = '$month_id' AND Status = '$status' and SOURCE_DB = '$db_source'
+and Priority_Type IS NOT NULL
+group by SOURCE_DB, OrgIDProv, METRIC
+order by PRIMARY_LEVEL, METRIC
+
+-- COMMAND ----------
+
+-- DBTITLE 1,ED101 & ED102 - CCG (sub-ICB)
+--ED101: Median waiting time from first to second contact for referrals receiving a second contact in the RP, with ED, categorized as routine, aged 0-18
+--ED102: Median waiting time from first to second contact for referrals receiving a second contact in the RP, with ED, categorized as urgent, aged 0-18
+
+INSERT INTO $db_output.cyp_ed_wt_unformatted
+select 
+       '$month_id' AS MONTH_ID
+       ,'$status' AS STATUS
+       ,'$rp_startdate_run' AS REPORTING_PERIOD_START
+       ,'$rp_enddate' AS REPORTING_PERIOD_END
+       ,'CCG - GP Practice or Residence' AS BREAKDOWN
+       ,COALESCE(ccg.IC_Rec_CCG, NULL) AS PRIMARY_LEVEL
+       ,'NONE' AS PRIMARY_LEVEL_DESCRIPTION
+       ,'NONE' AS SECONDARY_LEVEL
+       ,'NONE' AS SECONDARY_LEVEL_DESCRIPTION
+       ,CASE WHEN Priority_Type = 'Routine' THEN 'ED101'
+             WHEN Priority_Type = 'Urgent' THEN 'ED102'
+             END AS METRIC
+       ,PERCENTILE(waiting_time_days, 0.5) as METRIC_VALUE
+       ,SOURCE_DB
+from $db_output.CYP_ED_WT_STEP8 as step8
+LEFT JOIN $db_output.MHS001_CCG_LATEST ccg ON step8.Person_ID = ccg.Person_ID
+where UniqMonthID = '$month_id' AND Status = '$status' and SOURCE_DB = '$db_source'
+and Priority_Type IS NOT NULL
+group by SOURCE_DB, ccg.IC_Rec_CCG, METRIC
+order by PRIMARY_LEVEL, METRIC
+
+-- COMMAND ----------
+
+-- DBTITLE 1,ED101 & ED102 - STP (ICB)
+--ED101: Median waiting time from first to second contact for referrals receiving a second contact in the RP, with ED, categorized as routine, aged 0-18
+--ED102: Median waiting time from first to second contact for referrals receiving a second contact in the RP, with ED, categorized as urgent, aged 0-18
+
+INSERT INTO $db_output.cyp_ed_wt_unformatted
+select 
+       '$month_id' AS MONTH_ID
+       ,'$status' AS STATUS
+       ,'$rp_startdate_run' AS REPORTING_PERIOD_START
+       ,'$rp_enddate' AS REPORTING_PERIOD_END
+       ,'STP - GP Practice or Residence' AS BREAKDOWN
+       ,COALESCE(stp.STP_CODE, NULL) AS PRIMARY_LEVEL
+       ,'NONE' AS PRIMARY_LEVEL_DESCRIPTION
+       ,'NONE' AS SECONDARY_LEVEL
+       ,'NONE' AS SECONDARY_LEVEL_DESCRIPTION
+       ,CASE WHEN Priority_Type = 'Routine' THEN 'ED101'
+             WHEN Priority_Type = 'Urgent' THEN 'ED102'
+             END AS METRIC
+       ,PERCENTILE(waiting_time_days, 0.5) as METRIC_VALUE
+       ,SOURCE_DB
+from $db_output.CYP_ED_WT_STEP8 as step8
+LEFT JOIN $db_output.MHS001_CCG_LATEST ccg ON step8.Person_ID = ccg.Person_ID
+LEFT JOIN $db_output.STP_Region_mapping_post_2020 stp ON ccg.IC_Rec_CCG = stp.CCG_CODE
+where UniqMonthID = '$month_id' AND Status = '$status' and SOURCE_DB = '$db_source'
+and Priority_Type IS NOT NULL
+group by SOURCE_DB, stp.STP_CODE, METRIC
+order by PRIMARY_LEVEL, METRIC
+
+-- COMMAND ----------
+
+-- DBTITLE 1,ED103 & ED104 - National
+--ED103: 90th percentile waiting time from first to second contact for referrals receiving a second contact in the RP, with ED, categorized as routine, aged 0-18
+--ED104: 90th percentile waiting time from first to second contact for referrals receiving a second contact in the RP, with ED, categorized as urgent, aged 0-18
+
+INSERT INTO $db_output.cyp_ed_wt_unformatted
+select 
+       '$month_id' AS MONTH_ID
+       ,'$status' AS STATUS
+       ,'$rp_startdate_run' AS REPORTING_PERIOD_START
+       ,'$rp_enddate' AS REPORTING_PERIOD_END
+       ,'England' AS BREAKDOWN
+       ,'England' AS PRIMARY_LEVEL
+       ,'England' AS PRIMARY_LEVEL_DESCRIPTION
+       ,'NONE' AS SECONDARY_LEVEL
+       ,'NONE' AS SECONDARY_LEVEL_DESCRIPTION
+       ,CASE WHEN Priority_Type = 'Routine' THEN 'ED103'
+             WHEN Priority_Type = 'Urgent' THEN 'ED104'
+             END AS METRIC
+       ,PERCENTILE(waiting_time_days, 0.9) as METRIC_VALUE
+       ,SOURCE_DB
+from $db_output.CYP_ED_WT_STEP8 
+where UniqMonthID = '$month_id' AND Status = '$status' and SOURCE_DB = '$db_source'
+and Priority_Type IS NOT NULL
+group by SOURCE_DB, METRIC
+order by PRIMARY_LEVEL, METRIC
+
+-- COMMAND ----------
+
+-- DBTITLE 1,ED103 & ED104 - Provider
+--ED103: 90th percentile waiting time from first to second contact for referrals receiving a second contact in the RP, with ED, categorized as routine, aged 0-18
+--ED104: 90th percentile waiting time from first to second contact for referrals receiving a second contact in the RP, with ED, categorized as urgent, aged 0-18
+
+INSERT INTO $db_output.cyp_ed_wt_unformatted
+select 
+       '$month_id' AS MONTH_ID
+       ,'$status' AS STATUS
+       ,'$rp_startdate_run' AS REPORTING_PERIOD_START
+       ,'$rp_enddate' AS REPORTING_PERIOD_END
+       ,'Provider' AS BREAKDOWN
+       ,COALESCE(OrgIDProv, NULL) AS PRIMARY_LEVEL
+       ,'NONE' AS PRIMARY_LEVEL_DESCRIPTION
+       ,'NONE' AS SECONDARY_LEVEL
+       ,'NONE' AS SECONDARY_LEVEL_DESCRIPTION
+       ,CASE WHEN Priority_Type = 'Routine' THEN 'ED103'
+             WHEN Priority_Type = 'Urgent' THEN 'ED104'
+             END AS METRIC
+       ,PERCENTILE(waiting_time_days, 0.9) as METRIC_VALUE
+       ,SOURCE_DB
+from $db_output.CYP_ED_WT_STEP8 
+where UniqMonthID = '$month_id' AND Status = '$status' and SOURCE_DB = '$db_source'
+and Priority_Type IS NOT NULL
+group by SOURCE_DB, OrgIDProv, METRIC
+order by PRIMARY_LEVEL, METRIC
+
+-- COMMAND ----------
+
+-- DBTITLE 1,ED103 & ED104 - CCG (sub-ICB)
+--ED103: 90th percentile waiting time from first to second contact for referrals receiving a second contact in the RP, with ED, categorized as routine, aged 0-18
+--ED104: 90th percentile waiting time from first to second contact for referrals receiving a second contact in the RP, with ED, categorized as urgent, aged 0-18
+
+INSERT INTO $db_output.cyp_ed_wt_unformatted
+select 
+       '$month_id' AS MONTH_ID
+       ,'$status' AS STATUS
+       ,'$rp_startdate_run' AS REPORTING_PERIOD_START
+       ,'$rp_enddate' AS REPORTING_PERIOD_END
+       ,'CCG - GP Practice or Residence' AS BREAKDOWN
+       ,COALESCE(ccg.IC_Rec_CCG, NULL) AS PRIMARY_LEVEL
+       ,'NONE' AS PRIMARY_LEVEL_DESCRIPTION
+       ,'NONE' AS SECONDARY_LEVEL
+       ,'NONE' AS SECONDARY_LEVEL_DESCRIPTION
+       ,CASE WHEN Priority_Type = 'Routine' THEN 'ED103'
+             WHEN Priority_Type = 'Urgent' THEN 'ED104'
+             END AS METRIC
+       ,PERCENTILE(waiting_time_days, 0.9) as METRIC_VALUE
+       ,SOURCE_DB
+from $db_output.CYP_ED_WT_STEP8 as step8
+LEFT JOIN $db_output.MHS001_CCG_LATEST ccg ON step8.Person_ID = ccg.Person_ID
+where UniqMonthID = '$month_id' AND Status = '$status' and SOURCE_DB = '$db_source'
+and Priority_Type IS NOT NULL
+group by SOURCE_DB, ccg.IC_Rec_CCG, METRIC
+order by PRIMARY_LEVEL, METRIC
+
+-- COMMAND ----------
+
+-- DBTITLE 1,ED103 & ED104 - STP (ICB)
+--ED103: 90th percentile waiting time from first to second contact for referrals receiving a second contact in the RP, with ED, categorized as routine, aged 0-18
+--ED104: 90th percentile waiting time from first to second contact for referrals receiving a second contact in the RP, with ED, categorized as urgent, aged 0-18
+
+INSERT INTO $db_output.cyp_ed_wt_unformatted
+select 
+       '$month_id' AS MONTH_ID
+       ,'$status' AS STATUS
+       ,'$rp_startdate_run' AS REPORTING_PERIOD_START
+       ,'$rp_enddate' AS REPORTING_PERIOD_END
+       ,'STP - GP Practice or Residence' AS BREAKDOWN
+       ,COALESCE(stp.STP_CODE, NULL) AS PRIMARY_LEVEL
+       ,'NONE' AS PRIMARY_LEVEL_DESCRIPTION
+       ,'NONE' AS SECONDARY_LEVEL
+       ,'NONE' AS SECONDARY_LEVEL_DESCRIPTION
+       ,CASE WHEN Priority_Type = 'Routine' THEN 'ED103'
+             WHEN Priority_Type = 'Urgent' THEN 'ED104'
+             END AS METRIC
+       ,PERCENTILE(waiting_time_days, 0.9) as METRIC_VALUE
+       ,SOURCE_DB
+from $db_output.CYP_ED_WT_STEP8 as step8
+
+LEFT JOIN $db_output.MHS001_CCG_LATEST ccg ON step8.Person_ID = ccg.Person_ID
+LEFT JOIN $db_output.STP_Region_mapping_post_2020 stp ON ccg.IC_Rec_CCG = stp.CCG_CODE
+
+where UniqMonthID = '$month_id' AND Status = '$status' and SOURCE_DB = '$db_source'
+and Priority_Type IS NOT NULL
+group by SOURCE_DB, stp.STP_CODE, METRIC
+order by PRIMARY_LEVEL, METRIC

@@ -63,7 +63,7 @@
             ) AS mpi 
     ON mpi.Person_ID = r.Person_ID
 
- LEFT JOIN $reference_data.english_indices_of_dep_v02 imd_ref ON mpi.LSOA2011 = imd_ref.LSOA_CODE_2011 AND imd_ref.IMD_YEAR = '2019' 
+ LEFT JOIN $$reference_data.english_indices_of_dep_v02 imd_ref ON mpi.LSOA2011 = imd_ref.LSOA_CODE_2011 AND imd_ref.IMD_YEAR = '2019' 
    
  LEFT JOIN $db_output.imd_desc imd ON imd_ref.DECI_IMD = imd.IMD_Number AND '$end_month_id' >= imd.FirstMonth AND (imd.LastMonth IS null OR '$end_month_id' <= imd.LastMonth)
    

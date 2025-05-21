@@ -4,7 +4,7 @@
  INSERT OVERWRITE TABLE $db_output.nhse_pre_proc_header
  select distinct uniqmonthid, reportingperiodstartdate, reportingperiodenddate, label as Der_FY
  from $db_source.mhs000header h
- left join $reference_data.calendar_financial_year fy on h.reportingperiodstartdate between fy.START_DATE and fy.END_DATE
+ left join $$reference_data.calendar_financial_year fy on h.reportingperiodstartdate between fy.START_DATE and fy.END_DATE
  where UniqMonthID <= "$end_month_id"
  order by 1 desc
 

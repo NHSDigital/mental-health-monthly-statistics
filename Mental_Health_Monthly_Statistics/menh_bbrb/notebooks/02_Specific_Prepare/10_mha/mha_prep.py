@@ -61,8 +61,8 @@
 
  LEFT JOIN
           (SELECT LSOA_CODE_2011, DECI_IMD, IMD_YEAR
-          FROM $reference_data.english_indices_of_dep_v02
-          WHERE IMD_YEAR = (SELECT MAX(IMD_YEAR) FROM $reference_data.english_indices_of_dep_v02) ) C ON B.LSOA2011 = LSOA_CODE_2011     
+          FROM $$reference_data.english_indices_of_dep_v02
+          WHERE IMD_YEAR = (SELECT MAX(IMD_YEAR) FROM $$reference_data.english_indices_of_dep_v02) ) C ON B.LSOA2011 = LSOA_CODE_2011     
           
  --LEFT JOIN $db_output.CCG A ON A.PERSON_ID = b.PERSON_ID          ##MHA-MIGRATION
  LEFT JOIN $db_output.ethnicity_desc eth on B.NHSDEthnicity = eth.LowerEthnicityCode and '$end_month_id' >= eth.FirstMonth and (eth.LastMonth is null or '$end_month_id' <= eth.LastMonth)

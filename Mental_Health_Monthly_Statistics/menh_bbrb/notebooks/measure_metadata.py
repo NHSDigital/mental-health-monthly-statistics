@@ -1594,7 +1594,7 @@ cyp_out_measure_ids = {
   "crude_rate": 0,
   "related_to": "referrals",
   'suppression': 'count',
-  'breakdowns': [eng_bd, prov_bd, stp_prac_res_bd, comm_region_bd],#, age_band_cyp_bd, gender_bd, upper_eth_bd, imd_decile_bd, reason_for_ref_bd, serv_team_type_ref_to_bd],
+  'breakdowns': [eng_bd, prov_bd, stp_prac_res_bd, comm_region_bd, age_band_cyp_bd, gender_bd, upper_eth_bd, imd_decile_bd, reason_for_ref_bd, serv_team_type_ref_to_bd],
   "output_table": "bbrb_final_raw"
 },
 'MHS111' : {
@@ -1609,7 +1609,7 @@ cyp_out_measure_ids = {
   "crude_rate": 0,
   "related_to": "referrals",
   'suppression': 'count',
-  'breakdowns': [eng_bd, prov_bd, stp_prac_res_bd, comm_region_bd],#, age_band_cyp_bd, gender_bd, upper_eth_bd, imd_decile_bd, reason_for_ref_bd, serv_team_type_ref_to_bd],
+  'breakdowns': [eng_bd, prov_bd, stp_prac_res_bd, comm_region_bd, age_band_cyp_bd, gender_bd, upper_eth_bd, imd_decile_bd, reason_for_ref_bd, serv_team_type_ref_to_bd],
   "output_table": "bbrb_final_raw"
 },
 'MHS111a' : {
@@ -1624,7 +1624,7 @@ cyp_out_measure_ids = {
   "crude_rate": 0,
   "related_to": "referrals",
   'suppression': 'percent',
-  'breakdowns': [eng_bd, prov_bd, stp_prac_res_bd, comm_region_bd],#, age_band_cyp_bd, gender_bd, upper_eth_bd, imd_decile_bd, reason_for_ref_bd, serv_team_type_ref_to_bd],
+  'breakdowns': [eng_bd, prov_bd, stp_prac_res_bd, comm_region_bd, age_band_cyp_bd, gender_bd, upper_eth_bd, imd_decile_bd, reason_for_ref_bd, serv_team_type_ref_to_bd],
   "output_table": "bbrb_final_raw"
 },
 'MHS111b' : {
@@ -1639,7 +1639,7 @@ cyp_out_measure_ids = {
   "crude_rate": 0,
   "related_to": "referrals",
   'suppression': 'count',
-  'breakdowns': [eng_bd, prov_bd, stp_prac_res_bd, comm_region_bd],#, age_band_cyp_bd, gender_bd, upper_eth_bd, imd_decile_bd, reason_for_ref_bd, serv_team_type_ref_to_bd],
+  'breakdowns': [eng_bd, prov_bd, stp_prac_res_bd, comm_region_bd, age_band_cyp_bd, gender_bd, upper_eth_bd, imd_decile_bd, reason_for_ref_bd, serv_team_type_ref_to_bd],
   "output_table": "bbrb_final_raw"
 },
 'MHS111c' : {
@@ -1654,7 +1654,7 @@ cyp_out_measure_ids = {
   "crude_rate": 0,
   "related_to": "referrals",
   'suppression': 'percent',
-  'breakdowns': [eng_bd, prov_bd, stp_prac_res_bd, comm_region_bd],#, age_band_cyp_bd, gender_bd, upper_eth_bd, imd_decile_bd, reason_for_ref_bd, serv_team_type_ref_to_bd],
+  'breakdowns': [eng_bd, prov_bd, stp_prac_res_bd, comm_region_bd, age_band_cyp_bd, gender_bd, upper_eth_bd, imd_decile_bd, reason_for_ref_bd, serv_team_type_ref_to_bd],
   "output_table": "bbrb_final_raw"
 },
 'MHS111d' : {
@@ -1669,7 +1669,7 @@ cyp_out_measure_ids = {
   "crude_rate": 0,
   "related_to": "referrals",
   'suppression': 'count',
-  'breakdowns': [eng_bd, prov_bd, stp_prac_res_bd, comm_region_bd],#, age_band_cyp_bd, gender_bd, upper_eth_bd, imd_decile_bd, reason_for_ref_bd, serv_team_type_ref_to_bd],
+  'breakdowns': [eng_bd, prov_bd, stp_prac_res_bd, comm_region_bd, age_band_cyp_bd, gender_bd, upper_eth_bd, imd_decile_bd, reason_for_ref_bd, serv_team_type_ref_to_bd],
   "output_table": "bbrb_final_raw"
 },
 'MHS111e' : {
@@ -1684,7 +1684,7 @@ cyp_out_measure_ids = {
   "crude_rate": 0,
   "related_to": "referrals",
   'suppression': 'percent',
-  'breakdowns': [eng_bd, prov_bd, stp_prac_res_bd, comm_region_bd],#, age_band_cyp_bd, gender_bd, upper_eth_bd, imd_decile_bd, reason_for_ref_bd, serv_team_type_ref_to_bd],
+  'breakdowns': [eng_bd, prov_bd, stp_prac_res_bd, comm_region_bd, age_band_cyp_bd, gender_bd, upper_eth_bd, imd_decile_bd, reason_for_ref_bd, serv_team_type_ref_to_bd],
   "output_table": "bbrb_final_raw"
 },
 'MHS111f' : {
@@ -1699,7 +1699,7 @@ cyp_out_measure_ids = {
   "crude_rate": 0,
   "related_to": "referrals",
   'suppression': 'count',
-  'breakdowns': [eng_bd, prov_bd, stp_prac_res_bd, comm_region_bd],#, age_band_cyp_bd, gender_bd, upper_eth_bd, imd_decile_bd, reason_for_ref_bd, serv_team_type_ref_to_bd],
+  'breakdowns': [eng_bd, prov_bd, stp_prac_res_bd, comm_region_bd, age_band_cyp_bd, gender_bd, upper_eth_bd, imd_decile_bd, reason_for_ref_bd, serv_team_type_ref_to_bd],
   "output_table": "bbrb_final_raw"
 },
 'MHS111g' : {
@@ -1714,7 +1714,7 @@ cyp_out_measure_ids = {
   "crude_rate": 0,
   "related_to": "referrals",
   'suppression': 'percent',
-  'breakdowns': [eng_bd, prov_bd, stp_prac_res_bd, comm_region_bd],#, age_band_cyp_bd, gender_bd, upper_eth_bd, imd_decile_bd, reason_for_ref_bd, serv_team_type_ref_to_bd],
+  'breakdowns': [eng_bd, prov_bd, stp_prac_res_bd, comm_region_bd, age_band_cyp_bd, gender_bd, upper_eth_bd, imd_decile_bd, reason_for_ref_bd, serv_team_type_ref_to_bd],
   "output_table": "bbrb_final_raw"
 },
 'MHS112' : {
@@ -1729,7 +1729,7 @@ cyp_out_measure_ids = {
   "crude_rate": 0,
   "related_to": "referrals",
   'suppression': 'count',
-  'breakdowns': [eng_bd, prov_bd, stp_prac_res_bd, comm_region_bd],#, age_band_cyp_bd, gender_bd, upper_eth_bd, imd_decile_bd, reason_for_ref_bd, serv_team_type_ref_to_bd],
+  'breakdowns': [eng_bd, prov_bd, stp_prac_res_bd, comm_region_bd, age_band_cyp_bd, gender_bd, upper_eth_bd, imd_decile_bd, reason_for_ref_bd, serv_team_type_ref_to_bd],
   "output_table": "bbrb_final_raw"
 },
 'MHS112a' : {
@@ -1744,7 +1744,7 @@ cyp_out_measure_ids = {
   "crude_rate": 0,
   "related_to": "referrals",
   'suppression': 'percent',
-  'breakdowns': [eng_bd, prov_bd, stp_prac_res_bd, comm_region_bd],#, age_band_cyp_bd, gender_bd, upper_eth_bd, imd_decile_bd, reason_for_ref_bd, serv_team_type_ref_to_bd],
+  'breakdowns': [eng_bd, prov_bd, stp_prac_res_bd, comm_region_bd, age_band_cyp_bd, gender_bd, upper_eth_bd, imd_decile_bd, reason_for_ref_bd, serv_team_type_ref_to_bd],
   "output_table": "bbrb_final_raw"
 },
 'MHS112b' : {
@@ -1759,7 +1759,7 @@ cyp_out_measure_ids = {
   "crude_rate": 0,
   "related_to": "referrals",
   'suppression': 'count',
-  'breakdowns': [eng_bd, prov_bd, stp_prac_res_bd, comm_region_bd],#, age_band_cyp_bd, gender_bd, upper_eth_bd, imd_decile_bd, reason_for_ref_bd, serv_team_type_ref_to_bd],
+  'breakdowns': [eng_bd, prov_bd, stp_prac_res_bd, comm_region_bd, age_band_cyp_bd, gender_bd, upper_eth_bd, imd_decile_bd, reason_for_ref_bd, serv_team_type_ref_to_bd],
   "output_table": "bbrb_final_raw"
 }, 
 'MHS112c' : {
@@ -1774,7 +1774,7 @@ cyp_out_measure_ids = {
   "crude_rate": 0,
   "related_to": "referrals",
   'suppression': 'percent',
-  'breakdowns': [eng_bd, prov_bd, stp_prac_res_bd, comm_region_bd],#, age_band_cyp_bd, gender_bd, upper_eth_bd, imd_decile_bd, reason_for_ref_bd, serv_team_type_ref_to_bd],
+  'breakdowns': [eng_bd, prov_bd, stp_prac_res_bd, comm_region_bd, age_band_cyp_bd, gender_bd, upper_eth_bd, imd_decile_bd, reason_for_ref_bd, serv_team_type_ref_to_bd],
   "output_table": "bbrb_final_raw"
 },
 'MHS112d' : {
@@ -1789,7 +1789,7 @@ cyp_out_measure_ids = {
   "crude_rate": 0,
   "related_to": "referrals",
   'suppression': 'count',
-  'breakdowns': [eng_bd, prov_bd, stp_prac_res_bd, comm_region_bd],#, age_band_cyp_bd, gender_bd, upper_eth_bd, imd_decile_bd, reason_for_ref_bd, serv_team_type_ref_to_bd],
+  'breakdowns': [eng_bd, prov_bd, stp_prac_res_bd, comm_region_bd, age_band_cyp_bd, gender_bd, upper_eth_bd, imd_decile_bd, reason_for_ref_bd, serv_team_type_ref_to_bd],
   "output_table": "bbrb_final_raw"
 }, 
 'MHS112e' : {
@@ -1804,7 +1804,7 @@ cyp_out_measure_ids = {
   "crude_rate": 0,
   "related_to": "referrals",
   'suppression': 'percent',
-  'breakdowns': [eng_bd, prov_bd, stp_prac_res_bd, comm_region_bd],#, age_band_cyp_bd, gender_bd, upper_eth_bd, imd_decile_bd, reason_for_ref_bd, serv_team_type_ref_to_bd],
+  'breakdowns': [eng_bd, prov_bd, stp_prac_res_bd, comm_region_bd, age_band_cyp_bd, gender_bd, upper_eth_bd, imd_decile_bd, reason_for_ref_bd, serv_team_type_ref_to_bd],
   "output_table": "bbrb_final_raw"
 },
 'MHS112f' : {
@@ -1819,7 +1819,7 @@ cyp_out_measure_ids = {
   "crude_rate": 0,
   "related_to": "referrals",
   'suppression': 'count',
-  'breakdowns': [eng_bd, prov_bd, stp_prac_res_bd, comm_region_bd],#, age_band_cyp_bd, gender_bd, upper_eth_bd, imd_decile_bd, reason_for_ref_bd, serv_team_type_ref_to_bd],
+  'breakdowns': [eng_bd, prov_bd, stp_prac_res_bd, comm_region_bd, age_band_cyp_bd, gender_bd, upper_eth_bd, imd_decile_bd, reason_for_ref_bd, serv_team_type_ref_to_bd],
   "output_table": "bbrb_final_raw"
 }, 
 'MHS112g' : {
@@ -1834,7 +1834,7 @@ cyp_out_measure_ids = {
   "crude_rate": 0,
   "related_to": "referrals",
   'suppression': 'percent',
-  'breakdowns': [eng_bd, prov_bd, stp_prac_res_bd, comm_region_bd],#, age_band_cyp_bd, gender_bd, upper_eth_bd, imd_decile_bd, reason_for_ref_bd, serv_team_type_ref_to_bd],
+  'breakdowns': [eng_bd, prov_bd, stp_prac_res_bd, comm_region_bd, age_band_cyp_bd, gender_bd, upper_eth_bd, imd_decile_bd, reason_for_ref_bd, serv_team_type_ref_to_bd],
   "output_table": "bbrb_final_raw"
 },
 'MHS113a' : {
@@ -1849,7 +1849,7 @@ cyp_out_measure_ids = {
   "crude_rate": 0,
   "related_to": "referrals",
   'suppression': 'count',
-  'breakdowns': [eng_bd, prov_bd, stp_prac_res_bd, comm_region_bd],#, age_band_cyp_bd, gender_bd, upper_eth_bd, imd_decile_bd, reason_for_ref_bd, serv_team_type_ref_to_bd],
+  'breakdowns': [eng_bd, prov_bd, stp_prac_res_bd, comm_region_bd, age_band_cyp_bd, gender_bd, upper_eth_bd, imd_decile_bd, reason_for_ref_bd, serv_team_type_ref_to_bd],
   "output_table": "bbrb_final_raw"
 },
 'MHS113b' : {
@@ -1864,7 +1864,7 @@ cyp_out_measure_ids = {
   "crude_rate": 0,
   "related_to": "referrals",
   'suppression': 'percent',
-  'breakdowns': [eng_bd, prov_bd, stp_prac_res_bd, comm_region_bd],#, age_band_cyp_bd, gender_bd, upper_eth_bd, imd_decile_bd, reason_for_ref_bd, serv_team_type_ref_to_bd],
+  'breakdowns': [eng_bd, prov_bd, stp_prac_res_bd, comm_region_bd, age_band_cyp_bd, gender_bd, upper_eth_bd, imd_decile_bd, reason_for_ref_bd, serv_team_type_ref_to_bd],
   "output_table": "bbrb_final_raw"
 }, 
 'MHS113c' : {
@@ -1879,7 +1879,7 @@ cyp_out_measure_ids = {
   "crude_rate": 0,
   "related_to": "referrals",
   'suppression': 'count',
-  'breakdowns': [eng_bd, prov_bd, stp_prac_res_bd, comm_region_bd],#, age_band_cyp_bd, gender_bd, upper_eth_bd, imd_decile_bd, reason_for_ref_bd, serv_team_type_ref_to_bd],
+  'breakdowns': [eng_bd, prov_bd, stp_prac_res_bd, comm_region_bd, age_band_cyp_bd, gender_bd, upper_eth_bd, imd_decile_bd, reason_for_ref_bd, serv_team_type_ref_to_bd],
   "output_table": "bbrb_final_raw"
 },
 'MHS113d' : {
@@ -1894,7 +1894,7 @@ cyp_out_measure_ids = {
   "crude_rate": 0,
   "related_to": "referrals",
   'suppression': 'percent',
-  'breakdowns': [eng_bd, prov_bd, stp_prac_res_bd, comm_region_bd],#, age_band_cyp_bd, gender_bd, upper_eth_bd, imd_decile_bd, reason_for_ref_bd, serv_team_type_ref_to_bd],
+  'breakdowns': [eng_bd, prov_bd, stp_prac_res_bd, comm_region_bd, age_band_cyp_bd, gender_bd, upper_eth_bd, imd_decile_bd, reason_for_ref_bd, serv_team_type_ref_to_bd],
   "output_table": "bbrb_final_raw"
 },
 'MHS113e' : {
@@ -1909,7 +1909,7 @@ cyp_out_measure_ids = {
   "crude_rate": 0,
   "related_to": "referrals",
   'suppression': 'count',
-  'breakdowns': [eng_bd, prov_bd, stp_prac_res_bd, comm_region_bd],#, age_band_cyp_bd, gender_bd, upper_eth_bd, imd_decile_bd, reason_for_ref_bd, serv_team_type_ref_to_bd],
+  'breakdowns': [eng_bd, prov_bd, stp_prac_res_bd, comm_region_bd, age_band_cyp_bd, gender_bd, upper_eth_bd, imd_decile_bd, reason_for_ref_bd, serv_team_type_ref_to_bd],
   "output_table": "bbrb_final_raw"
 },
 'MHS113f' : {
@@ -1924,7 +1924,7 @@ cyp_out_measure_ids = {
   "crude_rate": 0,
   "related_to": "referrals",
   'suppression': 'percent',
-  'breakdowns': [eng_bd, prov_bd, stp_prac_res_bd, comm_region_bd],#, age_band_cyp_bd, gender_bd, upper_eth_bd, imd_decile_bd, reason_for_ref_bd, serv_team_type_ref_to_bd],
+  'breakdowns': [eng_bd, prov_bd, stp_prac_res_bd, comm_region_bd, age_band_cyp_bd, gender_bd, upper_eth_bd, imd_decile_bd, reason_for_ref_bd, serv_team_type_ref_to_bd],
   "output_table": "bbrb_final_raw"
 }, 
 'MHS114a' : {
@@ -1939,13 +1939,13 @@ cyp_out_measure_ids = {
   "crude_rate": 0,
   "related_to": "referrals",
   'suppression': "count",
-  'breakdowns': [eng_bd, prov_bd, stp_prac_res_bd, comm_region_bd],#, age_band_cyp_bd, gender_bd, upper_eth_bd, imd_decile_bd, reason_for_ref_bd, serv_team_type_ref_to_bd],
+  'breakdowns': [eng_bd, prov_bd, stp_prac_res_bd, comm_region_bd, age_band_cyp_bd, gender_bd, upper_eth_bd, imd_decile_bd, reason_for_ref_bd, serv_team_type_ref_to_bd],
   "output_table": "bbrb_final_raw"
 },
 'MHS114b' : {
   'name': 'Percentage of closed referrals for children and young people aged between 0 and 17 with at least 2 contacts and a parent-rated perspective paired score that showed measurable improvement',
   'freq': 'M',
-  'source_table': 'cyp_master',                    
+  'source_table': 'cyp_master',
   "filter_clause": "",                              
   'aggregate_field': "ROUND((COUNT(DISTINCT CASE WHEN Improvement_PR = 1 THEN UniqServReqID ELSE NULL END)/COUNT(DISTINCT CASE WHEN Paired_PR IS NOT NULL THEN UniqServReqID ELSE NULL END))*100, 1)",
   'aggregate_function': produce_agg_df,
@@ -1954,7 +1954,7 @@ cyp_out_measure_ids = {
   "crude_rate": 0,
   "related_to": "referrals",
   'suppression': 'percent',
-  'breakdowns': [eng_bd, prov_bd, stp_prac_res_bd, comm_region_bd],#, age_band_cyp_bd, gender_bd, upper_eth_bd, imd_decile_bd, reason_for_ref_bd, serv_team_type_ref_to_bd],
+  'breakdowns': [eng_bd, prov_bd, stp_prac_res_bd, comm_region_bd, age_band_cyp_bd, gender_bd, upper_eth_bd, imd_decile_bd, reason_for_ref_bd, serv_team_type_ref_to_bd],
   "output_table": "bbrb_final_raw"
 }, 
 'MHS114c' : {
@@ -1969,7 +1969,7 @@ cyp_out_measure_ids = {
   "crude_rate": 0,
   "related_to": "referrals",
   'suppression': 'count',
-  'breakdowns': [eng_bd, prov_bd, stp_prac_res_bd, comm_region_bd],#, age_band_cyp_bd, gender_bd, upper_eth_bd, imd_decile_bd, reason_for_ref_bd, serv_team_type_ref_to_bd],
+  'breakdowns': [eng_bd, prov_bd, stp_prac_res_bd, comm_region_bd, age_band_cyp_bd, gender_bd, upper_eth_bd, imd_decile_bd, reason_for_ref_bd, serv_team_type_ref_to_bd],
   "output_table": "bbrb_final_raw"
 },
 'MHS114d' : {
@@ -1984,7 +1984,7 @@ cyp_out_measure_ids = {
   "crude_rate": 0,
   "related_to": "referrals",
   'suppression': 'percent',
-  'breakdowns': [eng_bd, prov_bd, stp_prac_res_bd, comm_region_bd],#, age_band_cyp_bd, gender_bd, upper_eth_bd, imd_decile_bd, reason_for_ref_bd, serv_team_type_ref_to_bd],
+  'breakdowns': [eng_bd, prov_bd, stp_prac_res_bd, comm_region_bd, age_band_cyp_bd, gender_bd, upper_eth_bd, imd_decile_bd, reason_for_ref_bd, serv_team_type_ref_to_bd],
   "output_table": "bbrb_final_raw"
 },
 'MHS114e' : {
@@ -1999,7 +1999,7 @@ cyp_out_measure_ids = {
   "crude_rate": 0,
   "related_to": "referrals",
   "suppression": "count",
-  'breakdowns': [eng_bd, prov_bd, stp_prac_res_bd, comm_region_bd],#, age_band_cyp_bd, gender_bd, upper_eth_bd, imd_decile_bd, reason_for_ref_bd, serv_team_type_ref_to_bd],
+  'breakdowns': [eng_bd, prov_bd, stp_prac_res_bd, comm_region_bd, age_band_cyp_bd, gender_bd, upper_eth_bd, imd_decile_bd, reason_for_ref_bd, serv_team_type_ref_to_bd],
   "output_table": "bbrb_final_raw"
 },
 'MHS114f' : {
@@ -2015,7 +2015,7 @@ cyp_out_measure_ids = {
   "crude_rate": 0,
   "related_to": "referrals",
   'suppression': 'percent',
-  'breakdowns': [eng_bd, prov_bd, stp_prac_res_bd, comm_region_bd],#, age_band_cyp_bd, gender_bd, upper_eth_bd, imd_decile_bd, reason_for_ref_bd, serv_team_type_ref_to_bd],
+  'breakdowns': [eng_bd, prov_bd, stp_prac_res_bd, comm_region_bd, age_band_cyp_bd, gender_bd, upper_eth_bd, imd_decile_bd, reason_for_ref_bd, serv_team_type_ref_to_bd],
   "output_table": "bbrb_final_raw"
 }, 
 'MHS115a' : {
@@ -2030,7 +2030,7 @@ cyp_out_measure_ids = {
   "crude_rate": 0,
   "related_to": "referrals",
   'suppression': 'count',
-  'breakdowns': [eng_bd, prov_bd, stp_prac_res_bd, comm_region_bd],#, age_band_cyp_bd, gender_bd, upper_eth_bd, imd_decile_bd, reason_for_ref_bd, serv_team_type_ref_to_bd],
+  'breakdowns': [eng_bd, prov_bd, stp_prac_res_bd, comm_region_bd, age_band_cyp_bd, gender_bd, upper_eth_bd, imd_decile_bd, reason_for_ref_bd, serv_team_type_ref_to_bd],
   "output_table": "bbrb_final_raw"
 },
 'MHS115b' : {
@@ -2046,7 +2046,7 @@ cyp_out_measure_ids = {
   "crude_rate": 0,
   "related_to": "referrals",
   'suppression': 'percent',
-  'breakdowns': [eng_bd, prov_bd, stp_prac_res_bd, comm_region_bd],#, age_band_cyp_bd, gender_bd, upper_eth_bd, imd_decile_bd, reason_for_ref_bd, serv_team_type_ref_to_bd],
+  'breakdowns': [eng_bd, prov_bd, stp_prac_res_bd, comm_region_bd, age_band_cyp_bd, gender_bd, upper_eth_bd, imd_decile_bd, reason_for_ref_bd, serv_team_type_ref_to_bd],
   "output_table": "bbrb_final_raw"
 }, 
 'MHS115c' : {
@@ -2062,7 +2062,7 @@ cyp_out_measure_ids = {
   "crude_rate": 0,
   "related_to": "referrals",
   'suppression': 'count',
-  'breakdowns': [eng_bd, prov_bd, stp_prac_res_bd, comm_region_bd],#, age_band_cyp_bd, gender_bd, upper_eth_bd, imd_decile_bd, reason_for_ref_bd, serv_team_type_ref_to_bd],
+  'breakdowns': [eng_bd, prov_bd, stp_prac_res_bd, comm_region_bd, age_band_cyp_bd, gender_bd, upper_eth_bd, imd_decile_bd, reason_for_ref_bd, serv_team_type_ref_to_bd],
   "output_table": "bbrb_final_raw"
 },
 'MHS115d' : {
@@ -2077,7 +2077,7 @@ cyp_out_measure_ids = {
   "crude_rate": 0,
   "related_to": "referrals",
   'suppression': 'percent',
-  'breakdowns': [eng_bd, prov_bd, stp_prac_res_bd, comm_region_bd],#, age_band_cyp_bd, gender_bd, upper_eth_bd, imd_decile_bd, reason_for_ref_bd, serv_team_type_ref_to_bd],
+  'breakdowns': [eng_bd, prov_bd, stp_prac_res_bd, comm_region_bd, age_band_cyp_bd, gender_bd, upper_eth_bd, imd_decile_bd, reason_for_ref_bd, serv_team_type_ref_to_bd],
   "output_table": "bbrb_final_raw"
 },
 'MHS115e' : {
@@ -2092,7 +2092,7 @@ cyp_out_measure_ids = {
   "crude_rate": 0,
   "related_to": "referrals",
   'suppression': 'count',
-  'breakdowns': [eng_bd, prov_bd, stp_prac_res_bd, comm_region_bd],#, age_band_cyp_bd, gender_bd, upper_eth_bd, imd_decile_bd, reason_for_ref_bd, serv_team_type_ref_to_bd],
+  'breakdowns': [eng_bd, prov_bd, stp_prac_res_bd, comm_region_bd, age_band_cyp_bd, gender_bd, upper_eth_bd, imd_decile_bd, reason_for_ref_bd, serv_team_type_ref_to_bd],
   "output_table": "bbrb_final_raw"
 },
 'MHS115f' : {
@@ -2107,7 +2107,7 @@ cyp_out_measure_ids = {
   "crude_rate": 0,
   "related_to": "referrals",
   'suppression': 'percent',
-  'breakdowns': [eng_bd, prov_bd, stp_prac_res_bd, comm_region_bd],#, age_band_cyp_bd, gender_bd, upper_eth_bd, imd_decile_bd, reason_for_ref_bd, serv_team_type_ref_to_bd],
+  'breakdowns': [eng_bd, prov_bd, stp_prac_res_bd, comm_region_bd, age_band_cyp_bd, gender_bd, upper_eth_bd, imd_decile_bd, reason_for_ref_bd, serv_team_type_ref_to_bd],
   "output_table": "bbrb_final_raw"
 },
 }

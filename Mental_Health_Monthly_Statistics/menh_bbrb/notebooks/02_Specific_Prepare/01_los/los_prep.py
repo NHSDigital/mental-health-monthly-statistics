@@ -1,7 +1,7 @@
 # Databricks notebook source
 # dbutils.widgets.text("db_output", "$personal_db")
 # db_output = dbutils.widgets.get("db_output")
-# dbutils.widgets.text("db_source", "testdata_menh_bbrb_$mhsds_db")
+# dbutils.widgets.text("db_source", "testdata_menh_bbrb_$mhsds")
 # db_source = dbutils.widgets.get("db_source")
 # dbutils.widgets.text("end_month_id", "1459")
 # end_month_id = dbutils.widgets.get("end_month_id")
@@ -95,7 +95,7 @@ else:
  %sql
  ----this step needs to be done to bin invalid/expired ccg/sub-icb codes into UNKNOWN
  INSERT OVERWRITE TABLE $db_output.spells 
- SELECT  
+ SELECT DISTINCT
  A.PERSON_ID as Person_ID, 
  A.UniqHospProvSpellID,
  A.OrgIDProv,
@@ -134,7 +134,7 @@ else:
  %sql
  ----this step needs to be done to bin invalid/expired ccg/sub-icb codes into UNKNOWN
  INSERT OVERWRITE TABLE $db_output.distinct_spells 
- SELECT  
+ SELECT DISTINCT
  Person_ID, 
  UniqHospProvSpellID,
  OrgIDProv,

@@ -45,13 +45,14 @@ if update_metadata == 'true':
             ('CYP_ED_WaitingTimes_preFY2324', 'run_notebooks', '04_CYP_ED_WaitingTimes/01_Prepare/PrepViews', 412, 'transform', null),
             ('CYP_ED_WaitingTimes_preFY2324', 'run_notebooks', '04_CYP_ED_WaitingTimes/02_Aggregate/01_CYP_ED_WT_Aggregate', 413, 'transform', null),
           
-            ('CYP_ED_WaitingTimes', 'run_notebooks', '04a_CYP_ED_WaitingTimes/00_Master/DeletePrevRunRecords', 460, 'transform', null),
-            ('CYP_ED_WaitingTimes', 'run_notebooks', '04a_CYP_ED_WaitingTimes/01_Prepare/LoadRefData', 461, 'transform', null),
-            ('CYP_ED_WaitingTimes', 'run_notebooks', '04a_CYP_ED_WaitingTimes/01_Prepare/PrepViews', 462, 'transform', null),
-            ('CYP_ED_WaitingTimes', 'run_notebooks', '04a_CYP_ED_WaitingTimes/02_Aggregate/01_CYP_ED_WT_Aggregate', 463, 'transform', null),
-            ('CYP_ED_WaitingTimes_12m', 'run_notebooks', '04a_CYP_ED_WaitingTimes/01_Prepare/LoadRefData', 464, 'transform', null),
-            ('CYP_ED_WaitingTimes_12m', 'run_notebooks', '04a_CYP_ED_WaitingTimes/01_Prepare/PrepViews', 465, 'transform', null),
-            ('CYP_ED_WaitingTimes_12m', 'run_notebooks', '04a_CYP_ED_WaitingTimes/02_Aggregate/01_CYP_ED_WT_Aggregate', 466, 'transform', null),
+            ('CYP_ED_WaitingTimes', 'init_schemas', '04_CYP_ED_WaitingTimes/create_tables', 460, 'create_schema', null),
+            ('CYP_ED_WaitingTimes', 'run_notebooks', '04a_CYP_ED_WaitingTimes/00_Master/DeletePrevRunRecords', 461, 'transform', null),
+            ('CYP_ED_WaitingTimes', 'run_notebooks', '04a_CYP_ED_WaitingTimes/01_Prepare/LoadRefData', 462, 'transform', null),
+            ('CYP_ED_WaitingTimes', 'run_notebooks', '04a_CYP_ED_WaitingTimes/01_Prepare/PrepViews', 463, 'transform', null),
+            ('CYP_ED_WaitingTimes', 'run_notebooks', '04a_CYP_ED_WaitingTimes/02_Aggregate/01_CYP_ED_WT_Aggregate', 464, 'transform', null),
+            ('CYP_ED_WaitingTimes_12m', 'run_notebooks', '04a_CYP_ED_WaitingTimes/01_Prepare/LoadRefData', 465, 'transform', null),
+            ('CYP_ED_WaitingTimes_12m', 'run_notebooks', '04a_CYP_ED_WaitingTimes/01_Prepare/PrepViews', 466, 'transform', null),
+            ('CYP_ED_WaitingTimes_12m', 'run_notebooks', '04a_CYP_ED_WaitingTimes/02_Aggregate/01_CYP_ED_WT_Aggregate', 467, 'transform', null),
             
             
             ('CYP_Outcome_Measures', 'init_schemas', '06_CYP_Outcome_Measures/create_tables', 601, 'create_schema', null),

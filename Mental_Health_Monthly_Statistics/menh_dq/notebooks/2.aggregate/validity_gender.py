@@ -3,10 +3,10 @@
 
 
 # dbutils.widgets.text("db_output" , "menh_dq", "db_output")
-# dbutils.widgets.text("dbm" , "testdata_menh_dq_$mhsds_db", "dbm")
+# dbutils.widgets.text("dbm" , "testdata_menh_dq_$mhsds", "dbm")
 
 # dbutils.widgets.text("month_id", "1449", "month_id")
-# dbutils.widgets.text("reference_data", "reference_data", "reference_data")
+# dbutils.widgets.text("$reference_data", "$reference_data", "$reference_data")
 
 # dbutils.widgets.text("rp_startdate", "2020-12-01", "rp_startdate")
 # dbutils.widgets.text("rp_enddate", '2020-12-31', "rp_enddate")
@@ -28,9 +28,9 @@ rp_enddate  = dbutils.widgets.get("rp_enddate")
 print(rp_enddate)
 assert rp_enddate
 
-reference_data  = dbutils.widgets.get("reference_data")
-print(reference_data)
-assert reference_data
+$reference_data  = dbutils.widgets.get("$reference_data")
+print($reference_data)
+assert $reference_data
 
 month_id  = dbutils.widgets.get("month_id")
 print(month_id)
