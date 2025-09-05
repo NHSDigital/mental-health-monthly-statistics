@@ -4,7 +4,7 @@
  INSERT OVERWRITE TABLE $db_output.nhse_pre_proc_header
  select distinct uniqmonthid, reportingperiodstartdate, reportingperiodenddate, label as Der_FY
  from $db_source.mhs000header h
- left join $$reference_data.calendar_financial_year fy on h.reportingperiodstartdate between fy.START_DATE and fy.END_DATE
+ left join $reference_data.calendar_financial_year fy on h.reportingperiodstartdate between fy.START_DATE and fy.END_DATE
  where UniqMonthID <= "$end_month_id"
  order by 1 desc
 
@@ -354,7 +354,7 @@
  r.UniqMonthID,
  r.CodedAssToolType,
  r.PersScore,    
- date_format(r.AssToolCompTimestamp, "yyyy-MM-dd") AS Der_AssToolCompDate, ---new field for v5 ---changed to COALESCE as this field is not mapped from v4.1 to v5
+ date(r.AssToolCompTimestamp) AS Der_AssToolCompDate, ---new field for v5 ---changed to COALESCE as this field is not mapped from v4.1 to v5
  r.RecordNumber,
  r.MHS606UniqID AS Der_AssUniqID,
  r.OrgIDProv,

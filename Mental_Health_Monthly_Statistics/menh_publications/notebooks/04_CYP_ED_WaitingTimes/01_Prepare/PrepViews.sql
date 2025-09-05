@@ -154,7 +154,8 @@ SELECT
     DATEDIFF(CareContDate,ReferralRequestReceivedDate)/7 as waiting_time,
     DATEDIFF(CareContDate,ReferralRequestReceivedDate) as waiting_time_days,
     '$db_source' as SOURCE_DB,
-    UniqMonthID AS SubmissionMonthID                -- ADDED TO ALLOW VALIDCODES TO COMPARE WITH SUBMISSION MONTH
+    UniqMonthID AS SubmissionMonthID,                -- ADDED TO ALLOW VALIDCODES TO COMPARE WITH SUBMISSION MONTH
+    '$rp_startdate_quarterly' as rp_startdate_run
 from global_temp.CYP_ED_WT_STEP3;
 
 -- COMMAND ----------
@@ -181,6 +182,7 @@ and ((step1.ServDischDate is null or step1.ServDischDate > '$rp_enddate') AND st
 
 -- COMMAND ----------
 
+-- DBTITLE 1,CYP_ED_WT_STEP6
 INSERT INTO $db_output.CYP_ED_WT_STEP6
 select 
    '$month_id' AS UniqMonthID,
@@ -196,5 +198,6 @@ select
     DATEDIFF('$rp_enddate',ReferralRequestReceivedDate)/7 as waiting_time,
     DATEDIFF('$rp_enddate',ReferralRequestReceivedDate) as waiting_time_days,
     '$db_source' as SOURCE_DB,
-    UniqMonthID AS SubmissionMonthID                -- ADDED TO ALLOW VALIDCODES TO COMPARE WITH SUBMISSION MONTH
+    UniqMonthID AS SubmissionMonthID,                -- ADDED TO ALLOW VALIDCODES TO COMPARE WITH SUBMISSION MONTH
+    '$rp_startdate_quarterly' as rp_startdate_run
 from global_temp.CYP_ED_WT_STEP5;

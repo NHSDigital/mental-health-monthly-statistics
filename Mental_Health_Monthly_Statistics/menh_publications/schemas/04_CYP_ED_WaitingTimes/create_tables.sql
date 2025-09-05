@@ -3,9 +3,9 @@
  db_output=dbutils.widgets.get("db_output")
  print(db_output)
  assert db_output
- $mhsds=dbutils.widgets.get("$mhsds")
- print($mhsds)
- assert $mhsds
+ mhsds_database=dbutils.widgets.get("mhsds_database")
+ print(mhsds_database)
+ assert mhsds_database
 
 -- COMMAND ----------
 
@@ -42,7 +42,8 @@
    waiting_time float,
    waiting_time_days float,
    SOURCE_DB string,
-   SubmissionMonthID int
+   SubmissionMonthID int,
+   rp_startdate_run date
  )
 
 
@@ -71,7 +72,8 @@
    waiting_time float,
    waiting_time_days float,
    SOURCE_DB string,
-   SubmissionMonthID int
+   SubmissionMonthID int,
+   rp_startdate_run date
  )
 
 
@@ -99,8 +101,66 @@
    waiting_time float,
    waiting_time_days float,
    SOURCE_DB string,
-   SubmissionMonthID int
+   SubmissionMonthID int,
+   rp_startdate_run date
  )
+  USING DELTA;
+
+-- COMMAND ----------
+
+-- DBTITLE 1,create table cyp_ed_wt_STEP9
+ %sql
+
+ -- table can be dropped safely as it is truncated each run and holds no persisted data
+ DROP TABLE IF EXISTS $db_output.cyp_ed_wt_step9;
+ CREATE TABLE IF NOT EXISTS $db_output.cyp_ed_wt_step9
+ (
+   UniqMonthID int,
+   Status string,
+   UniqServReqID string,
+   OrgIDProv string,
+   Person_ID string,
+   ClinRespPriorityType string,
+   IC_Rec_CCG string,
+   AgeServReferRecDate string,
+   AgeRepPeriodEnd string,
+   ReferralRequestReceivedDate date,
+   ServDischDate date,
+   Priority_Type string,
+   SOURCE_DB string,
+   SubmissionMonthID int,
+   rp_startdate_run date
+ )
+  USING DELTA;
+
+-- COMMAND ----------
+
+-- DBTITLE 1,create table cyp_ed_wt_STEP10
+  %sql
+
+  -- table can be dropped safely as it is truncated each run and holds no persisted data
+  DROP TABLE IF EXISTS $db_output.cyp_ed_wt_step10;
+
+  CREATE TABLE IF NOT EXISTS $db_output.cyp_ed_wt_step10
+  (
+    UniqMonthID int,
+    Status string,
+    UniqServReqID string,
+    OrgIDProv string,
+    Person_ID string,
+    ClinRespPriorityType string,
+    IC_Rec_CCG string,
+    ReferralRequestReceivedDate date,
+    ServDischDate date,
+    Priority_Type string,
+    waiting_time float,
+    waiting_time_days float,
+    SOURCE_DB string,
+    SubmissionMonthID int,
+    rp_startdate_run date
+  )
+
+
   USING DELTA;
 
 -- COMMAND ----------
@@ -166,6 +226,6 @@ PARTITIONED BY (REPORTING_PERIOD_END, STATUS);
 -- # # update only needs doing once - DONE
 
 -- # for table, column in tableColumn.items():
--- #   action = """Update {db_output}.{table} SET {column} = '{$mhsds}' where {column} is null""".format(db_output=db_output,table=table,column=column,$mhsds=$mhsds)
+-- #   action = """Update {db_output}.{table} SET {column} = '{mhsds_database}' where {column} is null""".format(db_output=db_output,table=table,column=column,mhsds_database=mhsds_database)
 -- #   print(action)
 -- #   spark.sql(action)

@@ -13,7 +13,7 @@
  -- create widget text LOSPeriodEnd default '2019-08-31';
  -- create widget text PreviousMonthEnd default '2019-07-31';
  -- create widget text db_output default 'menh_analysis';
- -- create widget text db_source default '$mhsds_db';
+ -- create widget text db_source default 'mhsds_database';
 
 # COMMAND ----------
 

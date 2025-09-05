@@ -2,7 +2,7 @@
  %sql
  CREATE OR REPLACE TEMPORARY VIEW RD_CCG_LATEST AS
  SELECT DISTINCT ORG_TYPE_CODE, ORG_CODE, NAME
- FROM $reference_data.ORG_DAILY
+ FROM reference_data.ORG_DAILY
  WHERE (BUSINESS_END_DATE >= '$rp_enddate' OR BUSINESS_END_DATE IS NULL)
    AND BUSINESS_START_DATE <= '$rp_enddate'
      AND ORG_TYPE_CODE = "CC"
@@ -29,12 +29,12 @@
                  row_number() over (partition by rd.OrganisationId order by rd.DateType ) as RN1,
                  COALESCE(odssd.TargetOrganisationID, rd.OrganisationID) as ORG_CODE
                  
-         FROM $$reference_data.ODSAPIRoleDetails rd
+         FROM $reference_data.ODSAPIRoleDetails rd
          
-         LEFT JOIN $$reference_data.ODSAPIOrganisationDetails od
+         LEFT JOIN $reference_data.ODSAPIOrganisationDetails od
          ON rd.OrganisationID = od.OrganisationID and rd.DateType = od.DateType
          
-         LEFT JOIN $$reference_data.ODSAPISuccessorDetails as odssd
+         LEFT JOIN $reference_data.ODSAPISuccessorDetails as odssd
          ON rd.OrganisationID = odssd.OrganisationID and odssd.Type = 'Successor' and odssd.StartDate <= '$rp_enddate'
          
          WHERE 
@@ -66,8 +66,8 @@
              rd.OrganisationId as ORG_CODE,
              Name as NAME
   
-         FROM $$reference_data.ODSAPIRoleDetails rd
-         LEFT JOIN $$reference_data.ODSAPIOrganisationDetails od
+         FROM $reference_data.ODSAPIRoleDetails rd
+         LEFT JOIN $reference_data.ODSAPIOrganisationDetails od
          ON rd.OrganisationID = od.OrganisationID and rd.DateType = od.DateType
          
         WHERE 
@@ -330,23 +330,31 @@
  ,COALESCE(ETH.LowerEthnicityCode,'UNKNOWN') AS LowerEthnicity
  ,COALESCE(ETH.LowerEthnicityName,'UNKNOWN') AS LowerEthnicity_Desc
  ,COALESCE(ETH.UpperEthnicity,'UNKNOWN') AS UpperEthnicity
+ ,COALESCE(ETH.WNWEthnicity,'UNKNOWN') AS WNW_Ethnicity
  ,MPI.Gender
  ,MPI.GenderIDCode
- ,CASE WHEN MPI.GenderIDCode IN ('1','2','3','4') THEN MPI.GenderIDCode 
-       WHEN MPI.Gender IN ('1','2','9') THEN MPI.Gender 
-       ELSE 'UNKNOWN' END AS Der_Gender          
+ ,COALESCE(GEN.Der_Gender, 'UNKNOWN') AS Der_Gender
+ ,COALESCE(GEN.Der_Gender_Desc, 'UNKNOWN') AS Der_Gender_Desc 
  ,MPI.AgeRepPeriodEnd
  ,AB.Age_Group_IPS as Age_Band
+ ,AB.Age_Group_CYP
  ,COALESCE(DEC.IMD_Decile,'UNKNOWN') AS IMD_Decile
+ ,COALESCE(DEC.IMD_Quintile,'UNKNOWN') AS IMD_Quintile
+ ,COALESCE(DEC.IMD_Core20,'UNKNOWN') AS IMD_Core20
   
  FROM $db_source.MHS001MPI MPI
- LEFT JOIN $$reference_data.ENGLISH_INDICES_OF_DEP_V02 IMD 
+ LEFT JOIN $reference_data.ENGLISH_INDICES_OF_DEP_V02 IMD 
                      on MPI.LSOA2011 = IMD.LSOA_CODE_2011 
                      and IMD.imd_year = '2019'
  LEFT JOIN $db_output.bbrb_org_daily_past_12_months_mhsds_providers OD on MPI.OrgIDProv = OD.ORG_CODE
  LEFT JOIN $db_output.ethnicity_desc ETH on MPI.NHSDEthnicity = ETH.LowerEthnicityCode and '$end_month_id' >= ETH.FirstMonth and (ETH.LastMonth is null or '$end_month_id' <= ETH.LastMonth)
  LEFT JOIN $db_output.imd_desc DEC on IMD.DECI_IMD = DEC.IMD_Number and '$end_month_id' >= DEC.FirstMonth and (DEC.LastMonth is null or '$end_month_id' <= DEC.LastMonth)
  LEFT JOIN $db_output.age_band_desc AB on MPI.AgeRepPeriodEnd = AB.AgeRepPeriodEnd and '$end_month_id' >= AB.FirstMonth and (AB.LastMonth is null or '$end_month_id' <= AB.LastMonth)
+ LEFT JOIN $db_output.gender_desc GEN on 
+       CASE WHEN MPI.GenderIDCode IN ('1','2','3','4') THEN MPI.GenderIDCode 
+       WHEN MPI.Gender IN ('1','2','9') THEN MPI.Gender 
+       ELSE 'UNKNOWN' END = GEN.Der_Gender
+       
  WHERE MPI.UniqMonthID between '$start_month_id' and '$end_month_id'
 
 # COMMAND ----------

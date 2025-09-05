@@ -22,9 +22,9 @@
  rp_startdate = dbutils.widgets.get("rp_startdate")
  rp_enddate = dbutils.widgets.get("rp_enddate")
  status = dbutils.widgets.get("status")
- db_source = dbutils.widgets.get("db_source") #dbutils.widgets.get("mhsds_db") #----------
+ db_source = dbutils.widgets.get("db_source") #dbutils.widgets.get("mhsds_database") #----------
  # db_output1 = 'menh_publications' #dbutils.widgets.get("menh_publications") #----------
- # menh_publications_source = '$mhsds_db' #dbutils.widgets.get("$mhsds_db") #-----------
+ # menh_publications_source = 'mhsds_database' #dbutils.widgets.get("mhsds_database") #-----------
  month_id = dbutils.widgets.get("month_id")
 
 
@@ -70,7 +70,7 @@
  # reference_data =  "reference_data"
 
 
- # db_source = "$mhsds_db"
+ # db_source = "mhsds_database"
 
  # print(f'db_output is {db_output}; \
  #       rp_startdate is {rp_startdate}; \

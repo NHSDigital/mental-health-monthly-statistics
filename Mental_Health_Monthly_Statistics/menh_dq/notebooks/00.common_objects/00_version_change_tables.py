@@ -28,15 +28,17 @@ assert db_output
 # COMMAND ----------
 
  %sql
-
+  
  -- SH 21/10 put ClinRespPriorityType ValidValue in quotes
  -- TableName, Field, Measure, Type, ValidValue, FirstMonth, LastMonth
+  
+ -- User note 29/11: reordered the population of this table so that the DQ measures are in order for ease of checking and updating
 
- -- User 29/11: reordered the population of this table so that the DQ measures are in order for ease of checking and updating
-
+ -- AT 04/08/25 added new codes for DQM11, DQM19, DQM32
+  
  INSERT INTO $db_output.validcodes
  VALUES
- -- User: MHS-DQM08 entries checked 07-12-2021
+ -- User note: MHS-DQM08 entries checked 07-12-2021
  ('MHS503AssignedCareProf', 'TreatFuncCodeMH', 'MHS-DQM08', 'VALID', '319', 1429, null)
  ,('MHS503AssignedCareProf', 'TreatFuncCodeMH', 'MHS-DQM08', 'VALID', '348', 1459, null)
  ,('MHS503AssignedCareProf', 'TreatFuncCodeMH', 'MHS-DQM08', 'VALID', '656', 1459, null)
@@ -86,7 +88,7 @@ assert db_output
  ,('MHS101Referral', 'PrimReasonReferralMH', 'MHS-DQM10', 'VALID', '29', 1459, null)
  ,('MHS101Referral', 'PrimReasonReferralMH', 'MHS-DQM10', 'VALID', '30', 1459, null)
  ,('MHS101Referral', 'PrimReasonReferralMH', 'MHS-DQM10', 'VALID', '31', 1489, null)                    ----V6_Changes
- -- User: MHS-DQM11 entries checked 29-11-2021
+ -- User note: MHS-DQM11 entries checked 29-11-2021
  ,('MHS006MHCareCoord', 'CareProfServOrTeamTypeAssoc', 'MHS-DQM11', 'VALID', 'A01', 1429, null)
  ,('MHS006MHCareCoord', 'CareProfServOrTeamTypeAssoc', 'MHS-DQM11', 'VALID', 'A02', 1429, null)
  ,('MHS006MHCareCoord', 'CareProfServOrTeamTypeAssoc', 'MHS-DQM11', 'VALID', 'A03', 1429, 1458)
@@ -137,10 +139,11 @@ assert db_output
  ,('MHS006MHCareCoord', 'CareProfServOrTeamTypeAssoc', 'MHS-DQM11', 'VALID', 'F01', 1459, null)
  ,('MHS006MHCareCoord', 'CareProfServOrTeamTypeAssoc', 'MHS-DQM11', 'VALID', 'F02', 1459, null)
  ,('MHS006MHCareCoord', 'CareProfServOrTeamTypeAssoc', 'MHS-DQM11', 'VALID', 'F03', 1459, null)
- ,('MHS006MHCareCoord', 'CareProfServOrTeamTypeAssoc', 'MHS-DQM11', 'VALID', 'F04', 1459, null)
+ ,('MHS006MHCareCoord', 'CareProfServOrTeamTypeAssoc', 'MHS-DQM11', 'VALID', 'F04', 1459, 1488)
  ,('MHS006MHCareCoord', 'CareProfServOrTeamTypeAssoc', 'MHS-DQM11', 'VALID', 'F05', 1459, null)
  ,('MHS006MHCareCoord', 'CareProfServOrTeamTypeAssoc', 'MHS-DQM11', 'VALID', 'F06', 1459, null)
- -- User: MHS-DQM1 entries ch8ecked 07-12-2021 -- unclear why this needs a separate list from the one above that it exactly matches...
+ ,('MHS006MHCareCoord', 'CareProfServOrTeamTypeAssoc', 'MHS-DQM11', 'VALID', 'F07', 1489, null)
+ -- User note: MHS-DQM1 entries ch8ecked 07-12-2021 -- unclear why this needs a separate list from the one above that it exactly matches...
  ---V6_Changes MHS102ServiceTypeReferredTo changed to MHS902ServiceTeamDetails
  ,('MHS902ServiceTeamDetails', 'ServTeamTypeMH', 'MHS-DQM18', 'VALID', 'A01', 1429, null)
  ,('MHS902ServiceTeamDetails', 'ServTeamTypeMH', 'MHS-DQM18', 'VALID', 'A02', 1429, null)
@@ -195,7 +198,7 @@ assert db_output
  ,('MHS902ServiceTeamDetails', 'ServTeamTypeMH', 'MHS-DQM18', 'VALID', 'F04', 1459, 1488)
  ,('MHS902ServiceTeamDetails', 'ServTeamTypeMH', 'MHS-DQM18', 'VALID', 'F05', 1459, null)
  ,('MHS902ServiceTeamDetails', 'ServTeamTypeMH', 'MHS-DQM18', 'VALID', 'F06', 1459, null)
- ,('MHS902ServiceTeamDetails', 'ServTeamTypeMH', 'MHS-DQM18', 'VALID', 'F07', 1489, null)   ----V6_Changes
+ ,('MHS902ServiceTeamDetails', 'ServTeamTypeMH', 'MHS-DQM18', 'VALID', 'F07', 1489, null)
  -- NP: MHS-DQM19 entries checked 10 10-01-2022 (28 added )
  ,('MHS101Referral', 'PrimReasonReferralMH', 'MHS-DQM19', 'VALID', '01', 1429, null)
  ,('MHS101Referral', 'PrimReasonReferralMH', 'MHS-DQM19', 'VALID', '02', 1429, null)
@@ -226,12 +229,13 @@ assert db_output
  ,('MHS101Referral', 'PrimReasonReferralMH', 'MHS-DQM19', 'VALID', '28', 1429, null)
  ,('MHS101Referral', 'PrimReasonReferralMH', 'MHS-DQM19', 'VALID', '29', 1459, null)
  ,('MHS101Referral', 'PrimReasonReferralMH', 'MHS-DQM19', 'VALID', '30', 1459, null)
- -- User: MHS-DQM20 entries checked 29-11-2021
+ ,('MHS101Referral', 'PrimReasonReferralMH', 'MHS-DQM19', 'VALID', '31', 1489, null)
+ -- User note: MHS-DQM20 entries checked 29-11-2021
  ,('MHS101Referral', 'ClinRespPriorityType', 'MHS-DQM20', 'VALID', '1', 1429, null)
  ,('MHS101Referral', 'ClinRespPriorityType', 'MHS-DQM20', 'VALID', '2', 1429, null)
  ,('MHS101Referral', 'ClinRespPriorityType', 'MHS-DQM20', 'VALID', '3', 1429, null)
  ,('MHS101Referral', 'ClinRespPriorityType', 'MHS-DQM20', 'VALID', '4', 1459, null)
- -- User: MHS-DQM31 entries checked 08-12-2021
+ -- User note: MHS-DQM31 entries checked 08-12-2021
  ---V6_Changes
  ,('MHS502WardStay', 'MHAdmittedPatientClass', 'MHS-DQM31', 'VALID', '10', 1429, 1488)
  ,('MHS502WardStay', 'MHAdmittedPatientClass', 'MHS-DQM31', 'VALID', '11', 1429, 1488)
@@ -291,7 +295,14 @@ assert db_output
  ,('MHS502WardStay', 'MHAdmittedPatientClass', 'MHS-DQM31', 'VALID', '309', 1489, null)
  ,('MHS502WardStay', 'MHAdmittedPatientClass', 'MHS-DQM31', 'VALID', '310', 1489, null)
  ,('MHS502WardStay', 'MHAdmittedPatientClass', 'MHS-DQM31', 'VALID', '311', 1489, null)
- -- User: MHS-DQM34 entries checked 02-12-2021
+ --- Added values for OATReasonAT Apr-25 VODIM Changes
+ ,('MHS105OnwardReferral', 'OATReason', 'MHS-DQM32', 'VALID', '10', 1489, null)
+ ,('MHS105OnwardReferral', 'OATReason', 'MHS-DQM32', 'VALID', '11', 1489, null)
+ ,('MHS105OnwardReferral', 'OATReason', 'MHS-DQM32', 'VALID', '12', 1489, null)
+ ,('MHS105OnwardReferral', 'OATReason', 'MHS-DQM32', 'VALID', '13', 1489, null)
+ ,('MHS105OnwardReferral', 'OATReason', 'MHS-DQM32', 'VALID', '14', 1489, null)
+ ,('MHS105OnwardReferral', 'OATReason', 'MHS-DQM32', 'VALID', '15', 1489, null)
+ -- User note: MHS-DQM34 entries checked 02-12-2021
  ,('MHS101Referral', 'SourceOfReferralMH', 'MHS-DQM34', 'VALID', 'A1', 1429, null)
  ,('MHS101Referral', 'SourceOfReferralMH', 'MHS-DQM34', 'VALID', 'A2', 1429, null)
  ,('MHS101Referral', 'SourceOfReferralMH', 'MHS-DQM34', 'VALID', 'A3', 1429, null)
@@ -332,7 +343,7 @@ assert db_output
  ,('MHS101Referral', 'SourceOfReferralMH', 'MHS-DQM34', 'VALID', 'P1', 1429, null)
  ,('MHS101Referral', 'SourceOfReferralMH', 'MHS-DQM34', 'VALID', 'Q1', 1459, null)
  ,('MHS101Referral', 'SourceOfReferralMH', 'MHS-DQM34', 'VALID', 'Q2', 1489, null)               -----V6_Changes
- -- User: MHS-DQM35 entries checked 02-12-2021
+ -- User note: MHS-DQM35 entries checked 02-12-2021
  ,('MHS201CareContact', 'ConsMechanismMH', 'MHS-DQM35', 'VALID', '01', 1429, null)
  ,('MHS201CareContact', 'ConsMechanismMH', 'MHS-DQM35', 'VALID', '02', 1429, null)
  ,('MHS201CareContact', 'ConsMechanismMH', 'MHS-DQM35', 'VALID', '03', 1429, 1458)
@@ -345,7 +356,7 @@ assert db_output
  ,('MHS201CareContact', 'ConsMechanismMH', 'MHS-DQM35', 'VALID', '12', 1459, null)
  ,('MHS201CareContact', 'ConsMechanismMH', 'MHS-DQM35', 'VALID', '13', 1459, null)
  -- ,('MHS201CareContact', 'ConsMechanismMH', 'MHS-DQM35', 'OTHER', '98', 1429, null) -- dealt with in the code rather than here
- -- User: MHS-DQM38 entries checked 07-12-2021 - incorrect
+ -- User note: MHS-DQM38 entries checked 07-12-2021 - incorrect
  ---V6_Changes
  ,('MHS504DelayedDischarge', 'DelayDischReason', 'MHS-DQM38', 'VALID', 'A2', 1429, 1488)
  ,('MHS504DelayedDischarge', 'DelayDischReason', 'MHS-DQM38', 'VALID', 'B1', 1429, 1488)
@@ -418,8 +429,7 @@ assert db_output
  ,('MHS518ClinReadyforDischarge', 'ClinReadyforDischDelayReason', 'MHS-DQM38', 'VALID', '34', 1489, null)
  ,('MHS518ClinReadyforDischarge', 'ClinReadyforDischDelayReason', 'MHS-DQM38', 'VALID', '35', 1489, null)
  ,('MHS518ClinReadyforDischarge', 'ClinReadyforDischDelayReason', 'MHS-DQM38', 'VALID', '36', 1489, null)
- ,('MHS518ClinReadyforDischarge', 'ClinReadyforDischDelayReason', 'MHS-DQM38', 'VALID', '37', 1489, null)
-
+ ,('MHS518ClinReadyforDischarge', 'ClinReadyforDischDelayReason', 'MHS-DQM38', 'VALID', '37', 1489, null) 
 
 # COMMAND ----------
 
@@ -485,7 +495,6 @@ assert db_output
  ,('MHS003AccommStatus', 'AccommodationType','MHS-DQM64','VALID','SH03','1429','1458')
  ,('MHS003AccommStatus', 'AccommodationType','MHS-DQM64','OTHER','SH09','1429','1458')
  ,('MHS003AccommStatus', 'AccommodationType','MHS-DQM64','VALID','ML00','1429','1458')
- ,('MHS003AccommStatus', 'AccommodationType','MHS-DQM64','VALID','OC96','1429','1458')
  ,('MHS003AccommStatus', 'AccommodationType','MHS-DQM64','VALID','OC97','1429','1458')
  ,('MHS003AccommStatus', 'AccommodationType','MHS-DQM64','VALID','OC98','1429','1458')
  ,('MHS003AccommStatus', 'AccommodationType','MHS-DQM64','VALID','OC99','1429','1458')
@@ -606,19 +615,19 @@ assert db_output
  with SMHPC as
  (
  --when we have pseudo codes for Wales, Scotland, Norther Ireland, The channel Islands and the Isle of Man then we exclude the records
- select distinct SMHPC_AED as SpecialisedResponsibleCommissionerCode  from $$reference_data.POSTCODE where GOR not in ('W99999999', 'S99999999','N99999999','L99999999','M99999999') and 
+ select distinct SMHPC_AED as SpecialisedResponsibleCommissionerCode  from $reference_data.POSTCODE where GOR not in ('W99999999', 'S99999999','N99999999','L99999999','M99999999') and 
  RECORD_START_DATE <= '$rp_startdate' and (RECORD_END_DATE is null or RECORD_END_DATE > '$rp_enddate') and SMHPC_AED is not null
  Union
- select distinct SMHPC_AS  as SpecialisedResponsibleCommissionerCode  from $$reference_data.POSTCODE   where GOR not in ('W99999999', 'S99999999','N99999999','L99999999','M99999999') and 
+ select distinct SMHPC_AS  as SpecialisedResponsibleCommissionerCode  from $reference_data.POSTCODE   where GOR not in ('W99999999', 'S99999999','N99999999','L99999999','M99999999') and 
  RECORD_START_DATE <= '$rp_startdate' and (RECORD_END_DATE is null or RECORD_END_DATE > '$rp_enddate') and SMHPC_AS is not null
  Union
- select distinct SMHPC_CT4 as SpecialisedResponsibleCommissionerCode  from $$reference_data.POSTCODE   where GOR not in ('W99999999', 'S99999999','N99999999','L99999999','M99999999') and 
+ select distinct SMHPC_CT4 as SpecialisedResponsibleCommissionerCode  from $reference_data.POSTCODE   where GOR not in ('W99999999', 'S99999999','N99999999','L99999999','M99999999') and 
  RECORD_START_DATE <= '$rp_startdate' and (RECORD_END_DATE is null or RECORD_END_DATE > '$rp_enddate') and SMHPC_CT4 is not null
  ),
  NHSEnglandCommissioningRegion  as
  (select distinct a.Organisationid as SpecialisedResponsibleCommissionerCode 
- from $$reference_data.ODSAPIRoleDetails a
- left join $$reference_data.org_daily b
+ from $reference_data.ODSAPIRoleDetails a
+ left join $reference_data.org_daily b
  on a.OrganisationId = b.org_code
  where a.Roleid = 'RO218'
  and a.status = 'Active'

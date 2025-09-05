@@ -2,9 +2,9 @@
 db_output=dbutils.widgets.get("db_output")
 print(db_output)
 assert db_output
-$reference_data=dbutils.widgets.get("$reference_data")
-print($reference_data)
-assert $reference_data
+reference_data=dbutils.widgets.get("reference_data")
+print(reference_data)
+assert reference_data
 
 # COMMAND ----------
 
@@ -43,5 +43,5 @@ assert $reference_data
  %sql
  CREATE OR REPLACE VIEW $db_output.EthnicCategory AS
  SELECT NATIONAL_CODE, NATIONAL_CODE_DESCRIPTION
- FROM $$reference_data.dd_ethnic_category_code
+ FROM $reference_data.dd_ethnic_category_code
  WHERE BUSINESS_END_DATE is null

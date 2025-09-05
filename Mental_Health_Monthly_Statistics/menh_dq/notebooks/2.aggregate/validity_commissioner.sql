@@ -89,7 +89,7 @@ FROM
 				ORG_CLOSE_DATE,
 				ORG_TYPE_CODE,
                 ROW_NUMBER() OVER(PARTITION BY ORG_CODE ORDER BY IFNULL(BUSINESS_END_DATE, CURRENT_DATE()) DESC, IFNULL(ORG_CLOSE_DATE, CURRENT_DATE()) DESC) AS RowNumber
-				FROM $$reference_data.org_daily --$db_output.dq_vw_org_daily
+				FROM $reference_data.org_daily --$db_output.dq_vw_org_daily
 				WHERE BUSINESS_START_DATE <= '$rp_enddate'
                 AND (BUSINESS_END_DATE >= '$rp_enddate' OR BUSINESS_END_DATE IS NULL)) org --17/10/2022: updated to >= from > because the previous code was excluding organisations with a BUSINESS_END_DATE of the lat day of the month (BITC-4072)
 			ON org.ORG_CODE = dq.OrgIdComm 

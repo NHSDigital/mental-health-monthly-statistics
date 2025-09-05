@@ -6,7 +6,7 @@
  to make the national EIP01a, b and c metrics (for each age bracket), and then inserts this into the
  AWT_unformatted table. 
 
-   Sam Hollings - 2018-03-12                                                                           */ 
+    - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
 
  Insert into $db_output.AWT_unformatted
@@ -38,7 +38,7 @@
  to make the national EIP01 (age agnostic), and then inserts this into the
  AWT_unformatted table. 
 
-   Sam Hollings - 2018-03-12                                                                           */ 
+    - 2018-03-12                                                                           */ 
  /* --------------------------------------------MHS69-------------------------------------------------------------*/
  Insert into $db_output.AWT_unformatted
    SELECT  '$rp_startdate' AS REPORTING_PERIOD_START, 
@@ -64,7 +64,7 @@
  EIP01_common to make CCG EIP01a, b and c metrics (for each age bracket), and then inserts this into the
  AWT_unformatted table. 
 
-   Sam Hollings - 2018-03-12                                                                           */ 
+    - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
 
  Insert into $db_output.AWT_unformatted
@@ -95,7 +95,7 @@
  EIP01_common to make the CCG EIP01 metrics (age agnostic), and then inserts this into the
  AWT_unformatted table. 
 
-   Sam Hollings - 2018-03-12                                                                           */ 
+    - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
 
  Insert into $db_output.AWT_unformatted
@@ -123,7 +123,7 @@
  EIP01_common to make the provider EIP01a, b and c metrics (for each age bracket), and then inserts this into the
  AWT_unformatted table. 
 
-   Sam Hollings - 2018-03-12                                                                           */ 
+    - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
 
  Insert into $db_output.AWT_unformatted
@@ -154,7 +154,7 @@
  EIP01_common to make the provider EIP01 metric (age agnostic), and then inserts this into the
  AWT_unformatted table. 
 
-   Sam Hollings - 2018-03-12                                                                           */ 
+    - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
 
  Insert into $db_output.AWT_unformatted
@@ -182,7 +182,7 @@
  to make the national EIP23aa, b and c metrics (for each age bracket), and then inserts this into the
  AWT_unformatted table. 
 
-   Sam Hollings - 2018-03-12                                                                           */ 
+    - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
 
  Insert into $db_output.AWT_unformatted
@@ -213,7 +213,7 @@
  to make the national EIP23a (age agnostic), and then inserts this into the
  AWT_unformatted table. 
 
-   Sam Hollings - 2018-03-13                                                                           */ 
+    - 2018-03-13                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
 
  Insert into $db_output.AWT_unformatted
@@ -240,7 +240,7 @@
  to make the CCG EIP23aa, b and c metrics (for each age bracket), and then inserts this into the
  AWT_unformatted table. 
 
-   Sam Hollings - 2018-03-12                                                                           */ 
+    - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
 
  Insert into $db_output.AWT_unformatted
@@ -271,7 +271,7 @@
  to make the CCG EIP23a metric (age agnostic), and then inserts this into the
  AWT_unformatted table. 
 
-   Sam Hollings - 2018-03-12                                                                           */ 
+    - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
 
  Insert into $db_output.AWT_unformatted
@@ -299,7 +299,7 @@
  to make the provider EIP23aa, b and c metrics (for each age bracket), and then inserts this into the
  AWT_unformatted table. 
 
-   Sam Hollings - 2018-03-12                                                                           */ 
+    - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
 
  Insert into $db_output.AWT_unformatted 
@@ -330,7 +330,7 @@
  to make the provider EIP23a metric (age agnostic), and then inserts this into the
  AWT_unformatted table.
 
-   Sam Hollings - 2018-03-12                                                                           */ 
+    - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
 
  Insert into $db_output.AWT_unformatted 
@@ -358,7 +358,7 @@
  to make the national EIP23ba, b and c metrics (for each age bracket), and then inserts this into the
  AWT_unformatted table. 
 
-   Sam Hollings - 2018-03-12                                                                           */ 
+    - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
 
  Insert into $db_output.AWT_unformatted 
@@ -390,7 +390,7 @@
  to make the national EIP23b metric (age agnostic), and then inserts this into the
  AWT_unformatted table. 
 
-   Sam Hollings - 2018-03-12                                                                           */ 
+    - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
 
  Insert into $db_output.AWT_unformatted 
@@ -418,7 +418,7 @@
  to make the CCG EIP23ba, b and c metrics (for each age bracket), and then inserts this into the
  AWT_unformatted table. 
 
-   Sam Hollings - 2018-03-12                                                                           */ 
+    - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
 
  Insert into $db_output.AWT_unformatted 
@@ -450,7 +450,7 @@
  to make the CCG EIP23b metric (age agnostic), and then inserts this into the
  AWT_unformatted table. 
 
-   Sam Hollings - 2018-03-12                                                                           */ 
+    - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
 
  Insert into $db_output.AWT_unformatted 
@@ -479,7 +479,7 @@
  to make the provider EIP23ba, b and c metrics (for each age bracket), and then inserts this into the
  AWT_unformatted table. 
 
-   Sam Hollings - 2018-03-12                                                                           */ 
+    - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
 
  Insert into $db_output.AWT_unformatted 
@@ -511,7 +511,7 @@
  to make the provider EIP23b metric (age agnostic), and then inserts this into the
  AWT_unformatted table. 
 
-   Sam Hollings - 2018-03-12                                                                           */ 
+    - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
 
  Insert into $db_output.AWT_unformatted 
@@ -540,7 +540,7 @@
  to make the national EIP23ca, b and c metrics (for each age bracket), and then inserts this into the
  AWT_unformatted table. 
 
-   Sam Hollings - 2018-03-12                                                                           */ 
+    - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
 
  Insert into $db_output.AWT_unformatted
@@ -572,7 +572,7 @@
  to make the national EIP23c metric (age agnostic), and then inserts this into the
  AWT_unformatted table. 
 
-   Sam Hollings - 2018-03-12                                                                           */ 
+    - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
 
  Insert into $db_output.AWT_unformatted 
@@ -600,7 +600,7 @@
  to make the CCG EIP23ca, b and c metrics (for each age bracket), and then inserts this into the
  AWT_unformatted table. 
 
-   Sam Hollings - 2018-03-12                                                                           */ 
+    - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
 
  Insert into $db_output.AWT_unformatted 
@@ -632,7 +632,7 @@
  to make the CCG EIP23c metric (age agnostic), and then inserts this into the
  AWT_unformatted table. 
 
-   Sam Hollings - 2018-03-12                                                                           */ 
+    - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
 
  Insert into $db_output.AWT_unformatted
@@ -661,7 +661,7 @@
  to make the provider EIP23ca, b and c metrics (for each age bracket), and then inserts this into the
  AWT_unformatted table. 
 
-   Sam Hollings - 2018-03-12                                                                           */ 
+    - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
 
  Insert into $db_output.AWT_unformatted 
@@ -693,7 +693,7 @@
  to make the provider EIP23c metric (age agnostic), and then inserts this into the
  AWT_unformatted table. 
 
-   Sam Hollings - 2018-03-12                                                                           */ 
+    - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
 
  Insert into $db_output.AWT_unformatted 
@@ -722,7 +722,7 @@
  to make the national EIP23ca, b and c metrics (for each age bracket), and then inserts this into the
  AWT_unformatted table. 
 
-   Sam Hollings - 2018-03-12                                                                           */ 
+    - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
 
  Insert into $db_output.AWT_unformatted 
@@ -753,7 +753,7 @@
  to make the national EIP23c metrics (age agnostic), and then inserts this into the
  AWT_unformatted table. 
 
-   Sam Hollings - 2018-03-12                                                                           */ 
+    - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
 
  Insert into $db_output.AWT_unformatted 
@@ -781,7 +781,7 @@
  EIP23d_common to make CCG EIP23da, b and c metrics (for each age bracket), and then inserts this into the
  AWT_unformatted table. 
 
-   Sam Hollings - 2018-03-12                                                                           */ 
+    - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
 
  Insert into $db_output.AWT_unformatted 
@@ -813,7 +813,7 @@
  EIP23d_common to make CCG EIP23d metrics (age agnostic), and then inserts this into the
  AWT_unformatted table. 
 
-   Sam Hollings - 2018-03-12                                                                           */ 
+    - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
 
  Insert into $db_output.AWT_unformatted 
@@ -841,7 +841,7 @@
  EIP23d_common to make the provider EIP23da, b and c metrics (for each age bracket), and then inserts this into the
  AWT_unformatted table. 
 
-   Sam Hollings - 2018-03-12                                                                           */ 
+    - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
 
  Insert into $db_output.AWT_unformatted 
@@ -872,7 +872,7 @@
  EIP23d_common to make the provider EIP23d metrics (age agnostic), and then inserts this into the
  AWT_unformatted table. 
 
-   Sam Hollings - 2018-03-12                                                                           */ 
+    - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
 
  Insert into $db_output.AWT_unformatted 
@@ -900,7 +900,7 @@
  to make the national EIP23ea, b and c metrics (for each age bracket), and then inserts this into the
  AWT_unformatted table. 
 
-   Sam Hollings - 2018-03-12                                                                           */ 
+    - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
 
  Insert into $db_output.AWT_unformatted 
@@ -932,7 +932,7 @@
  to make the national EIP23e metrics (age agnostic), and then inserts this into the
  AWT_unformatted table. 
 
-   Sam Hollings - 2018-03-12                                                                           */ 
+    - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
 
  Insert into $db_output.AWT_unformatted 
@@ -960,7 +960,7 @@
  EIP23d_common to make CCG EIP23ea, b and c metrics (for each age bracket), and then inserts this into the
  AWT_unformatted table. 
 
-   Sam Hollings - 2018-03-12                                                                           */ 
+    - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
 
  Insert into $db_output.AWT_unformatted 
@@ -992,7 +992,7 @@
  EIP23d_common to make CCG EIP23e metrics (age agnostic), and then inserts this into the
  AWT_unformatted table. 
 
-   Sam Hollings - 2018-03-12                                                                           */ 
+    - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
 
  Insert into $db_output.AWT_unformatted
@@ -1021,7 +1021,7 @@
  EIP23d_common to make the provider EIP23ea, b and c metrics (for each age bracket), and then inserts this into the
  AWT_unformatted table. 
 
-   Sam Hollings - 2018-03-12                                                                           */ 
+    - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
 
  Insert into $db_output.AWT_unformatted 
@@ -1053,7 +1053,7 @@
  EIP23d_common to make the provider EIP23e metrics (age agnostic), and then inserts this into the
  AWT_unformatted table. 
 
-   Sam Hollings - 2018-03-12                                                                           */ 
+    - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
 
  Insert into $db_output.AWT_unformatted 
@@ -1082,7 +1082,7 @@
  to make the national EIP23fa, b and c metrics (for each age bracket), and then inserts this into the
  AWT_unformatted table. 
 
-   Sam Hollings - 2018-03-12                                                                           */ 
+    - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
 
  Insert into $db_output.AWT_unformatted 
@@ -1115,7 +1115,7 @@
  to make the national EIP23f metrics (age agnostic), and then inserts this into the
  AWT_unformatted table. 
 
-   Sam Hollings - 2018-03-12                                                                           */ 
+    - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
 
  Insert into $db_output.AWT_unformatted 
@@ -1143,7 +1143,7 @@
  EIP01_common to make CCG EIP23fa, b and c metrics (for each age bracket), and then inserts this into the
  AWT_unformatted table. 
 
-   Sam Hollings - 2018-03-12                                                                           */ 
+    - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
 
  Insert into $db_output.AWT_unformatted 
@@ -1175,7 +1175,7 @@
  EIP01_common to make CCG EIP23f metrics (age agnostic), and then inserts this into the
  AWT_unformatted table. 
 
-   Sam Hollings - 2018-03-12                                                                           */ 
+    - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
 
  Insert into $db_output.AWT_unformatted 
@@ -1204,7 +1204,7 @@
  EIP23d_common to make the provider EIP23fa, b and c metrics (for each age bracket), and then inserts this into the
  AWT_unformatted table. 
 
-   Sam Hollings - 2018-03-12                                                                           */ 
+    - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
 
  Insert into $db_output.AWT_unformatted 
@@ -1236,7 +1236,7 @@
  EIP23d_common to make the provider EIP23f metrics (age agnostic), and then inserts this into the
  AWT_unformatted table. 
 
-   Sam Hollings - 2018-03-12                                                                           */ 
+    - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
 
  Insert into $db_output.AWT_unformatted 
@@ -1265,7 +1265,7 @@
  EIP23g_common to make the provider EIP23g metrics (age agnostic), and then inserts this into the
  AWT_unformatted table. 
 
-   Sam Hollings - 2018-03-12                                                                           */ 
+    - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
 
  Insert into $db_output.AWT_unformatted 
@@ -1292,7 +1292,7 @@
  EIP23g_common to make the provider EIP23g metrics (age agnostic), and then inserts this into the
  AWT_unformatted table. 
 
-   Sam Hollings - 2018-03-12                                                                           */ 
+    - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
 
  Insert into $db_output.AWT_unformatted 
@@ -1321,7 +1321,7 @@
  EIP23g_common to make the provider EIP23g metrics (age agnostic), and then inserts this into the
  AWT_unformatted table. 
 
-   Sam Hollings - 2018-03-12                                                                           */ 
+    - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
 
  Insert into $db_output.AWT_unformatted 
@@ -1349,7 +1349,7 @@
  EIP23h_common to make the provider EIP23h metrics (age agnostic), and then inserts this into the
  AWT_unformatted table. 
 
-   Sam Hollings - 2018-03-12                                                                           */ 
+    - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
 
  Insert into $db_output.AWT_unformatted 
@@ -1376,7 +1376,7 @@
  EIP23h_common to make the provider EIP23h metrics (age agnostic), and then inserts this into the
  AWT_unformatted table. 
 
-   Sam Hollings - 2018-03-12                                                                           */ 
+    - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
 
  Insert into $db_output.AWT_unformatted 
@@ -1404,7 +1404,7 @@
  EIP23h_common to make the provider EIP23h metrics (age agnostic), and then inserts this into the
  AWT_unformatted table. 
 
-   Sam Hollings - 2018-03-12                                                                           */ 
+    - 2018-03-12                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
 
  Insert into $db_output.AWT_unformatted 
@@ -1436,7 +1436,7 @@
      - EIP23a metric = total referrals on EIP pathway entering treatment)
  This is then inserted into the AWT_unformatted table. 
 
-   Laura Markendale - 2019-05-01                                                                           
+    - 2019-05-01                                                                           
    Bhabani Sahoo    - 2021-04-01 : Updated the code to fix Ethnicity fix                                     */ 
  /* ---------------------------------------------------------------------------------------------------------*/
 
@@ -1481,7 +1481,7 @@
      - EIP23a age metric = total referrals on EIP pathway entering treatment)
  This is then inserted into the AWT_unformatted table. 
 
-   Laura Markendale - 2019-05-01                                                                           */ 
+    - 2019-05-01                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
 
  Insert into $db_output.AWT_unformatted 
@@ -1533,7 +1533,7 @@
      - EIP23d metric = number of open referrals at end of reporting period
  This is then inserted into the AWT_unformatted table. 
 
-   Laura Markendale - 2019-05-01                                                                           
+    - 2019-05-01                                                                           
    Bhabani Sahoo    - 2021-04-01 : Updated the code to fix Ethnicity fix                                     */  
  /* ---------------------------------------------------------------------------------------------------------*/
 
@@ -1578,7 +1578,7 @@
      - EIP23d metric = open referrals at end of reporting period
  This is then inserted into the AWT_unformatted table. 
 
-   Laura Markendale - 2019-05-01                                                                           */ 
+    - 2019-05-01                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
 
  Insert into $db_output.AWT_unformatted 
@@ -1626,7 +1626,7 @@
  /* EIP32 national aggregation - this aggregates the EIP32_ED32_common table based on the requirements of EIP32
    across the whole country.
 
-   Sam Hollings - 2018-03-20                                                                           */ 
+    - 2018-03-20                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
 
  Insert into $db_output.AWT_unformatted 
@@ -1654,7 +1654,7 @@
  /* EIP32 CCG - this aggregates the EIP32_ED32_common table based on the requirements of EIP32
    for each CCG.
 
-   Sam Hollings - 2018-03-20                                                                           */ 
+    - 2018-03-20                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
 
  Insert into $db_output.AWT_unformatted 
@@ -1683,7 +1683,7 @@
  /* EIP32 Provider - this aggregates the EIP32_ED32_common table based on the requirements of EIP32
    for each Provider.
 
-   Sam Hollings - 2018-03-20                                                                           */ 
+    - 2018-03-20                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
 
  Insert into $db_output.AWT_unformatted 
@@ -1712,7 +1712,7 @@
  /* ED32 national aggregation - this aggregates the EIP32_ED32_common table based on the requirements of ED32
    across the whole country.
 
-   Sam Hollings - 2018-03-20                                                                           */ 
+    - 2018-03-20                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
 
  Insert into $db_output.AWT_unformatted 
@@ -1739,7 +1739,7 @@
  /* ED32 CCG - this aggregates the EIP32_ED32_common table based on the requirements of ED32
    for each CCG.
 
-   Sam Hollings - 2018-03-20                                                                           */ 
+    - 2018-03-20                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
 
  Insert into $db_output.AWT_unformatted 
@@ -1767,7 +1767,7 @@
  /* ED32 Provider - this aggregates the EIP32_ED32_common table based on the requirements of ED32
    for each Provider.
 
-   Sam Hollings - 2018-03-20                                                                           */ 
+    - 2018-03-20                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
 
  Insert into $db_output.AWT_unformatted 
@@ -1872,7 +1872,7 @@
  /* EIP63 National Age Groups - Denormalised the EIP63 metric data to 
  also include CCG fields - this can be used for the CCG extract and summed to provide national extract.
 
-   Sam Hollings - 2018-03-6                                                                           */ 
+    - 2018-03-6                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
 
  Insert into $db_output.AWT_unformatted 
@@ -1903,7 +1903,7 @@
  /* EIP63 National National - Denormalised the EIP63 metric data to 
  also include CCG fields - this can be used for the CCG extract and the national extract.
 
-   Sam Hollings - 2018-03-6                                                                           */ 
+    - 2018-03-6                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
 
  Insert into $db_output.AWT_unformatted 
@@ -1929,7 +1929,7 @@
  /* EIP63 CCG Age Groups - this is the aggregate calculation of EIP63 CCG breakdown. Denormalised the EIP63 metric data to 
  also include CCG fields - this can be used for the CCG extract and summed to provide national extract.
 
-   Sam Hollings - 2018-03-6                                                                           */ 
+    - 2018-03-6                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
 
  Insert into $db_output.AWT_unformatted 
@@ -1959,7 +1959,7 @@
  /* EIP63 CCG National - this is the aggregate calculation of EIP63 CCG breakdown. Denormalised the EIP63 metric data to 
  also include CCG fields - this can be used for the CCG extract and summed to provide national extract.
 
-   Sam Hollings - 2018-03-6                                                                           */ 
+    - 2018-03-6                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
 
  Insert into $db_output.AWT_unformatted 
@@ -1985,7 +1985,7 @@
  /* ---------------------------------------------------------------------------------------------------------*/
  /* EIP63 Provider Age groups - this is the aggregate calculation of EIP63 Prov breakdown for the age groups
 
-   Sam Hollings - 2018-03-6                                                                           */ 
+    - 2018-03-6                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
  Insert into $db_output.AWT_unformatted 
  SELECT			'$rp_startdate' AS REPORTING_PERIOD_START, 
@@ -2013,7 +2013,7 @@
  /* ---------------------------------------------------------------------------------------------------------*/
  /* EIP63 Provider National - this is the aggregate calculation of EIP63 Prov breakdown for the age groups
 
-   Sam Hollings - 2018-03-6                                                                           */ 
+    - 2018-03-6                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
  Insert into $db_output.AWT_unformatted 
  SELECT			'$rp_startdate' AS REPORTING_PERIOD_START, 
@@ -2039,7 +2039,7 @@
  /* EIP64a/64 National Age Group - This aggregates the EIP64abc_common table to to produce the EIP64 national
    metric  for each age group.
 
-   Sam Hollings - 2018-03-6                                                                           */ 
+    - 2018-03-6                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
 
  Insert into $db_output.AWT_unformatted 
@@ -2069,7 +2069,7 @@
  /* EIP64a/64 National National - This aggregates the EIP64abc_common table to to produce the EIP64 national
    metric over all age groups.
 
-   Sam Hollings - 2018-03-6                                                                           */ 
+    - 2018-03-6                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
 
  Insert into $db_output.AWT_unformatted 
@@ -2094,7 +2094,7 @@
  /* ---------------------------------------------------------------------------------------------------------*/
  /* EIP64 CCG Age Groups - this is the aggregate calculation of EIP64 CCG breakdown from EIP64abc_common.
 
-   Sam Hollings - 2018-03-6                                                                           */ 
+    - 2018-03-6                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
 
  Insert into $db_output.AWT_unformatted 
@@ -2124,7 +2124,7 @@
  /* EIP64 CCG National - this is the aggregate calculation of EIP64 CCG breakdown from EIP64abc_common. Across
    all age groups.
    
-   Sam Hollings - 2018-03-6                                                                           */ 
+    - 2018-03-6                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
 
  Insert into $db_output.AWT_unformatted 
@@ -2150,7 +2150,7 @@
  /* ---------------------------------------------------------------------------------------------------------*/
  /* EIP64 Provider Age groups - this is the aggregate calculation of EIP64 Prov breakdown for the age groups
 
-   Sam Hollings - 2018-03-6                                                                           */ 
+    - 2018-03-6                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
  Insert into $db_output.AWT_unformatted 
  SELECT			'$rp_startdate' AS REPORTING_PERIOD_START, 
@@ -2178,7 +2178,7 @@
  /* ---------------------------------------------------------------------------------------------------------*/
  /* EIP64 Provider National - this is the aggregate calculation of EIP64 Prov breakdown across the age groups
 
-   Sam Hollings - 2018-03-6                                                                           */ 
+    - 2018-03-6                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
  Insert into $db_output.AWT_unformatted 
  SELECT			'$rp_startdate' AS REPORTING_PERIOD_START, 
@@ -2204,7 +2204,7 @@
  /* EIP64b/65 National Age Group - This aggregates the EIP64abc_common table to to produce the EIP65 national
    metric for each age group.
 
-   Sam Hollings - 2018-03-6                                                                           */ 
+    - 2018-03-6                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
 
  Insert into $db_output.AWT_unformatted 
@@ -2236,7 +2236,7 @@
  /* EIP64b/65 National National - This aggregates the EIP64abc_common table to to produce the EIP65 national
    metric over all age groups.
 
-   Sam Hollings - 2018-03-6                                                                           */ 
+    - 2018-03-6                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
 
  Insert into $db_output.AWT_unformatted 
@@ -2262,7 +2262,7 @@
  /* ---------------------------------------------------------------------------------------------------------*/
  /* EIP64b/65 CCG Age Groups - this is the aggregate calculation of EIP64b/65 CCG breakdown from EIP64abc_common.
 
-   Sam Hollings - 2018-03-6                                                                           */ 
+    - 2018-03-6                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
 
  Insert into $db_output.AWT_unformatted 
@@ -2293,7 +2293,7 @@
  /* EIP64b/65 CCG Age Groups - this is the aggregate calculation of EIP64b/65 CCG breakdown from EIP64abc_common.
    This is across all age groups.
    
-   Sam Hollings - 2018-03-6                                                                           */ 
+    - 2018-03-6                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
 
  Insert into $db_output.AWT_unformatted 
@@ -2320,7 +2320,7 @@
  /* ---------------------------------------------------------------------------------------------------------*/
  /* EIP64b/65 Provider Age groups - this is the aggregate calculation of EIP65 Prov breakdown for the age groups
 
-   Sam Hollings - 2018-03-6                                                                           */ 
+    - 2018-03-6                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
  Insert into $db_output.AWT_unformatted 
  SELECT			'$rp_startdate' AS REPORTING_PERIOD_START, 
@@ -2349,7 +2349,7 @@
  /* ---------------------------------------------------------------------------------------------------------*/
  /* EIP64b/65 Provider National - this is the aggregate calculation of EIP65 Prov breakdown across the age groups
 
-   Sam Hollings - 2018-03-6                                                                           */ 
+    - 2018-03-6                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
  Insert into $db_output.AWT_unformatted 
  SELECT			'$rp_startdate' AS REPORTING_PERIOD_START, 
@@ -2376,7 +2376,7 @@
  /* EIP64c/66 National Age Group - This aggregates the EIP64abc_common table to to produce the EIP66 national
    metric for each age group.
 
-   Sam Hollings - 2018-03-6                                                                           */ 
+    - 2018-03-6                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
 
  Insert into $db_output.AWT_unformatted 
@@ -2407,7 +2407,7 @@
  /* EIP64c/66 National National - This aggregates the EIP64abc_common table to to produce the EIP66 national
    metric over all age groups.
 
-   Sam Hollings - 2018-03-6                                                                           */ 
+    - 2018-03-6                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
 
  Insert into $db_output.AWT_unformatted 
@@ -2433,7 +2433,7 @@
  /* ---------------------------------------------------------------------------------------------------------*/
  /* EIP64c/66 CCG Age Groups - this is the aggregate calculation of EIP64c/66 CCG breakdown from EIP64abc_common.
 
-   Sam Hollings - 2018-03-6                                                                           */ 
+    - 2018-03-6                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
 
  Insert into $db_output.AWT_unformatted 
@@ -2464,7 +2464,7 @@
  /* EIP64c/66 CCG National - this is the aggregate calculation of EIP64c/66 CCG breakdown from EIP64abc_common,
    across all age groups.
 
-   Sam Hollings - 2018-03-6                                                                           */ 
+    - 2018-03-6                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
 
  Insert into $db_output.AWT_unformatted 
@@ -2491,7 +2491,7 @@
  /* ---------------------------------------------------------------------------------------------------------*/
  /* EIP64c/66 Provider Age groups - this is the aggregate calculation of EIP66 Prov breakdown for the age groups
 
-   Sam Hollings - 2018-03-6                                                                           */ 
+    - 2018-03-6                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
  Insert into $db_output.AWT_unformatted 
  SELECT			'$rp_startdate' AS REPORTING_PERIOD_START, 
@@ -2520,7 +2520,7 @@
  /* ---------------------------------------------------------------------------------------------------------*/
  /* EIP64c/66 Provider Natinal - this is the aggregate calculation of EIP66 Prov breakdown across the age groups
 
-   Sam Hollings - 2018-03-6                                                                           */ 
+    - 2018-03-6                                                                           */ 
  /* ---------------------------------------------------------------------------------------------------------*/
  Insert into $db_output.AWT_unformatted 
  SELECT			'$rp_startdate' AS REPORTING_PERIOD_START, 

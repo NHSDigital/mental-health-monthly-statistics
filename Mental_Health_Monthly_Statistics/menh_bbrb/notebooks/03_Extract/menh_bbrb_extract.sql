@@ -57,10 +57,10 @@
  # status = "Performance"
  # rp_enddate =  "2020-12-31"
  # rp_startdate = "2020-12-01"
- # $reference_data =  "$reference_data"
+ # reference_data =  "reference_data"
 
 
- # db_source = "$mhsds" 
+ # db_source = "mhsds_database" 
 
 
  # print(f'db_output is {db_output}; \

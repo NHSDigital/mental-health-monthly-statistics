@@ -31,7 +31,7 @@
  %sql
  INSERT OVERWRITE TABLE $db_output.OAPS_In_Scope
  SELECT ORG_CODE
- FROM $$reference_data.ORG_DAILY
+ FROM $reference_data.ORG_DAILY
  WHERE (BUSINESS_END_DATE >= add_months('$rp_enddate', 1) OR ISNULL(BUSINESS_END_DATE))
    AND BUSINESS_START_DATE <= add_months('$rp_enddate', 1)
    AND ORG_CODE in ('NQL','NR5','R1A','R1C','R1F','R1L','RAT','RDY','RGD','RH5','RHA','RJ8','RKL','RLY','RMY','RNN',
@@ -250,6 +250,30 @@
 
 # COMMAND ----------
 
+ %sql 
+ CREATE OR REPLACE GLOBAL TEMPORARY VIEW MHS005PatInd_LD AS
+  
+ SELECT DISTINCT A.PERSON_ID, A.UNIQMONTHID, A.LDStatus
+ FROM $db_source.MHS005PatInd  A
+ INNER JOIN (SELECT PERSON_ID, UNIQMONTHID, RecordNumber, LDStatus, DENSE_RANK() OVER (PARTITION BY PERSON_ID ORDER BY UNIQMONTHID DESC, RecordNumber DESC) AS AUT_RANK
+             FROM $db_source.MHS005PatInd 
+             WHERE UNIQMONTHID <= '$end_month_id'
+             and LDStatus in ('1', '2', '3', '4', '5', 'U', 'X', 'Z')) B ON B.AUT_RANK = 1 AND A.PERSON_ID = B.PERSON_ID AND A.UNIQMONTHID = B.UNIQMONTHID AND  A.RecordNumber = B.RecordNumber
+
+# COMMAND ----------
+
+ %sql
+ CREATE OR REPLACE GLOBAL TEMPORARY VIEW MHS005PatInd_AUT AS
+  
+ SELECT DISTINCT A.PERSON_ID, A.UNIQMONTHID, A.AutismStatus
+ FROM $db_source.MHS005PatInd  A
+ INNER JOIN (SELECT PERSON_ID, UNIQMONTHID, RecordNumber, AutismStatus, DENSE_RANK() OVER (PARTITION BY PERSON_ID ORDER BY UNIQMONTHID DESC, RecordNumber DESC) AS AUT_RANK
+             FROM $db_source.MHS005PatInd 
+             WHERE UNIQMONTHID <= '$end_month_id'
+             and AutismStatus in ('1', '2', '3', '4', '5', 'U', 'X', 'Z')) B ON B.AUT_RANK = 1 AND A.PERSON_ID = B.PERSON_ID AND A.UNIQMONTHID = B.UNIQMONTHID AND  A.RecordNumber = B.RecordNumber
+
+# COMMAND ----------
+
  %sql
  INSERT OVERWRITE TABLE $db_output.oaps_month
  select distinct 
@@ -273,6 +297,10 @@
          coalesce(eth.LowerEthnicityName, "UNKNOWN") as LowerEthnicityName,
          coalesce(eth.UpperEthnicity, "UNKNOWN") as UpperEthnicity,
          coalesce(imd.IMD_Decile, "UNKNOWN") as IMD_Decile,
+         coalesce(aut.AutismStatus, "UNKNOWN") as AutismStatus, 
+         coalesce(aut1.AutismStatus_desc, "UNKNOWN") as AutismStatus_desc, 
+         coalesce(ld.LDStatus, "UNKNOWN") as LDStatus, 
+         coalesce(ld1.LDStatus_desc, "UNKNOWN") as LDStatus_desc, 
          coalesce(oaps.ReasonOAT, "UNKNOWN") as ReasonOAT,
          coalesce(dd_reasonoat.Description, "UNKNOWN") as ReasonOATName,
          oaps.UniqServReqID,
@@ -425,7 +453,7 @@
  left join $db_output.bbrb_org_daily subm_prov
    on oaps.OrgIDReferring = subm_prov.ORG_CODE
     
- left join $$reference_data.english_indices_of_dep_v02 imd_ref
+ left join $reference_data.english_indices_of_dep_v02 imd_ref
    on mpi.LSOA2011 = imd_ref.LSOA_CODE_2011 
    and imd_ref.IMD_YEAR = '2019' 
    
@@ -444,13 +472,19 @@
  left join $db_output.ethnicity_desc eth
    on mpi.NHSDEthnicity = eth.LowerEthnicityCode and '$end_month_id' >= eth.FirstMonth and (eth.LastMonth is null or '$end_month_id' <= eth.LastMonth)
    
- left join $$reference_data.datadictionarycodes dd_reasonoat 
+ left join $reference_data.datadictionarycodes dd_reasonoat 
    on oaps.ReasonOAT = dd_reasonoat.PrimaryCode
    and dd_reasonoat.ItemName = 'REASON_FOR_OUT_OF_AREA_REFERRAL_FOR_ADULT_ACUTE_MENTAL_HEALTH'
    
- left join $$reference_data.datadictionarycodes dd_reasonref
+ left join $reference_data.datadictionarycodes dd_reasonref
    on OAPs.PrimReasonReferralMH = dd_reasonref.PrimaryCode
-   and dd_reasonref.ItemName = 'REASON_FOR_REFERRAL_TO_MENTAL_HEALTH'
+   and dd_reasonref.ItemName = 'REASON_FOR_REFERRAL_TO_MENTAL_HEALTH' 
+  
+ LEFT JOIN global_temp.MHS005PatInd_AUT aut on oaps.PERSON_ID = aut.PERSON_ID
+ LEFT JOIN $db_output.autism_status_desc aut1 on aut.AutismStatus = aut1.AutismStatus and '$end_month_id' >= aut1.FirstMonth and (aut1.LastMonth is null or '$end_month_id' <= aut1.LastMonth)
+  
+ LEFT JOIN global_temp.MHS005PatInd_LD ld on oaps.PERSON_ID = ld.PERSON_ID
+ LEFT JOIN $db_output.ld_status_desc ld1 on ld.LDStatus = ld1.LDStatus and '$end_month_id' >= ld1.FirstMonth and (ld1.LastMonth is null or '$end_month_id' <= ld1.LastMonth)
 
 # COMMAND ----------
 
@@ -477,6 +511,10 @@
          coalesce(eth.LowerEthnicityName, "UNKNOWN") as LowerEthnicityName,
          coalesce(eth.UpperEthnicity, "UNKNOWN") as UpperEthnicity,
          coalesce(imd.IMD_Decile, "UNKNOWN") as IMD_Decile,
+         coalesce(aut.AutismStatus, "UNKNOWN") as AutismStatus, 
+         coalesce(aut1.AutismStatus_desc, "UNKNOWN") as AutismStatus_desc, 
+         coalesce(ld.LDStatus, "UNKNOWN") as LDStatus, 
+         coalesce(ld1.LDStatus_desc, "UNKNOWN") as LDStatus_desc, 
          coalesce(oaps.ReasonOAT, "UNKNOWN") as ReasonOAT,
          coalesce(dd_reasonoat.Description, "UNKNOWN") as ReasonOATName,
          oaps.UniqServReqID,
@@ -625,7 +663,7 @@
  left join $db_output.bbrb_org_daily subm_prov
    on oaps.OrgIDReferring = subm_prov.ORG_CODE
     
- left join $$reference_data.english_indices_of_dep_v02 imd_ref
+ left join $reference_data.english_indices_of_dep_v02 imd_ref
    on mpi.LSOA2011 = imd_ref.LSOA_CODE_2011 
    and imd_ref.IMD_YEAR = '2019' 
    
@@ -644,13 +682,20 @@
  left join $db_output.ethnicity_desc eth
    on mpi.NHSDEthnicity = eth.LowerEthnicityCode and '$end_month_id' >= eth.FirstMonth and (eth.LastMonth is null or '$end_month_id' <= eth.LastMonth)
    
- left join $$reference_data.datadictionarycodes dd_reasonoat 
+ left join $reference_data.datadictionarycodes dd_reasonoat 
    on oaps.ReasonOAT = dd_reasonoat.PrimaryCode
    and dd_reasonoat.ItemName = 'REASON_FOR_OUT_OF_AREA_REFERRAL_FOR_ADULT_ACUTE_MENTAL_HEALTH'
    
- left join $$reference_data.datadictionarycodes dd_reasonref
+ left join $reference_data.datadictionarycodes dd_reasonref
    on OAPs.PrimReasonReferralMH = dd_reasonref.PrimaryCode
-   and dd_reasonref.ItemName = 'REASON_FOR_REFERRAL_TO_MENTAL_HEALTH'
+   and dd_reasonref.ItemName = 'REASON_FOR_REFERRAL_TO_MENTAL_HEALTH' 
+  
+ LEFT JOIN global_temp.MHS005PatInd_AUT aut on oaps.PERSON_ID = aut.PERSON_ID and oaps.uniqmonthid >= aut.uniqmonthid
+ LEFT JOIN $db_output.autism_status_desc aut1 on aut.AutismStatus = aut1.AutismStatus and '$end_month_id' >= aut1.FirstMonth and (aut1.LastMonth is null or '$end_month_id' <= aut1.LastMonth)
+                                   
+  
+ LEFT JOIN global_temp.MHS005PatInd_LD ld on oaps.PERSON_ID = ld.PERSON_ID and oaps.uniqmonthid >= ld.uniqmonthid
+ LEFT JOIN $db_output.ld_status_desc ld1 on ld.LDStatus = ld1.LDStatus and '$end_month_id' >= ld1.FirstMonth and (ld1.LastMonth is null or '$end_month_id' <= ld1.LastMonth)
 
 # COMMAND ----------
 
@@ -677,6 +722,10 @@
          coalesce(eth.LowerEthnicityName, "UNKNOWN") as LowerEthnicityName,
          coalesce(eth.UpperEthnicity, "UNKNOWN") as UpperEthnicity,
          coalesce(imd.IMD_Decile, "UNKNOWN") as IMD_Decile,
+         coalesce(aut.AutismStatus, "UNKNOWN") as AutismStatus,
+         coalesce(aut1.AutismStatus_desc, "UNKNOWN") as AutismStatus_desc,
+         coalesce(ld.LDStatus, "UNKNOWN") as LDStatus,
+         coalesce(ld1.LDStatus_desc, "UNKNOWN") as LDStatus_desc,
          coalesce(oaps.ReasonOAT, "UNKNOWN") as ReasonOAT,
          coalesce(dd_reasonoat.Description, "UNKNOWN") as ReasonOATName,
          oaps.UniqServReqID,
@@ -826,7 +875,7 @@
  left join $db_output.bbrb_org_daily subm_prov
    on oaps.OrgIDReferring = subm_prov.ORG_CODE
     
- left join $$reference_data.english_indices_of_dep_v02 imd_ref
+ left join $reference_data.english_indices_of_dep_v02 imd_ref
    on mpi.LSOA2011 = imd_ref.LSOA_CODE_2011 
    and imd_ref.IMD_YEAR = '2019' 
    
@@ -845,13 +894,19 @@
  left join $db_output.ethnicity_desc eth
    on mpi.NHSDEthnicity = eth.LowerEthnicityCode and '$end_month_id' >= eth.FirstMonth and (eth.LastMonth is null or '$end_month_id' <= eth.LastMonth)
    
- left join $$reference_data.datadictionarycodes dd_reasonoat 
+ left join $reference_data.datadictionarycodes dd_reasonoat 
    on oaps.ReasonOAT = dd_reasonoat.PrimaryCode
    and dd_reasonoat.ItemName = 'REASON_FOR_OUT_OF_AREA_REFERRAL_FOR_ADULT_ACUTE_MENTAL_HEALTH'
    
- left join $$reference_data.datadictionarycodes dd_reasonref
+ left join $reference_data.datadictionarycodes dd_reasonref
    on OAPs.PrimReasonReferralMH = dd_reasonref.PrimaryCode
-   and dd_reasonref.ItemName = 'REASON_FOR_REFERRAL_TO_MENTAL_HEALTH'
+   and dd_reasonref.ItemName = 'REASON_FOR_REFERRAL_TO_MENTAL_HEALTH' 
+  
+ LEFT JOIN global_temp.MHS005PatInd_AUT aut on oaps.PERSON_ID = aut.PERSON_ID and oaps.uniqmonthid >= aut.uniqmonthid
+ LEFT JOIN $db_output.autism_status_desc aut1 on aut.AutismStatus = aut1.AutismStatus and '$end_month_id' >= aut1.FirstMonth and (aut1.LastMonth is null or '$end_month_id' <= aut1.LastMonth)
+  
+ LEFT JOIN global_temp.MHS005PatInd_LD ld on oaps.PERSON_ID = ld.PERSON_ID and oaps.uniqmonthid >= ld.uniqmonthid
+ LEFT JOIN $db_output.ld_status_desc ld1 on ld.LDStatus = ld1.LDStatus and '$end_month_id' >= ld1.FirstMonth and (ld1.LastMonth is null or '$end_month_id' <= ld1.LastMonth)
 
 # COMMAND ----------
 
@@ -880,7 +935,11 @@
          coalesce(eth.LowerEthnicityCode, "UNKNOWN") as LowerEthnicityCode,
          coalesce(eth.LowerEthnicityName, "UNKNOWN") as LowerEthnicityName,
          coalesce(eth.UpperEthnicity, "UNKNOWN") as UpperEthnicity,
-         coalesce(imd.IMD_Decile, "UNKNOWN") as IMD_Decile,        
+         coalesce(imd.IMD_Decile, "UNKNOWN") as IMD_Decile,    
+         coalesce(aut.AutismStatus, "UNKNOWN") as AutismStatus,
+         coalesce(aut1.AutismStatus_desc, "UNKNOWN") as AutismStatus_desc,
+         coalesce(ld.LDStatus, "UNKNOWN") as LDStatus,
+         coalesce(ld1.LDStatus_desc, "UNKNOWN") as LDStatus_desc,
          CASE WHEN HS.UniqHospProvSpellID is NULL THEN 'No Hospital Spell'
                 WHEN WS.UniqHospProvSpellID is not NULL THEN WS.MHAdmittedPatientClass
                 ELSE 'UNKNOWN' END AS MHAdmittedPatientClass
@@ -936,7 +995,7 @@
  left join $db_output.bbrb_stp_mapping stp
    on ccg.SubICBGPRes = stp.CCG_Code
     
- left join $$reference_data.english_indices_of_dep_v02 imd_ref
+ left join $reference_data.english_indices_of_dep_v02 imd_ref
    on mpi.LSOA2011 = imd_ref.LSOA_CODE_2011 
    and imd_ref.IMD_YEAR = '2019' 
    
@@ -953,7 +1012,13 @@
    and '$end_month_id' >= gen.FirstMonth and (gen.LastMonth is null or '$end_month_id' <= gen.LastMonth)
    
  left join $db_output.ethnicity_desc eth
-   on mpi.NHSDEthnicity = eth.LowerEthnicityCode and '$end_month_id' >= eth.FirstMonth and (eth.LastMonth is null or '$end_month_id' <= eth.LastMonth)
+   on mpi.NHSDEthnicity = eth.LowerEthnicityCode and '$end_month_id' >= eth.FirstMonth and (eth.LastMonth is null or '$end_month_id' <= eth.LastMonth) 
+  
+ LEFT JOIN global_temp.MHS005PatInd_AUT aut on hs.PERSON_ID = aut.PERSON_ID
+ LEFT JOIN $db_output.autism_status_desc aut1 on aut.AutismStatus = aut1.AutismStatus and '$end_month_id' >= aut1.FirstMonth and (aut1.LastMonth is null or '$end_month_id' <= aut1.LastMonth)
+  
+ LEFT JOIN global_temp.MHS005PatInd_LD ld on hs.PERSON_ID = ld.PERSON_ID
+ LEFT JOIN $db_output.ld_status_desc ld1 on ld.LDStatus = ld1.LDStatus and '$end_month_id' >= ld1.FirstMonth and (ld1.LastMonth is null or '$end_month_id' <= ld1.LastMonth)
 
 # COMMAND ----------
 
@@ -975,7 +1040,11 @@
          coalesce(eth.LowerEthnicityCode, "UNKNOWN") as LowerEthnicityCode,
          coalesce(eth.LowerEthnicityName, "UNKNOWN") as LowerEthnicityName,
          coalesce(eth.UpperEthnicity, "UNKNOWN") as UpperEthnicity,
-         coalesce(imd.IMD_Decile, "UNKNOWN") as IMD_Decile,        
+         coalesce(imd.IMD_Decile, "UNKNOWN") as IMD_Decile,
+         coalesce(aut.AutismStatus, "UNKNOWN") as AutismStatus,
+         coalesce(aut1.AutismStatus_desc, "UNKNOWN") as AutismStatus_desc,
+         coalesce(ld.LDStatus, "UNKNOWN") as LDStatus,
+         coalesce(ld1.LDStatus_desc, "UNKNOWN") as LDStatus_desc,
          CASE WHEN HS.UniqHospProvSpellID is NULL THEN 'No Hospital Spell'
                 WHEN WS.UniqHospProvSpellID is not NULL THEN WS.MHAdmittedPatientClass
                 ELSE 'UNKNOWN' END AS MHAdmittedPatientClass
@@ -1031,7 +1100,7 @@
  left join $db_output.bbrb_stp_mapping stp
    on ccg.SubICBGPRes = stp.CCG_Code
     
- left join $$reference_data.english_indices_of_dep_v02 imd_ref
+ left join $reference_data.english_indices_of_dep_v02 imd_ref
    on mpi.LSOA2011 = imd_ref.LSOA_CODE_2011 
    and imd_ref.IMD_YEAR = '2019' 
    
@@ -1049,6 +1118,13 @@
    
  left join $db_output.ethnicity_desc eth
    on mpi.NHSDEthnicity = eth.LowerEthnicityCode and '$end_month_id' >= eth.FirstMonth and (eth.LastMonth is null or '$end_month_id' <= eth.LastMonth)
+   
+ LEFT JOIN global_temp.MHS005PatInd_AUT aut on hs.PERSON_ID = aut.PERSON_ID and hs.uniqmonthid >= aut.uniqmonthid
+ LEFT JOIN $db_output.autism_status_desc aut1 on aut.AutismStatus = aut1.AutismStatus and '$end_month_id' >= aut1.FirstMonth and (aut1.LastMonth is null or '$end_month_id' <= aut1.LastMonth)
+                                   
+  
+ LEFT JOIN global_temp.MHS005PatInd_LD ld on hs.PERSON_ID = ld.PERSON_ID and hs.uniqmonthid >= ld.uniqmonthid
+ LEFT JOIN $db_output.ld_status_desc ld1 on ld.LDStatus = ld1.LDStatus and '$end_month_id' >= ld1.FirstMonth and (ld1.LastMonth is null or '$end_month_id' <= ld1.LastMonth)
 
 # COMMAND ----------
 
@@ -1070,7 +1146,11 @@
          coalesce(eth.LowerEthnicityCode, "UNKNOWN") as LowerEthnicityCode,
          coalesce(eth.LowerEthnicityName, "UNKNOWN") as LowerEthnicityName,
          coalesce(eth.UpperEthnicity, "UNKNOWN") as UpperEthnicity,
-         coalesce(imd.IMD_Decile, "UNKNOWN") as IMD_Decile,        
+         coalesce(imd.IMD_Decile, "UNKNOWN") as IMD_Decile,  
+         coalesce(aut.AutismStatus, "UNKNOWN") as AutismStatus,
+         coalesce(aut1.AutismStatus_desc, "UNKNOWN") as AutismStatus_desc,
+         coalesce(ld.LDStatus, "UNKNOWN") as LDStatus,
+         coalesce(ld1.LDStatus_desc, "UNKNOWN") as LDStatus_desc,
          CASE WHEN HS.UniqHospProvSpellID is NULL THEN 'No Hospital Spell'
                 WHEN WS.UniqHospProvSpellID is not NULL THEN WS.MHAdmittedPatientClass
                 ELSE 'UNKNOWN' END AS MHAdmittedPatientClass
@@ -1126,7 +1206,7 @@
  left join $db_output.bbrb_stp_mapping stp
    on ccg.SubICBGPRes = stp.CCG_Code
     
- left join $$reference_data.english_indices_of_dep_v02 imd_ref
+ left join $reference_data.english_indices_of_dep_v02 imd_ref
    on mpi.LSOA2011 = imd_ref.LSOA_CODE_2011 
    and imd_ref.IMD_YEAR = '2019' 
    
@@ -1143,7 +1223,13 @@
    and '$end_month_id' >= gen.FirstMonth and (gen.LastMonth is null or '$end_month_id' <= gen.LastMonth)
    
  left join $db_output.ethnicity_desc eth
-   on mpi.NHSDEthnicity = eth.LowerEthnicityCode and '$end_month_id' >= eth.FirstMonth and (eth.LastMonth is null or '$end_month_id' <= eth.LastMonth)
+   on mpi.NHSDEthnicity = eth.LowerEthnicityCode and '$end_month_id' >= eth.FirstMonth and (eth.LastMonth is null or '$end_month_id' <= eth.LastMonth) 
+  
+ LEFT JOIN global_temp.MHS005PatInd_AUT aut on hs.PERSON_ID = aut.PERSON_ID and hs.uniqmonthid >= aut.uniqmonthid
+ LEFT JOIN $db_output.autism_status_desc aut1 on aut.AutismStatus = aut1.AutismStatus and '$end_month_id' >= aut1.FirstMonth and (aut1.LastMonth is null or '$end_month_id' <= aut1.LastMonth)
+  
+ LEFT JOIN global_temp.MHS005PatInd_LD ld on hs.PERSON_ID = ld.PERSON_ID and hs.uniqmonthid >= ld.uniqmonthid
+ LEFT JOIN $db_output.ld_status_desc ld1 on ld.LDStatus = ld1.LDStatus and '$end_month_id' >= ld1.FirstMonth and (ld1.LastMonth is null or '$end_month_id' <= ld1.LastMonth)
 
 # COMMAND ----------
 

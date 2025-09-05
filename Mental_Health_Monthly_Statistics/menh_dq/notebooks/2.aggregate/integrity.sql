@@ -12,9 +12,9 @@
  rp_enddate  = dbutils.widgets.get("rp_enddate")
  print(rp_enddate)
  assert rp_enddate
- # $reference_data  = dbutils.widgets.get("$reference_data")
- # print($reference_data)
- # assert $reference_data
+ # reference_data  = dbutils.widgets.get("reference_data")
+ # print(reference_data)
+ # assert reference_data
  month_id  = dbutils.widgets.get("month_id")
  print(month_id)
  assert month_id
@@ -68,7 +68,7 @@ TRUNCATE TABLE $db_output.dq_stg_integrity;
 
 -- COMMAND ----------
 
-/** User: added to support code needed for v4.1 when CAMHSTier removed **/
+/** User note: added to support code needed for v4.1 when CAMHSTier removed **/
 
 CREATE OR REPLACE GLOBAL TEMPORARY VIEW REFS AS 
  
@@ -90,7 +90,7 @@ WHERE a.UniqMonthID = '$month_id'
 
 -- COMMAND ----------
 
-/** User: added to support code needed for v4.1 when CAMHSTier removed **/
+/** User note: added to support code needed for v4.1 when CAMHSTier removed **/
 
 CREATE OR REPLACE GLOBAL TEMPORARY VIEW TEAMTYPE AS
  
@@ -107,7 +107,7 @@ GROUP BY r.UniqCareProfTeamID
 -- COMMAND ----------
 
 -- DBTITLE 1,Referrals to CYP-MH services starting in RP
-/** User: updated for v4.1 when CAMHSTier removed **/
+/** User note: updated for v4.1 when CAMHSTier removed **/
 
 WITH Referral
 AS

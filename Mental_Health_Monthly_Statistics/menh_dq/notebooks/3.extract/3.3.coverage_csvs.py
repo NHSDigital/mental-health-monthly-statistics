@@ -3,8 +3,8 @@
 
 # dbutils.widgets.text("db_output", "menh_dq", "db_output")
 # dbutils.widgets.text("month_id", "1449", "month_id")
-# dbutils.widgets.text("dbm", "testdata_menh_dq_$mhsds", "dbm")
-# dbutils.widgets.text("$reference_data", "$reference_data", "$reference_data")
+# dbutils.widgets.text("dbm", "testdata_menh_dq_mhsds_database", "dbm")
+# dbutils.widgets.text("reference_data", "reference_data", "reference_data")
 # dbutils.widgets.text("status", "Performance", "status")
 
 
@@ -31,7 +31,7 @@ assert dbm
    ORG_CODE,
    NAME,
    ROW_NUMBER() OVER(PARTITION BY ORG_CODE ORDER BY IFNULL(BUSINESS_END_DATE, CURRENT_DATE()) DESC, IFNULL(ORG_CLOSE_DATE, CURRENT_DATE()) DESC) AS RowNumber
- FROM $$reference_data.org_daily
+ FROM $reference_data.org_daily
  ),
 
  -- Make orgs form above unique
@@ -405,7 +405,7 @@ assert dbm
    FROM $dbm.mhs504delayeddischarge
    WHERE UniqMonthID = $month_id
    GROUP BY OrgIDProv
- --   original v4.1 table - kept in for runs of earlier months -- can't exist until $mhsds is updated :o(
+ --   original v4.1 table - kept in for runs of earlier months -- can't exist until mhsds_database is updated :o(
  --  UNION ALL SELECT
  --   'MHS505RestrictiveIntervention' AS TableName,
  --    OrgIDProv,

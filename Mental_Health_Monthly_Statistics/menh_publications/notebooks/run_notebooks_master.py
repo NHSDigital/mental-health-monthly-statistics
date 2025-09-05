@@ -38,8 +38,8 @@
  status = dbutils.widgets.get("status")
  assert status
 
- $reference_data = dbutils.widgets.get("$reference_data")
- assert $reference_data
+ reference_data = dbutils.widgets.get("reference_data")
+ assert reference_data
 
  rp_startdate_quarterly = (startdateasdate + relativedelta(months=-2, days=0)).strftime("%Y-%m-%d")
  assert rp_startdate_quarterly
@@ -84,7 +84,7 @@ display(metadata_df)
      "status": status,
      "rp_enddate": rp_enddate,
      "rp_startdate": rp_startdate,
-     "$reference_data": $reference_data,
+     "reference_data": reference_data,
      "product": product,
      "automatic_run": automatic_run,
      "custom_run": custom_run,
@@ -234,9 +234,9 @@ if group_by_products:
        for row in rows:
          run = 1
          row_product = row['product']
-         if (row_product == 'CYP_ED_WaitingTimes_preFY2324' and month_id >= '1501'):
+         if (row_product == 'CYP_ED_WaitingTimes_preFY2324' and month_id >= '1506'):
            run = 0
-         elif ((row_product == 'CYP_ED_WaitingTimes' or row_product == 'CYP_ED_WaitingTimes_12m') and month_id < '1501'):
+         elif ((row_product == 'CYP_ED_WaitingTimes' or row_product == 'CYP_ED_WaitingTimes_12m') and month_id < '1506'):
            run = 0
            
          if row_product == 'CYP_ED_WaitingTimes':
@@ -259,7 +259,7 @@ if group_by_products:
      else:
        print(f"processing {product} product")
        run_product = product
-       if (product == 'CYP_ED_WaitingTimes' and month_id < '1501'):
+       if (product == 'CYP_ED_WaitingTimes' and month_id < '1506'):
          run_product = 'CYP_ED_WaitingTimes_preFY2324'
          
        if run_product == 'CYP_ED_WaitingTimes':

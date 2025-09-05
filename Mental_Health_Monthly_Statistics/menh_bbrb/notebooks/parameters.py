@@ -19,7 +19,13 @@ unsup_breakdowns = ['England',
                     'England; Service or Team Type Referred To',
                     'England; Age; Under 18 or 18 and over',
                     'England; Autism Status',
-                    'England; LD Status']
+                    'England; LD Status',
+                    'England; IMD Quintile',
+                    'England; IMD Core20',
+                    'England; Mean Deviation of Upper Ethnicity',
+                    'England; Ethnicity - Standardised Rate Difference from White British',
+                    'England; IMD - Standardised Rate Difference from Most Deprived Quintile'
+                   ]
 
 # COMMAND ----------
 

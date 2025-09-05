@@ -39,3 +39,23 @@
  AND SOURCE_DB = '$db_source'
  ;
  VACUUM $db_output.cyp_ed_wt_step8 RETAIN 8 HOURS;
+
+-- COMMAND ----------
+
+ %sql
+ DELETE FROM $db_output.cyp_ed_wt_step9
+ WHERE UniqMonthID = '$month_id'
+ AND STATUS = '$status'
+ AND SOURCE_DB = '$db_source'
+ ;
+ VACUUM $db_output.cyp_ed_wt_step9 RETAIN 8 HOURS;
+
+-- COMMAND ----------
+
+ %sql
+ DELETE FROM $db_output.cyp_ed_wt_step10
+ WHERE UniqMonthID = '$month_id'
+ AND STATUS = '$status'
+ AND SOURCE_DB = '$db_source'
+ ;
+ VACUUM $db_output.cyp_ed_wt_step10 RETAIN 8 HOURS;

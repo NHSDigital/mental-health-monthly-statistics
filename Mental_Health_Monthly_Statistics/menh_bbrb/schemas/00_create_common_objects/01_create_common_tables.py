@@ -334,7 +334,7 @@
 # COMMAND ----------
 
  %sql
- -- DROP TABLE IF EXISTS $db_output.mhs001mpi_12_months_data; 
+ DROP TABLE IF EXISTS $db_output.mhs001mpi_12_months_data; 
  CREATE TABLE IF NOT EXISTS $db_output.mhs001mpi_12_months_data 
  (
  UniqMonthID bigint,
@@ -347,12 +347,17 @@
  LowerEthnicity string,
  LowerEthnicity_Desc string,
  UpperEthnicity string,
+ WNW_Ethnicity string,
  Gender string,
  GenderIDCode string,
  Der_Gender string,
+ Der_Gender_Desc string,
  AgeRepPeriodEnd bigint,
  Age_Band string,
- IMD_Decile string
+ Age_Group_CYP string,
+ IMD_Decile string,
+ IMD_Quintile string,
+ IMD_Core20 string
  ) USING DELTA
 
 # COMMAND ----------
@@ -412,7 +417,7 @@
 # COMMAND ----------
 
  %sql
- -- DROP TABLE IF EXISTS $db_output.eth_pop;
+ DROP TABLE IF EXISTS $db_output.eth_pop;
  CREATE TABLE IF NOT EXISTS $db_output.eth_pop
  (
  Age_Group STRING,
@@ -425,13 +430,14 @@
  LowerEthnicityCode STRING,
  LowerEthnicityName STRING,
  UpperEthnicity STRING,
+ WNWEthnicity STRING,
  POPULATION_COUNT INT
  ) USING DELTA
 
 # COMMAND ----------
 
  %sql
- -- DROP TABLE IF EXISTS $db_output.imd_pop;
+ DROP TABLE IF EXISTS $db_output.imd_pop;
  CREATE TABLE IF NOT EXISTS $db_output.imd_pop
  (
  Age_Group STRING,
@@ -443,6 +449,7 @@
  Region_Name STRING,
  IMD_Decile STRING,
  IMD_Quintile STRING,
+ IMD_Core20 STRING,
  POPULATION_COUNT INT
  ) USING DELTA
 
@@ -460,6 +467,61 @@
  Region_Code STRING,
  Region_Name STRING,
  POPULATION_COUNT INT
+ ) USING DELTA
+
+# COMMAND ----------
+
+ %sql
+ -- DROP TABLE IF EXISTS $db_output.age_gender_std_eth_pop;
+ CREATE TABLE IF NOT EXISTS $db_output.age_gender_std_eth_pop
+ (
+ Der_Gender string,
+ Der_Gender_Desc string,
+ age string,
+ Age_Group_IPS string,
+ Age_Group_OAPs string,
+ Age_Group_MHA string,
+ Age_Group_CYP string,
+ Age_Group_Higher_Level string,
+ Age_Group string,
+ CCG_Code string,
+ CCG_Name string,
+ STP_Code string,
+ STP_Name string,
+ Region_Code string,
+ Region_Name string,
+ LowerEthnicityCode string,
+ LowerEthnicityName string,
+ UpperEthnicity string,
+ WNW_Ethnicity string,
+ POPULATION_COUNT int
+ ) USING DELTA
+
+# COMMAND ----------
+
+ %sql
+ -- DROP TABLE IF EXISTS $db_output.age_gender_std_imd_pop;
+ CREATE TABLE IF NOT EXISTS $db_output.age_gender_std_imd_pop
+ (
+ Der_Gender string,
+ Der_Gender_Desc string,
+ age int,
+ Age_Group_IPS string,
+ Age_Group_OAPs string,
+ Age_Group_MHA string,
+ Age_Group_CYP string,
+ Age_Group_Higher_Level string,
+ Age_Group string,
+ CCG_Code string,
+ CCG_Name string,
+ STP_Code string,
+ STP_Name string,
+ Region_Code string,
+ Region_Name string,
+ IMD_Decile string,
+ IMD_Quintile string,
+ IMD_Core20 string,
+ POPULATION_COUNT int
  ) USING DELTA
 
 # COMMAND ----------
@@ -493,7 +555,7 @@
 # COMMAND ----------
 
  %sql
- -- DROP TABLE IF EXISTS $db_output.nhse_pre_proc_header;
+ DROP TABLE IF EXISTS $db_output.nhse_pre_proc_header;
  CREATE TABLE IF NOT EXISTS $db_output.nhse_pre_proc_header
  (
  uniqmonthid INT,
@@ -1037,12 +1099,13 @@ df1.write.insertInto(f"{db_output}.age_band_desc", overwrite=True)
 # COMMAND ----------
 
  %sql
- -- DROP TABLE IF EXISTS $db_output.imd_desc;
+ DROP TABLE IF EXISTS $db_output.imd_desc;
  CREATE TABLE IF NOT EXISTS $db_output.imd_desc
  (
  IMD_Number STRING,
  IMD_Decile STRING,
  IMD_Quintile STRING,
+ IMD_Core20 STRING,
  FirstMonth INT,
  LastMonth INT
  ) USING DELTA
@@ -1052,17 +1115,17 @@ df1.write.insertInto(f"{db_output}.age_band_desc", overwrite=True)
  %sql
  TRUNCATE TABLE $db_output.imd_desc;
  INSERT INTO $db_output.imd_desc VALUES
- ("1", "01 Most deprived", "01 Most deprived", 1390, null),
- ("2", "02 More deprived", "01 Most deprived", 1390, null),
- ("3", "03 More deprived", "02", 1390, null),
- ("4", "04 More deprived", "02", 1390, null),
- ("5", "05 More deprived", "03", 1390, null),
- ("6", "06 Less deprived", "03", 1390, null),
- ("7", "07 Less deprived", "04", 1390, null),
- ("8", "08 Less deprived", "04", 1390, null),
- ("9", "09 Less deprived", "05 Least deprived", 1390, null),
- ("10", "10 Least deprived", "05 Least deprived", 1390, null),
- ("UNKNOWN", "UNKNOWN", "UNKNOWN", 1390, null)
+ ("1", "01 Most deprived", "01 Most deprived", "Most deprived quintile", 1390, null),
+ ("2", "02 More deprived", "01 Most deprived", "Most deprived quintile", 1390, null),
+ ("3", "03 More deprived", "02", "Other 4 quintiles", 1390, null),
+ ("4", "04 More deprived", "02", "Other 4 quintiles", 1390, null),
+ ("5", "05 More deprived", "03", "Other 4 quintiles", 1390, null),
+ ("6", "06 Less deprived", "03", "Other 4 quintiles", 1390, null),
+ ("7", "07 Less deprived", "04", "Other 4 quintiles", 1390, null),
+ ("8", "08 Less deprived", "04", "Other 4 quintiles", 1390, null),
+ ("9", "09 Less deprived", "05 Least deprived", "Other 4 quintiles", 1390, null),
+ ("10", "10 Least deprived", "05 Least deprived", "Other 4 quintiles", 1390, null),
+ ("UNKNOWN", "UNKNOWN", "UNKNOWN", "UNKNOWN", 1390, null)
 
 # COMMAND ----------
 

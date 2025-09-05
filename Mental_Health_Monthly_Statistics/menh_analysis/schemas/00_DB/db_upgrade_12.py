@@ -1,6 +1,6 @@
 # Databricks notebook source
 # dbutils.widgets.text("db_output","","db_output")
-# dbutils.widgets.text("db_source","testdata_menh_analysis_$mhsds_db","db_source")
+# dbutils.widgets.text("db_source","testdata_menh_analysis_mhsds_database","db_source")
 
 # COMMAND ----------
 
@@ -84,6 +84,10 @@
  ,DisabCode_Desc	string
  ,Sex_Orient	string
  ,RuralUrbanClassName string
+ ,AutismStatus string
+ ,AutismStatus_desc string
+ ,LDStatus string
+ ,LDStatus_desc string
  ) USING DELTA PARTITIONED BY (UniqMonthID)
 
 # COMMAND ----------
@@ -210,22 +214,26 @@
  DROP TABLE IF EXISTS $db_output.tmp_mhmab_mhs32_prep;
  CREATE TABLE IF NOT EXISTS $db_output.tmp_mhmab_mhs32_prep
  (
- UniqServReqID	string,
- Person_ID	string,
- Age_Band	string,
- Der_Gender	string,
- Der_GenderName	string,
- LowerEthnicity	string,
- LowerEthnicity_Desc	string,
- IMD_Decile	string,
- AccommodationType	string,
- AccommodationType_Desc	string,
- EmployStatus	string,
- EmployStatus_Desc	string,
- DisabCode	string,
- DisabCode_Desc	string,
- Sex_Orient	string,
- RuralUrbanClassName string
+ UniqServReqID    string,
+ Person_ID    string,
+ Age_Band    string,
+ Der_Gender    string,
+ Der_GenderName    string,
+ LowerEthnicity    string,
+ LowerEthnicity_Desc    string,
+ IMD_Decile    string,
+ AccommodationType    string,
+ AccommodationType_Desc    string,
+ EmployStatus    string,
+ EmployStatus_Desc    string,
+ DisabCode    string,
+ DisabCode_Desc    string,
+ Sex_Orient    string,
+ RuralUrbanClassName string,
+ AutismStatus string,
+ AutismStatus_desc string,
+ LDStatus string,
+ LDStatus_desc string
  ) USING DELTA
 
 # COMMAND ----------
@@ -331,22 +339,26 @@
  %sql
  DROP TABLE IF EXISTS $db_output.tmp_mhmab_mhs01_prep;
  CREATE TABLE IF NOT EXISTS $db_output.tmp_mhmab_mhs01_prep
- (UniqServReqID	string,
- Person_ID	string,
- Age_Band	string,
- Der_Gender	string,
+ (UniqServReqID    string,
+ Person_ID    string,
+ Age_Band    string,
+ Der_Gender    string,
  Der_GenderName string,
- LowerEthnicity	string,
- LowerEthnicity_Desc	string,
- IMD_Decile	string,
- AccommodationType	string,
- AccommodationType_Desc	string,
- EmployStatus	string,
- EmployStatus_Desc	string,
- DisabCode	string,
- DisabCode_Desc	string,
- Sex_Orient	string,
- RuralUrbanClassName string
+ LowerEthnicity    string,
+ LowerEthnicity_Desc    string,
+ IMD_Decile    string,
+ AccommodationType    string,
+ AccommodationType_Desc    string,
+ EmployStatus    string,
+ EmployStatus_Desc    string,
+ DisabCode    string,
+ DisabCode_Desc    string,
+ Sex_Orient    string,
+ RuralUrbanClassName string,
+ AutismStatus string,
+ AutismStatus_desc string,
+ LDStatus string,
+ LDStatus_desc string
  ) USING DELTA
 
 # COMMAND ----------
@@ -397,23 +409,27 @@
  %sql
  DROP TABLE IF EXISTS $db_output.tmp_mhmab_mhs07_prep;
  CREATE TABLE IF NOT EXISTS $db_output.tmp_mhmab_mhs07_prep (
- UniqServReqID	string,
- Person_ID	string,
- UniqHospProvSpellID	string,
- Age_Band	string,
- Der_Gender	string,
- Der_GenderName	string,
- LowerEthnicity	string,
- LowerEthnicity_Desc	string,
- IMD_Decile	string,
- AccommodationType	string,
- AccommodationType_Desc	string,
- EmployStatus	string,
- EmployStatus_Desc	string,
- DisabCode	string,
- DisabCode_Desc	string,
- Sex_Orient	string,
- RuralUrbanClassName  string) USING DELTA
+ UniqServReqID    string,
+ Person_ID    string,
+ UniqHospProvSpellID    string,
+ Age_Band    string,
+ Der_Gender    string,
+ Der_GenderName    string,
+ LowerEthnicity    string,
+ LowerEthnicity_Desc    string,
+ IMD_Decile    string,
+ AccommodationType    string,
+ AccommodationType_Desc    string,
+ EmployStatus    string,
+ EmployStatus_Desc    string,
+ DisabCode    string,
+ DisabCode_Desc    string,
+ Sex_Orient    string,
+ RuralUrbanClassName  string,
+ AutismStatus string,
+ AutismStatus_desc string,
+ LDStatus string,
+ LDStatus_desc string) USING DELTA
 
 # COMMAND ----------
 
@@ -485,3 +501,56 @@
 
 # COMMAND ----------
 
+ %sql
+ DROP TABLE IF EXISTS $db_output.autism_status_desc;
+ CREATE TABLE IF NOT EXISTS $db_output.autism_status_desc
+ (
+ AutismStatus STRING,
+ AutismStatus_desc STRING,
+ FirstMonth INT,
+ LastMonth INT
+ ) USING DELTA
+
+# COMMAND ----------
+
+ %sql
+ TRUNCATE TABLE $db_output.autism_status_desc;
+ INSERT INTO $db_output.autism_status_desc VALUES
+ ("1", "Confirmed patient diagnosis of autism", 1489, null),
+ ("2", "Suspected patient diagnosis of autism and the patient is on a diagnostic patient pathway for a patient diagnosis of autism", 1489, null),
+ ("3", "Suspected patient diagnosis of autism but the patient is not on a diagnostic patient pathway for a patient diagnosis of autism", 1489, null),
+ ("4", "Suspected patient diagnosis of autism but it is not known whether the patient is on a diagnostic patient pathway for a patient diagnosis of autism", 1489, null),
+ ("5", "No patient diagnosis of autism", 1489, null),
+ ("U", "Patient asked but autism status not known", 1489, null),
+ ("X", "Not Known (Not Recorded)", 1489, null),
+ ("Z", "Not Stated (PATIENT asked but declined to provide a response)", 1489, null),
+ ("UNKNOWN", "UNKNOWN", 1489, null)
+
+# COMMAND ----------
+
+ %sql
+ DROP TABLE IF EXISTS $db_output.LD_status_desc;
+ CREATE TABLE IF NOT EXISTS $db_output.LD_status_desc
+ (
+ LDStatus STRING,
+ LDStatus_desc STRING,
+ FirstMonth INT,
+ LastMonth INT
+ ) USING DELTA
+
+# COMMAND ----------
+
+ %sql
+  
+ TRUNCATE TABLE $db_output.LD_status_desc;
+ INSERT INTO $db_output.LD_status_desc VALUES
+  
+ ("1", "Confirmed patient diagnosis of a learning disability", 1489, null),
+ ("2", "Suspected patient diagnosis of a learning disability and the patient is on a diagnostic patient pathway for a patient diagnosis of a learning disability", 1489, null),
+ ("3", "Suspected patient diagnosis of a learning disability but the patient is not on a diagnostic patient pathway for a patient diagnosis of a learning disability", 1489, null),
+ ("4", "Suspected patient diagnosis of a learning disability but it is not known whether the patient is on a diagnostic patient pathway for a patient diagnosis of a learning disability", 1489, null),
+ ("5", "No patient diagnosis of a learning disability", 1489, null),
+ ("U", "Patient asked but learning disability status not known", 1489, null),
+ ("X", "Not Known (Not Recorded)", 1489, null),
+ ("Z", "Not Stated (PATIENT asked but declined to provide a response)", 1489, null),
+ ("UNKNOWN", "UNKNOWN", 1489, null)

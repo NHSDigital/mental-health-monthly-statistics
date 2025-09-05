@@ -1,6 +1,6 @@
 # Databricks notebook source
  %sql
- -- DROP TABLE IF EXISTS $db_output.firstcont_final;
+ DROP TABLE IF EXISTS $db_output.firstcont_final;
  CREATE TABLE IF NOT EXISTS $db_output.firstcont_final
  (
  UniqMonthID int,
@@ -16,6 +16,17 @@
  Person_ID string,
  RecordNumber string,
  UniqServReqID string,
+ LowerEthnicity string,
+ LowerEthnicity_Desc string,
+ UpperEthnicity string,
+ WNW_Ethnicity string,
+ Der_Gender string, 
+ Der_Gender_Desc string,
+ AgeRepPeriodEnd string,
+ Age_Band string,
+ IMD_Decile string,
+ IMD_Quintile string,
+ IMD_Core20 string,
  AccessLARN int,
  AccessCCGRN int, 
  AccessCCGProvRN int, 
@@ -140,3 +151,6 @@
  TimeFromRefToFirstCont int,
  TimeFromRefToEndRP int
  ) USING DELTA
+
+# COMMAND ----------
+

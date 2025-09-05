@@ -4,10 +4,10 @@
   CREATE WIDGET TEXT month_id DEFAULT "1448"; 
   CREATE WIDGET TEXT rp_startdate DEFAULT "2020-01-01";
   CREATE WIDGET TEXT rp_enddate DEFAULT "2020-12-31";
-  CREATE WIDGET TEXT db_source DEFAULT "testdata_menh_publications_$mhsds";
+  CREATE WIDGET TEXT db_source DEFAULT "testdata_menh_publications_mhsds_database";
   CREATE WIDGET TEXT db_output DEFAULT "menh_publications";
   CREATE WIDGET TEXT status DEFAULT "Performance";
-  CREATE WIDGET TEXT $reference_data DEFAULT "$reference_data";
+  CREATE WIDGET TEXT reference_data DEFAULT "reference_data";
 
 -- COMMAND ----------
 
@@ -21,9 +21,9 @@
  db_source=dbutils.widgets.get("db_source")
  print(db_source)
  assert db_source
- $reference_data=dbutils.widgets.get("$reference_data")
- print($reference_data)
- assert $reference_data
+ reference_data=dbutils.widgets.get("reference_data")
+ print(reference_data)
+ assert reference_data
  status=dbutils.widgets.get("status")
  print(status)
  assert status

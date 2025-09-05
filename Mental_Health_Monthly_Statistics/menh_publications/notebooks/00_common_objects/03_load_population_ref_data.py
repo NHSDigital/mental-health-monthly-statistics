@@ -9,7 +9,7 @@
 # db_output  = dbutils.widgets.get("db_output")
 # assert db_output
  
-# dbutils.widgets.text("db_source", "$mhsds", "db_source")
+# dbutils.widgets.text("db_source", "mhsds_database", "db_source")
 # db_source = dbutils.widgets.get("db_source")
 # assert db_source
  
@@ -147,7 +147,7 @@ display(df1)
 # DBTITLE 1,Ethnicity lookup table by ethnic_group_code - used to replace case when
 # used in census_2021_national_derived and census_2021_sub_icb_derived
  
-x1 = """select code as ethnic_group_code, description as Ethnic_group from $reference_data.ONS_2021_census_lookup
+x1 = """select code as ethnic_group_code, description as Ethnic_group from reference_data.ONS_2021_census_lookup
 where field = 'ethnic_group_code' and code != -8"""
 df1 = spark.sql(x1)
  
@@ -198,7 +198,7 @@ df1 = spark.createDataFrame(l1, schema = schema1)
 spark.sql(f"drop table if exists {db_output}.mapimd")
 df1.write.saveAsTable(f"{db_output}.mapimd", mode = 'overwrite')
  
-IMD_year = spark.sql("select max(IMD_YEAR) from $reference_data.english_indices_of_dep_v02").collect()[0][0]
+IMD_year = spark.sql("select max(IMD_YEAR) from reference_data.english_indices_of_dep_v02").collect()[0][0]
 display(df1)
 
 # COMMAND ----------
@@ -228,10 +228,10 @@ display(df1)
        when age_code between 85 and 89 then '85 to 89'
        when age_code >= '90' then '90 or over' else 'Unknown' end as Age_Group,
       sum(observation) as observation
- from $reference_data.ons_2021_census
+ from reference_data.ons_2021_census
   
  where area_type_group_code = "E92" ---England grouping only
- and ons_date = (select max(ons_date) from $reference_data.ons_2021_census where area_type_group_code = "E92") ---most recent data
+ and ons_date = (select max(ons_date) from reference_data.ons_2021_census where area_type_group_code = "E92") ---most recent data
  group by ethnic_group_code,
  sex_code,
  case  when age_code < 18 then 'Under 18'
@@ -308,7 +308,7 @@ display(df1)
  Age_Group,
  observation as Population
  from census_2021_national_derived c
- left join $reference_data.ONS_2021_census_lookup a on c.ethnic_group_code = a.code and a.field = "ethnic_group_code"
+ left join reference_data.ONS_2021_census_lookup a on c.ethnic_group_code = a.code and a.field = "ethnic_group_code"
  where ethnic_group_code != -8 ---exclude does not apply ethnicity
  order by ethnic_group_formatted, der_gender desc, Age_Group
 
@@ -322,9 +322,9 @@ display(df1)
  -- drop table if exists $db_output.ons_2021_census;
  create or replace table $db_output.ons_2021_census -- using delta as
  select ethnic_group_code, sex_code, age_code as Age, observation
- from $reference_data.ons_2021_census
+ from reference_data.ons_2021_census
  where area_type_group_code = "E92" ---England grouping only
- and ons_date = (select max(ons_date) from $reference_data.ons_2021_census where area_type_group_code = "E92") ---most recent data
+ and ons_date = (select max(ons_date) from reference_data.ons_2021_census where area_type_group_code = "E92") ---most recent data
  and ethnic_group_code != -8;
   
  create or replace temporary view vw_ons_2021_census as
@@ -361,9 +361,9 @@ display(df1)
  --drop table if exists $db_output.ons_2021_census;
  create or replace table $db_output.ons_2021_census using delta as
  select area_type_group_code, area_type_code, Age_code as Age, sex_code, ethnic_group_code, observation 
- from $reference_data.ons_2021_census
+ from reference_data.ons_2021_census
  where area_type_group_code = "E38" ---Sub ICB grouping only
- and ons_date = (select max(ons_date) from $reference_data.ons_2021_census where area_type_group_code = "E38")
+ and ons_date = (select max(ons_date) from reference_data.ons_2021_census where area_type_group_code = "E38")
  and ethnic_group_code != -8;
   
  create or replace temporary view vw_ons_2021_census as
@@ -386,9 +386,9 @@ display(df1)
      stp.CCG_Code, stp.CCG_Description as CCG_Name, stp.STP_Code, stp.STP_Description as STP_Name, stp.Region_Code, stp.Region_Description as Region_Name,
      sum(observation) as Population
      from $db_output.ons_2021_census c
-     left join $reference_data.ONS_CHD_GEO_EQUIVALENTS o on c.area_type_code = o.GEOGRAPHY_CODE and area_type_group_code = "E38" and is_current = 1
+     left join reference_data.ONS_CHD_GEO_EQUIVALENTS o on c.area_type_code = o.GEOGRAPHY_CODE and area_type_group_code = "E38" and is_current = 1
      -- workaround as ccg no longer 92a and 70f included
-     left join $reference_data.ONS_CHD_GEO_EQUIVALENTS od on c.area_type_code = od.GEOGRAPHY_CODE and area_type_code in ("E38000246", 'E38000248')
+     left join reference_data.ONS_CHD_GEO_EQUIVALENTS od on c.area_type_code = od.GEOGRAPHY_CODE and area_type_code in ("E38000246", 'E38000248')
      
      left join $db_output.mapethnicgroupcode a on c.ethnic_group_code = a.ethnic_group_code
      left join $db_output.STP_Region_mapping_post_2020 stp on coalesce(o.DH_GEOGRAPHY_CODE, od.DH_GEOGRAPHY_CODE) = stp.ccg_code
@@ -415,7 +415,7 @@ display(df1)
  (select distinct(*) from 
  (select LSOA11, ccg as CCG_Code, stp as STP_Code, RECORD_START_DATE,
  case when RECORD_END_DATE is null then '31-12-9999' else RECORD_END_DATE end as RECORD_END_DATE
- from $reference_data.postcode
+ from reference_data.postcode
  where LEFT(LSOA11, 3) = "E01")))
  where row_num = 1;
   
@@ -430,7 +430,7 @@ display(df1)
 
 # DBTITLE 1,Filter ons_2021_census_lsoa_age_sex
  %sql
- -- $reference_data.ons_2021_census_lsoa_age_sex used instead of $reference_data.ons_2021_census because age_code IS NULL in $reference_data.ons_2021_census where area_type_code like '%E01%' (LSOA)
+ -- reference_data.ons_2021_census_lsoa_age_sex used instead of reference_data.ons_2021_census because age_code IS NULL in reference_data.ons_2021_census where area_type_code like '%E01%' (LSOA)
  -- filters census_lsoa_age_sex table to LSOA data
  -- adds additional age breakdown columns to the table and GenderCode column
   
@@ -504,7 +504,7 @@ display(df1)
    when age_code in (18,19,20,21,22,23) then "65 or over"
  end as imd_split_15_19_65,
  observation as Population
- FROM $reference_data.ons_2021_census_lsoa_age_sex
+ FROM reference_data.ons_2021_census_lsoa_age_sex
  where area_type_code like '%E01%';
   
  select area_type_code, age_code, imd_age_base, imd_decile_age_lower, imd_decile_gender_age_lower, GenderCode, Population
@@ -525,9 +525,9 @@ display(df1)
   
  left join
    (select DECI_IMD, IMD_YEAR, LSOA_CODE_2011, LSOA_NAME_2011
-   from $reference_data.ENGLISH_INDICES_OF_DEP_V02
+   from reference_data.ENGLISH_INDICES_OF_DEP_V02
    where LSOA_CODE_2011 like '%E01%'
-   and IMD_YEAR = (select max(IMD_YEAR) from $reference_data.english_indices_of_dep_v02)) r
+   and IMD_YEAR = (select max(IMD_YEAR) from reference_data.english_indices_of_dep_v02)) r
  on c1.area_type_code = r.LSOA_CODE_2011
   
  left join $db_output.mapIMD m 

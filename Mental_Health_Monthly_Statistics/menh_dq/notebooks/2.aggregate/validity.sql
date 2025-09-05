@@ -19,9 +19,9 @@
  rp_enddate  = dbutils.widgets.get("rp_enddate")
  print(rp_enddate)
  assert rp_enddate
- $reference_data  = dbutils.widgets.get("$reference_data")
- print($reference_data)
- assert $reference_data
+ reference_data  = dbutils.widgets.get("reference_data")
+ print(reference_data)
+ assert reference_data
  month_id  = dbutils.widgets.get("month_id")
  print(month_id)
  assert month_id
@@ -293,7 +293,7 @@ SELECT
                       OPEN_DATE,
                       CLOSE_DATE,
                       ROW_NUMBER() OVER(PARTITION BY CODE ORDER BY IFNULL(CLOSE_DATE, CURRENT_DATE()) DESC) AS RowNUmber
-                  FROM $$reference_data.ods_practice_v02
+                  FROM $reference_data.ods_practice_v02
                  ) o ON m.GMPReg = o.CODE AND o.RowNUmber = 1                                   ----V6_Changes
  WHERE m.UniqMonthID = $month_id
  )
@@ -355,7 +355,7 @@ INSERT INTO $db_output.dq_stg_validity
 
 -- DBTITLE 1,Legal Status Classification Code
  %sql
-
+  
  INSERT INTO $db_output.dq_stg_validity
  SELECT
    --'Mental Health Act Legal Status Classification Code' AS MeasureName,
@@ -367,18 +367,15 @@ INSERT INTO $db_output.dq_stg_validity
          WHEN LegalStatusCode IN ('02', '03', '04', '05', '06', '07', '08', '09', '10', '12', '13', '14', '15', '16', '17', '18', '19', '20', '31', '32', '35', '36', '37', '38') THEN 1
          ELSE 0
        END) AS Valid,
+   0 AS Other,
    SUM(CASE
-         WHEN LegalStatusCode IN ('01') THEN 1
-         ELSE 0
-       END) AS Other,
-   SUM(CASE
-         WHEN LegalStatusCode IN ('98', '99') THEN 1
+         WHEN LegalStatusCode IN ('99') THEN 1 ---Remove '98' from Default AT VODIM changes Apr25
          ELSE 0
        END) AS Default,
    SUM(CASE
          WHEN LegalStatusCode NOT IN ('02', '03', '04', '05', '06', '07', '08', '09', '10', '12', '13', '14', '15', '16', '17', '18', '19', '20', '31', '32', '35', '36', '37', '38')
-         AND LegalStatusCode NOT IN ('01')
-         AND LegalStatusCode NOT IN ('98', '99')
+         --AND LegalStatusCode NOT IN ('01') -- Remove 01 from Other - VODIM changes Apr25
+         AND LegalStatusCode NOT IN ('99') ---Remove '98' from Default AT VODIM changes Apr25
          AND LTRIM(RTRIM(LegalStatusCode)) <> ''
          AND LegalStatusCode IS NOT NULL THEN 1
          ELSE 0
@@ -444,7 +441,7 @@ INSERT INTO $db_output.dq_stg_validity
    ORG_CLOSE_DATE,
    ORG_TYPE_CODE,
    ROW_NUMBER() OVER(PARTITION BY ORG_CODE ORDER BY IFNULL(BUSINESS_END_DATE, CURRENT_DATE()) DESC, IFNULL(ORG_CLOSE_DATE, CURRENT_DATE()) DESC) AS RowNumber
- FROM $$reference_data.org_daily /* $db_output.dq_vw_org_daily */
+ FROM $reference_data.org_daily /* $db_output.dq_vw_org_daily */
  WHERE BUSINESS_START_DATE <= '$rp_enddate'
  AND (BUSINESS_END_DATE >= '$rp_enddate' OR BUSINESS_END_DATE IS NULL) --17/10/2022: updated to >= from > because the previous code was excluding organisations with a BUSINESS_END_DATE of the lat day of the month (BITC-4072)
  ) o ON m.SiteIDOfTreat = o.org_CODE
@@ -526,7 +523,7 @@ INSERT INTO $db_output.dq_stg_validity
    ORG_CLOSE_DATE,
    ORG_TYPE_CODE,
    ROW_NUMBER() OVER(PARTITION BY ORG_CODE ORDER BY IFNULL(BUSINESS_END_DATE, CURRENT_DATE()) DESC, IFNULL(ORG_CLOSE_DATE, CURRENT_DATE()) DESC) AS RowNumber
- FROM $$reference_data.org_daily /* $db_output.dq_vw_org_daily */
+ FROM $reference_data.org_daily /* $db_output.dq_vw_org_daily */
  WHERE BUSINESS_START_DATE <= '$rp_enddate'
  AND (BUSINESS_END_DATE >= '$rp_enddate' OR BUSINESS_END_DATE IS NULL) --17/10/2022: updated to >= from > because the previous code was excluding organisations with a BUSINESS_END_DATE of the lat day of the month (BITC-4072)
  ) o ON m.SiteIDOfWard = o.org_CODE
@@ -594,7 +591,7 @@ INSERT INTO $db_output.dq_stg_validity
 
 -- DBTITLE 1,Primary Reason for Referral (Mental Health)
  %sql
- -- User changed to exclude all records where MHS102OtherServiceType.ReferRejectReason = '02' 
+ -- User note changed to exclude all records where MHS102OtherServiceType.ReferRejectReason = '02' 
 
  INSERT INTO $db_output.dq_stg_validity
  SELECT 
@@ -633,7 +630,7 @@ INSERT INTO $db_output.dq_stg_validity
 -- DBTITLE 1,Care Professional Service or Team Type Associate (Mental Health)
  %sql
 
- /** User updated codes for CareProfServOrTeamTypeAssoc for v4.1 **/
+ /** User note updated codes for CareProfServOrTeamTypeAssoc for v4.1 **/
 
  INSERT INTO $db_output.dq_stg_validity
  SELECT
@@ -680,7 +677,7 @@ INSERT INTO $db_output.dq_stg_validity
  rp_enddate = dbutils.widgets.get("rp_enddate")
  dbm = dbutils.widgets.get("dbm")
  db_output = dbutils.widgets.get("db_output")
- $reference_data = dbutils.widgets.get("$reference_data")
+ reference_data = dbutils.widgets.get("reference_data")
 
  for m in [('12','MHS101Referral',('VPP00','XMD00','X99998','X99999')),('13','MHS201CareContact',('VPP00','XMD00','R9998','89997')),('14','MHS204IndirectActivity',('VPP00','XMD00')),('15','MHS301GroupSession',('VPP00','XMD00','R9998','89997','89999')),('16','MHS512HospSpellCommAssPer',('VPP00','XMD00')),('17','MHS608AnonSelfAssess',('VPP00','XMD00'))]:
    measureid = str(m[0])
@@ -689,7 +686,7 @@ INSERT INTO $db_output.dq_stg_validity
    print(measureid)
    print(dbtable)
    print(defaultcodes)
-   dbutils.notebook.run("validity_commissioner", 0, {'rp_enddate': rp_enddate,  'rp_startdate': rp_startdate, 'month_id': month_id, '$reference_data': $reference_data , 'db_output': db_output, 'dbm':dbm , 'measureid': measureid , 'dbtable': dbtable , 'defaultcodes': defaultcodes}); 
+   dbutils.notebook.run("validity_commissioner", 0, {'rp_enddate': rp_enddate,  'rp_startdate': rp_startdate, 'month_id': month_id, 'reference_data': reference_data , 'db_output': db_output, 'dbm':dbm , 'measureid': measureid , 'dbtable': dbtable , 'defaultcodes': defaultcodes}); 
 
 -- COMMAND ----------
 
@@ -701,16 +698,16 @@ INSERT INTO $db_output.dq_stg_validity
  # rp_enddate = dbutils.widgets.get("rp_enddate")
  # dbm = dbutils.widgets.get("dbm")
  # db_output = dbutils.widgets.get("db_output")
- # $reference_data = dbutils.widgets.get("$reference_data")
+ # reference_data = dbutils.widgets.get("reference_data")
 
- # ## User: this should probably be changed to pass parameters via a loop into the validity_commissioner notebook - currently rather over-simplified...
+ # ## User note: this should probably be changed to pass parameters via a loop into the validity_commissioner notebook - currently rather over-simplified...
 
- # params12 = {'rp_enddate' : rp_enddate, 'rp_startdate' : rp_startdate, 'month_id' : month_id, '$reference_data' : $reference_data, 'db_output' : db_output, 'dbm' : dbm, "MeasureId": 12, "DbTable": "MHS101Referral"}
- # params13 = {'rp_enddate' : rp_enddate, 'rp_startdate' : rp_startdate, 'month_id' : month_id, '$reference_data' : $reference_data, 'db_output' : db_output, 'dbm' : dbm, "MeasureId": 13, "DbTable": "MHS201CareContact"}
- # params14 = {'rp_enddate' : rp_enddate, 'rp_startdate' : rp_startdate, 'month_id' : month_id, '$reference_data' : $reference_data, 'db_output' : db_output, 'dbm' : dbm, "MeasureId": 14, "DbTable": "MHS204IndirectActivity"}         
- # params15 = {'rp_enddate' : rp_enddate, 'rp_startdate' : rp_startdate, 'month_id' : month_id, '$reference_data' : $reference_data, 'db_output' : db_output, 'dbm' : dbm, "MeasureId": 15, "DbTable": "MHS301GroupSession"}
- # params16 = {'rp_enddate' : rp_enddate, 'rp_startdate' : rp_startdate, 'month_id' : month_id, '$reference_data' : $reference_data, 'db_output' : db_output, 'dbm' : dbm, "MeasureId": 16, "DbTable": "MHS512HospSpellCommAssPer"}    
- # params17 = {'rp_enddate' : rp_enddate, 'rp_startdate' : rp_startdate, 'month_id' : month_id, '$reference_data' : $reference_data, 'db_output' : db_output, 'dbm' : dbm, "MeasureId": 17, "DbTable": "MHS608AnonSelfAssess"}
+ # params12 = {'rp_enddate' : rp_enddate, 'rp_startdate' : rp_startdate, 'month_id' : month_id, 'reference_data' : reference_data, 'db_output' : db_output, 'dbm' : dbm, "MeasureId": 12, "DbTable": "MHS101Referral"}
+ # params13 = {'rp_enddate' : rp_enddate, 'rp_startdate' : rp_startdate, 'month_id' : month_id, 'reference_data' : reference_data, 'db_output' : db_output, 'dbm' : dbm, "MeasureId": 13, "DbTable": "MHS201CareContact"}
+ # params14 = {'rp_enddate' : rp_enddate, 'rp_startdate' : rp_startdate, 'month_id' : month_id, 'reference_data' : reference_data, 'db_output' : db_output, 'dbm' : dbm, "MeasureId": 14, "DbTable": "MHS204IndirectActivity"}         
+ # params15 = {'rp_enddate' : rp_enddate, 'rp_startdate' : rp_startdate, 'month_id' : month_id, 'reference_data' : reference_data, 'db_output' : db_output, 'dbm' : dbm, "MeasureId": 15, "DbTable": "MHS301GroupSession"}
+ # params16 = {'rp_enddate' : rp_enddate, 'rp_startdate' : rp_startdate, 'month_id' : month_id, 'reference_data' : reference_data, 'db_output' : db_output, 'dbm' : dbm, "MeasureId": 16, "DbTable": "MHS512HospSpellCommAssPer"}    
+ # params17 = {'rp_enddate' : rp_enddate, 'rp_startdate' : rp_startdate, 'month_id' : month_id, 'reference_data' : reference_data, 'db_output' : db_output, 'dbm' : dbm, "MeasureId": 17, "DbTable": "MHS608AnonSelfAssess"}
 
  # print(params12)
  # print(params13)
@@ -723,7 +720,7 @@ INSERT INTO $db_output.dq_stg_validity
  # # month_id = 1417
  # # rp_startdate = "2018-04-01"
  # # rp_enddate = "2018-04-30"
- # # dbm = "$mhsds"
+ # # dbm = "mhsds_database"
 
  # # This calculates the 6 DQ measures to do with "Organisation Identifier (Of Commissioner)", ie MHS-DQM12 - MHS-DQM17. 
  # dbutils.notebook.run("validity_commissioner", 0, params12)
@@ -743,7 +740,7 @@ INSERT INTO $db_output.dq_stg_validity
  rp_enddate = dbutils.widgets.get("rp_enddate")
  dbm = dbutils.widgets.get("dbm")
  db_output = dbutils.widgets.get("db_output")
- $reference_data = dbutils.widgets.get("$reference_data")
+ reference_data = dbutils.widgets.get("reference_data")
 
  for m in [('57','MHS101Referral',('VPP00','XMD00','X99998','X99999')),('58','MHS201CareContact',('VPP00','XMD00','R9998','89997')),('59','MHS204IndirectActivity',('VPP00','XMD00')),('60','MHS301GroupSession',('VPP00','XMD00','R9998','89997','89999')),('61','MHS512HospSpellCommAssPer',('VPP00','XMD00')),('62','MHS517SMHExceptionalPackOfCare',('VPP00','XMD00')),('63','MHS608AnonSelfAssess',('VPP00','XMD00'))]:
    measureid = str(m[0])
@@ -753,22 +750,22 @@ INSERT INTO $db_output.dq_stg_validity
    print(dbtable)
    print(defaultcodes)
    #NP-Feb-22- I couldn't get the code to run when passing a param to dbutils.notebook.run.  But it worked like this!
-   dbutils.notebook.run("validity_responsible_commissioner", 0, {'rp_enddate': rp_enddate,  'rp_startdate': rp_startdate, 'month_id': month_id, '$reference_data': $reference_data , 'db_output': db_output, 'dbm':dbm , 'measureid': measureid , 'dbtable': dbtable , 'defaultcodes': defaultcodes}); 
+   dbutils.notebook.run("validity_responsible_commissioner", 0, {'rp_enddate': rp_enddate,  'rp_startdate': rp_startdate, 'month_id': month_id, 'reference_data': reference_data , 'db_output': db_output, 'dbm':dbm , 'measureid': measureid , 'dbtable': dbtable , 'defaultcodes': defaultcodes}); 
   
 
 -- COMMAND ----------
 
 -- DBTITLE 1,Service Or Team Type Referred To (Mental Health)
  %sql
-
+  
  ----V6_Changes (ServiceTeamType in new table MHS902ServiceTeamDetails)
-
+  
  INSERT INTO $db_output.dq_stg_validity
  SELECT
    --'Service Or Team Type Referred To (Mental Health)' AS MeasureName,
    3 as DimensionTypeId,
    18 as MeasureId,
-   OrgIDProv,
+   ref.OrgIDProv,
    COUNT(*) AS Denominator,
    
    SUM(CASE WHEN vc.Measure is not null THEN 1
@@ -776,34 +773,35 @@ INSERT INTO $db_output.dq_stg_validity
          ELSE 0
        END) AS Valid,
    SUM(CASE
-         WHEN upper(ServTeamTypeMH) IN ('Z01', 'Z02') THEN 1
+         WHEN upper(ref.ServTeamTypeMH) IN ('Z01', 'Z02') THEN 1
          ELSE 0
        END) AS Other,
    0 AS Default,
    SUM(CASE
          WHEN vc.Measure is null
-         AND upper(ServTeamTypeMH) NOT IN ('Z01', 'Z02')
-         AND LTRIM(RTRIM(ServTeamTypeMH)) <> ''
-         AND ServTeamTypeMH IS NOT NULL THEN 1
+         AND upper(ref.ServTeamTypeMH) NOT IN ('Z01', 'Z02')
+         AND LTRIM(RTRIM(ref.ServTeamTypeMH)) <> ''
+         AND ref.ServTeamTypeMH IS NOT NULL THEN 1
          ELSE 0
        END) AS Invalid,
    SUM(CASE
-         WHEN LTRIM(RTRIM(ServTeamTypeMH)) = ''
-         OR ServTeamTypeMH IS NULL THEN 1
+         WHEN LTRIM(RTRIM(ref.ServTeamTypeMH)) = ''
+         OR ref.ServTeamTypeMH IS NULL THEN 1
          ELSE 0
        END) AS Missing
  FROM $db_output.ServiceTeamType as ref                  ----V6_Changes (also to make sure it works for V5 data or before)
  LEFT JOIN $db_output.validcodes as vc
  ON vc.tablename = 'MHS902ServiceTeamDetails' and vc.field = 'ServTeamTypeMH' and vc.Measure = 'MHS-DQM18' and vc.type = 'VALID' and upper(ref.ServTeamTypeMH) = vc.ValidValue and $month_id >= vc.FirstMonth and (vc.LastMonth is null or $month_id <= vc.LastMonth)
- WHERE UniqMonthID = $month_id
- GROUP BY OrgIDProv;
+ LEFT JOIN $dbm.MHS501HospProvSpell h on ref.uniqservreqid = h.uniqservreqid and ref.uniqmonthid = h.uniqmonthid
+ WHERE ref.UniqMonthID = $month_id AND h.UniqServReqID is null ---AT Apr-25 VODIM Changes to remove inpatient spells
+ GROUP BY ref.OrgIDProv;
 
 -- COMMAND ----------
 
 -- DBTITLE 1,Primary Reason for Referral (Mental Health) (Referral received on or after 1st Jan 2016)- V6_data
  %sql
 
- --User: changed to exclude all records where MHS102ServiceTypeReferredTo.ReferRejectReason = '02'
+ --User note: changed to exclude all records where MHS102ServiceTypeReferredTo.ReferRejectReason = '02'
 
  INSERT INTO $db_output.dq_stg_validity
  SELECT
@@ -848,7 +846,7 @@ INSERT INTO $db_output.dq_stg_validity
 -- DBTITLE 1,Primary Reason for Referral (Mental Health) (Referral received on or after 1st Jan 2016)- V5_data (data prior to V6)
  %sql
 
- --User: changed to exclude all records where MHS102ServiceTypeReferredTo.ReferRejectReason = '02'
+ --User note: changed to exclude all records where MHS102ServiceTypeReferredTo.ReferRejectReason = '02'
 
  INSERT INTO $db_output.dq_stg_validity
  SELECT
@@ -1109,7 +1107,7 @@ INSERT INTO $db_output.dq_stg_validity
 
 -- DBTITLE 1,Activity location type code
  %sql
-
+  
  INSERT INTO $db_output.dq_stg_validity
  SELECT
    --'Activity location type code' AS MeasureName,
@@ -1118,7 +1116,7 @@ INSERT INTO $db_output.dq_stg_validity
    OrgIDProv,
    COUNT(*) AS Denominator,
    SUM(CASE
-         WHEN upper(ActLocTypeCode) IN ('A01', 'A02', 'A03', 'A04', 'B01', 'B02', 'C01', 'C02', 'C03', 'D01', 'D02', 'D03', 'E01', 'E02', 'E03', 'E04', 'E99', 'F01', 'G01', 'G02', 'G03', 'G04', 'H01', 'J01', 'K01', 'K02', 'L01', 'L02', 'L03', 'L04', 'L05', 'L06', 'L99', 'M01', 'M02', 'M03', 'M04', 'M05', 'N01', 'N02', 'N03', 'N04', 'N05') THEN 1
+         WHEN upper(ActLocTypeCode) IN ('A01', 'A02', 'A03', 'A04', 'B01', 'B02', 'C01', 'C02', 'C03', 'D01', 'D02', 'D03', 'E01', 'E02', 'E03', 'E04', 'E99', 'F01', 'G01', 'G02', 'G03', 'G04', 'H01', 'J01', 'K01', 'K02', 'L01', 'L02', 'L03', 'L04', 'L05', 'L06', 'L99', 'M01', 'M02', 'M03', 'M04', 'M05','M06','M07', 'N01', 'N02', 'N03', 'N04', 'N05') THEN 1
          ELSE 0
        END) AS Valid,
    SUM(CASE
@@ -1127,7 +1125,7 @@ INSERT INTO $db_output.dq_stg_validity
        END) AS Other,
    0 AS Default,
    SUM(CASE
-         WHEN upper(ActLocTypeCode) NOT IN ('A01', 'A02', 'A03', 'A04', 'B01', 'B02', 'C01', 'C02', 'C03', 'D01', 'D02', 'D03', 'E01', 'E02', 'E03', 'E04', 'E99', 'F01', 'G01', 'G02', 'G03', 'G04', 'H01', 'J01', 'K01', 'K02', 'L01', 'L02', 'L03', 'L04', 'L05', 'L06', 'L99', 'M01', 'M02', 'M03', 'M04', 'M05', 'N01', 'N02', 'N03', 'N04', 'N05')
+         WHEN upper(ActLocTypeCode) NOT IN ('A01', 'A02', 'A03', 'A04', 'B01', 'B02', 'C01', 'C02', 'C03', 'D01', 'D02', 'D03', 'E01', 'E02', 'E03', 'E04', 'E99', 'F01', 'G01', 'G02', 'G03', 'G04', 'H01', 'J01', 'K01', 'K02', 'L01', 'L02', 'L03', 'L04', 'L05', 'L06', 'L99', 'M01', 'M02', 'M03', 'M04', 'M05','M06','M07', 'N01', 'N02', 'N03', 'N04', 'N05')
          AND upper(ActLocTypeCode) NOT IN ('X01')
          AND LTRIM(RTRIM(ActLocTypeCode)) <> ''
          AND ActLocTypeCode IS NOT NULL THEN 1
@@ -1274,7 +1272,7 @@ INSERT INTO $db_output.dq_stg_validity
 
 -- DBTITLE 1,Delayed discharge attributable to (V6 Data onwards)
  %sql
-
+  
  INSERT INTO $db_output.dq_stg_validity
  SELECT
    --'Delayed discharge attributable to' AS MeasureName,
@@ -1546,9 +1544,9 @@ INSERT INTO $db_output.dq_stg_validity
 
 -- COMMAND ----------
 
--- DBTITLE 1,Referral closure reason (V5 data and prior)
+-- DBTITLE 1,Referral closure reason (using ServiceTeamType for all records)
  %sql
-
+  
  INSERT INTO $db_output.dq_stg_validity
  SELECT
    --'Referral closure reason' AS MeasureName,
@@ -1574,8 +1572,8 @@ INSERT INTO $db_output.dq_stg_validity
          ELSE 0
        END) AS Missing
  FROM $db_output.ServiceTeamType
- WHERE UniqMonthID = $month_id and ReferClosureDate is not null
- GROUP BY OrgIDProv;  
+ WHERE UniqMonthID = $month_id AND ReferClosureDate IS NOT null AND ReferRejectionDate IS NULL
+ GROUP BY OrgIDProv;
 
 -- COMMAND ----------
 
@@ -1719,7 +1717,7 @@ INSERT INTO $db_output.dq_stg_validity
    ,sum(Case when disch.OrgIDRespLADelayDisch is not null and org.org_code is null then 1 else 0 end) AS Invalid
    ,sum(Case when disch.OrgIDRespLADelayDisch is null then 1 else 0 end) AS Missing
  FROM $dbm.MHS504delayeddischarge disch
- left outer join $$reference_data.org_daily org
+ left outer join $reference_data.org_daily org
  on disch.OrgIDRespLADelayDisch = org.org_code 
  and (BUSINESS_END_DATE >= add_months('$rp_enddate', 1) OR ISNULL(BUSINESS_END_DATE))
                  AND BUSINESS_START_DATE <= add_months('$rp_enddate', 1) 
@@ -1728,8 +1726,8 @@ INSERT INTO $db_output.dq_stg_validity
                  AND ORG_OPEN_DATE <= '$rp_enddate'
  where disch.UniqMonthID = $month_id
  and disch.UniqMonthID <= 1488
+ and (AttribToIndic IS NULL OR AttribToIndic in ('05','06')) ---AT Apr25 VODIM Changes
  group by disch.OrgIdProv
-
 
 -- COMMAND ----------
 
@@ -1747,7 +1745,7 @@ INSERT INTO $db_output.dq_stg_validity
    ,sum(Case when disch.OrgIDRespLAClinReadyforDisch is not null and org.org_code is null then 1 else 0 end) AS Invalid
    ,sum(Case when disch.OrgIDRespLAClinReadyforDisch is null then 1 else 0 end) AS Missing
  FROM $dbm.MHS518ClinReadyforDischarge disch
- left outer join $$reference_data.org_daily org
+ left outer join $reference_data.org_daily org
  on disch.OrgIDRespLAClinReadyforDisch = org.org_code 
  and (BUSINESS_END_DATE >= add_months('$rp_enddate', 1) OR ISNULL(BUSINESS_END_DATE))
                  AND BUSINESS_START_DATE <= add_months('$rp_enddate', 1) 
@@ -1756,6 +1754,7 @@ INSERT INTO $db_output.dq_stg_validity
                  AND ORG_OPEN_DATE <= '$rp_enddate'
  where disch.UniqMonthID = $month_id
  and disch.UniqMonthID > 1488
+ and (AttribToIndic IS NULL OR AttribToIndic in ('05','06')) ---AT Apr25 VODIM Changes
  group by disch.OrgIdProv
 
 -- COMMAND ----------

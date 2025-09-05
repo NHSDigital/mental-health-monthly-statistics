@@ -114,29 +114,29 @@ db = dbutils.widgets.get("db")
 assert db
 
 # this is needed to enable run_notebooks to be run both from run_tests during promotion and directly run
-# needs to use $mhsds_db for both but the parameter is fed in from run_tests as the original mhsds_db :o(
+# needs to use mhsds_database for both but the parameter is fed in from run_tests as the original mhsds_database :o(
 
 # get the original parameter value (will work in all situations)
 try:
-  db_source = dbutils.widgets.get("mhsds_db")
+  db_source = dbutils.widgets.get("mhsds_database")
 except:
-  print('mhsds_db is not defined')
+  print('mhsds_database is not defined')
 
-# get the new parameter value (will only work in direct run, and will overwrite value for mhsds_db)
+# get the new parameter value (will only work in direct run, and will overwrite value for mhsds_database)
 try:
-  db_source = dbutils.widgets.get("$mhsds_db")
+  db_source = dbutils.widgets.get("mhsds_database")
 except:
-  print('$mhsds_db is not defined')
+  print('mhsds_database is not defined')
   
 try:
-  db_source = dbutils.widgets.get("$mhsds_db")
+  db_source = dbutils.widgets.get("mhsds_database")
 except:
-  print('$mhsds_db is not defined')
+  print('mhsds_database is not defined')
   
 
 # the above replaces this simpler situation!  
-# dbutils.widgets.text("mhsds_db", "", "Input database")
-# db_source = dbutils.widgets.get("mhsds_db")
+# dbutils.widgets.text("mhsds_database", "", "Input database")
+# db_source = dbutils.widgets.get("mhsds_database")
 # assert db_source
 dbutils.widgets.text("reference_data","reference_data","Source Ref Database")
 reference_data = dbutils.widgets.get("reference_data")

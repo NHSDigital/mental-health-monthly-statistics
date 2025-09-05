@@ -154,6 +154,24 @@ upper_eth_bd = {
     F.lit("NONE").alias("secondary_level_desc"),     
   ],
 }
+upper_eth_mean_dev_bd = {
+    "breakdown_name": "England; Mean Deviation of Upper Ethnicity",
+    "level_tier": 1,
+    "level_tables": ["eng_desc"],
+    "primary_level": F.col("UpperEthnicity"),
+    "primary_level_desc": F.col("UpperEthnicity"),
+    "secondary_level": F.lit("NONE"),
+    "secondary_level_desc": F.lit("NONE"),
+    "level_list" : [],
+    "lookup_col" : ["England"],
+    "level_fields" : [
+    F.lit("England; Mean Deviation of Upper Ethnicity").alias("breakdown"),
+    F.col("England").alias("primary_level"),
+    F.col("England").alias("primary_level_desc"),
+    F.lit("NONE").alias("secondary_level"), 
+    F.lit("NONE").alias("secondary_level_desc"),     
+  ],
+}
 wnw_eth_bd = {
     "breakdown_name": "England; Ethnicity (White British/Non-White British)",
     "level_tier": 0,
@@ -168,6 +186,24 @@ wnw_eth_bd = {
     F.lit("England; Ethnicity (White British/Non-White British)").alias("breakdown"),
     F.col("WNWEthnicity").alias("primary_level"),
     F.col("WNWEthnicity").alias("primary_level_desc"),
+    F.lit("NONE").alias("secondary_level"), 
+    F.lit("NONE").alias("secondary_level_desc"),     
+  ],
+}
+wnw_eth_stan_rates_diff_bd = {
+    "breakdown_name": "England; Ethnicity - Standardised Rate Difference from White British",
+    "level_tier": 1,
+    "level_tables": ["eng_desc"],
+    "primary_level": F.col("WNW_Ethnicity"),
+    "primary_level_desc": F.col("WNW_Ethnicity"),
+    "secondary_level": F.lit("NONE"),
+    "secondary_level_desc": F.lit("NONE"),
+    "level_list" : [],
+    "lookup_col" : ["England"],
+    "level_fields" : [
+    F.lit("England; Ethnicity - Standardised Rate Difference from White British").alias("breakdown"),
+    F.col("England").alias("primary_level"),
+    F.col("England").alias("primary_level_desc"),
     F.lit("NONE").alias("secondary_level"), 
     F.lit("NONE").alias("secondary_level_desc"),     
   ],
@@ -188,6 +224,60 @@ imd_decile_bd = {
     F.col("IMD_Decile").alias("primary_level_desc"),
     F.lit("NONE").alias("secondary_level"), 
     F.lit("NONE").alias("secondary_level_desc")
+  ],
+}
+imd_quintile_bd = {
+    "breakdown_name": "England; IMD Quintile",
+    "level_tier": 0,
+    "level_tables": ["imd_desc"],
+    "primary_level": F.col("IMD_Quintile"),
+    "primary_level_desc": F.col("IMD_Quintile"),
+    "secondary_level": F.lit("NONE"),
+    "secondary_level_desc": F.lit("NONE"),
+    "level_list" : [],
+    "lookup_col" : ["IMD_Quintile"],
+    "level_fields" : [
+    F.lit("England; IMD Quintile").alias("breakdown"),
+    F.col("IMD_Quintile").alias("primary_level"),
+    F.col("IMD_Quintile").alias("primary_level_desc"),
+    F.lit("NONE").alias("secondary_level"), 
+    F.lit("NONE").alias("secondary_level_desc")
+  ],
+}
+imd_core20_bd = {
+    "breakdown_name": "England; IMD Core20",
+    "level_tier": 0,
+    "level_tables": ["imd_desc"],
+    "primary_level": F.col("IMD_Core20"),
+    "primary_level_desc": F.col("IMD_Core20"),
+    "secondary_level": F.lit("NONE"),
+    "secondary_level_desc": F.lit("NONE"),
+    "level_list" : [],
+    "lookup_col" : ["IMD_Core20"],
+    "level_fields" : [
+    F.lit("England; IMD Core20").alias("breakdown"),
+    F.col("IMD_Core20").alias("primary_level"),
+    F.col("IMD_Core20").alias("primary_level_desc"),
+    F.lit("NONE").alias("secondary_level"), 
+    F.lit("NONE").alias("secondary_level_desc")
+  ],
+}
+imd_core20_stan_rates_diff_bd = {
+    "breakdown_name": "England; IMD - Standardised Rate Difference from Most Deprived Quintile",
+    "level_tier": 1,
+    "level_tables": ["eng_desc"],
+    "primary_level": F.col("IMD_Core20"),
+    "primary_level_desc": F.col("IMD_Core20"),
+    "secondary_level": F.lit("NONE"),
+    "secondary_level_desc": F.lit("NONE"),
+    "level_list" : [],
+    "lookup_col" : ["England"],
+    "level_fields" : [
+    F.lit("England; IMD - Standardised Rate Difference from Most Deprived Quintile").alias("breakdown"),
+    F.col("England").alias("primary_level"),
+    F.col("England").alias("primary_level_desc"),
+    F.lit("NONE").alias("secondary_level"), 
+    F.lit("NONE").alias("secondary_level_desc"),     
   ],
 }
 reason_for_ref_bd = {
@@ -417,6 +507,8 @@ sending_prov_lower_eth_bd = cross_dict([sending_prov_bd, lower_eth_bd])
 sending_prov_upper_eth_bd = cross_dict([sending_prov_bd, upper_eth_bd])
 sending_prov_gender_bd = cross_dict([sending_prov_bd, gender_bd])
 sending_prov_imd_decile_bd = cross_dict([sending_prov_bd, imd_decile_bd])
+sending_prov_autism_status_bd = cross_dict([sending_prov_bd, autism_status_bd]) ##------BITC-6682 added breakdowns
+sending_prov_ld_status_bd = cross_dict([sending_prov_bd, ld_status_bd]) ##------BITC-6682 added breakdowns
 sending_prov_reason_for_ref_bd = cross_dict([sending_prov_bd, reason_for_ref_bd])
 sending_prov_bed_type_bd = cross_dict([sending_prov_bd, bed_type_bd])
 sending_prov_start_bed_type_bd = cross_dict([sending_prov_bd, start_bed_type_bd])
@@ -429,6 +521,8 @@ receiving_prov_lower_eth_bd = cross_dict([receiving_prov_bd, lower_eth_bd])
 receiving_prov_upper_eth_bd = cross_dict([receiving_prov_bd, upper_eth_bd])
 receiving_prov_gender_bd = cross_dict([receiving_prov_bd, gender_bd])
 receiving_prov_imd_decile_bd = cross_dict([receiving_prov_bd, imd_decile_bd])
+receiving_prov_ld_status_bd = cross_dict([receiving_prov_bd, ld_status_bd]) ##------BITC-6682 added breakdowns
+receiving_prov_autism_status_bd = cross_dict([receiving_prov_bd, autism_status_bd]) ##------BITC-6682 added breakdowns
 receiving_prov_reason_for_ref_bd = cross_dict([receiving_prov_bd, reason_for_ref_bd])
 receiving_prov_bed_type_bd = cross_dict([receiving_prov_bd, bed_type_bd])
 receiving_prov_start_bed_type_bd = cross_dict([receiving_prov_bd, start_bed_type_bd])
@@ -573,6 +667,60 @@ stp_prac_res_bd = {
     F.lit("NONE").alias("secondary_level_desc")
     ],
 }
+stp_prac_res_upper_eth_mean_dev_bd = {
+    "breakdown_name": "STP of GP Practice or Residence; Mean Deviation of Upper Ethnicity",
+    "level_tier": 1,
+    "level_tables": ["bbrb_stp_mapping"],
+    "primary_level": F.col("UpperEthnicity"),
+    "primary_level_desc": F.col("UpperEthnicity"),
+    "secondary_level": F.col("STP_Code"),
+    "secondary_level_desc": F.col("STP_Name"),
+    "level_list" : [],
+    "lookup_col" : ["STP_CODE", "STP_NAME"],
+    "level_fields" : [
+    F.lit("STP of GP Practice or Residence; Mean Deviation of Upper Ethnicity").alias("breakdown"),
+    F.col("STP_CODE").alias("primary_level"),
+    F.col("STP_NAME").alias("primary_level_desc"),
+    F.lit("NONE").alias("secondary_level"), 
+    F.lit("NONE").alias("secondary_level_desc"),     
+  ],
+}
+stp_prac_res_wnw_eth_stan_rates_diff_bd = {
+    "breakdown_name": "STP of GP Practice or Residence; Ethnicity - Standardised Rate Difference from White British",
+    "level_tier": 1,
+    "level_tables": ["bbrb_stp_mapping"],
+    "primary_level": F.col("WNW_Ethnicity"),
+    "primary_level_desc": F.col("WNW_Ethnicity"),
+    "secondary_level": F.col("STP_Code"),
+    "secondary_level_desc": F.col("STP_Name"),
+    "level_list" : [],
+    "lookup_col" : ["STP_CODE", "STP_NAME"],
+    "level_fields" : [
+    F.lit("STP of GP Practice or Residence; Ethnicity - Standardised Rate Difference from White British").alias("breakdown"),
+    F.col("STP_CODE").alias("primary_level"),
+    F.col("STP_NAME").alias("primary_level_desc"),
+    F.lit("NONE").alias("secondary_level"), 
+    F.lit("NONE").alias("secondary_level_desc"),     
+  ],
+}
+stp_prac_res_imd_core20_stan_rates_diff_bd = {
+    "breakdown_name": "STP of GP Practice or Residence; IMD - Standardised Rate Difference from Most Deprived Quintile",
+    "level_tier": 1,
+    "level_tables": ["bbrb_stp_mapping"],
+    "primary_level": F.col("IMD_Core20"),
+    "primary_level_desc": F.col("IMD_Core20"),
+    "secondary_level": F.col("STP_Code"),
+    "secondary_level_desc": F.col("STP_Name"),
+    "level_list" : [],
+    "lookup_col" : ["STP_CODE", "STP_NAME"],
+    "level_fields" : [
+    F.lit("STP of GP Practice or Residence; IMD - Standardised Rate Difference from Most Deprived Quintile").alias("breakdown"),
+    F.col("STP_CODE").alias("primary_level"),
+    F.col("STP_NAME").alias("primary_level_desc"),
+    F.lit("NONE").alias("secondary_level"), 
+    F.lit("NONE").alias("secondary_level_desc"),     
+  ],
+}
  
 stp_res_wnw_eth_bd = cross_dict([stp_res_bd, wnw_eth_bd])
 stp_res_age_band_oaps_bd = cross_dict([stp_res_bd, age_band_oaps_bd])
@@ -591,17 +739,21 @@ stp_prac_res_wnw_eth_bd = cross_dict([stp_prac_res_bd, wnw_eth_bd])
 stp_prac_res_age_band_oaps_bd = cross_dict([stp_prac_res_bd, age_band_oaps_bd])
 stp_prac_res_upper_eth_bd = cross_dict([stp_prac_res_bd, upper_eth_bd])
 stp_prac_res_lower_eth_bd = cross_dict([stp_prac_res_bd, lower_eth_bd])
+stp_prac_res_wnw_eth_bd = cross_dict([stp_prac_res_bd, wnw_eth_bd])
 stp_prac_res_gender_bd = cross_dict([stp_prac_res_bd, gender_bd])
 stp_prac_res_imd_decile_bd = cross_dict([stp_prac_res_bd, imd_decile_bd])
+stp_prac_res_imd_quintile_bd = cross_dict([stp_prac_res_bd, imd_quintile_bd])
+stp_prac_res_imd_core20_bd = cross_dict([stp_prac_res_bd, imd_core20_bd])
 stp_prac_res_reason_for_ref_bd = cross_dict([stp_prac_res_bd, reason_for_ref_bd])
 stp_prac_res_bed_type_bd = cross_dict([stp_prac_res_bd, bed_type_bd])
 stp_prac_res_start_bed_type_bd = cross_dict([stp_prac_res_bd, start_bed_type_bd])
 stp_prac_res_end_bed_type_bd = cross_dict([stp_prac_res_bd, end_bed_type_bd])
 stp_prac_res_active_bed_type_bd = cross_dict([stp_prac_res_bd, active_bed_type_bd])
 stp_prac_res_receiving_prov_bd = cross_dict([stp_prac_res_bd, receiving_prov_bd])
-
+ 
 #MHA_Measures
 stp_prac_res_age_band_mha_bd = cross_dict([stp_prac_res_bd, age_band_mha_bd])
+stp_prac_res_age_band_cyp_bd = cross_dict([stp_prac_res_bd, age_band_cyp_bd])
 stp_prac_res_age_group_higher_bd = cross_dict([stp_prac_res_bd, age_group_higher_bd])
 stp_prac_res_upper_eth_bd = cross_dict([stp_prac_res_bd, upper_eth_bd])
 stp_prac_res_autism_status_bd = cross_dict([stp_prac_res_bd, autism_status_bd])
@@ -628,19 +780,77 @@ comm_region_bd = {
     F.lit("NONE").alias("secondary_level_desc")
     ],
 }
+comm_region_upper_eth_mean_dev_bd = {
+    "breakdown_name": "Commissioning Region; Mean Deviation of Upper Ethnicity",
+    "level_tier": 1,
+    "level_tables": ["bbrb_stp_mapping"],
+    "primary_level": F.col("UpperEthnicity"),
+    "primary_level_desc": F.col("UpperEthnicity"),
+    "secondary_level": F.col("Region_Code"),
+    "secondary_level_desc": F.col("Region_Name"),
+    "level_list" : [],
+    "lookup_col" : ["REGION_CODE", "REGION_NAME"],
+    "level_fields" : [
+    F.lit("Commissioning Region; Mean Deviation of Upper Ethnicity").alias("breakdown"),
+    F.col("REGION_CODE").alias("primary_level"),
+    F.col("REGION_NAME").alias("primary_level_desc"),
+    F.lit("NONE").alias("secondary_level"), 
+    F.lit("NONE").alias("secondary_level_desc"),     
+  ],
+} 
+comm_region_wnw_eth_stan_rates_diff_bd = {
+    "breakdown_name": "Commissioning Region; Ethnicity - Standardised Rate Difference from White British",
+    "level_tier": 1,
+    "level_tables": ["bbrb_stp_mapping"],
+    "primary_level": F.col("WNW_Ethnicity"),
+    "primary_level_desc": F.col("WNW_Ethnicity"),
+    "secondary_level": F.col("Region_Code"),
+    "secondary_level_desc": F.col("Region_Name"),
+    "level_list" : [],
+    "lookup_col" : ["REGION_CODE", "REGION_NAME"],
+    "level_fields" : [
+    F.lit("Commissioning Region; Ethnicity - Standardised Rate Difference from White British").alias("breakdown"),
+    F.col("REGION_CODE").alias("primary_level"),
+    F.col("REGION_NAME").alias("primary_level_desc"),
+    F.lit("NONE").alias("secondary_level"), 
+    F.lit("NONE").alias("secondary_level_desc"),     
+  ],
+}
+comm_region_imd_core20_stan_rates_diff_bd = {
+    "breakdown_name": "Commissioning Region; IMD - Standardised Rate Difference from Most Deprived Quintile",
+    "level_tier": 1,
+    "level_tables": ["bbrb_stp_mapping"],
+    "primary_level": F.col("IMD_Core20"),
+    "primary_level_desc": F.col("IMD_Core20"),
+    "secondary_level": F.col("Region_Code"),
+    "secondary_level_desc": F.col("Region_Name"),
+    "level_list" : [],
+    "lookup_col" : ["REGION_CODE", "REGION_NAME"],
+    "level_fields" : [
+    F.lit("Commissioning Region; IMD - Standardised Rate Difference from Most Deprived Quintile").alias("breakdown"),
+    F.col("REGION_CODE").alias("primary_level"),
+    F.col("REGION_NAME").alias("primary_level_desc"),
+    F.lit("NONE").alias("secondary_level"), 
+    F.lit("NONE").alias("secondary_level_desc"),     
+  ],
+}
  
 comm_region_age_band_oaps_bd = cross_dict([comm_region_bd, age_band_oaps_bd])
+comm_region_age_band_cyp_bd = cross_dict([comm_region_bd, age_band_cyp_bd])
 comm_region_lower_eth_bd = cross_dict([comm_region_bd, lower_eth_bd])
 comm_region_upper_eth_bd = cross_dict([comm_region_bd, upper_eth_bd])
+comm_region_wnw_eth_bd = cross_dict([comm_region_bd, wnw_eth_bd])
 comm_region_gender_bd = cross_dict([comm_region_bd, gender_bd])
 comm_region_imd_decile_bd = cross_dict([comm_region_bd, imd_decile_bd])
+comm_region_imd_quintile_bd = cross_dict([comm_region_bd, imd_quintile_bd])
+comm_region_imd_core20_bd = cross_dict([comm_region_bd, imd_core20_bd])
 comm_region_reason_for_ref_bd = cross_dict([comm_region_bd, reason_for_ref_bd])
 comm_region_bed_type_bd = cross_dict([comm_region_bd, bed_type_bd])
 comm_region_start_bed_type_bd = cross_dict([comm_region_bd, start_bed_type_bd])
 comm_region_end_bed_type_bd = cross_dict([comm_region_bd, end_bed_type_bd])
 comm_region_active_bed_type_bd = cross_dict([comm_region_bd, active_bed_type_bd])
 comm_region_receiving_prov_bd = cross_dict([comm_region_bd, receiving_prov_bd])
-
+ 
 #MHA_Measures
 comm_region_age_band_mha_bd = cross_dict([comm_region_bd, age_band_mha_bd])
 comm_region_age_group_higher_bd = cross_dict([comm_region_bd, age_group_higher_bd])
@@ -732,6 +942,15 @@ upper_eth_pop_bd = {
   "secondary_level_desc": F.lit("NONE"),
   "aggregate_field": "SUM(POPULATION_COUNT)"
 }
+wnw_eth_pop_bd = {
+  "breakdown_name": "England; Ethnicity (White British/Non-White British)", 
+  "source_table": "eth_pop", 
+  "primary_level": F.col("WNWEthnicity"), 
+  "primary_level_desc": F.col("WNWEthnicity"), 
+  "secondary_level": F.lit("NONE"), 
+  "secondary_level_desc": F.lit("NONE"),
+  "aggregate_field": "SUM(POPULATION_COUNT)"
+}
 imd_decile_pop_bd = {
   "breakdown_name": "England; IMD Decile", 
   "source_table": "imd_pop", 
@@ -750,7 +969,15 @@ imd_quintile_pop_bd = {
   "secondary_level_desc": F.lit("NONE"),
   "aggregate_field": "SUM(POPULATION_COUNT)"
 }
- 
+imd_core20_pop_bd = {
+  "breakdown_name": "England; IMD Core20", 
+  "source_table": "imd_pop", 
+  "primary_level": F.col("IMD_Core20"), 
+  "primary_level_desc": F.col("IMD_Core20"), 
+  "secondary_level": F.lit("NONE"), 
+  "secondary_level_desc": F.lit("NONE"),
+  "aggregate_field": "SUM(POPULATION_COUNT)"
+}
 ccg_res_pop_bd = {
   "breakdown_name": "CCG of Residence", 
   "source_table": "commissioner_pop", 
@@ -791,11 +1018,14 @@ stp_prac_res_pop_bd = {
 }
 stp_prac_res_age_band_ips_pop_bd = pop_cross_dict([stp_prac_res_pop_bd, age_band_ips_pop_bd])
 stp_prac_res_age_band_oaps_pop_bd = pop_cross_dict([stp_prac_res_pop_bd, age_band_oaps_pop_bd])
+stp_prac_res_age_band_cyp_pop_bd = pop_cross_dict([stp_prac_res_pop_bd, age_band_cyp_pop_bd])
 stp_prac_res_lower_eth_pop_bd = pop_cross_dict([stp_prac_res_pop_bd, lower_eth_pop_bd])
 stp_prac_res_upper_eth_pop_bd = pop_cross_dict([stp_prac_res_pop_bd, upper_eth_pop_bd])
+stp_prac_res_wnw_eth_pop_bd = pop_cross_dict([stp_prac_res_pop_bd, wnw_eth_pop_bd])
 stp_prac_res_gender_pop_bd = pop_cross_dict([stp_prac_res_pop_bd, gender_pop_bd])
 stp_prac_res_imd_decile_pop_bd = pop_cross_dict([stp_prac_res_pop_bd, imd_decile_pop_bd])
 stp_prac_res_imd_quintile_pop_bd = pop_cross_dict([stp_prac_res_pop_bd, imd_quintile_pop_bd])
+stp_prac_res_imd_core20_pop_bd = pop_cross_dict([stp_prac_res_pop_bd, imd_core20_pop_bd])
 ##MHA_Measures
 stp_prac_res_age_band_mha_pop_bd = pop_cross_dict([stp_prac_res_pop_bd, age_band_mha_pop_bd])
 stp_prac_res_age_group_higher_pop_bd = pop_cross_dict([stp_prac_res_pop_bd, age_group_higher_pop_bd])
@@ -811,11 +1041,14 @@ comm_region_pop_bd = {
 }
 comm_region_age_band_ips_pop_bd = pop_cross_dict([comm_region_pop_bd, age_band_ips_pop_bd])
 comm_region_age_band_oaps_pop_bd = pop_cross_dict([comm_region_pop_bd, age_band_oaps_pop_bd])
+comm_region_age_band_cyp_pop_bd = pop_cross_dict([comm_region_pop_bd, age_band_cyp_pop_bd])
 comm_region_lower_eth_pop_bd = pop_cross_dict([comm_region_pop_bd, lower_eth_pop_bd])
 comm_region_upper_eth_pop_bd = pop_cross_dict([comm_region_pop_bd, upper_eth_pop_bd])
+comm_region_wnw_eth_pop_bd = pop_cross_dict([comm_region_pop_bd, wnw_eth_pop_bd])
 comm_region_gender_pop_bd = pop_cross_dict([comm_region_pop_bd, gender_pop_bd])
 comm_region_imd_decile_pop_bd = pop_cross_dict([comm_region_pop_bd, imd_decile_pop_bd])
 comm_region_imd_quintile_pop_bd = pop_cross_dict([comm_region_pop_bd, imd_quintile_pop_bd])
+comm_region_imd_core20_pop_bd = pop_cross_dict([comm_region_pop_bd, imd_core20_pop_bd])
 ##MHA_Measures
 comm_region_age_band_mha_pop_bd = pop_cross_dict([comm_region_pop_bd, age_band_mha_pop_bd])
 comm_region_age_group_higher_pop_bd = pop_cross_dict([comm_region_pop_bd, age_group_higher_pop_bd])
@@ -824,20 +1057,30 @@ pop_metadata = {
   "MHSPOPALL": {
     "measure_name": "Mid-year population - All ages",
     "age_group": (F.col("POPULATION_COUNT").isNotNull()),
-    "breakdowns": [eng_pop_bd, age_band_ips_pop_bd, age_band_oaps_pop_bd, age_band_mha_pop_bd, age_group_higher_pop_bd, gender_pop_bd, lower_eth_pop_bd, upper_eth_pop_bd, imd_decile_pop_bd, 
+    "breakdowns": [eng_pop_bd, 
+                   age_band_ips_pop_bd, age_band_oaps_pop_bd, age_band_mha_pop_bd, age_group_higher_pop_bd, 
+                   gender_pop_bd, 
+                   lower_eth_pop_bd, upper_eth_pop_bd, wnw_eth_pop_bd,
+                   imd_decile_pop_bd, imd_quintile_pop_bd, imd_core20_pop_bd,
                    ccg_res_pop_bd, 
                    ccg_prac_res_pop_bd, ccg_prac_res_age_band_oaps_pop_bd, ccg_prac_res_age_band_mha_pop_bd, ccg_prac_res_age_group_higher_pop_bd, ccg_prac_res_lower_eth_pop_bd, ccg_prac_res_upper_eth_pop_bd, 
                    ccg_prac_res_gender_pop_bd, ccg_prac_res_imd_decile_pop_bd, 
                    stp_prac_res_pop_bd, stp_prac_res_age_band_oaps_pop_bd, stp_prac_res_age_band_mha_pop_bd, stp_prac_res_age_group_higher_pop_bd, stp_prac_res_lower_eth_pop_bd, stp_prac_res_upper_eth_pop_bd,
-                   stp_prac_res_gender_pop_bd, stp_prac_res_imd_decile_pop_bd,
+                   stp_prac_res_wnw_eth_pop_bd, stp_prac_res_gender_pop_bd, stp_prac_res_imd_decile_pop_bd, stp_prac_res_imd_quintile_pop_bd,stp_prac_res_imd_core20_pop_bd,
                    comm_region_pop_bd, comm_region_age_band_oaps_pop_bd, comm_region_age_band_mha_pop_bd, comm_region_age_group_higher_pop_bd, comm_region_lower_eth_pop_bd, comm_region_upper_eth_pop_bd, 
-                   comm_region_gender_pop_bd, comm_region_imd_decile_pop_bd
+                   comm_region_wnw_eth_pop_bd, comm_region_gender_pop_bd, comm_region_imd_decile_pop_bd, comm_region_imd_quintile_pop_bd, comm_region_imd_core20_pop_bd
                   ]
   },
   "MHSPOPCYP": {
     "measure_name": "Mid-year population - ages 0 to 17",
     "age_group": (F.col("Age_Group") == "0-17"),
-    "breakdowns": [eng_pop_bd, ccg_res_pop_bd, ccg_prac_res_pop_bd]
+    "breakdowns": [eng_pop_bd, age_band_cyp_pop_bd, gender_pop_bd, upper_eth_pop_bd, wnw_eth_pop_bd, imd_decile_pop_bd, imd_quintile_pop_bd, imd_core20_pop_bd,
+                   ccg_res_pop_bd, ccg_prac_res_pop_bd,
+                   stp_prac_res_pop_bd, stp_prac_res_age_band_cyp_pop_bd, stp_prac_res_lower_eth_pop_bd, stp_prac_res_upper_eth_pop_bd, stp_prac_res_wnw_eth_pop_bd,
+                   stp_prac_res_gender_pop_bd, stp_prac_res_imd_quintile_pop_bd, stp_prac_res_imd_core20_pop_bd,
+                   comm_region_pop_bd, comm_region_age_band_cyp_pop_bd, comm_region_lower_eth_pop_bd, comm_region_upper_eth_pop_bd, comm_region_wnw_eth_pop_bd, 
+                   comm_region_gender_pop_bd, comm_region_imd_quintile_pop_bd, comm_region_imd_core20_pop_bd
+                  ]
   },
   "MHSPOPADU": {
     "measure_name": "Mid-year population - ages 18 to 64",

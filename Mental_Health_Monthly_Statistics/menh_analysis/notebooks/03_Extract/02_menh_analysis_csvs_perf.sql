@@ -11,10 +11,10 @@
  from dsp.code_promotion.mesh_send import cp_mesh_send
 
  # select distinct reporting_period_start,status from menh_analysis.all_products_formatted
- # where source_db like '$mhsds_db'
+ # where source_db like 'mhsds_database'
  # order by reporting_period_start desc
  # select distinct reporting_period_start,status from menh_analysis.all_products_formatted
- # where source_db like 'mhsds_db'
+ # where source_db like 'mhsds_database'
  # order by reporting_period_start desc
 
 -- COMMAND ----------
@@ -23,7 +23,7 @@
 
 -- # # databases where the tables to extract from are
 -- # dbutils.widgets.text("db_output", "menh_analysis", "db_output");
--- # dbutils.widgets.text("db_source", "$mhsds_db", "db_source");
+-- # dbutils.widgets.text("db_source", "mhsds_database", "db_source");
 
 -- # # parameters for non-standard runs
 -- # dbutils.widgets.text("rp_startdate", "2020-12-01", "rp_startdate");

@@ -5,7 +5,8 @@ INSERT INTO $db_output.cyp_ed_wt_breakdown_values VALUES
   ('England'),
   ('CCG - GP Practice or Residence'),
   ('Provider'),
-  ('STP - GP Practice or Residence');
+  ('STP - GP Practice or Residence'),
+  ('Commissioning Region');
 
 
 -- COMMAND ----------
@@ -43,7 +44,14 @@ SELECT DISTINCT
  'NONE' as secondary_level_desc,
  'STP - GP Practice or Residence' as breakdown 
 FROM $db_output.STP_Region_mapping_post_2020
-
+UNION ALL
+SELECT DISTINCT 
+ Region_code as primary_level, 
+ COALESCE(Region_description, "UNKNOWN") as primary_level_desc,
+ 'NONE' as secondary_level,
+ 'NONE' as secondary_level_desc,
+ 'Commissioning Region' as breakdown 
+FROM $db_output.STP_Region_mapping_post_2020
 
 -- COMMAND ----------
 

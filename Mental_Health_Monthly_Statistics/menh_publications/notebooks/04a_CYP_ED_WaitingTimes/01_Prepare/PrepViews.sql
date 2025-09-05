@@ -88,7 +88,7 @@
      And A.ReferralRequestReceivedDate >= '2016-01-01'  
      And vc.Measure is not null
      AND PrimReasonReferralMH = '12'
-     AND (AgeServReferRecDate <= 18 AND AgeServReferRecDate >=0)
+     AND (AgeServReferRecDate <= 17 AND AgeServReferRecDate >=0)
      AND (A.ServDischDate >= '$rp_startdate_run' or A.ServDischDate is null)
      AND H.UniqServReqID IS NULL
      AND S.UniqServReqID IS NULL
@@ -195,7 +195,8 @@ SELECT
     DATEDIFF(CareContDate,ReferralRequestReceivedDate)/7 as waiting_time,
     DATEDIFF(CareContDate,ReferralRequestReceivedDate) as waiting_time_days,
     '$db_source' as SOURCE_DB,
-    UniqMonthID AS SubmissionMonthID                -- ADDED TO ALLOW VALIDCODES TO COMPARE WITH SUBMISSION MONTH
+    UniqMonthID AS SubmissionMonthID,                -- ADDED TO ALLOW VALIDCODES TO COMPARE WITH SUBMISSION MONTH
+    '$rp_startdate_run' as rp_startdate_run -- distinguish quarterly and yearly runs
 from global_temp.CYP_ED_WT_STEP3;
 
 -- COMMAND ----------
@@ -219,12 +220,12 @@ SELECT
 FROM  global_temp.CYP_ED_WT_STEP1 step1 
 left outer join global_temp.CYP_ED_WT_STEP2 step2
 on step1.UniqServReqID = step2.UniqServReqID
--- ADDED LEFT JOIN TO MPI BASED ON RECORDNUMBER TO EXCLUDE THOSE STILL WAITING AGE 19 AND OVER
+-- ADDED LEFT JOIN TO MPI BASED ON RECORDNUMBER TO EXCLUDE THOSE STILL WAITING AGE 18 AND OVER
 left join $db_source.MHS001MPI M on step1.Person_ID = M.Person_ID and step1.RecordNumber = M.RecordNumber
 where step2.UniqServReqID is null
 and ((step1.ServDischDate is null or step1.ServDischDate > '$rp_enddate') AND step1.UniqMonthID = '$month_id')
 --APPLIED AGE FILTER BASED ON AGE AT END OF MONTH
-AND M.AgeRepPeriodEnd < 19;
+AND M.AgeRepPeriodEnd < 18;
 
 -- COMMAND ----------
 
@@ -244,7 +245,8 @@ select
     DATEDIFF('$rp_enddate',ReferralRequestReceivedDate)/7 as waiting_time,
     DATEDIFF('$rp_enddate',ReferralRequestReceivedDate) as waiting_time_days,
     '$db_source' as SOURCE_DB,
-    UniqMonthID AS SubmissionMonthID                -- ADDED TO ALLOW VALIDCODES TO COMPARE WITH SUBMISSION MONTH
+    UniqMonthID AS SubmissionMonthID,                -- ADDED TO ALLOW VALIDCODES TO COMPARE WITH SUBMISSION MONTH
+    '$rp_startdate_run' as rp_startdate_run -- distinguish quarterly and yearly runs
 from global_temp.CYP_ED_WT_STEP5;
 
 -- COMMAND ----------
@@ -278,6 +280,64 @@ SELECT
     DATEDIFF(c2.CareContDate,c1.CareContDate)/7 as waiting_time,
     DATEDIFF(c2.CareContDate,c1.CareContDate) as waiting_time_days,
     '$db_source' as SOURCE_DB,
-    c2.UniqMonthID AS SubmissionMonthID                -- ADDED TO ALLOW VALIDCODES TO COMPARE WITH SUBMISSION MONTH
+    c2.UniqMonthID AS SubmissionMonthID,                -- ADDED TO ALLOW VALIDCODES TO COMPARE WITH SUBMISSION MONTH
+    '$rp_startdate_run' as rp_startdate_run -- distinguish quarterly and yearly runs
 FROM global_temp.CYP_ED_WT_STEP7 c2
 INNER JOIN (SELECT * FROM global_temp.CYP_ED_WT_STEP3_prep WHERE rnk = 1) c1 ON c2.UniqServReqID = c1.UniqServReqID --join to get first contact for the referral
+
+-- COMMAND ----------
+
+-- DBTITLE 1,CYP_ED_WT_STEP9
+--STEP9 -  Identify the referrals still waiting for a treatment for eating disorder at the end of the RP that turned 18 and are no longer in scope
+INSERT INTO $db_output.CYP_ED_WT_STEP9
+SELECT 
+    '$month_id' AS UniqMonthID,
+    '$status' AS Status,
+    step1.UniqServReqID,
+    step1.OrgIDProv,
+    step1.Person_ID,
+    step1.ClinRespPriorityType,
+    step1.IC_Rec_CCG,
+    step1.AgeServReferRecDate,
+    M.AgeRepPeriodEnd,
+    step1.ReferralRequestReceivedDate,
+    step1.ServDischDate,
+    step1.Priority_Type,    
+    '$db_source' as SOURCE_DB,
+    step1.UniqMonthID AS SubmissionMonthID, -- ADDED TO ALLOW VALIDCODES TO COMPARE WITH SUBMISSION MONTH
+    '$rp_startdate_run' as rp_startdate_run -- distinguish quarterly and yearly runs
+FROM  global_temp.CYP_ED_WT_STEP1 step1 
+left outer join global_temp.CYP_ED_WT_STEP2 step2
+on step1.UniqServReqID = step2.UniqServReqID
+-- ADDED LEFT JOIN TO MPI BASED ON RECORDNUMBER TO IDENTIFY THOSE STILL WAITING AGE 18 AND OVER
+left join $db_source.MHS001MPI M on step1.Person_ID = M.Person_ID and step1.RecordNumber = M.RecordNumber
+where step2.UniqServReqID is null
+and ((step1.ServDischDate is null or step1.ServDischDate > '$rp_enddate') AND step1.UniqMonthID = '$month_id')
+--APPLIED AGE FILTER BASED ON AGE AT END OF MONTH
+AND M.AgeRepPeriodEnd > 17;
+
+-- COMMAND ----------
+
+-- DBTITLE 1,CYP_ED_WT_STEP10
+--STEP10 -  Identify the waiting times of referrals still waiting for a treatment for eating disorder at the end of the RP that turned 18 and are no longer in scope
+
+INSERT INTO $db_output.CYP_ED_WT_STEP10
+select 
+   '$month_id' AS UniqMonthID,
+    '$status' AS Status,
+    UniqServReqID,
+    OrgIDProv,
+    Person_ID,
+    ClinRespPriorityType,
+    IC_Rec_CCG,
+    ReferralRequestReceivedDate,
+    ServDischDate,
+    Priority_Type,
+    DATEDIFF('$rp_enddate',ReferralRequestReceivedDate)/7 as waiting_time,
+    DATEDIFF('$rp_enddate',ReferralRequestReceivedDate) as waiting_time_days,
+    '$db_source' as SOURCE_DB,
+    UniqMonthID AS SubmissionMonthID,                -- ADDED TO ALLOW VALIDCODES TO COMPARE WITH SUBMISSION MONTH
+    '$rp_startdate_run' as rp_startdate_run -- distinguish quarterly and yearly runs
+from $db_output.CYP_ED_WT_STEP9
+where rp_startdate_run = '$rp_startdate_run' -- distinguish quarterly and yearly runs
+;

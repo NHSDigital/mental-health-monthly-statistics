@@ -1,7 +1,7 @@
 -- Databricks notebook source
  %md # Note
 
- Reference data for specialised mental health service category codes used by validity measures 53, 54 and 55. This is currently missing from $reference_data.datadictionarycodes and will need removing once the data becomes available.
+ Reference data for specialised mental health service category codes used by validity measures 53, 54 and 55. This is currently missing from reference_data.datadictionarycodes and will need removing once the data becomes available.
 
 -- COMMAND ----------
 
@@ -9,13 +9,13 @@
 
 -- SELECT
 -- *
--- FROM $$reference_data.datadictionarycodes
+-- FROM $reference_data.datadictionarycodes
 -- WHERE ItemName = 'SPECIALISED MENTAL HEALTH SERVICE CATEGORY CODE'; and 
 
 -- COMMAND ----------
 
  %sql
-
+  
  INSERT OVERWRITE TABLE $db.dq_smh_service_category_code
  VALUES ('' , 'Other', 1429, null),  -- why is this in here if it is excluded in the code anyway
  ('NCBPS05C', 'NCBPS05C/OP_COMMUNICATION', 1429, null), 
@@ -45,6 +45,7 @@
  ('NCBPS22D', 'NCBPS22D/OP_EXTENDED', 1429, null),
  ('NCBPS22D', 'NCBPS22D/OP_STANDARD', 1429, null),
  ('NCBPS22D', 'NCBPS22D/OUTREACH', 1429, null),
+ ('NCBPS22E', 'NCBPS22E/AEDHTT', 1489, null), ---AT VODIM Changes Apr-25
  ('NCBPS22E', 'NCBPS22E/ASSESS', 1429, null),
  ('NCBPS22E', 'NCBPS22E/DCFD', 1429, null),
  ('NCBPS22E', 'NCBPS22E/DCHD', 1429, null),
@@ -86,6 +87,7 @@
  ('NCBPS22S', 'NCBPS22S/LS_MG_LD', 1429, null),
  ('NCBPS22S', 'NCBPS22S/LS_MG_MI', 1429, 1464),
  ('NCBPS22S', 'NCBPS22S/LS_MG_PD', 1429, 1464),
+ ('NCBPS22S', 'NCBPS22S/LS_SG_LD_ASD', 1489, null), ---AT VODIM Changes Apr-25
  ('NCBPS22S', 'NCBPS22S/MS_F_ABI', 1429, 1464),
  ('NCBPS22S', 'NCBPS22S/MS_F_ASD', 1429, null),
  ('NCBPS22S', 'NCBPS22S/MS_F_DEAF', 1465, null),
@@ -179,6 +181,7 @@
  ('NCBPS23V', 'NCBPS23V/ASSESS_ASD', 1429, null),
  ('NCBPS23V', 'NCBPS23V/TREAT_ASD', 1429, null),
  ('NCBPS23V', 'NCBPS23V/IP_NS_ASD', 1429, null),
+ ('NCBPS23V', 'NCBPS23V/YPHTT', 1489, null), ---AT VODIM Changes Apr-25
  ('NCBPS24C', 'NCBPS24C/FCAMHS', 1429, null),
  ('NCBPS24E', 'NCBPS24E/ASSESS_ADOL/CHILD_MI', 1441, 1464),
  ('NCBPS24E', 'NCBPS24E/ASSESS_CHILD_MI', 1441, null),

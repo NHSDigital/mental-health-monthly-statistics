@@ -393,6 +393,8 @@
  ('England; IMD Decile'),
  ('England; Sexual Orientation'),
  ('England; Rural/Urban Classification'),
+ ('England; Autism Status'),
+ ('England; LD Status'),
  ('CCG - GP Practice or Residence'),
  ('CCG - GP Practice or Residence; Age Group'),
  ('CCG - GP Practice or Residence; Attendance'),
@@ -703,6 +705,33 @@
    from $reference_data.ONS_RURAL_URBAN_CLASS_LSOA2011
    UNION ALL
    SELECT "UNKNOWN"
+ )
+ union all
+ SELECT DISTINCT
+   'England' as primary_level, 
+   'England' as primary_level_desc,
+   LDStatus as secondary_level,
+   LDStatus_desc as secondary_level_desc,
+   'England; LD Status' as breakdown
+ FROM (
+   select distinct LDStatus,LDStatus_desc
+   from  $db_output.ld_status_desc
+   UNION ALL
+   SELECT "UNKNOWN","UNKNOWN"
+ )
+  
+ union all
+ SELECT DISTINCT
+   'England' as primary_level, 
+   'England' as primary_level_desc,
+   AutismStatus as secondary_level,
+   AutismStatus_desc as secondary_level_desc,
+   'England; Autism Status' as breakdown
+ FROM (
+   select distinct AutismStatus,AutismStatus_desc
+   from $db_output.autism_status_desc
+   UNION ALL
+   SELECT "UNKNOWN","UNKNOWN"
  )
 
  --************************************************************************************************************************

@@ -7,9 +7,9 @@
  c.EffectiveTime as Concept_EffectiveTime,
  c.active as Concept_Active,
  ROW_NUMBER() OVER (PARTITION BY c.ID ORDER BY c.effectiveTime desc) as Concept_RN
- FROM $reference_data.snomed_sct2_concept_full c
+ FROM reference_data.snomed_sct2_concept_full c
  INNER JOIN (
-   select distinct ReferencedComponentID from $reference_data.snomed_sct2_refset_full
+   select distinct ReferencedComponentID from reference_data.snomed_sct2_refset_full
    where RefSetID IN 
    ('1853441000000109', --Mental Health Services Data Set assessment procedures simple reference set
    '1853461000000105', --Mental Health Services Data Set psychological therapies simple reference set
@@ -23,7 +23,7 @@
  CREATE OR REPLACE TEMP VIEW SNOMED_4ww_RefSets AS
  SELECT DISTINCT r.RefSetID, r.ReferencedComponentID as ConceptID, r.effectiveTime as RefSet_EffectiveTime, r.Active as RefSet_Active,
  ROW_NUMBER() OVER (PARTITION BY r.ReferencedComponentID ORDER BY r.effectiveTime desc) as RefSet_RN
- from $reference_data.snomed_sct2_refset_full r
+ from reference_data.snomed_sct2_refset_full r
    where RefSetID IN 
    ('1853441000000109', --Mental Health Services Data Set assessment procedures simple reference set
    '1853461000000105', --Mental Health Services Data Set psychological therapies simple reference set
@@ -94,6 +94,36 @@
  inner join SNOMED_RefSet_Start_End_Time r on c.ConceptID = r.ConceptID
   
  order by c.ConceptID, r.RefSet_EffectiveStartTime
+
+# COMMAND ----------
+
+# DBTITLE 1,Get latest MPI records for the quarter
+ %sql
+ -- Get latest MPI records for the quarter (BITC-6882)
+  
+ CREATE OR REPLACE TEMP VIEW REFSPL_MHS001MPI_LATEST AS
+  
+ SELECT             
+                  B.UniqMonthID
+                 ,B.orgidProv
+                 ,B.Person_ID
+                 ,B.RecordNumber
+                 ,C.DECI_IMD
+                 ,coalesce(imd.IMD_Decile, "UNKNOWN") as IMD_Decile
+                 ,coalesce(imd.IMD_Core20, "UNKNOWN") as IMD_Core20
+ FROM            $db_source.MHS001MPI AS B                                     
+  
+ LEFT JOIN
+          (SELECT LSOA_CODE_2011, DECI_IMD, IMD_YEAR
+          FROM $reference_data.english_indices_of_dep_v02
+          WHERE IMD_YEAR = (SELECT MAX(IMD_YEAR) FROM $reference_data.english_indices_of_dep_v02) ) C ON B.LSOA2011 = C.LSOA_CODE_2011     
+  
+ LEFT JOIN $db_output.imd_desc imd on C.DECI_IMD = imd.IMD_Number and '$end_month_id' >= imd.FirstMonth and (imd.LastMonth is null or '$end_month_id' <= imd.LastMonth)
+      
+ INNER JOIN (SELECT PERSON_ID, MAX(UNIQMONTHID) AS UNIQMONTHID FROM $db_source.MHS001MPI WHERE (RecordEndDate is null or RecordEndDate >= '$rp_enddate') and RecordStartDate <= '$rp_enddate' AND RecordStartDate >= ADD_MONTHS('$rp_enddate',-3) AND PatMRecInRP = True GROUP BY PERSON_ID) AS MPI on b.person_id = mpi.person_id and b.uniqmonthid =mpi.uniqmonthid  
+  
+ WHERE (b.RecordEndDate is null or b.RecordEndDate >= '$rp_enddate') and b.RecordStartDate <= '$rp_enddate' AND b.RecordStartDate >= ADD_MONTHS('$rp_enddate',-3)
+      AND PatMRecInRP = True
 
 # COMMAND ----------
 
@@ -520,6 +550,8 @@
  COALESCE(s.STP_NAME, 'UNKNOWN') AS STP_Name,
  COALESCE(s.REGION_CODE, 'UNKNOWN') AS Region_Code,
  COALESCE(s.REGION_NAME, 'UNKNOWN') AS Region_Name,
+ --BITC-6882: IMD breakdowns
+ COALESCE(mpi.IMD_Core20, "UNKNOWN") as IMD_Core20,
  m.SpellID,
  m.StartDate,
  m.EndDate,
@@ -564,6 +596,9 @@
   
  LEFT JOIN $db_output.bbrb_stp_mapping s on c.SubICBGPRes = s.CCG_CODE
 
+ --BITC-6882: IMD breakdowns
+ LEFT JOIN REFSPL_MHS001MPI_LATEST mpi on m.Person_ID = mpi.Person_ID
+
 # COMMAND ----------
 
  %sql
@@ -593,7 +628,7 @@
  s.ReferRejectionDate,
  s.ReferRejectReason,
  r.SourceOfReferralMH,
- s.ServTeamTypeRefToMH,
+ r.PrimReasonReferralMH,
  CASE WHEN r.PrimReasonReferralMH = '24' THEN 1 ELSE 0 END Reason_ND,
  CASE WHEN r.PrimReasonReferralMH = '25' THEN 1 ELSE 0 END Reason_ASD,
  CASE WHEN s.ServTeamTypeRefToMH = 'C03' THEN 'C10' ELSE s.ServTeamTypeRefToMH END AS Der_ServTeamTypeRefToMH, 
@@ -1041,6 +1076,8 @@
  COALESCE(s.STP_NAME, 'UNKNOWN') AS STP_Name,
  COALESCE(s.REGION_CODE, 'UNKNOWN') AS Region_Code,
  COALESCE(s.REGION_NAME, 'UNKNOWN') AS Region_Name,
+ --BITC-6882: IMD breakdowns
+ COALESCE(mpi.IMD_Core20, "UNKNOWN") as IMD_Core20,
  m.SpellID,
  m.StartDate,
  m.EndDate,
@@ -1078,6 +1115,9 @@
  LEFT JOIN $db_output.bbrb_ccg_in_quarter c on m.Person_ID = c.Person_ID
   
  LEFT JOIN $db_output.bbrb_stp_mapping s on c.SubICBGPRes = s.CCG_CODE
+
+ --BITC-6882: IMD breakdowns
+ LEFT JOIN REFSPL_MHS001MPI_LATEST mpi on m.Person_ID = mpi.Person_ID
 
 # COMMAND ----------
 

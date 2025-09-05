@@ -14,9 +14,24 @@
           else r.IC_Rec_CCG end as Der_OrgComm,
      r.LADistrictAuth,
      r.AgeServReferRecDate,
-     r.AgeRepPeriodEnd
+     r.AgeRepPeriodEnd,
+     r.NHSDEthnicity,
+     mpi.LowerEthnicity,
+     mpi.LowerEthnicity_Desc,
+     mpi.UpperEthnicity,
+     mpi.WNW_Ethnicity,
+     mpi.Gender,
+     mpi.GenderIDCode,
+     mpi.Der_Gender, 
+     mpi.Der_Gender_Desc,
+     ab.Age_Group_CYP as Age_Band,
+     mpi.IMD_Decile,
+     mpi.IMD_Quintile,
+     mpi.IMD_Core20
   
  FROM $db_output.nhse_pre_proc_referral r
+ LEFT JOIN $db_output.mhs001mpi_12_months_data mpi on r.Person_ID = mpi.Person_ID and r.RecordNumber = mpi.RecordNumber
+ LEFT JOIN $db_output.age_band_desc ab on r.AgeServReferRecDate = ab.AgeRepPeriodEnd and '$end_month_id' >= ab.FirstMonth and (ab.LastMonth is null or '$end_month_id' <= ab.LastMonth)
   
  WHERE r.AgeServReferRecDate BETWEEN 0 AND 17 AND 
  r.UniqMonthID BETWEEN '$end_month_id' -11 AND '$end_month_id' 
@@ -75,6 +90,19 @@
      r.RecordNumber,
      r.UniqServReqID,
      COALESCE(a.AgeCareContDate,r.AgeRepPeriodEnd) AS Der_ContAge,
+     r.LowerEthnicity,
+     r.LowerEthnicity_Desc,
+     r.UpperEthnicity,
+     r.WNW_Ethnicity,
+     r.Gender,
+     r.GenderIDCode,
+     r.Der_Gender, 
+     r.Der_Gender_Desc,         
+     r.AgeRepPeriodEnd,
+     r.Age_Band,
+     r.IMD_Decile,
+     r.IMD_Quintile,
+     r.IMD_Core20,
      a.Der_ContactDate
   
  FROM Comb a
@@ -183,9 +211,24 @@
           else r.IC_Rec_CCG end as Der_OrgComm,
      r.LADistrictAuth,
      r.AgeServReferRecDate,    
-     r.AgeRepPeriodEnd
+     r.AgeRepPeriodEnd,
+     r.NHSDEthnicity,
+     mpi.LowerEthnicity,
+     mpi.LowerEthnicity_Desc,
+     mpi.UpperEthnicity,
+     mpi.WNW_Ethnicity,
+     mpi.Gender,
+     mpi.GenderIDCode,
+     mpi.Der_Gender, 
+     mpi.Der_Gender_Desc,     
+     ab.Age_Group_CYP as Age_Band,
+     mpi.IMD_Decile,
+     mpi.IMD_Quintile,
+     mpi.IMD_Core20
   
  FROM $db_output.nhse_pre_proc_referral r
+ LEFT JOIN $db_output.mhs001mpi_12_months_data mpi on r.Person_ID = mpi.Person_ID and r.RecordNumber = mpi.RecordNumber
+ LEFT JOIN $db_output.age_band_desc ab on r.AgeServReferRecDate = ab.AgeRepPeriodEnd and '$end_month_id' >= ab.FirstMonth and (ab.LastMonth is null or '$end_month_id' <= ab.LastMonth)
   
  WHERE r.AgeServReferRecDate BETWEEN 18 AND 24 AND 
  r.UniqMonthID BETWEEN '$end_month_id' -11 AND '$end_month_id' 
@@ -204,7 +247,20 @@
      r.Person_ID,
      r.RecordNumber,
      r.UniqServReqID,
+     r.AgeRepPeriodEnd,
      COALESCE(a.AgeCareContDate,r.AgeRepPeriodEnd) AS Der_ContAge,
+     r.LowerEthnicity,
+     r.LowerEthnicity_Desc,
+     r.UpperEthnicity,
+     r.WNW_Ethnicity,
+     r.Gender,
+     r.GenderIDCode,
+     r.Der_Gender, 
+     r.Der_Gender_Desc,     
+     r.Age_Band,
+     r.IMD_Decile,
+     r.IMD_Quintile,
+     r.IMD_Core20,
      a.Der_ContactDate
   
  FROM Comb a
@@ -219,7 +275,7 @@
  SELECT
      a.UniqMonthID,
      a.OrgIDProv,
-     o.NAME AS Prrovider_Name,
+     o.NAME AS Provider_Name,
      COALESCE(c.CCG21CDH,'UNKNOWN') AS CCG_Code,
      COALESCE(c.CCG21NM,'UNKNOWN') AS CCG_Name,
      COALESCE(c.STP21CDH,'UNKNOWN') AS STP_Code,
@@ -230,6 +286,17 @@
      a.Person_ID,
      a.RecordNumber,
      a.UniqServReqID,
+     a.LowerEthnicity,
+     a.LowerEthnicity_Desc,
+     a.UpperEthnicity,    
+     a.WNW_Ethnicity,
+     a.Der_Gender,     
+     a.Der_Gender_Desc,
+     a.AgeRepPeriodEnd,
+     a.Age_Band,
+     a.IMD_Decile,
+     a.IMD_Quintile,
+     a.IMD_Core20,
      ROW_NUMBER () OVER(PARTITION BY a.Person_ID, a.LADistrictAuth ORDER BY a.Der_ContactDate ASC) AS AccessLARN,
      ROW_NUMBER () OVER(PARTITION BY a.Person_ID, c.CCG21CDH ORDER BY a.Der_ContactDate ASC) AS AccessCCGRN,
      ROW_NUMBER () OVER(PARTITION BY a.Person_ID, c.CCG21CDH, a.OrgIDProv ORDER BY a.Der_ContactDate ASC) AS AccessCCGProvRN,
@@ -239,8 +306,8 @@
      ROW_NUMBER () OVER(PARTITION BY a.Person_ID, c.NHSER21CDH ORDER BY a.Der_ContactDate ASC) AS AccessRegionRN,
      'MHS95' AS Metric-- add metric id to table
   
- FROM Act as A
- LEFT JOIN $db_output.CCG_MAPPING_2021 C on a.DER_ORGCOMM = C.CCG_UNMAPPED
+ FROM Act as a
+ LEFT JOIN $db_output.CCG_MAPPING_2021 c on a.DER_ORGCOMM = C.CCG_UNMAPPED
  LEFT JOIN $db_output.bbrb_org_daily_latest  o on a.OrgIDProv = o.ORG_CODE
 
 # COMMAND ----------
@@ -262,6 +329,17 @@
      a.Person_ID,
      a.RecordNumber,
      a.UniqServReqID,
+     a.LowerEthnicity,
+     a.LowerEthnicity_Desc,
+     a.UpperEthnicity,    
+     a.WNW_Ethnicity,
+     a.Der_Gender, 
+     a.Der_Gender_Desc,         
+     a.AgeRepPeriodEnd,
+     a.Age_Band,
+     a.IMD_Decile,
+     a.IMD_Quintile,
+     a.IMD_Core20,
      ROW_NUMBER () OVER(PARTITION BY a.Person_ID, a.LADistrictAuth ORDER BY a.Der_ContactDate ASC) AS AccessLARN,
      ROW_NUMBER () OVER(PARTITION BY a.Person_ID, c.CCG21CDH ORDER BY a.Der_ContactDate ASC) AS AccessCCGRN,
      ROW_NUMBER () OVER(PARTITION BY a.Person_ID, c.CCG21CDH, a.OrgIDProv ORDER BY a.Der_ContactDate ASC) AS AccessCCGProvRN,

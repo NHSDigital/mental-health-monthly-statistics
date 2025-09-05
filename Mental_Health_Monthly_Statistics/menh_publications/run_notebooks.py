@@ -113,29 +113,29 @@ db = dbutils.widgets.get("db")
 assert db
 
 # this is needed to enable run_notebooks to be run both from run_tests during promotion and directly run
-# needs to use $mhsds for both but the parameter is fed in from run_tests as the original $mhsds :o(
+# needs to use mhsds_database for both but the parameter is fed in from run_tests as the original mhsds_database :o(
 
 # get the original parameter value (will work in all sitations)
 try:
-  db_source = dbutils.widgets.get("$mhsds")
+  db_source = dbutils.widgets.get("mhsds_database")
 except:
-  print('$mhsds is not defined')
+  print('mhsds_database is not defined')
 
-# get the new parameter value (will only work in direct run, and will overwrite value for $mhsds)
+# get the new parameter value (will only work in direct run, and will overwrite value for mhsds_database)
 try:
-  db_source = dbutils.widgets.get("$mhsds")
+  db_source = dbutils.widgets.get("mhsds_database")
 except:
-  print('$mhsds is not defined')
+  print('mhsds_database is not defined')
   
 
 # the above replaces this simpler situation!
-# db_source = dbutils.widgets.get("$mhsds")
+# db_source = dbutils.widgets.get("mhsds_database")
 # new v5 source
-# db_source = dbutils.widgets.get("$mhsds")
+# db_source = dbutils.widgets.get("mhsds_database")
 # assert db_source
 
-$reference_data = dbutils.widgets.get("$reference_data")
-assert $reference_data
+reference_data = dbutils.widgets.get("reference_data")
+assert reference_data
 
 
 product = dbutils.widgets.text("product", "", "product")
@@ -147,7 +147,7 @@ product = dbutils.widgets.get("product")
 params = {
   'db_source' : db_source, 
   'db_output' : db, 
-  '$reference_data': $reference_data,
+  'reference_data': reference_data,
   'rp_enddate' : '', 
   'rp_startdate' : '', 
   'month_id' : '', 

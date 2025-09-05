@@ -25,7 +25,7 @@
  db_source is {db_source}')
  # month_id = '1462'
  # status = 'Performance'
- # db_source = 'testdata_menh_dq_$mhsds'
+ # db_source = 'testdata_menh_dq_mhsds_database'
  # db_output = 'menh_dq'
 
 
@@ -82,7 +82,7 @@
  if(status in ['Performance','Provisional','Final']):
  #######    DQ_coverage_MmmPxxx_YYYY - run for Provisional (Prov) & Performance (Perf)
  # -- 17/2/21 SH MONTH_ID removed from extract sent to analysts ; added coalesce on coverage_count as * assigned to bigint column leaves it as null - in /data_management_services/menh_dq/notebooks/3.extract/3.3.coverage_csvs
- # -- 26/01/22 User: added in exclusions for new tables in v5 in case we need to run historic months of dq outputs
+ # -- 26/01/22 User note: added in exclusions for new tables in v5 in case we need to run historic months of dq outputs
 
    dq_coverage_monthly_csv = spark.sql("SELECT \
                                        REPORTING_PERIOD_START, \
@@ -167,9 +167,9 @@
  print(f'Second part of file name: {file_part_name}')
 
  if(status in ['Performance','Final','Provisional']):
-   # -- 26/01/22 User: added in exclusions for new tables in v5 in case we need to run historic months of dq outputs
+   # -- 26/01/22 User note: added in exclusions for new tables in v5 in case we need to run historic months of dq outputs
    ########### DQ_coverage_monthly_PBI_Mmm_YYYY - just for Performance
-   # -- 26/01/22 User: added in exclusions for new tables in v5 in case we need to run historic months of dq outputs
+   # -- 26/01/22 User note: added in exclusions for new tables in v5 in case we need to run historic months of dq outputs
    dq_coverage_monthly_pbi = spark.sql("SELECT \
                                        Organisation_code , \
                                        Organisation_Name , \

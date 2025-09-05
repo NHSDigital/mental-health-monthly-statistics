@@ -620,7 +620,7 @@
     Denormalised the EIP63 metric data to also include CCG fields - this can be used for the CCG extract 
     and summed to provide national extract.
 
-   Sam Hollings - 2018-03-6
+    - 2018-03-6
    Bhabani Sahoo- 2021-04-08                                                                                 */ 
  /* ---------------------------------------------------------------------------------------------------------*/
 
@@ -647,7 +647,7 @@
  /* ---------------------------------------------------------------------------------------------------------*/
  /* EIP63 Provider National - this is the aggregate calculation of EIP63 Prov breakdown based on Ethnicity
 
-   Sam Hollings - 2018-03-6
+    - 2018-03-6
    Bhabani Sahoo- 2021-04-08                                                                                 */ 
  /* ---------------------------------------------------------------------------------------------------------*/
  Insert into $db_output.AWT_unformatted 
@@ -701,7 +701,7 @@
  /* EIP64 CCG National - this is the aggregate calculation of EIP64 CCG breakdown from EIP64abc_common. Across
    all age groups.
    
-   Sam Hollings - 2018-03-6    
+    - 2018-03-6    
    Bhabani Sahoo - 2021-04-08                                                                                */ 
  /* ---------------------------------------------------------------------------------------------------------*/
 
@@ -728,7 +728,7 @@
  /* ---------------------------------------------------------------------------------------------------------*/
  /* EIP64 Provider National - this is the aggregate calculation of EIP64 Prov breakdown based on Ethnicity
 
-   Sam Hollings - 2018-03-6 
+    - 2018-03-6 
    Bhabani Sahoo - 2021-04-08                                                                                */ 
  /* ---------------------------------------------------------------------------------------------------------*/
  Insert into $db_output.AWT_unformatted 
@@ -783,7 +783,7 @@
  /* ---------------------------------------------------------------------------------------------------------*/
  /* EIP65 CCG based on Ethnicity - this is the aggregate calculation of EIP65 CCG breakdown from EIP64abc_common.
      
-   Sam Hollings - 2018-03-6    
+    - 2018-03-6    
    Bhabani Sahoo - 2021-04-09                                                                                */ 
  /* ---------------------------------------------------------------------------------------------------------*/
 
@@ -811,7 +811,7 @@
  /* ---------------------------------------------------------------------------------------------------------*/
  /* EIP64b/65 Provider National - this is the aggregate calculation of EIP65 Prov breakdown across the age groups
 
-   Sam Hollings - 2018-03-6
+    - 2018-03-6
    Bhabani Sahoo - 2021-04-08                                                                                */ 
  /* ---------------------------------------------------------------------------------------------------------*/
  Insert into $db_output.AWT_unformatted 
@@ -867,7 +867,7 @@
  /* EIP66 CCG National - this is the aggregate calculation of EIP64c/66 CCG breakdown from EIP64abc_common,
    based on Ethnicity.
 
-   Sam Hollings - 2018-03-6  
+    - 2018-03-6  
    Bhabani Sahoo - 2021-04-08                                                                                */ 
  /* ---------------------------------------------------------------------------------------------------------*/
 
@@ -895,7 +895,7 @@
  /* ---------------------------------------------------------------------------------------------------------*/
  /* EIP66 Provider Natinal - this is the aggregate calculation of EIP66 Prov breakdown across Ethnicity
 
-   Sam Hollings - 2018-03-6                                                                           
+    - 2018-03-6                                                                           
    Bhabani Sahoo - 2021-04-08                                                                                */ 
  /* ---------------------------------------------------------------------------------------------------------*/
  Insert into $db_output.AWT_unformatted 

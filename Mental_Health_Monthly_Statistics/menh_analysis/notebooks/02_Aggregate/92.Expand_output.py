@@ -78,6 +78,8 @@
            'England; IMD Decile',
            'England; Sexual Orientation',
            'England; Rural/Urban Classification',
+           'England; Autism Status',
+           'England; LD Status',
            'Provider; Age Group',
            'Provider; Attendance',
            'Provider; Bed Type',
@@ -132,6 +134,8 @@
    (p.BREAKDOWN IN ('England; IMD Decile') AND p.METRIC IN ('MHS01', 'MHS07', 'MHS29', 'MHS32')) OR
    (p.BREAKDOWN IN ('England; Sexual Orientation') AND p.METRIC IN ('MHS01', 'MHS07', 'MHS29', 'MHS32')) OR
    (p.BREAKDOWN IN ('England; Rural/Urban Classification') AND p.METRIC IN ('MHS01', 'MHS07', 'MHS29', 'MHS32')) OR
+   (p.BREAKDOWN IN ('England; LD Status') AND p.METRIC IN ('MHS01', 'MHS07', 'MHS29', 'MHS32')) OR
+   (p.BREAKDOWN IN ('England; Autism Status') AND p.METRIC IN ('MHS01', 'MHS07', 'MHS29', 'MHS32')) OR
    
    (p.BREAKDOWN IN ('Provider; Age Group') AND p.METRIC IN ('MHS23d', 'MHS29d', 'MHS30f', 'MHS32c', 'MHS57b')) OR
    (p.BREAKDOWN IN ('Provider; Attendance') AND p.METRIC IN ('MHS29a', 'MHS29d', 'MHS29f')) OR

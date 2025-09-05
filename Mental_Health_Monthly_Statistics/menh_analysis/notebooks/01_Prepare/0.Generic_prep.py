@@ -979,6 +979,32 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 # COMMAND ----------
 
  %sql
+ CREATE OR REPLACE GLOBAL TEMPORARY VIEW MHS005PatInd_AUT AS
+  
+ SELECT DISTINCT A.PERSON_ID, A.UNIQMONTHID, A.AutismStatus
+ FROM $db_source.MHS005PatInd  A
+ INNER JOIN (SELECT PERSON_ID, UNIQMONTHID, RecordNumber, AutismStatus, DENSE_RANK() OVER (PARTITION BY PERSON_ID ORDER BY UNIQMONTHID DESC, RecordNumber DESC) AS AUT_RANK
+             FROM $db_source.MHS005PatInd 
+             WHERE UNIQMONTHID <= '$month_id'
+             and AutismStatus in ('1', '2', '3', '4', '5', 'U', 'X', 'Z')) B ON B.AUT_RANK = 1 AND A.PERSON_ID = B.PERSON_ID AND A.UNIQMONTHID = B.UNIQMONTHID AND  A.RecordNumber = B.RecordNumber
+  
+
+# COMMAND ----------
+
+ %sql
+  -- BITC-6692 -- addition 
+ CREATE OR REPLACE GLOBAL TEMPORARY VIEW MHS005PatInd_LD AS
+  
+ SELECT DISTINCT A.PERSON_ID, A.UNIQMONTHID, A.LDStatus
+ FROM $db_source.MHS005PatInd  A
+ INNER JOIN (SELECT PERSON_ID, UNIQMONTHID, RecordNumber, LDStatus, DENSE_RANK() OVER (PARTITION BY PERSON_ID ORDER BY UNIQMONTHID DESC, RecordNumber DESC) AS AUT_RANK
+             FROM $db_source.MHS005PatInd 
+             WHERE UNIQMONTHID <= '$month_id'
+             and LDStatus in ('1', '2', '3', '4', '5', 'U', 'X', 'Z')) B ON B.AUT_RANK = 1 AND A.PERSON_ID = B.PERSON_ID AND A.UNIQMONTHID = B.UNIQMONTHID AND  A.RecordNumber = B.RecordNumber
+
+# COMMAND ----------
+
+ %sql
 
  TRUNCATE TABLE $db_output.tmp_mhmab_mhs001mpi_latest_month_data 
 
@@ -1114,7 +1140,12 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
                   WHEN SOC.SocPerCircumstance = '472985009' THEN 'Asexual (not sexually attracted to either gender)'
                   ELSE 'UNKNOWN' END AS Sex_Orient
     --------------------------------------------------------------------------------------------------------------------------------------
-        ,COALESCE(RU.RUC11, "UNKNOWN") as RuralUrbanClassName
+        ,COALESCE(RU.RUC11, "UNKNOWN") as RuralUrbanClassName 
+        -------------------------------------------------------------------------------------------------------
+        ,coalesce(aut.AutismStatus, "UNKNOWN") as AutismStatus
+        ,coalesce(aut1.AutismStatus_desc, "UNKNOWN") as AutismStatus_desc
+        ,coalesce(ld.LDStatus, "UNKNOWN") as LDStatus
+        ,coalesce(ld1.LDStatus_desc, "UNKNOWN") as LDStatus_desc
  --First Join-----------------------------------------------------------------------------------------------------------------
  FROM MPI001_prep MPI 
  LEFT JOIN global_temp.CCG
@@ -1157,9 +1188,17 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
 
  LEFT JOIN $reference_data.ONS_RURAL_URBAN_CLASS_LSOA2011 RU ON MPI.LSOA2011 = RU.LSOA11CD
 
+ ---MPI AND LD/AUTISM ---
+  
+ LEFT JOIN global_temp.MHS005PatInd_AUT aut on mpi.PERSON_ID = aut.PERSON_ID
+ LEFT JOIN $db_output.autism_status_desc aut1 on aut.AutismStatus = aut1.AutismStatus and '$end_month_id' >= aut1.FirstMonth and (aut1.LastMonth is null or '$end_month_id' <= aut1.LastMonth)
+  
+ LEFT JOIN global_temp.MHS005PatInd_LD ld on mpi.PERSON_ID = ld.PERSON_ID
+ LEFT JOIN $db_output.ld_status_desc ld1 on ld.LDStatus = ld1.LDStatus and '$end_month_id' >= ld1.FirstMonth and (ld1.LastMonth is null or '$end_month_id' <= ld1.LastMonth)
+  
  --WHERE MPI.UniqMonthID = '$end_month_id'
  WHERE MPI.UniqMonthID = '$month_id'
- AND MPI.PatMRecInRP = true   
+ AND MPI.PatMRecInRP = true 
  )
 
 # COMMAND ----------
@@ -2011,7 +2050,12 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
  FROM $db_source.MHS201CareContact AS CC
  INNER JOIN $db_source.MHS101Referral AS REF ON CC.Person_ID = REF.Person_ID AND REF.UNIQSERVREQID = CC.UNIQSERVREQID
  INNER JOIN $db_output.tmp_MHMAB_MHS001MPI_latest_month_data AS MPI ON MPI.Person_ID = CC.Person_ID 
- INNER JOIN $db_output.ServiceTeamType  AS SERV ON REF.UNIQSERVREQID = SERV.UNIQSERVREQID AND CC.UniqOtherCareProfTeamLocalID = SERV.UniqCareProfTeamID AND REF.PERSON_ID = SERV.PERSON_ID AND SERV.UNIQMONTHID = '$month_id'
+ INNER JOIN $db_output.ServiceTeamType  AS SERV ON REF.UNIQSERVREQID = SERV.UNIQSERVREQID AND 
+ --BITC-7091: Bugfix for mhs30f
+ --CC.UniqOtherCareProfTeamLocalID = SERV.UniqCareProfTeamID 
+ (CASE  WHEN CC.OtherCareProfTeamLocalID IS NOT NULL THEN cc.UniqOtherCareProfTeamLocalID
+  ELSE REF.UniqCareProfTeamLocalID END)  = SERV.UniqCareProfTeamID
+ AND REF.PERSON_ID = SERV.PERSON_ID AND SERV.UNIQMONTHID = '$month_id'
  INNER JOIN global_temp.CCG AS CCG ON CC.Person_ID = CCG.Person_ID
  LEFT JOIN $db_output.ConsMechanismMH_dim as CMU_DIM ON CC.ConsMechanismMH = CMU_DIM.Code and CC.UniqMonthID >= CMU_DIM.FirstMonth and CC.UniqMonthID <= coalesce(LastMonth,9999)
  INNER JOIN $db_output.validcodes as vc on SERV.ServTeamTypeRefToMH = vc.ValidValue and vc.Measure = 'CAMHS' and '$month_id' >= vc.FirstMonth and (vc.LastMonth is null or '$month_id' <= vc.LastMonth)
@@ -2047,7 +2091,12 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
   FROM  $db_source.MHS201CareContact AS CC
   INNER JOIN $db_source.MHS101Referral AS REF ON CC.Person_ID = REF.Person_ID AND REF.UNIQSERVREQID = CC.UNIQSERVREQID 
   INNER JOIN $db_source.MHS001MPI AS MPI ON MPI.Person_ID = CC.Person_ID AND CC.OrgIDPRov = MPI.OrgIDProv AND MPI.UniqMonthID = CC.UniqMonthID
-  INNER JOIN $db_output.ServiceTeamType AS SERV ON REF.UNIQSERVREQID = SERV.UNIQSERVREQID AND CC.UniqOtherCareProfTeamLocalID = SERV.UniqCareProfTeamID AND REF.PERSON_ID = SERV.PERSON_ID AND SERV.UNIQMONTHID = '$month_id'
+  INNER JOIN $db_output.ServiceTeamType AS SERV ON REF.UNIQSERVREQID = SERV.UNIQSERVREQID AND 
+  --BITC-7091: Bugfix for mhs30f
+  --CC.UniqOtherCareProfTeamLocalID = SERV.UniqCareProfTeamID 
+  (CASE  WHEN CC.OtherCareProfTeamLocalID IS NOT NULL THEN cc.UniqOtherCareProfTeamLocalID
+  ELSE REF.UniqCareProfTeamLocalID END)  = SERV.UniqCareProfTeamID
+  AND REF.PERSON_ID = SERV.PERSON_ID AND SERV.UNIQMONTHID = '$month_id'
   INNER JOIN global_temp.CCG  AS CCG ON CC.Person_ID = CCG.Person_ID
   LEFT JOIN $db_output.ConsMechanismMH_dim as CMU_DIM ON CC.ConsMechanismMH = CMU_DIM.Code and CC.UniqMonthID >= CMU_DIM.FirstMonth and CC.UniqMonthID <= coalesce(LastMonth,9999)
   INNER JOIN $db_output.validcodes as vc on SERV.ServTeamTypeRefToMH = vc.ValidValue and vc.Measure = 'CAMHS' and '$month_id' >= vc.FirstMonth and (vc.LastMonth is null or '$month_id' <= vc.LastMonth)
@@ -2193,6 +2242,10 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
             ,COALESCE(MPI.DisabCode_Desc, "UNKNOWN") as DisabCode_Desc
             ,COALESCE(MPI.Sex_Orient, "UNKNOWN") as Sex_Orient
             ,COALESCE(MPI.RuralUrbanClassName, "UNKNOWN") as RuralUrbanClassName
+            ,COALESCE(MPI.AutismStatus, "UNKNOWN") as AutismStatus -- BITC-6682 field added --
+            ,COALESCE(MPI.AutismStatus_desc, "UNKNOWN") as AutismStatus_desc -- BITC-6682 field added --
+            ,COALESCE(MPI.LDStatus, "UNKNOWN") as LDStatus -- BITC-6682 field added --
+            ,COALESCE(MPI.LDStatus_desc, "UNKNOWN") as LDStatus_desc -- BITC-6682 field added --
  FROM $db_output.tmp_MHMAB_MHS001MPI_latest_month_data AS MPI
  LEFT JOIN $db_source.MHS101Referral AS REF
              ON MPI.Person_ID = REF.Person_ID 
@@ -2423,6 +2476,10 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
             ,COALESCE(MPI.DisabCode_Desc, "UNKNOWN") as DisabCode_Desc
             ,COALESCE(MPI.Sex_Orient, "UNKNOWN") as Sex_Orient
             ,COALESCE(MPI.RuralUrbanClassName, "UNKNOWN") as RuralUrbanClassName
+            ,COALESCE(MPI.AutismStatus, "UNKNOWN") as AutismStatus
+            ,COALESCE(MPI.AutismStatus_desc, "UNKNOWN") as AutismStatus_desc
+            ,COALESCE(MPI.LDStatus, "UNKNOWN") as LDStatus
+            ,COALESCE(MPI.LDStatus_desc, "UNKNOWN") as LDStatus_desc
  FROM $db_output.mhs101referral_open_end_rp AS REF
  LEFT JOIN $db_output.tmp_MHMAB_mhs001mpi_latest_month_data AS MPI
              ON REF.Person_ID = MPI.Person_ID 
@@ -2451,6 +2508,10 @@ spark.sql('VACUUM {db_output}.{table} RETAIN 8 HOURS'.format(db_output=db_output
             ,COALESCE(MPI.DisabCode_Desc, "UNKNOWN") as DisabCode_Desc
             ,COALESCE(MPI.Sex_Orient, "UNKNOWN") as Sex_Orient
             ,COALESCE(MPI.RuralUrbanClassName, "UNKNOWN") as RuralUrbanClassName
+            ,COALESCE(MPI.AutismStatus, "UNKNOWN") as AutismStatus
+            ,COALESCE(MPI.AutismStatus_desc, "UNKNOWN") as AutismStatus_desc
+            ,COALESCE(MPI.LDStatus, "UNKNOWN") as LDStatus
+            ,COALESCE(MPI.LDStatus_desc, "UNKNOWN") as LDStatus_desc
  FROM $db_output.tmp_MHMAB_mhs001mpi_latest_month_data AS MPI
  INNER JOIN $db_output.mhs101referral_open_end_rp AS REF
              ON MPI.Person_ID = REF.Person_ID 

@@ -510,7 +510,7 @@ def insert_lda_lookup_values(db_output: str, metadata: dict):
   The "skeleton" table ensures cases like this aren't missed in the final output
 
   Example:
-  jan22perf = MHRunParameters("mh_clear_collab", "$mhsds_db", "2022-01-31")
+  jan22perf = MHRunParameters("mh_clear_collab", "mhsds_database", "2022-01-31")
   insert_mh_monthly_lookup_values(jan22perf.db_output, jan22perf.db_source, jan22perf.rp_enddate, jan22perf.end_month_id, common_measure_ids)
   >> all breakdown and primary/secondary level for each measure inserted into the mh_monthly_level_values table
   """

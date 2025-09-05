@@ -7,7 +7,7 @@
 -- CREATE WIDGET TEXT db_output DEFAULT "menh_analysis";
 -- CREATE WIDGET TEXT status DEFAULT "Performance";
 -- CREATE WIDGET TEXT month_id DEFAULT "1419";
--- CREATE WIDGET TEXT db_source DEFAULT "testdata_menh_analysis_mhsds_db";
+-- CREATE WIDGET TEXT db_source DEFAULT "testdata_menh_analysis_mhsds_database";
 -- CREATE WIDGET TEXT rp_startdate DEFAULT "2018-06-01";
 -- CREATE WIDGET TEXT rp_enddate DEFAULT "2018-06-30";
 

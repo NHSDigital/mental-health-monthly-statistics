@@ -479,7 +479,7 @@ four_ww_measure_ids = {
   "crude_rate": 0,
   "related_to": "patient spells",
   "suppression": "count",
-  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd],
+  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd, imd_core20_bd, stp_prac_res_imd_core20_bd, comm_region_imd_core20_bd],
   "output_table": "bbrb_final_raw"
 },
   "MRS01a": {
@@ -494,7 +494,7 @@ four_ww_measure_ids = {
   "crude_rate": 0,
   "related_to": "patient spells",
   "suppression": "count",
-  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd],
+  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd, imd_core20_bd, stp_prac_res_imd_core20_bd, comm_region_imd_core20_bd],
   "output_table": "bbrb_final_raw"
 },
   "MRS01b": {
@@ -509,7 +509,7 @@ four_ww_measure_ids = {
   "crude_rate": 0,
   "related_to": "patient spells",
   "suppression": "percent",
-  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd],
+  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd, imd_core20_bd, stp_prac_res_imd_core20_bd, comm_region_imd_core20_bd],
   "output_table": "bbrb_final_raw"
 },
   "MRS02": {
@@ -524,7 +524,7 @@ four_ww_measure_ids = {
   "crude_rate": 0,
   "related_to": "patient spells",
   "suppression": "count",
-  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd],
+  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd, imd_core20_bd, stp_prac_res_imd_core20_bd, comm_region_imd_core20_bd],
   "output_table": "bbrb_final_raw"
 },
   "MRS02a": {
@@ -539,7 +539,7 @@ four_ww_measure_ids = {
   "crude_rate": 0,
   "related_to": "patient spells",
   "suppression": "count",
-  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd],
+  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd, imd_core20_bd, stp_prac_res_imd_core20_bd, comm_region_imd_core20_bd],
   "output_table": "bbrb_final_raw"
 },
   "MRS02b": {
@@ -554,7 +554,7 @@ four_ww_measure_ids = {
   "crude_rate": 0,
   "related_to": "patient spells",
   "suppression": "percent",
-  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd],
+  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd, imd_core20_bd, stp_prac_res_imd_core20_bd, comm_region_imd_core20_bd],
   "output_table": "bbrb_final_raw"
 },
   "MRS02c": {
@@ -569,7 +569,7 @@ four_ww_measure_ids = {
   "crude_rate": 0,
   "related_to": "patient spells",
   "suppression": "count",
-  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd],
+  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd, imd_core20_bd, stp_prac_res_imd_core20_bd, comm_region_imd_core20_bd],
   "output_table": "bbrb_final_raw"
 },
   "MRS02d": {
@@ -584,7 +584,7 @@ four_ww_measure_ids = {
   "crude_rate": 0,
   "related_to": "patient spells",
   "suppression": "percent",
-  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd],
+  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd, imd_core20_bd, stp_prac_res_imd_core20_bd, comm_region_imd_core20_bd],
   "output_table": "bbrb_final_raw"
 },
   "MRS02e": {
@@ -599,7 +599,7 @@ four_ww_measure_ids = {
   "crude_rate": 0,
   "related_to": "patient spells",
   "suppression": "count",
-  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd],
+  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd, imd_core20_bd, stp_prac_res_imd_core20_bd, comm_region_imd_core20_bd],
   "output_table": "bbrb_final_raw"
 },
   "MRS02f": {
@@ -614,7 +614,7 @@ four_ww_measure_ids = {
   "crude_rate": 0,
   "related_to": "patient spells",
   "suppression": "percent",
-  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd],
+  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd, imd_core20_bd, stp_prac_res_imd_core20_bd, comm_region_imd_core20_bd],
   "output_table": "bbrb_final_raw"
 },
   "MRS03": {
@@ -629,7 +629,7 @@ four_ww_measure_ids = {
   "crude_rate": 0,
   "related_to": "patient spells",
   "suppression": "count",
-  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd],
+  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd, imd_core20_bd, stp_prac_res_imd_core20_bd, comm_region_imd_core20_bd],
   "output_table": "bbrb_final_raw"
 },
   "MRS03a": {
@@ -644,7 +644,7 @@ four_ww_measure_ids = {
   "crude_rate": 0,
   "related_to": "median",
   "suppression": "percent",
-  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd],
+  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd, imd_core20_bd, stp_prac_res_imd_core20_bd, comm_region_imd_core20_bd],
   "output_table": "bbrb_final_raw"
 },
   "MRS03b": {
@@ -659,7 +659,7 @@ four_ww_measure_ids = {
   "crude_rate": 0,
   "related_to": "median",
   "suppression": "percent",
-  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd],
+  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd, imd_core20_bd, stp_prac_res_imd_core20_bd, comm_region_imd_core20_bd],
   "output_table": "bbrb_final_raw"
 },
   "MRS04": {
@@ -674,7 +674,7 @@ four_ww_measure_ids = {
   "crude_rate": 0,
   "related_to": "patient spells",
   "suppression": "count",
-  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd],
+  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd, imd_core20_bd, stp_prac_res_imd_core20_bd, comm_region_imd_core20_bd],
   "output_table": "bbrb_final_raw"
 },
   "MRS05": {
@@ -689,7 +689,7 @@ four_ww_measure_ids = {
   "crude_rate": 0,
   "related_to": "patient spells",
   "suppression": "count",
-  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd],
+  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd, imd_core20_bd, stp_prac_res_imd_core20_bd, comm_region_imd_core20_bd],
   "output_table": "bbrb_final_raw"
 },
   "MRS06": {
@@ -704,7 +704,7 @@ four_ww_measure_ids = {
   "crude_rate": 0,
   "related_to": "patient spells",
   "suppression": "count",
-  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd],
+  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd, imd_core20_bd, stp_prac_res_imd_core20_bd, comm_region_imd_core20_bd],
   "output_table": "bbrb_final_raw"
 },
   "MRS07a": {
@@ -719,7 +719,7 @@ four_ww_measure_ids = {
   "crude_rate": 0,
   "related_to": "patient spells",
   "suppression": "count",
-  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd],
+  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd, imd_core20_bd, stp_prac_res_imd_core20_bd, comm_region_imd_core20_bd],
   "output_table": "bbrb_final_raw"
 },
   "MRS07b": {
@@ -734,7 +734,7 @@ four_ww_measure_ids = {
   "crude_rate": 0,
   "related_to": "patient spells",
   "suppression": "percent",
-  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd],
+  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd, imd_core20_bd, stp_prac_res_imd_core20_bd, comm_region_imd_core20_bd],
   "output_table": "bbrb_final_raw"
 },
   "MRS07c": {
@@ -749,7 +749,7 @@ four_ww_measure_ids = {
   "crude_rate": 0,
   "related_to": "patient spells",
   "suppression": "count",
-  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd],
+  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd, imd_core20_bd, stp_prac_res_imd_core20_bd, comm_region_imd_core20_bd],
   "output_table": "bbrb_final_raw"
 },
   "MRS07d": {
@@ -764,7 +764,7 @@ four_ww_measure_ids = {
   "crude_rate": 0,
   "related_to": "patient spells",
   "suppression": "percent",
-  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd],
+  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd, imd_core20_bd, stp_prac_res_imd_core20_bd, comm_region_imd_core20_bd],
   "output_table": "bbrb_final_raw"
 },
   "MRS07e": {
@@ -779,7 +779,7 @@ four_ww_measure_ids = {
   "crude_rate": 0,
   "related_to": "patient spells",
   "suppression": "count",
-  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd],
+  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd, imd_core20_bd, stp_prac_res_imd_core20_bd, comm_region_imd_core20_bd],
   "output_table": "bbrb_final_raw"
 },
   "MRS07f": {
@@ -794,7 +794,7 @@ four_ww_measure_ids = {
   "crude_rate": 0,
   "related_to": "patient spells",
   "suppression": "percent",
-  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd],
+  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd, imd_core20_bd, stp_prac_res_imd_core20_bd, comm_region_imd_core20_bd],
   "output_table": "bbrb_final_raw"
 },
   "MRS08": {
@@ -809,7 +809,7 @@ four_ww_measure_ids = {
   "crude_rate": 0,
   "related_to": "patient spells",
   "suppression": "count",
-  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd],
+  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd, imd_core20_bd, stp_prac_res_imd_core20_bd, comm_region_imd_core20_bd],
   "output_table": "bbrb_final_raw"
 },
   "MRS08a": {
@@ -824,7 +824,7 @@ four_ww_measure_ids = {
   "crude_rate": 0,
   "related_to": "patient spells",
   "suppression": "count",
-  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd],
+  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd, imd_core20_bd, stp_prac_res_imd_core20_bd, comm_region_imd_core20_bd],
   "output_table": "bbrb_final_raw"
 },
   "MRS08b": {
@@ -839,7 +839,7 @@ four_ww_measure_ids = {
   "crude_rate": 0,
   "related_to": "patient spells",
   "suppression": "percent",
-  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd],
+  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd, imd_core20_bd, stp_prac_res_imd_core20_bd, comm_region_imd_core20_bd],
   "output_table": "bbrb_final_raw"
 },
   "MRS09": {
@@ -854,7 +854,7 @@ four_ww_measure_ids = {
   "crude_rate": 0,
   "related_to": "patient spells",
   "suppression": "count",
-  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd],
+  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd, imd_core20_bd, stp_prac_res_imd_core20_bd, comm_region_imd_core20_bd],
   "output_table": "bbrb_final_raw"
 },
   "MRS09a": {
@@ -869,7 +869,7 @@ four_ww_measure_ids = {
   "crude_rate": 0,
   "related_to": "patient spells",
   "suppression": "count",
-  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd],
+  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd, imd_core20_bd, stp_prac_res_imd_core20_bd, comm_region_imd_core20_bd],
   "output_table": "bbrb_final_raw"
 },
   "MRS09b": {
@@ -884,7 +884,7 @@ four_ww_measure_ids = {
   "crude_rate": 0,
   "related_to": "patient spells",
   "suppression": "percent",
-  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd],
+  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd, imd_core20_bd, stp_prac_res_imd_core20_bd, comm_region_imd_core20_bd],
   "output_table": "bbrb_final_raw"
 },
   "MRS09c": {
@@ -899,7 +899,7 @@ four_ww_measure_ids = {
   "crude_rate": 0,
   "related_to": "patient spells",
   "suppression": "count",
-  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd],
+  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd, imd_core20_bd, stp_prac_res_imd_core20_bd, comm_region_imd_core20_bd],
   "output_table": "bbrb_final_raw"
 },
   "MRS09d": {
@@ -914,7 +914,7 @@ four_ww_measure_ids = {
   "crude_rate": 0,
   "related_to": "patient spells",
   "suppression": "percent",
-  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd],
+  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd, imd_core20_bd, stp_prac_res_imd_core20_bd, comm_region_imd_core20_bd],
   "output_table": "bbrb_final_raw"
 },
   "MRS09e": {
@@ -929,7 +929,7 @@ four_ww_measure_ids = {
   "crude_rate": 0,
   "related_to": "patient spells",
   "suppression": "count",
-  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd],
+  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd, imd_core20_bd, stp_prac_res_imd_core20_bd, comm_region_imd_core20_bd],
   "output_table": "bbrb_final_raw"
 },
   "MRS09f": {
@@ -944,7 +944,7 @@ four_ww_measure_ids = {
   "crude_rate": 0,
   "related_to": "patient spells",
   "suppression": "percent",
-  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd],
+  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd, imd_core20_bd, stp_prac_res_imd_core20_bd, comm_region_imd_core20_bd],
   "output_table": "bbrb_final_raw"
 },
   "MRS10": {
@@ -959,7 +959,7 @@ four_ww_measure_ids = {
   "crude_rate": 0,
   "related_to": "patient spells",
   "suppression": "count",
-  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd],
+  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd, imd_core20_bd, stp_prac_res_imd_core20_bd, comm_region_imd_core20_bd],
   "output_table": "bbrb_final_raw"
 },
   "MRS10a": {
@@ -974,7 +974,7 @@ four_ww_measure_ids = {
   "crude_rate": 0,
   "related_to": "median",
   "suppression": "percent",
-  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd],
+  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd, imd_core20_bd, stp_prac_res_imd_core20_bd, comm_region_imd_core20_bd],
   "output_table": "bbrb_final_raw"
 },
   "MRS10b": {
@@ -989,7 +989,7 @@ four_ww_measure_ids = {
   "crude_rate": 0,
   "related_to": "median",
   "suppression": "percent",
-  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd],
+  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd, imd_core20_bd, stp_prac_res_imd_core20_bd, comm_region_imd_core20_bd],
   "output_table": "bbrb_final_raw"
 },
   "MRS11": {
@@ -1004,7 +1004,7 @@ four_ww_measure_ids = {
   "crude_rate": 0,
   "related_to": "patient spells",
   "suppression": "count",
-  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd],
+  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd, imd_core20_bd, stp_prac_res_imd_core20_bd, comm_region_imd_core20_bd],
   "output_table": "bbrb_final_raw"
 },
   "MRS12": {
@@ -1019,7 +1019,7 @@ four_ww_measure_ids = {
   "crude_rate": 0,
   "related_to": "patient spells",
   "suppression": "count",
-  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd],
+  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd, imd_core20_bd, stp_prac_res_imd_core20_bd, comm_region_imd_core20_bd],
   "output_table": "bbrb_final_raw"
 },
   "MRS13": {
@@ -1034,7 +1034,7 @@ four_ww_measure_ids = {
   "crude_rate": 0,
   "related_to": "patient spells",
   "suppression": "count",
-  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd],
+  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd, imd_core20_bd, stp_prac_res_imd_core20_bd, comm_region_imd_core20_bd],
   "output_table": "bbrb_final_raw"
 },
   "MRS14a": {
@@ -1049,7 +1049,7 @@ four_ww_measure_ids = {
   "crude_rate": 0,
   "related_to": "patient spells",
   "suppression": "count",
-  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd],
+  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd, imd_core20_bd, stp_prac_res_imd_core20_bd, comm_region_imd_core20_bd],
   "output_table": "bbrb_final_raw"
 },
   "MRS14b": {
@@ -1064,7 +1064,7 @@ four_ww_measure_ids = {
   "crude_rate": 0,
   "related_to": "patient spells",
   "suppression": "percent",
-  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd],
+  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd, imd_core20_bd, stp_prac_res_imd_core20_bd, comm_region_imd_core20_bd],
   "output_table": "bbrb_final_raw"
 },
   "MRS14c": {
@@ -1079,7 +1079,7 @@ four_ww_measure_ids = {
   "crude_rate": 0,
   "related_to": "patient spells",
   "suppression": "count",
-  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd],
+  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd, imd_core20_bd, stp_prac_res_imd_core20_bd, comm_region_imd_core20_bd],
   "output_table": "bbrb_final_raw"
 },
   "MRS14d": {
@@ -1094,7 +1094,7 @@ four_ww_measure_ids = {
   "crude_rate": 0,
   "related_to": "patient spells",
   "suppression": "percent",
-  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd],
+  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd, imd_core20_bd, stp_prac_res_imd_core20_bd, comm_region_imd_core20_bd],
   "output_table": "bbrb_final_raw"
 },
   "MRS14e": {
@@ -1109,7 +1109,7 @@ four_ww_measure_ids = {
   "crude_rate": 0,
   "related_to": "patient spells",
   "suppression": "count",
-  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd],
+  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd, imd_core20_bd, stp_prac_res_imd_core20_bd, comm_region_imd_core20_bd],
   "output_table": "bbrb_final_raw"
 },
   "MRS14f": {
@@ -1124,7 +1124,7 @@ four_ww_measure_ids = {
   "crude_rate": 0,
   "related_to": "patient spells",
   "suppression": "percent",
-  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd],
+  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd, imd_core20_bd, stp_prac_res_imd_core20_bd, comm_region_imd_core20_bd],
   "output_table": "bbrb_final_raw"
 },
   "MRS15": {
@@ -1139,7 +1139,7 @@ four_ww_measure_ids = {
   "crude_rate": 0,
   "related_to": "patient spells",
   "suppression": "count",
-  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd],
+  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd, imd_core20_bd, stp_prac_res_imd_core20_bd, comm_region_imd_core20_bd],
   "output_table": "bbrb_final_raw"
 },
   "MRS16": {
@@ -1154,7 +1154,7 @@ four_ww_measure_ids = {
   "crude_rate": 0,
   "related_to": "patient spells",
   "suppression": "count",
-  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd],
+  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd, imd_core20_bd, stp_prac_res_imd_core20_bd, comm_region_imd_core20_bd],
   "output_table": "bbrb_final_raw"
 },
   "MRS17": {
@@ -1169,7 +1169,7 @@ four_ww_measure_ids = {
   "crude_rate": 0,
   "related_to": "patient spells",
   "suppression": "count",
-  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd],
+  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd, imd_core20_bd, stp_prac_res_imd_core20_bd, comm_region_imd_core20_bd],
   "output_table": "bbrb_final_raw"
 }, 
   
@@ -1185,7 +1185,7 @@ four_ww_measure_ids = {
   "crude_rate": 0,
   "related_to": "patient spells",
   "suppression": "count",
-  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd],
+  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd, imd_core20_bd, stp_prac_res_imd_core20_bd, comm_region_imd_core20_bd],
   "output_table": "bbrb_final_raw"
 },  
   
@@ -1201,7 +1201,7 @@ four_ww_measure_ids = {
   "crude_rate": 1,
   "related_to": "patient spells",
   "suppression": "percent",
-  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd],
+  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd, imd_core20_bd, stp_prac_res_imd_core20_bd, comm_region_imd_core20_bd],
   "output_table": "bbrb_final_raw"
 },   
   
@@ -1217,7 +1217,7 @@ four_ww_measure_ids = {
   "crude_rate": 0,
   "related_to": "patient spells",
   "suppression": "count",
-  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd],
+  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd, imd_core20_bd, stp_prac_res_imd_core20_bd, comm_region_imd_core20_bd],
   "output_table": "bbrb_final_raw"
 },    
   
@@ -1233,7 +1233,7 @@ four_ww_measure_ids = {
   "crude_rate": 0,
   "related_to": "patient spells",
   "suppression": "count",
-  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd],
+  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd, imd_core20_bd, stp_prac_res_imd_core20_bd, comm_region_imd_core20_bd],
   "output_table": "bbrb_final_raw"
 },  
   
@@ -1249,7 +1249,7 @@ four_ww_measure_ids = {
   "crude_rate": 1,
   "related_to": "patient spells",
   "suppression": "percent",
-  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd],
+  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd, imd_core20_bd, stp_prac_res_imd_core20_bd, comm_region_imd_core20_bd],
   "output_table": "bbrb_final_raw"
 }, 
 }
@@ -1469,7 +1469,122 @@ cyp_peri_measure_ids = {
   "crude_rate": 0,
   "related_to": "people",
   "suppression": "count",
-  "breakdowns": [eng_bd, prov_bd, ccg_prac_res_bd, ccg_prac_res_prov_bd, stp_prac_res_bd, comm_region_bd],
+  "breakdowns": [eng_bd, prov_bd, age_band_cyp_bd, gender_bd, upper_eth_bd, wnw_eth_bd, imd_quintile_bd, imd_core20_bd,
+                 ccg_prac_res_bd, ccg_prac_res_prov_bd, 
+                 stp_prac_res_bd, stp_prac_res_age_band_cyp_bd, stp_prac_res_gender_bd, stp_prac_res_upper_eth_bd, stp_prac_res_wnw_eth_bd, stp_prac_res_imd_quintile_bd, stp_prac_res_imd_core20_bd,
+                 comm_region_bd, comm_region_age_band_cyp_bd, comm_region_gender_bd, comm_region_upper_eth_bd, comm_region_wnw_eth_bd, comm_region_imd_quintile_bd, comm_region_imd_core20_bd],
+  "output_table": "bbrb_final_raw"
+},
+"MHS95a": {
+  "freq": "12M", 
+  "name": "Crude rate per 100,000 of CYP aged under 18 supported through NHS funded mental health with at least one contact (12 month rolling)",
+  "source_table": "firstcont_final",
+  "filter_clause": "",
+  "aggregate_field": "(COALESCE(SUM(NUMERATOR_COUNT)/SUM(DENOMINATOR_COUNT), 0))*100000",
+  "aggregate_function": produce_crude_rate_agg_df,
+  "numerator_id": "MHS95",
+  "denominator": "MHSPOPCYP",  
+  "crude_rate": 1,
+  "related_to": "people",
+  "suppression": "percent",
+  "breakdowns": [eng_bd, age_band_cyp_bd, gender_bd, upper_eth_bd, wnw_eth_bd, imd_quintile_bd, imd_core20_bd,
+                 stp_prac_res_bd, stp_prac_res_age_band_cyp_bd, stp_prac_res_gender_bd, stp_prac_res_upper_eth_bd, stp_prac_res_wnw_eth_bd, stp_prac_res_imd_quintile_bd, stp_prac_res_imd_core20_bd,
+                 comm_region_bd, comm_region_age_band_cyp_bd, comm_region_gender_bd, comm_region_upper_eth_bd, comm_region_wnw_eth_bd, comm_region_imd_quintile_bd, comm_region_imd_core20_bd],
+  "output_table": "bbrb_final_raw"
+},
+"MHS95b": {
+  "freq": "12M", 
+  "name": "Direct standardised rate per 100,000 of CYP aged under 18 supported through NHS funded mental health with at least one contact (12 month rolling)",
+  "source_table": "firstcont_final",
+  "filter_clause": (F.col("Metric") == "MHS95"),
+  "aggregate_field": "SUM(STANDARDISED_RATE) * 100000",
+  "aggregate_function": produce_direct_standardised_rate_agg_df,
+  "numerator_id": "MHS95",
+  "denominator": "MHSPOPCYP",  
+  "crude_rate": 0,
+  "related_to": "people",
+  "suppression": "percent",
+  "breakdowns": [upper_eth_bd, wnw_eth_bd, imd_quintile_bd, imd_core20_bd,
+                 stp_prac_res_upper_eth_bd, stp_prac_res_wnw_eth_bd, stp_prac_res_imd_quintile_bd, stp_prac_res_imd_core20_bd,
+                 comm_region_upper_eth_bd, comm_region_wnw_eth_bd, comm_region_imd_quintile_bd, comm_region_imd_core20_bd
+                ],
+  "output_table": "bbrb_final_raw"
+},
+"MHS95c": {
+  "freq": "12M", 
+  "name": "95% Confidence Interval (+/-) of direct standardised rate per 100,000 of CYP aged under 18 supported through NHS funded mental health with at least one contact (12 month rolling)",
+  "source_table": "firstcont_final",
+  "filter_clause": (F.col("Metric") == "MHS95"),
+  "aggregate_field": "SUM(CI_RANGE) * 100000",
+  "aggregate_function": produce_direct_standardised_rate_agg_df,
+  "numerator_id": "MHS95",
+  "denominator": "MHSPOPCYP",  
+  "crude_rate": 0,
+  "related_to": "people",
+  "suppression": "percent",
+  "breakdowns": [upper_eth_bd, wnw_eth_bd, imd_quintile_bd, imd_core20_bd,
+                 stp_prac_res_upper_eth_bd, stp_prac_res_wnw_eth_bd, stp_prac_res_imd_quintile_bd, stp_prac_res_imd_core20_bd,
+                 comm_region_upper_eth_bd, comm_region_wnw_eth_bd, comm_region_imd_quintile_bd, comm_region_imd_core20_bd],
+  "output_table": "bbrb_final_raw"
+},
+# "MHS95d": {
+#   "freq": "12M", 
+#   "name": "Absolute mean deviation between White and other upper ethnicities of direct standardised rate per 100,000 of CYP aged under 18 supported through NHS funded mental health with at least one contact (12 month rolling)",
+#   "source_table": "firstcont_final",
+#   "filter_clause": (F.col("Metric") == "MHS95"),
+#   "aggregate_field": "SUM(MeanAbsoluteDeviation) * 100000",
+#   "aggregate_function": produce_absolute_mean_deviation_white_vs_non_white_upper_ethnicites_df,
+#   "numerator_id": "MHS95",
+#   "denominator": 0,  
+#   "crude_rate": 0,
+#   "related_to": "people",
+#   "suppression": "percent",
+#   "breakdowns": [upper_eth_mean_dev_bd, stp_prac_res_upper_eth_mean_dev_bd, comm_region_upper_eth_mean_dev_bd],
+#   "output_table": "bbrb_final_raw"
+# },
+# "MHS95e": {
+#   "freq": "12M", 
+#   "name": "Weighted absolute mean deviation between White and other upper ethnicities of direct standardised rate per 100,000 of CYP aged under 18 supported through NHS funded mental health with at least one contact (12 month rolling)",
+#   "source_table": "firstcont_final",
+#   "filter_clause": (F.col("Metric") == "MHS95"),
+#   "aggregate_field": "SUM(WeightedMeanAbsoluteDeviation) * 100000",
+#   "aggregate_function": produce_absolute_mean_deviation_white_vs_non_white_upper_ethnicites_df,
+#   "numerator_id": "MHS95",
+#   "denominator": 0,  
+#   "crude_rate": 0,
+#   "related_to": "people",
+#   "suppression": "percent",
+#   "breakdowns": [upper_eth_mean_dev_bd, stp_prac_res_upper_eth_mean_dev_bd, comm_region_upper_eth_mean_dev_bd],
+#   "output_table": "bbrb_final_raw"
+# },
+"MHS95f": {
+  "freq": "12M", 
+  "name": "Absolute difference between White and non-White ethnicity of direct standardised rate per 100,000 of CYP aged under 18 supported through NHS funded mental health with at least one contact (12 month rolling)",
+  "source_table": "firstcont_final",
+  "filter_clause": (F.col("Metric") == "MHS95"),
+  "aggregate_field": "SUM(AbsoluteDiffFromMain) * 100000",
+  "aggregate_function": produce_absolute_difference_between_two_standardised_rates_df,
+  "numerator_id": "MHS95",
+  "denominator": 0,  
+  "crude_rate": 0,
+  "related_to": "people",
+  "suppression": "percent",
+  "breakdowns": [wnw_eth_stan_rates_diff_bd, stp_prac_res_wnw_eth_stan_rates_diff_bd, comm_region_wnw_eth_stan_rates_diff_bd],
+  "output_table": "bbrb_final_raw"
+},
+"MHS95g": {
+  "freq": "12M", 
+  "name": "Absolute difference between most deprived quintile and all other quintiles combined of direct standardised rate per 100,000 of CYP aged under 18 supported through NHS funded mental health with at least one contact (12 month rolling)",
+  "source_table": "firstcont_final",
+  "filter_clause": (F.col("Metric") == "MHS95"),
+  "aggregate_field": "SUM(AbsoluteDiffFromMain) * 100000",
+  "aggregate_function": produce_absolute_difference_between_two_standardised_rates_df,
+  "numerator_id": "MHS95",
+  "denominator": 0,  
+  "crude_rate": 0,
+  "related_to": "people",
+  "suppression": "percent",
+  "breakdowns": [imd_core20_stan_rates_diff_bd, stp_prac_res_imd_core20_stan_rates_diff_bd, comm_region_imd_core20_stan_rates_diff_bd],
   "output_table": "bbrb_final_raw"
 },
 "MHS109": {
@@ -2617,10 +2732,10 @@ oaps_measure_ids_part1 = {
   "crude_rate": 0,
   "related_to": "referrals",
   "suppression": "count",
-  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, reason_for_ref_bd, start_bed_type_bd, 
+  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, autism_status_bd, ld_status_bd, reason_for_ref_bd, start_bed_type_bd, 
                  ccg_prac_res_bd, 
                  stp_prac_res_bd,
-                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_reason_for_ref_bd, comm_region_start_bed_type_bd, comm_region_receiving_prov_bd,
+                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd,comm_region_ld_status_bd, comm_region_autism_status_bd, comm_region_reason_for_ref_bd, comm_region_start_bed_type_bd, comm_region_receiving_prov_bd,
                  sending_prov_bd, sending_prov_receiving_prov_bd,
                  receiving_prov_bd
                 ],
@@ -2638,8 +2753,8 @@ oaps_measure_ids_part1 = {
   "crude_rate": 0,
   "related_to": "referrals",
   "suppression": "count",
-  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, reason_for_ref_bd, start_bed_type_bd, 
-                 ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd,                              comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_reason_for_ref_bd,                            comm_region_start_bed_type_bd, comm_region_receiving_prov_bd, sending_prov_bd, sending_prov_receiving_prov_bd,
+  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, autism_status_bd, ld_status_bd, reason_for_ref_bd, start_bed_type_bd, 
+                 ccg_prac_res_bd, stp_prac_res_bd, comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_ld_status_bd, comm_region_autism_status_bd, comm_region_reason_for_ref_bd, comm_region_start_bed_type_bd, comm_region_receiving_prov_bd, sending_prov_bd, sending_prov_receiving_prov_bd,
                  receiving_prov_bd
                 ],
   "output_table": "bbrb_final_raw"
@@ -2656,13 +2771,13 @@ oaps_measure_ids_part1 = {
   "crude_rate": 0,
   "related_to": "referrals",
   "suppression": "count",
-  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, reason_for_ref_bd, start_bed_type_bd, 
+  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, autism_status_bd, ld_status_bd, reason_for_ref_bd, start_bed_type_bd, 
                  ccg_prac_res_bd, ccg_prac_res_age_band_oaps_bd, ccg_prac_res_lower_eth_bd, ccg_prac_res_upper_eth_bd,                                  ccg_prac_res_gender_bd, ccg_prac_res_imd_decile_bd, ccg_prac_res_reason_for_ref_bd, 
                  ccg_prac_res_start_bed_type_bd, ccg_prac_res_receiving_prov_bd,
                  stp_prac_res_bd, stp_prac_res_age_band_oaps_bd, stp_prac_res_lower_eth_bd, stp_prac_res_upper_eth_bd, stp_prac_res_gender_bd, stp_prac_res_imd_decile_bd, stp_prac_res_reason_for_ref_bd, stp_prac_res_start_bed_type_bd, stp_prac_res_receiving_prov_bd,
-                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_reason_for_ref_bd, comm_region_start_bed_type_bd, comm_region_receiving_prov_bd,
-                 sending_prov_bd, sending_prov_age_band_oaps_bd, sending_prov_lower_eth_bd, sending_prov_upper_eth_bd, sending_prov_gender_bd, sending_prov_imd_decile_bd, sending_prov_reason_for_ref_bd, sending_prov_start_bed_type_bd, sending_prov_receiving_prov_bd,
-                 receiving_prov_bd, receiving_prov_age_band_oaps_bd, receiving_prov_lower_eth_bd, receiving_prov_upper_eth_bd, receiving_prov_gender_bd, receiving_prov_imd_decile_bd, receiving_prov_reason_for_ref_bd, receiving_prov_start_bed_type_bd
+                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_ld_status_bd, comm_region_autism_status_bd, comm_region_reason_for_ref_bd, comm_region_start_bed_type_bd, comm_region_receiving_prov_bd,
+                 sending_prov_bd, sending_prov_age_band_oaps_bd, sending_prov_lower_eth_bd, sending_prov_upper_eth_bd, sending_prov_gender_bd, sending_prov_imd_decile_bd, sending_prov_ld_status_bd, sending_prov_autism_status_bd,sending_prov_reason_for_ref_bd, sending_prov_start_bed_type_bd, sending_prov_receiving_prov_bd,
+                 receiving_prov_bd, receiving_prov_age_band_oaps_bd, receiving_prov_lower_eth_bd, receiving_prov_upper_eth_bd, receiving_prov_gender_bd, receiving_prov_imd_decile_bd, receiving_prov_ld_status_bd, receiving_prov_autism_status_bd, receiving_prov_reason_for_ref_bd, receiving_prov_start_bed_type_bd
                 ],
   "output_table": "bbrb_final_raw"
 },
@@ -2678,10 +2793,11 @@ oaps_measure_ids_part1 = {
   "crude_rate": 0,
   "related_to": "referrals",
   "suppression": "count",
-  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, reason_for_ref_bd, start_bed_type_bd, 
+  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, autism_status_bd, ld_status_bd,  reason_for_ref_bd, start_bed_type_bd, 
                  ccg_prac_res_bd, 
                  stp_prac_res_bd,
-                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_reason_for_ref_bd, comm_region_start_bed_type_bd, comm_region_receiving_prov_bd,
+                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_ld_status_bd,
+comm_region_autism_status_bd, comm_region_reason_for_ref_bd, comm_region_start_bed_type_bd, comm_region_receiving_prov_bd,
                  sending_prov_bd, sending_prov_receiving_prov_bd,
                  receiving_prov_bd
                 ],
@@ -2699,11 +2815,12 @@ oaps_measure_ids_part1 = {
   "crude_rate": 0,
   "related_to": "referrals",
   "suppression": "count",
-  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, reason_for_ref_bd, start_bed_type_bd, 
+  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, autism_status_bd, ld_status_bd, reason_for_ref_bd, start_bed_type_bd, 
                  ccg_prac_res_bd, 
                  stp_prac_res_bd,
                  comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd,
-                 comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_reason_for_ref_bd, comm_region_start_bed_type_bd, comm_region_receiving_prov_bd,
+                 comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_ld_status_bd, 
+comm_region_autism_status_bd,comm_region_reason_for_ref_bd, comm_region_start_bed_type_bd, comm_region_receiving_prov_bd,
                  sending_prov_bd, sending_prov_receiving_prov_bd,
                  receiving_prov_bd
                 ],
@@ -2721,12 +2838,17 @@ oaps_measure_ids_part1 = {
   "crude_rate": 0,
   "related_to": "referrals",
   "suppression": "count",
-  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, reason_for_ref_bd, start_bed_type_bd, 
-                 ccg_prac_res_bd, ccg_prac_res_age_band_oaps_bd, ccg_prac_res_lower_eth_bd, ccg_prac_res_upper_eth_bd, ccg_prac_res_gender_bd, ccg_prac_res_imd_decile_bd, ccg_prac_res_reason_for_ref_bd, ccg_prac_res_start_bed_type_bd, ccg_prac_res_receiving_prov_bd,
-                 stp_prac_res_bd, stp_prac_res_age_band_oaps_bd, stp_prac_res_lower_eth_bd, stp_prac_res_upper_eth_bd, stp_prac_res_gender_bd, stp_prac_res_imd_decile_bd, stp_prac_res_reason_for_ref_bd, stp_prac_res_start_bed_type_bd, stp_prac_res_receiving_prov_bd,
-                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_reason_for_ref_bd, comm_region_start_bed_type_bd, comm_region_receiving_prov_bd,
-                 sending_prov_bd, sending_prov_age_band_oaps_bd, sending_prov_lower_eth_bd, sending_prov_upper_eth_bd, sending_prov_gender_bd, sending_prov_imd_decile_bd, sending_prov_reason_for_ref_bd, sending_prov_start_bed_type_bd, sending_prov_receiving_prov_bd,
-                 receiving_prov_bd, receiving_prov_age_band_oaps_bd, receiving_prov_lower_eth_bd, receiving_prov_upper_eth_bd, receiving_prov_gender_bd, receiving_prov_imd_decile_bd, receiving_prov_reason_for_ref_bd, receiving_prov_start_bed_type_bd
+  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, autism_status_bd, ld_status_bd, reason_for_ref_bd, start_bed_type_bd, 
+                 ccg_prac_res_bd, ccg_prac_res_age_band_oaps_bd, ccg_prac_res_lower_eth_bd, ccg_prac_res_upper_eth_bd, ccg_prac_res_gender_bd, ccg_prac_res_imd_decile_bd, ccg_prac_res_ld_status_bd,
+ccg_prac_res_autism_status_bd, ccg_prac_res_reason_for_ref_bd, ccg_prac_res_start_bed_type_bd, ccg_prac_res_receiving_prov_bd,
+                 stp_prac_res_bd, stp_prac_res_age_band_oaps_bd, stp_prac_res_lower_eth_bd, stp_prac_res_upper_eth_bd, stp_prac_res_gender_bd, stp_prac_res_imd_decile_bd, stp_prac_res_ld_status_bd,
+stp_prac_res_autism_status_bd, stp_prac_res_reason_for_ref_bd, stp_prac_res_start_bed_type_bd, stp_prac_res_receiving_prov_bd,
+                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_ld_status_bd,
+comm_region_autism_status_bd, comm_region_reason_for_ref_bd, comm_region_start_bed_type_bd, comm_region_receiving_prov_bd,
+                 sending_prov_bd, sending_prov_age_band_oaps_bd, sending_prov_lower_eth_bd, sending_prov_upper_eth_bd, sending_prov_gender_bd, sending_prov_imd_decile_bd, sending_prov_ld_status_bd,
+sending_prov_autism_status_bd, sending_prov_reason_for_ref_bd, sending_prov_start_bed_type_bd, sending_prov_receiving_prov_bd,
+                 receiving_prov_bd, receiving_prov_age_band_oaps_bd, receiving_prov_lower_eth_bd, receiving_prov_upper_eth_bd, receiving_prov_gender_bd, receiving_prov_imd_decile_bd, receiving_prov_ld_status_bd,
+receiving_prov_autism_status_bd, receiving_prov_reason_for_ref_bd, receiving_prov_start_bed_type_bd
                 ],
   "output_table": "bbrb_final_raw"
 },
@@ -2742,10 +2864,11 @@ oaps_measure_ids_part1 = {
   "crude_rate": 0,
   "related_to": "bed days",
   "suppression": "count",
-  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, reason_for_ref_bd, bed_type_bd, 
+  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, autism_status_bd, ld_status_bd, reason_for_ref_bd, bed_type_bd, 
                  ccg_prac_res_bd, 
                  stp_prac_res_bd,
-                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_reason_for_ref_bd, comm_region_bed_type_bd, comm_region_receiving_prov_bd,
+                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_ld_status_bd,
+comm_region_autism_status_bd, comm_region_reason_for_ref_bd, comm_region_bed_type_bd, comm_region_receiving_prov_bd,
                  sending_prov_bd, sending_prov_receiving_prov_bd,
                  receiving_prov_bd
                 ],
@@ -2763,10 +2886,11 @@ oaps_measure_ids_part1 = {
   "crude_rate": 0,
   "related_to": "bed days",
   "suppression": "count",
-  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, reason_for_ref_bd, bed_type_bd, 
+  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, autism_status_bd, ld_status_bd, reason_for_ref_bd, bed_type_bd, 
                  ccg_prac_res_bd, 
                  stp_prac_res_bd,
-                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_reason_for_ref_bd, comm_region_bed_type_bd, comm_region_receiving_prov_bd,
+                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_ld_status_bd,
+comm_region_autism_status_bd, comm_region_reason_for_ref_bd, comm_region_bed_type_bd, comm_region_receiving_prov_bd,
                  sending_prov_bd, sending_prov_receiving_prov_bd,
                  receiving_prov_bd
                 ],
@@ -2784,12 +2908,17 @@ oaps_measure_ids_part1 = {
   "crude_rate": 0,
   "related_to": "bed days",
   "suppression": "count",
-  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, reason_for_ref_bd, bed_type_bd, 
-                 ccg_prac_res_bd, ccg_prac_res_age_band_oaps_bd, ccg_prac_res_lower_eth_bd, ccg_prac_res_upper_eth_bd, ccg_prac_res_gender_bd, ccg_prac_res_imd_decile_bd, ccg_prac_res_reason_for_ref_bd, ccg_prac_res_bed_type_bd, ccg_prac_res_receiving_prov_bd,
-                 stp_prac_res_bd, stp_prac_res_age_band_oaps_bd, stp_prac_res_lower_eth_bd, stp_prac_res_upper_eth_bd, stp_prac_res_gender_bd, stp_prac_res_imd_decile_bd, stp_prac_res_reason_for_ref_bd, stp_prac_res_bed_type_bd, stp_prac_res_receiving_prov_bd,
-                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_reason_for_ref_bd, comm_region_bed_type_bd, comm_region_receiving_prov_bd,
-                 sending_prov_bd, sending_prov_age_band_oaps_bd, sending_prov_lower_eth_bd, sending_prov_upper_eth_bd, sending_prov_gender_bd, sending_prov_imd_decile_bd, sending_prov_reason_for_ref_bd, sending_prov_bed_type_bd, sending_prov_receiving_prov_bd,
-                 receiving_prov_bd, receiving_prov_age_band_oaps_bd, receiving_prov_lower_eth_bd, receiving_prov_upper_eth_bd, receiving_prov_gender_bd, receiving_prov_imd_decile_bd, receiving_prov_reason_for_ref_bd, receiving_prov_bed_type_bd
+  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, autism_status_bd, ld_status_bd, reason_for_ref_bd, bed_type_bd, 
+                 ccg_prac_res_bd, ccg_prac_res_age_band_oaps_bd, ccg_prac_res_lower_eth_bd, ccg_prac_res_upper_eth_bd, ccg_prac_res_gender_bd, ccg_prac_res_imd_decile_bd, ccg_prac_res_ld_status_bd,
+ccg_prac_res_autism_status_bd,ccg_prac_res_reason_for_ref_bd, ccg_prac_res_bed_type_bd, ccg_prac_res_receiving_prov_bd,
+                 stp_prac_res_bd, stp_prac_res_age_band_oaps_bd, stp_prac_res_lower_eth_bd, stp_prac_res_upper_eth_bd, stp_prac_res_gender_bd, stp_prac_res_imd_decile_bd, stp_prac_res_ld_status_bd,
+stp_prac_res_autism_status_bd, stp_prac_res_reason_for_ref_bd, stp_prac_res_bed_type_bd, stp_prac_res_receiving_prov_bd,
+                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_ld_status_bd,
+comm_region_autism_status_bd, comm_region_reason_for_ref_bd, comm_region_bed_type_bd, comm_region_receiving_prov_bd,
+                 sending_prov_bd, sending_prov_age_band_oaps_bd, sending_prov_lower_eth_bd, sending_prov_upper_eth_bd, sending_prov_gender_bd, sending_prov_imd_decile_bd, sending_prov_ld_status_bd,
+sending_prov_autism_status_bd,sending_prov_reason_for_ref_bd, sending_prov_bed_type_bd, sending_prov_receiving_prov_bd,
+                 receiving_prov_bd, receiving_prov_age_band_oaps_bd, receiving_prov_lower_eth_bd, receiving_prov_upper_eth_bd, receiving_prov_gender_bd, receiving_prov_imd_decile_bd, receiving_prov_ld_status_bd,
+receiving_prov_autism_status_bd,receiving_prov_reason_for_ref_bd, receiving_prov_bed_type_bd
                 ],
   "output_table": "bbrb_final_raw"
 },
@@ -2805,10 +2934,11 @@ oaps_measure_ids_part1 = {
   "crude_rate": 0,
   "related_to": "bed days",
   "suppression": "count",
-  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, reason_for_ref_bd, bed_type_bd, 
+  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, autism_status_bd, ld_status_bd, reason_for_ref_bd, bed_type_bd, 
                  ccg_prac_res_bd, 
                  stp_prac_res_bd,
-                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_reason_for_ref_bd, comm_region_bed_type_bd, comm_region_receiving_prov_bd,
+                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_ld_status_bd,
+comm_region_autism_status_bd,comm_region_reason_for_ref_bd, comm_region_bed_type_bd, comm_region_receiving_prov_bd,
                  sending_prov_bd, sending_prov_receiving_prov_bd,
                  receiving_prov_bd
                 ],
@@ -2826,10 +2956,11 @@ oaps_measure_ids_part1 = {
   "crude_rate": 0,
   "related_to": "bed days",
   "suppression": "count",
-  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, reason_for_ref_bd, bed_type_bd, 
+  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, autism_status_bd, ld_status_bd, reason_for_ref_bd, bed_type_bd, 
                  ccg_prac_res_bd, 
                  stp_prac_res_bd,
-                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_reason_for_ref_bd, comm_region_bed_type_bd, comm_region_receiving_prov_bd,
+                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_ld_status_bd,
+comm_region_autism_status_bd,comm_region_reason_for_ref_bd, comm_region_bed_type_bd, comm_region_receiving_prov_bd,
                  sending_prov_bd, sending_prov_receiving_prov_bd,
                  receiving_prov_bd
                 ],
@@ -2847,12 +2978,17 @@ oaps_measure_ids_part1 = {
   "crude_rate": 0,
   "related_to": "bed days",
   "suppression": "count",
-  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, reason_for_ref_bd, bed_type_bd, 
-                 ccg_prac_res_bd, ccg_prac_res_age_band_oaps_bd, ccg_prac_res_lower_eth_bd, ccg_prac_res_upper_eth_bd, ccg_prac_res_gender_bd, ccg_prac_res_imd_decile_bd, ccg_prac_res_reason_for_ref_bd, ccg_prac_res_bed_type_bd, ccg_prac_res_receiving_prov_bd,
-                 stp_prac_res_bd, stp_prac_res_age_band_oaps_bd, stp_prac_res_lower_eth_bd, stp_prac_res_upper_eth_bd, stp_prac_res_gender_bd, stp_prac_res_imd_decile_bd, stp_prac_res_reason_for_ref_bd, stp_prac_res_bed_type_bd, stp_prac_res_receiving_prov_bd,
-                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_reason_for_ref_bd, comm_region_bed_type_bd, comm_region_receiving_prov_bd,
-                 sending_prov_bd, sending_prov_age_band_oaps_bd, sending_prov_lower_eth_bd, sending_prov_upper_eth_bd, sending_prov_gender_bd, sending_prov_imd_decile_bd, sending_prov_reason_for_ref_bd, sending_prov_bed_type_bd, sending_prov_receiving_prov_bd,
-                 receiving_prov_bd, receiving_prov_age_band_oaps_bd, receiving_prov_lower_eth_bd, receiving_prov_upper_eth_bd, receiving_prov_gender_bd, receiving_prov_imd_decile_bd, receiving_prov_reason_for_ref_bd, receiving_prov_bed_type_bd
+  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, autism_status_bd, ld_status_bd, reason_for_ref_bd, bed_type_bd, 
+                 ccg_prac_res_bd, ccg_prac_res_age_band_oaps_bd, ccg_prac_res_lower_eth_bd, ccg_prac_res_upper_eth_bd, ccg_prac_res_gender_bd, ccg_prac_res_imd_decile_bd, ccg_prac_res_ld_status_bd,
+ccg_prac_res_autism_status_bd,ccg_prac_res_reason_for_ref_bd, ccg_prac_res_bed_type_bd, ccg_prac_res_receiving_prov_bd,
+                 stp_prac_res_bd, stp_prac_res_age_band_oaps_bd, stp_prac_res_lower_eth_bd, stp_prac_res_upper_eth_bd, stp_prac_res_gender_bd, stp_prac_res_imd_decile_bd, stp_prac_res_ld_status_bd,
+stp_prac_res_autism_status_bd,stp_prac_res_reason_for_ref_bd, stp_prac_res_bed_type_bd, stp_prac_res_receiving_prov_bd,
+                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_ld_status_bd,
+comm_region_autism_status_bd,comm_region_reason_for_ref_bd, comm_region_bed_type_bd, comm_region_receiving_prov_bd,
+                 sending_prov_bd, sending_prov_age_band_oaps_bd, sending_prov_lower_eth_bd, sending_prov_upper_eth_bd, sending_prov_gender_bd, sending_prov_imd_decile_bd, sending_prov_ld_status_bd,
+sending_prov_autism_status_bd, sending_prov_reason_for_ref_bd, sending_prov_bed_type_bd, sending_prov_receiving_prov_bd,
+                 receiving_prov_bd, receiving_prov_age_band_oaps_bd, receiving_prov_lower_eth_bd, receiving_prov_upper_eth_bd, receiving_prov_gender_bd, receiving_prov_imd_decile_bd, receiving_prov_ld_status_bd,
+receiving_prov_autism_status_bd,receiving_prov_reason_for_ref_bd, receiving_prov_bed_type_bd
                 ],
   "output_table": "bbrb_final_raw"
 },
@@ -2868,10 +3004,11 @@ oaps_measure_ids_part1 = {
   "crude_rate": 0,
   "related_to": "referrals",
   "suppression": "count",
-  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, reason_for_ref_bd, active_bed_type_bd, 
+  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, autism_status_bd, ld_status_bd, reason_for_ref_bd, active_bed_type_bd, 
                  ccg_prac_res_bd, 
                  stp_prac_res_bd,
-                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_reason_for_ref_bd, comm_region_active_bed_type_bd, comm_region_receiving_prov_bd,
+                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_ld_status_bd,
+comm_region_autism_status_bd,comm_region_reason_for_ref_bd, comm_region_active_bed_type_bd, comm_region_receiving_prov_bd,
                  sending_prov_bd, sending_prov_receiving_prov_bd,
                  receiving_prov_bd
                 ],
@@ -2889,10 +3026,11 @@ oaps_measure_ids_part1 = {
   "crude_rate": 0,
   "related_to": "referrals",
   "suppression": "count",
-  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, reason_for_ref_bd, active_bed_type_bd, 
+  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, autism_status_bd, ld_status_bd, reason_for_ref_bd, active_bed_type_bd, 
                  ccg_prac_res_bd, 
                  stp_prac_res_bd,
-                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_reason_for_ref_bd, comm_region_active_bed_type_bd, comm_region_receiving_prov_bd,
+                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_ld_status_bd,
+comm_region_autism_status_bd, comm_region_reason_for_ref_bd, comm_region_active_bed_type_bd, comm_region_receiving_prov_bd,
                  sending_prov_bd, sending_prov_receiving_prov_bd,
                  receiving_prov_bd
                 ],
@@ -2910,12 +3048,17 @@ oaps_measure_ids_part1 = {
   "crude_rate": 0,
   "related_to": "referrals",
   "suppression": "count",
-  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, reason_for_ref_bd, active_bed_type_bd, 
-                 ccg_prac_res_bd, ccg_prac_res_age_band_oaps_bd, ccg_prac_res_lower_eth_bd, ccg_prac_res_upper_eth_bd, ccg_prac_res_gender_bd, ccg_prac_res_imd_decile_bd, ccg_prac_res_reason_for_ref_bd, ccg_prac_res_active_bed_type_bd, ccg_prac_res_receiving_prov_bd,
-                 stp_prac_res_bd, stp_prac_res_age_band_oaps_bd, stp_prac_res_lower_eth_bd, stp_prac_res_upper_eth_bd, stp_prac_res_gender_bd, stp_prac_res_imd_decile_bd, stp_prac_res_reason_for_ref_bd, stp_prac_res_active_bed_type_bd, stp_prac_res_receiving_prov_bd,
-                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd,  comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_reason_for_ref_bd, comm_region_active_bed_type_bd, comm_region_receiving_prov_bd,
-                 sending_prov_bd, sending_prov_age_band_oaps_bd, sending_prov_lower_eth_bd, sending_prov_upper_eth_bd, sending_prov_gender_bd, sending_prov_imd_decile_bd, sending_prov_reason_for_ref_bd, sending_prov_active_bed_type_bd, sending_prov_receiving_prov_bd,
-                 receiving_prov_bd, receiving_prov_age_band_oaps_bd, receiving_prov_lower_eth_bd, receiving_prov_upper_eth_bd, receiving_prov_gender_bd, receiving_prov_imd_decile_bd, receiving_prov_reason_for_ref_bd, receiving_prov_active_bed_type_bd
+  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, autism_status_bd, ld_status_bd, reason_for_ref_bd, active_bed_type_bd, 
+                 ccg_prac_res_bd, ccg_prac_res_age_band_oaps_bd, ccg_prac_res_lower_eth_bd, ccg_prac_res_upper_eth_bd, ccg_prac_res_gender_bd, ccg_prac_res_imd_decile_bd, ccg_prac_res_ld_status_bd,
+ccg_prac_res_autism_status_bd, ccg_prac_res_reason_for_ref_bd, ccg_prac_res_active_bed_type_bd, ccg_prac_res_receiving_prov_bd,
+                 stp_prac_res_bd, stp_prac_res_age_band_oaps_bd, stp_prac_res_lower_eth_bd, stp_prac_res_upper_eth_bd, stp_prac_res_gender_bd, stp_prac_res_imd_decile_bd, stp_prac_res_ld_status_bd,
+stp_prac_res_autism_status_bd, stp_prac_res_reason_for_ref_bd, stp_prac_res_active_bed_type_bd, stp_prac_res_receiving_prov_bd,
+                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd,  comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_ld_status_bd,
+comm_region_autism_status_bd, comm_region_reason_for_ref_bd, comm_region_active_bed_type_bd, comm_region_receiving_prov_bd,
+                 sending_prov_bd, sending_prov_age_band_oaps_bd, sending_prov_lower_eth_bd, sending_prov_upper_eth_bd, sending_prov_gender_bd, sending_prov_imd_decile_bd, sending_prov_ld_status_bd,
+sending_prov_autism_status_bd, sending_prov_reason_for_ref_bd, sending_prov_active_bed_type_bd, sending_prov_receiving_prov_bd,
+                 receiving_prov_bd, receiving_prov_age_band_oaps_bd, receiving_prov_lower_eth_bd, receiving_prov_upper_eth_bd, receiving_prov_gender_bd, receiving_prov_imd_decile_bd, receiving_prov_ld_status_bd,
+receiving_prov_autism_status_bd,receiving_prov_reason_for_ref_bd, receiving_prov_active_bed_type_bd
                 ],
   "output_table": "bbrb_final_raw"
 },
@@ -2931,10 +3074,11 @@ oaps_measure_ids_part1 = {
   "crude_rate": 0,
   "related_to": "referrals",
   "suppression": "count",
-  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, reason_for_ref_bd, active_bed_type_bd, 
+  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, autism_status_bd, ld_status_bd, reason_for_ref_bd, active_bed_type_bd, 
                  ccg_prac_res_bd, 
                  stp_prac_res_bd,
-                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_reason_for_ref_bd, comm_region_active_bed_type_bd, comm_region_receiving_prov_bd,
+                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_ld_status_bd,
+comm_region_autism_status_bd, comm_region_reason_for_ref_bd, comm_region_active_bed_type_bd, comm_region_receiving_prov_bd,
                  sending_prov_bd, sending_prov_receiving_prov_bd,
                  receiving_prov_bd
                 ],
@@ -2952,10 +3096,11 @@ oaps_measure_ids_part1 = {
   "crude_rate": 0,
   "related_to": "referrals",
   "suppression": "count",
-  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, reason_for_ref_bd, active_bed_type_bd, 
+  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, autism_status_bd, ld_status_bd, reason_for_ref_bd, active_bed_type_bd, 
                  ccg_prac_res_bd, 
                  stp_prac_res_bd,
-                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_reason_for_ref_bd, comm_region_active_bed_type_bd, comm_region_receiving_prov_bd,
+                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_ld_status_bd,
+comm_region_autism_status_bd, comm_region_reason_for_ref_bd, comm_region_active_bed_type_bd, comm_region_receiving_prov_bd,
                  sending_prov_bd, sending_prov_receiving_prov_bd,
                  receiving_prov_bd
                 ],
@@ -2973,12 +3118,13 @@ oaps_measure_ids_part1 = {
   "crude_rate": 0,
   "related_to": "referrals",
   "suppression": "count",
-  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, reason_for_ref_bd, active_bed_type_bd, 
+  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, autism_status_bd, ld_status_bd, reason_for_ref_bd, active_bed_type_bd, 
                  ccg_prac_res_bd, ccg_prac_res_age_band_oaps_bd, ccg_prac_res_lower_eth_bd, ccg_prac_res_upper_eth_bd, ccg_prac_res_gender_bd, ccg_prac_res_imd_decile_bd, ccg_prac_res_reason_for_ref_bd, ccg_prac_res_active_bed_type_bd, ccg_prac_res_receiving_prov_bd,
                  stp_prac_res_bd, stp_prac_res_age_band_oaps_bd, stp_prac_res_lower_eth_bd, stp_prac_res_upper_eth_bd, stp_prac_res_gender_bd, stp_prac_res_imd_decile_bd, stp_prac_res_reason_for_ref_bd, stp_prac_res_active_bed_type_bd, stp_prac_res_receiving_prov_bd,
                  comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_reason_for_ref_bd, comm_region_active_bed_type_bd, comm_region_receiving_prov_bd,
                  sending_prov_bd, sending_prov_age_band_oaps_bd, sending_prov_lower_eth_bd, sending_prov_upper_eth_bd, sending_prov_gender_bd, sending_prov_imd_decile_bd, sending_prov_reason_for_ref_bd, sending_prov_active_bed_type_bd, sending_prov_receiving_prov_bd,
-                 receiving_prov_bd, receiving_prov_age_band_oaps_bd, receiving_prov_lower_eth_bd, receiving_prov_upper_eth_bd, receiving_prov_gender_bd, receiving_prov_imd_decile_bd, receiving_prov_reason_for_ref_bd, receiving_prov_active_bed_type_bd
+                 receiving_prov_bd, receiving_prov_age_band_oaps_bd, receiving_prov_lower_eth_bd, receiving_prov_upper_eth_bd, receiving_prov_gender_bd, receiving_prov_imd_decile_bd, receiving_prov_reason_for_ref_bd, receiving_prov_active_bed_type_bd, comm_region_ld_status_bd, comm_region_autism_status_bd, stp_prac_res_ld_status_bd, stp_prac_res_autism_status_bd, ccg_prac_res_ld_status_bd,
+ccg_prac_res_autism_status_bd, sending_prov_ld_status_bd, sending_prov_autism_status_bd, receiving_prov_ld_status_bd, receiving_prov_autism_status_bd
                 ],
   "output_table": "bbrb_final_raw"
 },
@@ -2994,10 +3140,11 @@ oaps_measure_ids_part1 = {
   "crude_rate": 0,
   "related_to": "referrals",
   "suppression": "count",
-  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, reason_for_ref_bd, end_bed_type_bd, 
+  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, autism_status_bd, ld_status_bd, reason_for_ref_bd, end_bed_type_bd, 
                  ccg_prac_res_bd, 
                  stp_prac_res_bd,
-                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_reason_for_ref_bd, comm_region_end_bed_type_bd, comm_region_receiving_prov_bd,
+                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_ld_status_bd,
+comm_region_autism_status_bd, comm_region_reason_for_ref_bd, comm_region_end_bed_type_bd, comm_region_receiving_prov_bd,
                  sending_prov_bd, sending_prov_receiving_prov_bd,
                  receiving_prov_bd
                 ],
@@ -3015,10 +3162,11 @@ oaps_measure_ids_part1 = {
   "crude_rate": 0,
   "related_to": "referrals",
   "suppression": "count",
-  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, reason_for_ref_bd, end_bed_type_bd, 
+  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, autism_status_bd, ld_status_bd, reason_for_ref_bd, end_bed_type_bd, 
                  ccg_prac_res_bd, 
                  stp_prac_res_bd,
-                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_reason_for_ref_bd, comm_region_end_bed_type_bd, comm_region_receiving_prov_bd,
+                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_ld_status_bd,
+comm_region_autism_status_bd, comm_region_reason_for_ref_bd, comm_region_end_bed_type_bd, comm_region_receiving_prov_bd,
                  sending_prov_bd, sending_prov_receiving_prov_bd,
                  receiving_prov_bd
                 ],
@@ -3036,12 +3184,13 @@ oaps_measure_ids_part1 = {
   "crude_rate": 0,
   "related_to": "referrals",
   "suppression": "count",
-  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, reason_for_ref_bd, end_bed_type_bd, 
+  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, autism_status_bd, ld_status_bd, reason_for_ref_bd, end_bed_type_bd, 
                  ccg_prac_res_bd, ccg_prac_res_age_band_oaps_bd, ccg_prac_res_lower_eth_bd, ccg_prac_res_upper_eth_bd, ccg_prac_res_gender_bd, ccg_prac_res_imd_decile_bd, ccg_prac_res_reason_for_ref_bd, ccg_prac_res_end_bed_type_bd, ccg_prac_res_receiving_prov_bd,
                  stp_prac_res_bd, stp_prac_res_age_band_oaps_bd, stp_prac_res_lower_eth_bd, stp_prac_res_upper_eth_bd, stp_prac_res_gender_bd, stp_prac_res_imd_decile_bd, stp_prac_res_reason_for_ref_bd, stp_prac_res_end_bed_type_bd, stp_prac_res_receiving_prov_bd,
                  comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_reason_for_ref_bd, comm_region_end_bed_type_bd, comm_region_receiving_prov_bd,
                  sending_prov_bd, sending_prov_age_band_oaps_bd, sending_prov_lower_eth_bd, sending_prov_upper_eth_bd,  sending_prov_gender_bd, sending_prov_imd_decile_bd, sending_prov_reason_for_ref_bd, sending_prov_end_bed_type_bd, sending_prov_receiving_prov_bd,
-                 receiving_prov_bd, receiving_prov_age_band_oaps_bd, receiving_prov_lower_eth_bd, receiving_prov_upper_eth_bd, receiving_prov_gender_bd, receiving_prov_imd_decile_bd, receiving_prov_reason_for_ref_bd, receiving_prov_end_bed_type_bd
+                 receiving_prov_bd, receiving_prov_age_band_oaps_bd, receiving_prov_lower_eth_bd, receiving_prov_upper_eth_bd, receiving_prov_gender_bd, receiving_prov_imd_decile_bd, receiving_prov_reason_for_ref_bd, receiving_prov_end_bed_type_bd, comm_region_ld_status_bd, comm_region_autism_status_bd, stp_prac_res_ld_status_bd, stp_prac_res_autism_status_bd, ccg_prac_res_ld_status_bd,
+ccg_prac_res_autism_status_bd, sending_prov_ld_status_bd, sending_prov_autism_status_bd, receiving_prov_ld_status_bd, receiving_prov_autism_status_bd
                 ],
   "output_table": "bbrb_final_raw"
 },
@@ -3057,10 +3206,11 @@ oaps_measure_ids_part1 = {
   "crude_rate": 0,
   "related_to": "referrals",
   "suppression": "count",
-  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, reason_for_ref_bd, end_bed_type_bd, 
+  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, autism_status_bd, ld_status_bd, reason_for_ref_bd, end_bed_type_bd, 
                  ccg_prac_res_bd, 
                  stp_prac_res_bd,
-                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_reason_for_ref_bd, comm_region_end_bed_type_bd, comm_region_receiving_prov_bd,
+                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_ld_status_bd,
+comm_region_autism_status_bd, comm_region_reason_for_ref_bd, comm_region_end_bed_type_bd, comm_region_receiving_prov_bd,
                  sending_prov_bd, sending_prov_receiving_prov_bd,
                  receiving_prov_bd
                 ],
@@ -3078,10 +3228,11 @@ oaps_measure_ids_part1 = {
   "crude_rate": 0,
   "related_to": "referrals",
   "suppression": "count",
-  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, reason_for_ref_bd, end_bed_type_bd, 
+  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, autism_status_bd, ld_status_bd, reason_for_ref_bd, end_bed_type_bd, 
                  ccg_prac_res_bd, 
                  stp_prac_res_bd,
-                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_reason_for_ref_bd, comm_region_end_bed_type_bd, comm_region_receiving_prov_bd,
+                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_ld_status_bd,
+comm_region_autism_status_bd, comm_region_reason_for_ref_bd, comm_region_end_bed_type_bd, comm_region_receiving_prov_bd,
                  sending_prov_bd, sending_prov_receiving_prov_bd,
                  receiving_prov_bd
                 ],
@@ -3099,12 +3250,13 @@ oaps_measure_ids_part1 = {
   "crude_rate": 0,
   "related_to": "referrals",
   "suppression": "count",
-  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, reason_for_ref_bd, end_bed_type_bd, 
+  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, autism_status_bd, ld_status_bd, reason_for_ref_bd, end_bed_type_bd, 
                  ccg_prac_res_bd, ccg_prac_res_age_band_oaps_bd, ccg_prac_res_lower_eth_bd, ccg_prac_res_upper_eth_bd, ccg_prac_res_gender_bd, ccg_prac_res_imd_decile_bd, ccg_prac_res_reason_for_ref_bd, ccg_prac_res_end_bed_type_bd, ccg_prac_res_receiving_prov_bd,
                  stp_prac_res_bd, stp_prac_res_age_band_oaps_bd, stp_prac_res_lower_eth_bd, stp_prac_res_upper_eth_bd, stp_prac_res_gender_bd, stp_prac_res_imd_decile_bd, stp_prac_res_reason_for_ref_bd, stp_prac_res_end_bed_type_bd, stp_prac_res_receiving_prov_bd,
                  comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_reason_for_ref_bd, comm_region_end_bed_type_bd, comm_region_receiving_prov_bd,
                  sending_prov_bd, sending_prov_age_band_oaps_bd, sending_prov_lower_eth_bd, sending_prov_upper_eth_bd, sending_prov_gender_bd, sending_prov_imd_decile_bd, sending_prov_reason_for_ref_bd, sending_prov_end_bed_type_bd, sending_prov_receiving_prov_bd,
-                 receiving_prov_bd, receiving_prov_age_band_oaps_bd, receiving_prov_lower_eth_bd, receiving_prov_upper_eth_bd, receiving_prov_gender_bd, receiving_prov_imd_decile_bd, receiving_prov_reason_for_ref_bd, receiving_prov_end_bed_type_bd
+                 receiving_prov_bd, receiving_prov_age_band_oaps_bd, receiving_prov_lower_eth_bd, receiving_prov_upper_eth_bd, receiving_prov_gender_bd, receiving_prov_imd_decile_bd, receiving_prov_reason_for_ref_bd, receiving_prov_end_bed_type_bd, comm_region_ld_status_bd, comm_region_autism_status_bd, stp_prac_res_ld_status_bd, stp_prac_res_autism_status_bd, ccg_prac_res_ld_status_bd,
+ccg_prac_res_autism_status_bd, sending_prov_ld_status_bd, sending_prov_autism_status_bd, receiving_prov_ld_status_bd, receiving_prov_autism_status_bd
                 ],
   "output_table": "bbrb_final_raw"
 },
@@ -3123,7 +3275,8 @@ oaps_measure_ids_part1 = {
   "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, 
                  ccg_prac_res_bd, 
                  stp_prac_res_bd,
-                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd],
+                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd,
+comm_region_autism_status_bd],
   "output_table": "bbrb_final_raw"
 },
   "OAP05Q": {
@@ -3138,7 +3291,7 @@ oaps_measure_ids_part1 = {
   "crude_rate": 1,
   "related_to": "referrals",
   "suppression": "percent",
-  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd,
+  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, 
                  ccg_prac_res_bd, 
                  stp_prac_res_bd,
                  comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd],
@@ -3156,7 +3309,7 @@ oaps_measure_ids_part1 = {
   "crude_rate": 1,
   "related_to": "referrals",
   "suppression": "percent",
-  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, 
+  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd,
                  ccg_prac_res_bd, ccg_prac_res_age_band_oaps_bd, ccg_prac_res_lower_eth_bd, ccg_prac_res_upper_eth_bd, ccg_prac_res_gender_bd, ccg_prac_res_imd_decile_bd,
                  stp_prac_res_bd, stp_prac_res_age_band_oaps_bd, stp_prac_res_lower_eth_bd, stp_prac_res_upper_eth_bd, stp_prac_res_gender_bd, stp_prac_res_imd_decile_bd, 
                  comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd],
@@ -3174,10 +3327,10 @@ oaps_measure_ids_part1 = {
   "crude_rate": 1,
   "related_to": "referrals",
   "suppression": "percent",
-  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, 
+  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd,
                  ccg_prac_res_bd, 
                  stp_prac_res_bd,
-                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd],
+                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd,comm_region_ld_status_bd,],
   "output_table": "bbrb_final_raw"
 },
   "OAP05aQ": {
@@ -3192,7 +3345,7 @@ oaps_measure_ids_part1 = {
   "crude_rate": 1,
   "related_to": "referrals",
   "suppression": "percent",
-  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd,
+  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, 
                  ccg_prac_res_bd, 
                  stp_prac_res_bd,
                  comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd],
@@ -3211,8 +3364,9 @@ oaps_measure_ids_part1 = {
   "related_to": "referrals",
   "suppression": "percent",
   "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, 
-                 ccg_prac_res_bd, ccg_prac_res_age_band_oaps_bd, ccg_prac_res_lower_eth_bd, ccg_prac_res_upper_eth_bd,  ccg_prac_res_gender_bd, ccg_prac_res_imd_decile_bd,
-                 stp_prac_res_bd, stp_prac_res_age_band_oaps_bd, stp_prac_res_lower_eth_bd, stp_prac_res_upper_eth_bd, stp_prac_res_gender_bd, stp_prac_res_imd_decile_bd, 
+                 ccg_prac_res_bd, ccg_prac_res_age_band_oaps_bd, ccg_prac_res_lower_eth_bd, ccg_prac_res_upper_eth_bd,  ccg_prac_res_gender_bd, ccg_prac_res_imd_decile_bd, ccg_prac_res_ld_status_bd,ccg_prac_res_autism_status_bd,
+                 stp_prac_res_bd, stp_prac_res_age_band_oaps_bd, stp_prac_res_lower_eth_bd, stp_prac_res_upper_eth_bd, stp_prac_res_gender_bd, stp_prac_res_imd_decile_bd, stp_prac_res_ld_status_bd, 
+stp_prac_res_autism_status_bd, 
                  comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd],
   "output_table": "bbrb_final_raw"
 },
@@ -3285,7 +3439,7 @@ oaps_measure_ids_part1 = {
   "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd,
                  ccg_prac_res_bd, 
                  stp_prac_res_bd,
-                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd],
+                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd],
   "output_table": "bbrb_final_raw"
 },
  "OAP06aQ": {
@@ -3374,7 +3528,7 @@ oaps_measure_ids_part1 = {
   "suppression": "percent",
   "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd,
                  ccg_prac_res_bd, ccg_prac_res_age_band_oaps_bd, ccg_prac_res_lower_eth_bd, ccg_prac_res_upper_eth_bd, ccg_prac_res_gender_bd, ccg_prac_res_imd_decile_bd,
-                 stp_prac_res_bd, stp_prac_res_age_band_oaps_bd, stp_prac_res_lower_eth_bd, stp_prac_res_upper_eth_bd, stp_prac_res_gender_bd, stp_prac_res_imd_decile_bd, 
+                 stp_prac_res_bd, stp_prac_res_age_band_oaps_bd, stp_prac_res_lower_eth_bd, stp_prac_res_upper_eth_bd, stp_prac_res_gender_bd, stp_prac_res_imd_decile_bd,
                  comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd],
   "output_table": "bbrb_final_raw"
 },
@@ -3428,7 +3582,7 @@ oaps_measure_ids_part1 = {
   "suppression": "percent",
   "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd,
                  ccg_prac_res_bd, ccg_prac_res_age_band_oaps_bd, ccg_prac_res_lower_eth_bd, ccg_prac_res_upper_eth_bd, ccg_prac_res_gender_bd, ccg_prac_res_imd_decile_bd,
-                 stp_prac_res_bd, stp_prac_res_age_band_oaps_bd, stp_prac_res_lower_eth_bd, stp_prac_res_upper_eth_bd, stp_prac_res_gender_bd, stp_prac_res_imd_decile_bd, 
+                 stp_prac_res_bd, stp_prac_res_age_band_oaps_bd, stp_prac_res_lower_eth_bd, stp_prac_res_upper_eth_bd, stp_prac_res_gender_bd, stp_prac_res_imd_decile_bd,
                  comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd],
   "output_table": "bbrb_final_raw"
 },
@@ -3449,10 +3603,11 @@ oaps_measure_ids_part2 = {
   "crude_rate": 0,
   "related_to": "hospital spells",
   "suppression": "count",
-  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, bed_type_bd, 
+  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, bed_type_bd, autism_status_bd, ld_status_bd, 
                  ccg_prac_res_bd, 
                  stp_prac_res_bd,
-                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd],
+                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd, comm_region_ld_status_bd,
+comm_region_autism_status_bd],
   "output_table": "bbrb_final_raw"
 },
   "ADDSTARTQ": {
@@ -3467,10 +3622,11 @@ oaps_measure_ids_part2 = {
   "crude_rate": 0,
   "related_to": "hospital spells",
   "suppression": "count",
-  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, bed_type_bd, 
+  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, bed_type_bd, autism_status_bd, ld_status_bd, 
                  ccg_prac_res_bd, 
                  stp_prac_res_bd,
-                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd],
+                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd, comm_region_ld_status_bd,
+comm_region_autism_status_bd],
   "output_table": "bbrb_final_raw"
 },
   "ADDSTARTY": {
@@ -3485,10 +3641,12 @@ oaps_measure_ids_part2 = {
   "crude_rate": 0,
   "related_to": "hospital spells",
   "suppression": "count",
-  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, bed_type_bd, 
-                 ccg_prac_res_bd, ccg_prac_res_age_band_oaps_bd, ccg_prac_res_lower_eth_bd, ccg_prac_res_upper_eth_bd, ccg_prac_res_gender_bd, ccg_prac_res_imd_decile_bd, ccg_prac_res_bed_type_bd,
-                 stp_prac_res_bd, stp_prac_res_age_band_oaps_bd, stp_prac_res_lower_eth_bd, stp_prac_res_upper_eth_bd, stp_prac_res_gender_bd, stp_prac_res_imd_decile_bd, stp_prac_res_bed_type_bd,
-                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd],
+  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, bed_type_bd, autism_status_bd, ld_status_bd, 
+                 ccg_prac_res_bd, ccg_prac_res_age_band_oaps_bd, ccg_prac_res_lower_eth_bd, ccg_prac_res_upper_eth_bd, ccg_prac_res_gender_bd, ccg_prac_res_imd_decile_bd, ccg_prac_res_bed_type_bd, ccg_prac_res_ld_status_bd,ccg_prac_res_autism_status_bd,
+                 stp_prac_res_bd, stp_prac_res_age_band_oaps_bd, stp_prac_res_lower_eth_bd, stp_prac_res_upper_eth_bd, stp_prac_res_gender_bd, stp_prac_res_imd_decile_bd, stp_prac_res_bed_type_bd, stp_prac_res_ld_status_bd, 
+stp_prac_res_autism_status_bd, 
+                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd, comm_region_ld_status_bd,
+comm_region_autism_status_bd],
   "output_table": "bbrb_final_raw"
 },
   "ADDSTARTaM": {
@@ -3503,10 +3661,11 @@ oaps_measure_ids_part2 = {
   "crude_rate": 0,
   "related_to": "hospital spells",
   "suppression": "count",
-  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, bed_type_bd, 
+  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, bed_type_bd, autism_status_bd, ld_status_bd, 
                  ccg_prac_res_bd, 
                  stp_prac_res_bd,
-                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd],
+                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd, comm_region_ld_status_bd,
+comm_region_autism_status_bd],
   "output_table": "bbrb_final_raw"
 },
   "ADDSTARTaQ": {
@@ -3521,10 +3680,11 @@ oaps_measure_ids_part2 = {
   "crude_rate": 0,
   "related_to": "hospital spells",
   "suppression": "count",
-  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, bed_type_bd, 
+  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, autism_status_bd, ld_status_bd, bed_type_bd, 
                  ccg_prac_res_bd, 
                  stp_prac_res_bd,
-                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd],
+                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd, comm_region_ld_status_bd,
+comm_region_autism_status_bd],
   "output_table": "bbrb_final_raw"
 },
   "ADDSTARTaY": {
@@ -3539,10 +3699,12 @@ oaps_measure_ids_part2 = {
   "crude_rate": 0,
   "related_to": "hospital spells",
   "suppression": "count",
-  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, bed_type_bd, 
-                 ccg_prac_res_bd, ccg_prac_res_age_band_oaps_bd, ccg_prac_res_lower_eth_bd, ccg_prac_res_upper_eth_bd, ccg_prac_res_gender_bd, ccg_prac_res_imd_decile_bd, ccg_prac_res_bed_type_bd,
-                 stp_prac_res_bd, stp_prac_res_age_band_oaps_bd, stp_prac_res_lower_eth_bd, stp_prac_res_upper_eth_bd, stp_prac_res_gender_bd, stp_prac_res_imd_decile_bd, stp_prac_res_bed_type_bd,
-                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd],
+  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, autism_status_bd, ld_status_bd, bed_type_bd, 
+                 ccg_prac_res_bd, ccg_prac_res_age_band_oaps_bd, ccg_prac_res_lower_eth_bd, ccg_prac_res_upper_eth_bd, ccg_prac_res_gender_bd, ccg_prac_res_imd_decile_bd, ccg_prac_res_bed_type_bd, ccg_prac_res_ld_status_bd,ccg_prac_res_autism_status_bd,
+                 stp_prac_res_bd, stp_prac_res_age_band_oaps_bd, stp_prac_res_lower_eth_bd, stp_prac_res_upper_eth_bd, stp_prac_res_gender_bd, stp_prac_res_imd_decile_bd, stp_prac_res_bed_type_bd, stp_prac_res_ld_status_bd, 
+stp_prac_res_autism_status_bd, 
+                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd, comm_region_ld_status_bd,
+comm_region_autism_status_bd],
   "output_table": "bbrb_final_raw"
 }, 
   "ADDACTIVEM": {
@@ -3557,10 +3719,11 @@ oaps_measure_ids_part2 = {
   "crude_rate": 0,
   "related_to": "hospital spells",
   "suppression": "count",
-  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, bed_type_bd, 
+  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, autism_status_bd, ld_status_bd, bed_type_bd, 
                  ccg_prac_res_bd, 
                  stp_prac_res_bd,
-                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd],
+                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd, comm_region_ld_status_bd,
+comm_region_autism_status_bd],
   "output_table": "bbrb_final_raw"
 },
   "ADDACTIVEQ": {
@@ -3575,10 +3738,11 @@ oaps_measure_ids_part2 = {
   "crude_rate": 0,
   "related_to": "hospital spells",
   "suppression": "count",
-  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, bed_type_bd, 
+  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, autism_status_bd, ld_status_bd, bed_type_bd, 
                  ccg_prac_res_bd, 
                  stp_prac_res_bd,
-                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd],
+                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd, comm_region_ld_status_bd,
+comm_region_autism_status_bd],
   "output_table": "bbrb_final_raw"
 },
   "ADDACTIVEY": {
@@ -3593,10 +3757,11 @@ oaps_measure_ids_part2 = {
   "crude_rate": 0,
   "related_to": "hospital spells",
   "suppression": "count",
-  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, bed_type_bd, 
-                 ccg_prac_res_bd, ccg_prac_res_age_band_oaps_bd, ccg_prac_res_lower_eth_bd, ccg_prac_res_upper_eth_bd, ccg_prac_res_gender_bd, ccg_prac_res_imd_decile_bd, ccg_prac_res_bed_type_bd,
+  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, autism_status_bd, ld_status_bd, bed_type_bd, 
+                 ccg_prac_res_bd, ccg_prac_res_age_band_oaps_bd, ccg_prac_res_lower_eth_bd, ccg_prac_res_upper_eth_bd, ccg_prac_res_gender_bd, ccg_prac_res_imd_decile_bd, ccg_prac_res_bed_type_bd, ccg_prac_res_ld_status_bd,ccg_prac_res_autism_status_bd,
                  stp_prac_res_bd, stp_prac_res_age_band_oaps_bd, stp_prac_res_lower_eth_bd, stp_prac_res_upper_eth_bd, stp_prac_res_gender_bd, stp_prac_res_imd_decile_bd, stp_prac_res_bed_type_bd,
-                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd],
+                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd, comm_region_ld_status_bd,
+comm_region_autism_status_bd],
   "output_table": "bbrb_final_raw"
 },
   "ADDACTIVEaM": {
@@ -3611,10 +3776,11 @@ oaps_measure_ids_part2 = {
   "crude_rate": 0,
   "related_to": "hospital spells",
   "suppression": "count",
-  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, bed_type_bd, 
+  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, autism_status_bd, ld_status_bd, bed_type_bd, 
                  ccg_prac_res_bd, 
                  stp_prac_res_bd,
-                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd],
+                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd, comm_region_ld_status_bd,
+comm_region_autism_status_bd],
   "output_table": "bbrb_final_raw"
 },
   "ADDACTIVEaQ": {
@@ -3629,10 +3795,11 @@ oaps_measure_ids_part2 = {
   "crude_rate": 0,
   "related_to": "hospital spells",
   "suppression": "count",
-  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, bed_type_bd, 
+  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, autism_status_bd, ld_status_bd, bed_type_bd, 
                  ccg_prac_res_bd, 
                  stp_prac_res_bd,
-                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd],
+                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd, comm_region_ld_status_bd,
+comm_region_autism_status_bd],
   "output_table": "bbrb_final_raw"
 },
   "ADDACTIVEaY": {
@@ -3647,10 +3814,12 @@ oaps_measure_ids_part2 = {
   "crude_rate": 0,
   "related_to": "hospital spells",
   "suppression": "count",
-  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, bed_type_bd, 
-                 ccg_prac_res_bd, ccg_prac_res_age_band_oaps_bd, ccg_prac_res_lower_eth_bd, ccg_prac_res_upper_eth_bd, ccg_prac_res_gender_bd, ccg_prac_res_imd_decile_bd, ccg_prac_res_bed_type_bd,
-                 stp_prac_res_bd, stp_prac_res_age_band_oaps_bd, stp_prac_res_lower_eth_bd, stp_prac_res_upper_eth_bd, stp_prac_res_gender_bd, stp_prac_res_imd_decile_bd, stp_prac_res_bed_type_bd,
-                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd],
+  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, autism_status_bd, ld_status_bd, bed_type_bd, 
+                 ccg_prac_res_bd, ccg_prac_res_age_band_oaps_bd, ccg_prac_res_lower_eth_bd, ccg_prac_res_upper_eth_bd, ccg_prac_res_gender_bd, ccg_prac_res_imd_decile_bd, ccg_prac_res_bed_type_bd, ccg_prac_res_ld_status_bd,ccg_prac_res_autism_status_bd,
+                 stp_prac_res_bd, stp_prac_res_age_band_oaps_bd, stp_prac_res_lower_eth_bd, stp_prac_res_upper_eth_bd, stp_prac_res_gender_bd, stp_prac_res_imd_decile_bd, stp_prac_res_bed_type_bd, stp_prac_res_ld_status_bd, 
+stp_prac_res_autism_status_bd, 
+                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd, comm_region_ld_status_bd,
+comm_region_autism_status_bd],
   "output_table": "bbrb_final_raw"
 }, 
   "DISCHM": {
@@ -3665,10 +3834,11 @@ oaps_measure_ids_part2 = {
   "crude_rate": 0,
   "related_to": "hospital spells",
   "suppression": "count",
-  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, bed_type_bd, 
+  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, autism_status_bd, ld_status_bd, bed_type_bd, 
                  ccg_prac_res_bd, 
                  stp_prac_res_bd,
-                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd],
+                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd, comm_region_ld_status_bd,
+comm_region_autism_status_bd],
   "output_table": "bbrb_final_raw"
 },
   "DISCHQ": {
@@ -3683,10 +3853,11 @@ oaps_measure_ids_part2 = {
   "crude_rate": 0,
   "related_to": "hospital spells",
   "suppression": "count",
-  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, bed_type_bd, 
+  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, autism_status_bd, ld_status_bd, bed_type_bd, 
                  ccg_prac_res_bd, 
                  stp_prac_res_bd,
-                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd],
+                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd, comm_region_ld_status_bd,
+comm_region_autism_status_bd],
   "output_table": "bbrb_final_raw"
 },
   "DISCHY": {
@@ -3701,10 +3872,12 @@ oaps_measure_ids_part2 = {
   "crude_rate": 0,
   "related_to": "hospital spells",
   "suppression": "count",
-  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, bed_type_bd, 
-                 ccg_prac_res_bd, ccg_prac_res_age_band_oaps_bd, ccg_prac_res_lower_eth_bd, ccg_prac_res_upper_eth_bd, ccg_prac_res_gender_bd, ccg_prac_res_imd_decile_bd, ccg_prac_res_bed_type_bd,
-                 stp_prac_res_bd, stp_prac_res_age_band_oaps_bd, stp_prac_res_lower_eth_bd, stp_prac_res_upper_eth_bd, stp_prac_res_gender_bd, stp_prac_res_imd_decile_bd, stp_prac_res_bed_type_bd,
-                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd],
+  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, autism_status_bd, ld_status_bd, bed_type_bd, 
+                 ccg_prac_res_bd, ccg_prac_res_age_band_oaps_bd, ccg_prac_res_lower_eth_bd, ccg_prac_res_upper_eth_bd, ccg_prac_res_gender_bd, ccg_prac_res_imd_decile_bd, ccg_prac_res_bed_type_bd, ccg_prac_res_ld_status_bd,ccg_prac_res_autism_status_bd,
+                 stp_prac_res_bd, stp_prac_res_age_band_oaps_bd, stp_prac_res_lower_eth_bd, stp_prac_res_upper_eth_bd, stp_prac_res_gender_bd, stp_prac_res_imd_decile_bd, stp_prac_res_bed_type_bd, stp_prac_res_ld_status_bd, 
+stp_prac_res_autism_status_bd, 
+                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd, comm_region_ld_status_bd,
+comm_region_autism_status_bd],
   "output_table": "bbrb_final_raw"
 },
   "DISCHaM": {
@@ -3719,10 +3892,11 @@ oaps_measure_ids_part2 = {
   "crude_rate": 0,
   "related_to": "hospital spells",
   "suppression": "count",
-  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, bed_type_bd, 
+  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, autism_status_bd, ld_status_bd, bed_type_bd, 
                  ccg_prac_res_bd, 
                  stp_prac_res_bd,
-                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd,  comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd],
+                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd,  comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd, comm_region_ld_status_bd,
+comm_region_autism_status_bd],
   "output_table": "bbrb_final_raw"
 },
   "DISCHaQ": {
@@ -3737,7 +3911,7 @@ oaps_measure_ids_part2 = {
   "crude_rate": 0,
   "related_to": "hospital spells",
   "suppression": "count",
-  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, bed_type_bd, 
+  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, autism_status_bd, ld_status_bd, bed_type_bd, 
                  ccg_prac_res_bd, 
                  stp_prac_res_bd,
                  comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd],
@@ -3755,10 +3929,12 @@ oaps_measure_ids_part2 = {
   "crude_rate": 0,
   "related_to": "hospital spells",
   "suppression": "count",
-  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, bed_type_bd, 
-                 ccg_prac_res_bd, ccg_prac_res_age_band_oaps_bd, ccg_prac_res_lower_eth_bd, ccg_prac_res_upper_eth_bd, ccg_prac_res_gender_bd, ccg_prac_res_imd_decile_bd, ccg_prac_res_bed_type_bd,
-                 stp_prac_res_bd, stp_prac_res_age_band_oaps_bd, stp_prac_res_lower_eth_bd, stp_prac_res_upper_eth_bd, stp_prac_res_gender_bd, stp_prac_res_imd_decile_bd, stp_prac_res_bed_type_bd,
-                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd],
+  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, autism_status_bd, ld_status_bd, bed_type_bd, 
+                 ccg_prac_res_bd, ccg_prac_res_age_band_oaps_bd, ccg_prac_res_lower_eth_bd, ccg_prac_res_upper_eth_bd, ccg_prac_res_gender_bd, ccg_prac_res_imd_decile_bd, ccg_prac_res_bed_type_bd, ccg_prac_res_ld_status_bd,ccg_prac_res_autism_status_bd,
+                 stp_prac_res_bd, stp_prac_res_age_band_oaps_bd, stp_prac_res_lower_eth_bd, stp_prac_res_upper_eth_bd, stp_prac_res_gender_bd, stp_prac_res_imd_decile_bd, stp_prac_res_bed_type_bd, stp_prac_res_ld_status_bd, 
+stp_prac_res_autism_status_bd, 
+                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd, comm_region_ld_status_bd,
+comm_region_autism_status_bd],
   "output_table": "bbrb_final_raw"
 }, 
   "BEDDAYSM": {
@@ -3773,10 +3949,11 @@ oaps_measure_ids_part2 = {
   "crude_rate": 0,
   "related_to": "bed days",
   "suppression": "count",
-  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, bed_type_bd, 
+  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, autism_status_bd, ld_status_bd, bed_type_bd, 
                  ccg_prac_res_bd, 
                  stp_prac_res_bd,
-                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd],
+                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd, comm_region_ld_status_bd,
+comm_region_autism_status_bd],
   "output_table": "bbrb_final_raw"
 },
  "BEDDAYSQ": {
@@ -3791,10 +3968,11 @@ oaps_measure_ids_part2 = {
   "crude_rate": 0,
   "related_to": "bed days",
   "suppression": "count",
-  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, bed_type_bd, 
+  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, autism_status_bd, ld_status_bd, bed_type_bd, 
                  ccg_prac_res_bd, 
                  stp_prac_res_bd,
-                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd],
+                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd, comm_region_ld_status_bd,
+comm_region_autism_status_bd],
   "output_table": "bbrb_final_raw"
 },
  "BEDDAYSY": {
@@ -3809,10 +3987,12 @@ oaps_measure_ids_part2 = {
   "crude_rate": 0,
   "related_to": "bed days",
   "suppression": "count",
-  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, bed_type_bd, 
-                 ccg_prac_res_bd, ccg_prac_res_age_band_oaps_bd, ccg_prac_res_lower_eth_bd, ccg_prac_res_upper_eth_bd, ccg_prac_res_gender_bd, ccg_prac_res_imd_decile_bd, ccg_prac_res_bed_type_bd,
-                 stp_prac_res_bd, stp_prac_res_age_band_oaps_bd, stp_prac_res_lower_eth_bd, stp_prac_res_upper_eth_bd, stp_prac_res_gender_bd, stp_prac_res_imd_decile_bd, stp_prac_res_bed_type_bd,
-                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd],
+  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, autism_status_bd, ld_status_bd, bed_type_bd, 
+                 ccg_prac_res_bd, ccg_prac_res_age_band_oaps_bd, ccg_prac_res_lower_eth_bd, ccg_prac_res_upper_eth_bd, ccg_prac_res_gender_bd, ccg_prac_res_imd_decile_bd, ccg_prac_res_bed_type_bd, ccg_prac_res_ld_status_bd,ccg_prac_res_autism_status_bd,
+                 stp_prac_res_bd, stp_prac_res_age_band_oaps_bd, stp_prac_res_lower_eth_bd, stp_prac_res_upper_eth_bd, stp_prac_res_gender_bd, stp_prac_res_imd_decile_bd, stp_prac_res_bed_type_bd, stp_prac_res_ld_status_bd, 
+stp_prac_res_autism_status_bd, 
+                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd, comm_region_ld_status_bd,
+comm_region_autism_status_bd],
   "output_table": "bbrb_final_raw"
 },
   "BEDDAYSaM": {
@@ -3827,10 +4007,11 @@ oaps_measure_ids_part2 = {
   "crude_rate": 0,
   "related_to": "bed days",
   "suppression": "count",
-  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, bed_type_bd, 
+  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, autism_status_bd, ld_status_bd, bed_type_bd, 
                  ccg_prac_res_bd, 
                  stp_prac_res_bd,
-                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd],
+                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd, comm_region_ld_status_bd,
+comm_region_autism_status_bd],
   "output_table": "bbrb_final_raw"
 },
  "BEDDAYSaQ": {
@@ -3845,7 +4026,7 @@ oaps_measure_ids_part2 = {
   "crude_rate": 0,
   "related_to": "bed days",
   "suppression": "count",
-  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, bed_type_bd, 
+  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, autism_status_bd, ld_status_bd, bed_type_bd, 
                  ccg_prac_res_bd, 
                  stp_prac_res_bd,
                  comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd],
@@ -3863,10 +4044,12 @@ oaps_measure_ids_part2 = {
   "crude_rate": 0,
   "related_to": "bed days",
   "suppression": "count",
-  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, bed_type_bd, 
-                 ccg_prac_res_bd, ccg_prac_res_age_band_oaps_bd, ccg_prac_res_lower_eth_bd, ccg_prac_res_upper_eth_bd, ccg_prac_res_gender_bd, ccg_prac_res_imd_decile_bd, ccg_prac_res_bed_type_bd,
-                 stp_prac_res_bd, stp_prac_res_age_band_oaps_bd, stp_prac_res_lower_eth_bd, stp_prac_res_upper_eth_bd, stp_prac_res_gender_bd, stp_prac_res_imd_decile_bd, stp_prac_res_bed_type_bd,
-                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd],
+  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, autism_status_bd, ld_status_bd, bed_type_bd, 
+                 ccg_prac_res_bd, ccg_prac_res_age_band_oaps_bd, ccg_prac_res_lower_eth_bd, ccg_prac_res_upper_eth_bd, ccg_prac_res_gender_bd, ccg_prac_res_imd_decile_bd, ccg_prac_res_bed_type_bd, ccg_prac_res_ld_status_bd,ccg_prac_res_autism_status_bd,
+                 stp_prac_res_bd, stp_prac_res_age_band_oaps_bd, stp_prac_res_lower_eth_bd, stp_prac_res_upper_eth_bd, stp_prac_res_gender_bd, stp_prac_res_imd_decile_bd, stp_prac_res_bed_type_bd, stp_prac_res_ld_status_bd, 
+stp_prac_res_autism_status_bd, 
+                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd, comm_region_ld_status_bd,
+comm_region_autism_status_bd],
   "output_table": "bbrb_final_raw"
 },
  "OAP08M": {
@@ -3899,10 +4082,11 @@ oaps_measure_ids_part2 = {
   "crude_rate": 1,
   "related_to": "referrals",
   "suppression": "percent",
-  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, bed_type_bd, 
+  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, autism_status_bd, ld_status_bd, bed_type_bd, 
                  ccg_prac_res_bd, 
                  stp_prac_res_bd,
-                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd],
+                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd, comm_region_ld_status_bd,
+comm_region_autism_status_bd],
   "output_table": "bbrb_final_raw"
 },
   "OAP08Y": {
@@ -3917,10 +4101,12 @@ oaps_measure_ids_part2 = {
   "crude_rate": 1,
   "related_to": "referrals",
   "suppression": "percent",
-  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, bed_type_bd, 
-                 ccg_prac_res_bd, ccg_prac_res_age_band_oaps_bd, ccg_prac_res_lower_eth_bd, ccg_prac_res_upper_eth_bd, ccg_prac_res_gender_bd, ccg_prac_res_imd_decile_bd, ccg_prac_res_bed_type_bd,
-                 stp_prac_res_bd, stp_prac_res_age_band_oaps_bd, stp_prac_res_lower_eth_bd, stp_prac_res_upper_eth_bd, stp_prac_res_gender_bd, stp_prac_res_imd_decile_bd, stp_prac_res_bed_type_bd,
-                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd],
+  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, autism_status_bd, ld_status_bd, bed_type_bd, 
+                 ccg_prac_res_bd, ccg_prac_res_age_band_oaps_bd, ccg_prac_res_lower_eth_bd, ccg_prac_res_upper_eth_bd, ccg_prac_res_gender_bd, ccg_prac_res_imd_decile_bd, ccg_prac_res_bed_type_bd, ccg_prac_res_ld_status_bd,ccg_prac_res_autism_status_bd,
+                 stp_prac_res_bd, stp_prac_res_age_band_oaps_bd, stp_prac_res_lower_eth_bd, stp_prac_res_upper_eth_bd, stp_prac_res_gender_bd, stp_prac_res_imd_decile_bd, stp_prac_res_bed_type_bd, stp_prac_res_ld_status_bd, 
+stp_prac_res_autism_status_bd, 
+                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd, comm_region_ld_status_bd,
+comm_region_autism_status_bd],
   "output_table": "bbrb_final_raw"
 }, 
   "OAP08aM": {
@@ -3935,7 +4121,7 @@ oaps_measure_ids_part2 = {
   "crude_rate": 1,
   "related_to": "referrals",
   "suppression": "percent",
-  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, bed_type_bd, 
+  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, autism_status_bd, ld_status_bd, bed_type_bd, 
                  ccg_prac_res_bd, 
                  stp_prac_res_bd,
                  comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd],
@@ -3953,10 +4139,11 @@ oaps_measure_ids_part2 = {
   "crude_rate": 1,
   "related_to": "referrals",
   "suppression": "percent",
-  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, bed_type_bd, 
+  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, autism_status_bd, ld_status_bd, bed_type_bd, 
                  ccg_prac_res_bd, 
                  stp_prac_res_bd,
-                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd],
+                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd, comm_region_ld_status_bd,
+comm_region_autism_status_bd],
   "output_table": "bbrb_final_raw"
 },
   "OAP08aY": {
@@ -3971,10 +4158,12 @@ oaps_measure_ids_part2 = {
   "crude_rate": 1,
   "related_to": "referrals",
   "suppression": "percent",
-  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, bed_type_bd, 
-                 ccg_prac_res_bd, ccg_prac_res_age_band_oaps_bd, ccg_prac_res_lower_eth_bd, ccg_prac_res_upper_eth_bd, ccg_prac_res_gender_bd, ccg_prac_res_imd_decile_bd, ccg_prac_res_bed_type_bd,
-                 stp_prac_res_bd, stp_prac_res_age_band_oaps_bd, stp_prac_res_lower_eth_bd, stp_prac_res_upper_eth_bd, stp_prac_res_gender_bd, stp_prac_res_imd_decile_bd, stp_prac_res_bed_type_bd,
-                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd],
+  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, autism_status_bd, ld_status_bd, bed_type_bd, 
+                 ccg_prac_res_bd, ccg_prac_res_age_band_oaps_bd, ccg_prac_res_lower_eth_bd, ccg_prac_res_upper_eth_bd, ccg_prac_res_gender_bd, ccg_prac_res_imd_decile_bd, ccg_prac_res_bed_type_bd, ccg_prac_res_ld_status_bd,ccg_prac_res_autism_status_bd,
+                 stp_prac_res_bd, stp_prac_res_age_band_oaps_bd, stp_prac_res_lower_eth_bd, stp_prac_res_upper_eth_bd, stp_prac_res_gender_bd, stp_prac_res_imd_decile_bd, stp_prac_res_bed_type_bd, stp_prac_res_ld_status_bd, 
+stp_prac_res_autism_status_bd, 
+                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd, comm_region_ld_status_bd,
+comm_region_autism_status_bd],
   "output_table": "bbrb_final_raw"
 },
   "OAP09M": {
@@ -3989,10 +4178,10 @@ oaps_measure_ids_part2 = {
   "crude_rate": 1,
   "related_to": "bed days",
   "suppression": "percent",
-  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, bed_type_bd, 
+  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, autism_status_bd, ld_status_bd, bed_type_bd, 
                  ccg_prac_res_bd, 
                  stp_prac_res_bd,
-                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd],
+                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd, comm_region_autism_status_bd, comm_region_ld_status_bd],
   "output_table": "bbrb_final_raw"
 },
  "OAP09Q": {
@@ -4007,10 +4196,11 @@ oaps_measure_ids_part2 = {
   "crude_rate": 1,
   "related_to": "bed days",
   "suppression": "percent",
-  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, bed_type_bd, 
+  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, autism_status_bd, ld_status_bd, bed_type_bd, 
                  ccg_prac_res_bd, 
                  stp_prac_res_bd,
-                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd],
+                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd, comm_region_ld_status_bd,
+comm_region_autism_status_bd],
   "output_table": "bbrb_final_raw"
 },
  "OAP09Y": {
@@ -4025,9 +4215,10 @@ oaps_measure_ids_part2 = {
   "crude_rate": 1,
   "related_to": "bed days",
   "suppression": "percent",
-  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, bed_type_bd, 
-                 ccg_prac_res_bd, ccg_prac_res_age_band_oaps_bd, ccg_prac_res_lower_eth_bd, ccg_prac_res_upper_eth_bd, ccg_prac_res_gender_bd, ccg_prac_res_imd_decile_bd, ccg_prac_res_bed_type_bd,
-                 stp_prac_res_bd, stp_prac_res_age_band_oaps_bd, stp_prac_res_lower_eth_bd, stp_prac_res_upper_eth_bd, stp_prac_res_gender_bd, stp_prac_res_imd_decile_bd, stp_prac_res_bed_type_bd,
+  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, autism_status_bd, ld_status_bd, bed_type_bd, 
+                 ccg_prac_res_bd, ccg_prac_res_age_band_oaps_bd, ccg_prac_res_lower_eth_bd, ccg_prac_res_upper_eth_bd, ccg_prac_res_gender_bd, ccg_prac_res_imd_decile_bd, ccg_prac_res_bed_type_bd, ccg_prac_res_ld_status_bd,ccg_prac_res_autism_status_bd,
+                 stp_prac_res_bd, stp_prac_res_age_band_oaps_bd, stp_prac_res_lower_eth_bd, stp_prac_res_upper_eth_bd, stp_prac_res_gender_bd, stp_prac_res_imd_decile_bd, stp_prac_res_bed_type_bd, stp_prac_res_ld_status_bd, 
+stp_prac_res_autism_status_bd, 
                  comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd],
   "output_table": "bbrb_final_raw"
 },
@@ -4043,10 +4234,11 @@ oaps_measure_ids_part2 = {
   "crude_rate": 1,
   "related_to": "bed days",
   "suppression": "percent",
-  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, bed_type_bd, 
+  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, autism_status_bd, ld_status_bd, bed_type_bd, 
                  ccg_prac_res_bd, 
                  stp_prac_res_bd,
-                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd],
+                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd, comm_region_ld_status_bd,
+comm_region_autism_status_bd],
   "output_table": "bbrb_final_raw"
 },
  "OAP09aQ": {
@@ -4061,7 +4253,7 @@ oaps_measure_ids_part2 = {
   "crude_rate": 1,
   "related_to": "bed days",
   "suppression": "percent",
-  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, bed_type_bd, 
+  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, autism_status_bd, ld_status_bd, bed_type_bd, 
                  ccg_prac_res_bd, 
                  stp_prac_res_bd,
                  comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd],
@@ -4079,10 +4271,12 @@ oaps_measure_ids_part2 = {
   "crude_rate": 1,
   "related_to": "bed days",
   "suppression": "percent",
-  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, bed_type_bd, 
-                 ccg_prac_res_bd, ccg_prac_res_age_band_oaps_bd, ccg_prac_res_lower_eth_bd, ccg_prac_res_upper_eth_bd, ccg_prac_res_gender_bd, ccg_prac_res_imd_decile_bd, ccg_prac_res_bed_type_bd,
-                 stp_prac_res_bd, stp_prac_res_age_band_oaps_bd, stp_prac_res_lower_eth_bd, stp_prac_res_upper_eth_bd, stp_prac_res_gender_bd, stp_prac_res_imd_decile_bd, stp_prac_res_bed_type_bd,
-                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd],
+  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, autism_status_bd, ld_status_bd,  bed_type_bd, 
+                 ccg_prac_res_bd, ccg_prac_res_age_band_oaps_bd, ccg_prac_res_lower_eth_bd, ccg_prac_res_upper_eth_bd, ccg_prac_res_gender_bd, ccg_prac_res_imd_decile_bd, ccg_prac_res_bed_type_bd, ccg_prac_res_ld_status_bd,ccg_prac_res_autism_status_bd,
+                 stp_prac_res_bd, stp_prac_res_age_band_oaps_bd, stp_prac_res_lower_eth_bd, stp_prac_res_upper_eth_bd, stp_prac_res_gender_bd, stp_prac_res_imd_decile_bd, stp_prac_res_bed_type_bd, stp_prac_res_ld_status_bd, 
+stp_prac_res_autism_status_bd, 
+                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd, comm_region_ld_status_bd,
+comm_region_autism_status_bd],
   "output_table": "bbrb_final_raw"
 },
   "OAP10M": {
@@ -4097,10 +4291,11 @@ oaps_measure_ids_part2 = {
   "crude_rate": 1,
   "related_to": "referrals",
   "suppression": "percent",
-  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, bed_type_bd, 
+  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, autism_status_bd, ld_status_bd, bed_type_bd, 
                  ccg_prac_res_bd, 
                  stp_prac_res_bd,
-                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd],
+                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd, comm_region_ld_status_bd,
+comm_region_autism_status_bd],
   "output_table": "bbrb_final_raw"
 },
  "OAP10Q": {
@@ -4115,10 +4310,11 @@ oaps_measure_ids_part2 = {
   "crude_rate": 1,
   "related_to": "referrals",
   "suppression": "percent",
-  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd,
+  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, autism_status_bd, ld_status_bd, 
                  ccg_prac_res_bd, 
                  stp_prac_res_bd,
-                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd],
+                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_ld_status_bd,
+comm_region_autism_status_bd],
   "output_table": "bbrb_final_raw"
 },
  "OAP10Y": {
@@ -4133,10 +4329,12 @@ oaps_measure_ids_part2 = {
   "crude_rate": 1,
   "related_to": "referrals",
   "suppression": "percent",
-  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, bed_type_bd, 
-                 ccg_prac_res_bd, ccg_prac_res_age_band_oaps_bd, ccg_prac_res_lower_eth_bd, ccg_prac_res_upper_eth_bd, ccg_prac_res_gender_bd, ccg_prac_res_imd_decile_bd, ccg_prac_res_bed_type_bd,
-                 stp_prac_res_bd, stp_prac_res_age_band_oaps_bd, stp_prac_res_lower_eth_bd, stp_prac_res_upper_eth_bd, stp_prac_res_gender_bd, stp_prac_res_imd_decile_bd, stp_prac_res_bed_type_bd,
-                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd],
+  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, autism_status_bd, ld_status_bd, bed_type_bd, 
+                 ccg_prac_res_bd, ccg_prac_res_age_band_oaps_bd, ccg_prac_res_lower_eth_bd, ccg_prac_res_upper_eth_bd, ccg_prac_res_gender_bd, ccg_prac_res_imd_decile_bd, ccg_prac_res_bed_type_bd, ccg_prac_res_ld_status_bd,ccg_prac_res_autism_status_bd,
+                 stp_prac_res_bd, stp_prac_res_age_band_oaps_bd, stp_prac_res_lower_eth_bd, stp_prac_res_upper_eth_bd, stp_prac_res_gender_bd, stp_prac_res_imd_decile_bd, stp_prac_res_bed_type_bd, stp_prac_res_ld_status_bd, 
+stp_prac_res_autism_status_bd, 
+                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd, comm_region_ld_status_bd,
+comm_region_autism_status_bd],
   "output_table": "bbrb_final_raw"
 },
   "OAP10aM": {
@@ -4151,7 +4349,7 @@ oaps_measure_ids_part2 = {
   "crude_rate": 1,
   "related_to": "referrals",
   "suppression": "percent",
-  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, bed_type_bd, 
+  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, autism_status_bd, ld_status_bd, bed_type_bd, 
                  ccg_prac_res_bd, 
                  stp_prac_res_bd,
                  comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd],
@@ -4169,10 +4367,11 @@ oaps_measure_ids_part2 = {
   "crude_rate": 1,
   "related_to": "referrals",
   "suppression": "percent",
-  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, bed_type_bd, 
+  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, autism_status_bd, ld_status_bd, bed_type_bd, 
                  ccg_prac_res_bd, 
                  stp_prac_res_bd,
-                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd],
+                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd, comm_region_ld_status_bd,
+comm_region_autism_status_bd],
   "output_table": "bbrb_final_raw"
 },
  "OAP10aY": {
@@ -4187,10 +4386,10 @@ oaps_measure_ids_part2 = {
   "crude_rate": 1,
   "related_to": "referrals",
   "suppression": "percent",
-  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, bed_type_bd, 
-                 ccg_prac_res_bd, ccg_prac_res_age_band_oaps_bd, ccg_prac_res_lower_eth_bd, ccg_prac_res_upper_eth_bd, ccg_prac_res_gender_bd, ccg_prac_res_imd_decile_bd, ccg_prac_res_bed_type_bd,
-                 stp_prac_res_bd, stp_prac_res_age_band_oaps_bd, stp_prac_res_lower_eth_bd, stp_prac_res_upper_eth_bd, stp_prac_res_gender_bd, stp_prac_res_imd_decile_bd, stp_prac_res_bed_type_bd,
-                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd],
+  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, autism_status_bd, ld_status_bd, bed_type_bd, 
+                 ccg_prac_res_bd, ccg_prac_res_age_band_oaps_bd, ccg_prac_res_lower_eth_bd, ccg_prac_res_upper_eth_bd, ccg_prac_res_gender_bd, ccg_prac_res_imd_decile_bd, ccg_prac_res_bed_type_bd, ccg_prac_res_ld_status_bd,ccg_prac_res_autism_status_bd, stp_prac_res_bd, stp_prac_res_age_band_oaps_bd, stp_prac_res_lower_eth_bd, stp_prac_res_upper_eth_bd, stp_prac_res_gender_bd, stp_prac_res_imd_decile_bd, stp_prac_res_ld_status_bd, 
+stp_prac_res_autism_status_bd, stp_prac_res_bed_type_bd, comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd, comm_region_ld_status_bd,
+comm_region_autism_status_bd],
   "output_table": "bbrb_final_raw"
 },
   "OAP11M": {
@@ -4205,10 +4404,11 @@ oaps_measure_ids_part2 = {
   "crude_rate": 1,
   "related_to": "referrals",
   "suppression": "percent",
-  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, bed_type_bd, 
+  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, autism_status_bd, ld_status_bd, bed_type_bd, 
                  ccg_prac_res_bd, 
                  stp_prac_res_bd,
-                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd],
+                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd, comm_region_ld_status_bd,
+comm_region_autism_status_bd],
   "output_table": "bbrb_final_raw"
 },
  "OAP11Q": {
@@ -4223,10 +4423,11 @@ oaps_measure_ids_part2 = {
   "crude_rate": 1,
   "related_to": "referrals",
   "suppression": "percent",
-  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, bed_type_bd, 
+  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, autism_status_bd, ld_status_bd, bed_type_bd, 
                  ccg_prac_res_bd, 
                  stp_prac_res_bd,
-                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd],
+                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd, comm_region_ld_status_bd,
+comm_region_autism_status_bd],
   "output_table": "bbrb_final_raw"
 },
  "OAP11Y": {
@@ -4241,10 +4442,11 @@ oaps_measure_ids_part2 = {
   "crude_rate": 1,
   "related_to": "referrals",
   "suppression": "percent",
-  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, bed_type_bd, 
-                 ccg_prac_res_bd, ccg_prac_res_age_band_oaps_bd, ccg_prac_res_lower_eth_bd, ccg_prac_res_upper_eth_bd, ccg_prac_res_gender_bd, ccg_prac_res_imd_decile_bd, ccg_prac_res_bed_type_bd,
-                 stp_prac_res_bd, stp_prac_res_age_band_oaps_bd, stp_prac_res_lower_eth_bd, stp_prac_res_upper_eth_bd, stp_prac_res_gender_bd, stp_prac_res_imd_decile_bd, stp_prac_res_bed_type_bd,
-                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd],
+  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, autism_status_bd, ld_status_bd, bed_type_bd, 
+                 ccg_prac_res_bd, ccg_prac_res_age_band_oaps_bd, ccg_prac_res_lower_eth_bd, ccg_prac_res_upper_eth_bd, ccg_prac_res_gender_bd, ccg_prac_res_imd_decile_bd, ccg_prac_res_bed_type_bd,ccg_prac_res_ld_status_bd,ccg_prac_res_autism_status_bd,                  stp_prac_res_bd, stp_prac_res_age_band_oaps_bd, stp_prac_res_lower_eth_bd, stp_prac_res_upper_eth_bd, stp_prac_res_gender_bd, stp_prac_res_imd_decile_bd, stp_prac_res_ld_status_bd, 
+stp_prac_res_autism_status_bd, stp_prac_res_bed_type_bd,
+                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd, comm_region_ld_status_bd,
+comm_region_autism_status_bd],
   "output_table": "bbrb_final_raw"
 },
   "OAP11aM": {
@@ -4259,10 +4461,11 @@ oaps_measure_ids_part2 = {
   "crude_rate": 1,
   "related_to": "referrals",
   "suppression": "percent",
-  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, bed_type_bd, 
+  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, autism_status_bd, ld_status_bd, bed_type_bd, 
                  ccg_prac_res_bd, 
                  stp_prac_res_bd,
-                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd],
+                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd, comm_region_ld_status_bd,
+comm_region_autism_status_bd],
   "output_table": "bbrb_final_raw"
 },
  "OAP11aQ": {
@@ -4277,10 +4480,11 @@ oaps_measure_ids_part2 = {
   "crude_rate": 1,
   "related_to": "referrals",
   "suppression": "percent",
-  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, bed_type_bd, 
-                 ccg_prac_res_bd, 
+  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, autism_status_bd, ld_status_bd, bed_type_bd, 
+                 ccg_prac_res_bd,  
                  stp_prac_res_bd,
-                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd],
+                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd, comm_region_ld_status_bd,
+comm_region_autism_status_bd],
   "output_table": "bbrb_final_raw"
 },
  "OAP11aY": {
@@ -4295,10 +4499,12 @@ oaps_measure_ids_part2 = {
   "crude_rate": 1,
   "related_to": "referrals",
   "suppression": "percent",
-  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, bed_type_bd, 
-                 ccg_prac_res_bd, ccg_prac_res_age_band_oaps_bd, ccg_prac_res_lower_eth_bd, ccg_prac_res_upper_eth_bd, ccg_prac_res_gender_bd, ccg_prac_res_imd_decile_bd, ccg_prac_res_bed_type_bd,
-                 stp_prac_res_bd, stp_prac_res_age_band_oaps_bd, stp_prac_res_lower_eth_bd, stp_prac_res_upper_eth_bd, stp_prac_res_gender_bd, stp_prac_res_imd_decile_bd, stp_prac_res_bed_type_bd,
-                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd],
+  "breakdowns": [eng_bd, age_band_oaps_bd, lower_eth_bd, upper_eth_bd, gender_bd, imd_decile_bd, autism_status_bd, ld_status_bd, bed_type_bd, 
+                 ccg_prac_res_bd, ccg_prac_res_age_band_oaps_bd, ccg_prac_res_lower_eth_bd, ccg_prac_res_upper_eth_bd, ccg_prac_res_gender_bd, ccg_prac_res_imd_decile_bd, ccg_prac_res_bed_type_bd,                    ccg_prac_res_ld_status_bd,ccg_prac_res_autism_status_bd, 
+                 stp_prac_res_bd, stp_prac_res_age_band_oaps_bd, stp_prac_res_lower_eth_bd, stp_prac_res_upper_eth_bd, stp_prac_res_gender_bd, stp_prac_res_imd_decile_bd, stp_prac_res_bed_type_bd, 
+                 stp_prac_res_autism_status_bd, stp_prac_res_ld_status_bd, 
+                 comm_region_bd, comm_region_age_band_oaps_bd, comm_region_lower_eth_bd, comm_region_upper_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_bed_type_bd, comm_region_ld_status_bd,
+comm_region_autism_status_bd],
   "output_table": "bbrb_final_raw"
 },
 }
@@ -4856,9 +5062,154 @@ mha_measure_ids = {
                  stp_prac_res_bd,
                  comm_region_bd],
   "output_table": "bbrb_final_raw"
+},
+  "MHS157": {
+  "freq": "12M", 
+  "name": "Detentions in the reporting period (12 month rolling)",
+  "source_table": "Detentions_yearly",
+  "filter_clause": (F.col("MHA_Logic_Cat_full").isin('A','B','C','D','P')),
+  "aggregate_field": "COUNT(DISTINCT UniqMHActEpisodeID)",
+  "aggregate_function": produce_filter_agg_df,
+  "numerator_id": "MHS157",
+  "denominator": 0,  
+  "crude_rate": 0,
+  "related_to": "detentions",
+  "suppression": "count",
+  "breakdowns": [eng_bd, age_band_mha_bd, gender_bd, upper_eth_bd, wnw_eth_bd, imd_decile_bd, imd_core20_bd,
+                 prov_bd, 
+                 ccg_prac_res_bd,
+                 stp_prac_res_bd, stp_prac_res_age_band_mha_bd, stp_prac_res_upper_eth_bd, stp_prac_res_wnw_eth_bd, stp_prac_res_gender_bd, stp_prac_res_imd_decile_bd, stp_prac_res_imd_core20_bd,
+                 comm_region_bd, comm_region_age_band_mha_bd, comm_region_upper_eth_bd, comm_region_wnw_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_imd_core20_bd],
+  "output_table": "bbrb_final_raw"
+},  
+"MHS157a": {
+  "freq": "12M", 
+  "name": "Crude rate per 100,000 of detentions in the reporting period (12 month rolling)",
+  "source_table": "Detentions_yearly_filtered",
+  "filter_clause": "",
+  "aggregate_field": "(COALESCE(SUM(NUMERATOR_COUNT)/SUM(DENOMINATOR_COUNT)))*100000",
+  "aggregate_function": produce_crude_rate_agg_df,
+  "numerator_id": "MHS157",
+  "denominator": "MHSPOPALL",  
+  "crude_rate": 1,
+  "related_to": "detentions",
+  "suppression": "percent",
+  "breakdowns": [eng_bd, age_band_mha_bd, gender_bd, upper_eth_bd, wnw_eth_bd, imd_decile_bd, imd_core20_bd,
+                 ccg_prac_res_bd,
+                 stp_prac_res_bd, stp_prac_res_age_band_mha_bd, stp_prac_res_upper_eth_bd, stp_prac_res_wnw_eth_bd, stp_prac_res_gender_bd, stp_prac_res_imd_decile_bd, stp_prac_res_imd_core20_bd,
+                 comm_region_bd, comm_region_age_band_mha_bd, comm_region_upper_eth_bd, comm_region_wnw_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_imd_core20_bd],
+  "output_table": "bbrb_final_raw"
+},
+  
+  "MHS157b": {
+  "freq": "12M", 
+  "name": "Direct standardised rate per 100,000 of detentions in the reporting period (12 month rolling)",
+  "source_table": "Detentions_yearly_filtered",
+  "filter_clause": "",
+  "aggregate_field": "SUM(STANDARDISED_RATE) * 100000",
+  "aggregate_function": produce_direct_standardised_rate_agg_df,
+  "numerator_id": "MHS157",
+  "denominator": "MHSPOPALL",  
+  "crude_rate": 0,
+  "related_to": "detentions",
+  "suppression": "percent",
+  "breakdowns": [upper_eth_bd, wnw_eth_bd, imd_decile_bd, imd_core20_bd,
+                 stp_prac_res_upper_eth_bd, stp_prac_res_wnw_eth_bd, stp_prac_res_imd_decile_bd, stp_prac_res_imd_core20_bd,
+                 comm_region_upper_eth_bd, comm_region_wnw_eth_bd, comm_region_imd_decile_bd, comm_region_imd_core20_bd
+                ],  
+  "output_table": "bbrb_final_raw"
+},
+  "MHS157c": {
+  "freq": "12M", 
+  "name": "95% Confidence Interval (+/-) of direct standardised rate per 100,000 of detentions in the reporting period (12 month rolling)",
+  "source_table": "Detentions_yearly_filtered",
+  "filter_clause": "",
+  "aggregate_field": "SUM(CI_RANGE) * 100000",
+  "aggregate_function": produce_direct_standardised_rate_agg_df,
+  "numerator_id": "MHS157",
+  "denominator": "MHSPOPALL",  
+  "crude_rate": 0,
+  "related_to": "detentions",
+  "suppression": "percent",
+  "breakdowns": [upper_eth_bd, wnw_eth_bd, imd_decile_bd, imd_core20_bd,
+                 stp_prac_res_upper_eth_bd, stp_prac_res_wnw_eth_bd, stp_prac_res_imd_decile_bd, stp_prac_res_imd_core20_bd,
+                 comm_region_upper_eth_bd, comm_region_wnw_eth_bd, comm_region_imd_decile_bd, comm_region_imd_core20_bd
+                ],
+  "output_table": "bbrb_final_raw"
+},  
+  "MHS158": {
+  "freq": "12M", 
+  "name": "CTOs in the reporting period (12 month rolling)",
+  "source_table": "CTO_yearly",
+  "filter_clause": "",
+  "aggregate_field": "COUNT(DISTINCT CTO_UniqMHActEpisodeID)",
+  "aggregate_function": produce_agg_df,
+  "numerator_id": "MHS158",
+  "denominator": 0,  
+  "crude_rate": 0,
+  "related_to": "detentions",
+  "suppression": "count",
+  "breakdowns": [eng_bd, age_band_mha_bd, gender_bd, upper_eth_bd, wnw_eth_bd, imd_decile_bd, imd_core20_bd,
+                 prov_bd, 
+                 ccg_prac_res_bd,
+                 stp_prac_res_bd, stp_prac_res_age_band_mha_bd, stp_prac_res_upper_eth_bd, stp_prac_res_wnw_eth_bd, stp_prac_res_gender_bd, stp_prac_res_imd_decile_bd, stp_prac_res_imd_core20_bd,
+                 comm_region_bd, comm_region_age_band_mha_bd, comm_region_upper_eth_bd, comm_region_wnw_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_imd_core20_bd],
+  "output_table": "bbrb_final_raw"
+},
+  
+  "MHS158a": {
+  "freq": "12M", 
+  "name": "Crude rate per 100,000 of CTOs in the reporting period (12 month rolling)",
+  "source_table": "CTO_yearly",
+  "filter_clause": "",
+  "aggregate_field": "(COALESCE(SUM(NUMERATOR_COUNT)/SUM(DENOMINATOR_COUNT)))*100000",
+  "aggregate_function": produce_crude_rate_agg_df,
+  "numerator_id": "MHS158",
+  "denominator": "MHSPOPALL",  
+  "crude_rate": 1,
+  "related_to": "detentions",
+  "suppression": "percent",
+  "breakdowns": [eng_bd, age_band_mha_bd, gender_bd, upper_eth_bd, wnw_eth_bd, imd_decile_bd, imd_core20_bd,
+                 ccg_prac_res_bd,
+                 stp_prac_res_bd, stp_prac_res_age_band_mha_bd, stp_prac_res_upper_eth_bd, stp_prac_res_wnw_eth_bd, stp_prac_res_gender_bd, stp_prac_res_imd_decile_bd, stp_prac_res_imd_core20_bd,
+                 comm_region_bd, comm_region_age_band_mha_bd, comm_region_upper_eth_bd, comm_region_wnw_eth_bd, comm_region_gender_bd, comm_region_imd_decile_bd, comm_region_imd_core20_bd],
+  "output_table": "bbrb_final_raw"
+},
+"MHS158b": {
+  "freq": "12M", 
+  "name": "Direct standardised rate per 100,000 of CTOs in the reporting period (12 month rolling)",
+  "source_table": "CTO_yearly",
+  "filter_clause": "",
+  "aggregate_field": "SUM(STANDARDISED_RATE) * 100000",
+  "aggregate_function": produce_direct_standardised_rate_agg_df,
+  "numerator_id": "MHS158",
+  "denominator": "MHSPOPALL",  
+  "crude_rate": 0,
+  "related_to": "detentions",
+  "suppression": "percent",
+  "breakdowns": [upper_eth_bd, wnw_eth_bd, imd_decile_bd, imd_core20_bd,
+                 stp_prac_res_upper_eth_bd, stp_prac_res_wnw_eth_bd, stp_prac_res_imd_decile_bd, stp_prac_res_imd_core20_bd,
+                 comm_region_upper_eth_bd, comm_region_wnw_eth_bd, comm_region_imd_decile_bd, comm_region_imd_core20_bd],
+  "output_table": "bbrb_final_raw"
+},
+"MHS158c": {
+  "freq": "12M", 
+  "name": "95% Confidence Interval (+/-) of direct standardised rate per 100,000 of CTOs in the reporting period (12 month rolling)",
+  "source_table": "CTO_yearly",
+  "filter_clause": "",
+  "aggregate_field": "SUM(CI_RANGE) * 100000",
+  "aggregate_function": produce_direct_standardised_rate_agg_df,
+  "numerator_id": "MHS158",
+  "denominator": "MHSPOPALL",  
+  "crude_rate": 0,
+  "related_to": "detentions",
+  "suppression": "percent",
+  "breakdowns": [upper_eth_bd, wnw_eth_bd, imd_decile_bd, imd_core20_bd,
+                 stp_prac_res_upper_eth_bd, stp_prac_res_wnw_eth_bd, stp_prac_res_imd_decile_bd, stp_prac_res_imd_core20_bd,
+                 comm_region_upper_eth_bd, comm_region_wnw_eth_bd, comm_region_imd_decile_bd, comm_region_imd_core20_bd],
+  "output_table": "bbrb_final_raw"
 }
-} 
-
+}
 
 # COMMAND ----------
 
@@ -4875,4 +5226,18 @@ measure_metadata = {
   "08_OAPS": {**oaps_measure_ids_part1, **oaps_measure_ids_part2},
   "09_MHC": mhc_measure_ids,
   "10_MHA": mha_measure_ids
+}
+
+# COMMAND ----------
+
+standardisation_counts_metadata = {
+  "MHS95": {
+  "aggregate_field": "COUNT(DISTINCT Person_ID)",
+  },
+  "MHS157": {
+  "aggregate_field": "COUNT(DISTINCT UniqMHActEpisodeID)",
+  },
+  "MHS158": {
+  "aggregate_field": "COUNT(DISTINCT CTO_UniqMHActEpisodeID)",
+  }
 }

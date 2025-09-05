@@ -37,7 +37,7 @@
 # COMMAND ----------
 
 # DBTITLE 1,Parameters checking and assigning
-#User copied (and amended) from menh_publications to remove the need to put in so many data inputs...
+#User note copied (and amended) from menh_publications to remove the need to put in so many data inputs...
 
 import json
 from datetime import datetime, date
@@ -48,28 +48,28 @@ db = dbutils.widgets.get("db")
 assert db
 
 # this is needed to enable run_notebooks to be run both from run_tests during promotion and directly run
-# needs to use $mhsds for both but the parameter is fed in from run_tests as the original $mhsds :o(
+# needs to use mhsds_database for both but the parameter is fed in from run_tests as the original mhsds_database :o(
 
 # get the original parameter value (will work in all sitations)
 try:
-  db_source = dbutils.widgets.get("$mhsds")
+  db_source = dbutils.widgets.get("mhsds_database")
 except:
-  print('$mhsds is not defined')
+  print('mhsds_database is not defined')
 
-# get the new parameter value (will only work in direct run, and will overwrite value for $mhsds)
+# get the new parameter value (will only work in direct run, and will overwrite value for mhsds_database)
 try:
-  db_source = dbutils.widgets.get("$mhsds")
+  db_source = dbutils.widgets.get("mhsds_database")
 except:
-  print('$mhsds is not defined')
+  print('mhsds_database is not defined')
 
 try:
-  db_source = dbutils.widgets.get("$mhsds")
+  db_source = dbutils.widgets.get("mhsds_database")
 except:
-  print('$mhsds is not defined')  
+  print('mhsds_database is not defined')
 
-dbutils.widgets.text("$reference_data","$reference_data","Reference Database")
-$reference_data = dbutils.widgets.get("$reference_data")
-assert $reference_data
+dbutils.widgets.text("reference_data","reference_data","Reference Database")
+reference_data = dbutils.widgets.get("reference_data")
+assert reference_data
 
 
 
@@ -78,7 +78,7 @@ assert $reference_data
 params = {
   'dbm' : db_source, 
   'db_output' : db, 
-  '$reference_data': $reference_data,
+  'reference_data': reference_data,
   'rp_enddate' : '', 
   'rp_startdate' : '', 
   'month_id' : '', 
@@ -231,14 +231,14 @@ def calculateUniqMonthID(RPStartDate: datetime)-> int:
 
 # COMMAND ----------
 
-# User added for alternative run with different source data
+# User note added for alternative run with different source data
 
 dbutils.widgets.text("alt_source_data","","alt_source_data")
 alt_source_data = dbutils.widgets.get("alt_source_data")
 
 print("alt_source_data: ",alt_source_data)
 
-# User this enables the main code base (or the v4 code base) to run on an alternative data source - such as Point In Time data or v4 (non-MSWM) data
+# User note this enables the main code base (or the v4 code base) to run on an alternative data source - such as Point In Time data or v4 (non-MSWM) data
 # value of alt_source_data should be the name of the alternative database
 
 # options for this parameter are:

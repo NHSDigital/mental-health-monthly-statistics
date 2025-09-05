@@ -151,6 +151,8 @@
  STP_Name string,
  Region_Code string,
  Region_Name string,
+ --BITC-6882: IMD breakdowns
+ IMD_Core20 string,
  SpellID string, 
  StartDate date,
  EndDate date,
@@ -364,6 +366,8 @@
  STP_Name string,
  Region_Code string,
  Region_Name string,
+ --BITC-6882: IMD breakdowns
+ IMD_Core20 string,
  SpellID string, 
  StartDate date,
  EndDate date,

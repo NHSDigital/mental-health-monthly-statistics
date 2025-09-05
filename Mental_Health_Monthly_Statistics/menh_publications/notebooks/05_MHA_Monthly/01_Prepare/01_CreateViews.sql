@@ -15,9 +15,9 @@
  rp_enddate=dbutils.widgets.get("rp_enddate")
  print(rp_enddate)
  assert rp_enddate
- $reference_data = dbutils.widgets.get("$reference_data")
- print($reference_data)
- assert($reference_data)
+ reference_data = dbutils.widgets.get("reference_data")
+ print(reference_data)
+ assert(reference_data)
 
 
 -- COMMAND ----------
@@ -31,7 +31,7 @@ SELECT DISTINCT	ORG_CODE
         WHEN ORG_TYPE_CODE IN ('CT','TR') THEN 'NHS TRUST'
         WHEN ORG_TYPE_CODE IN ('PH','LA','NN') THEN 'INDEPENDENT HEALTH PROVIDER'
       END AS ORG_TYPE_CODE								
-FROM	$$reference_data.ORG_DAILY	
+FROM	$reference_data.ORG_DAILY	
 WHERE			(BUSINESS_END_DATE >= '$rp_enddate' OR BUSINESS_END_DATE IS NULL)	
 			AND BUSINESS_START_DATE <= '$rp_enddate' AND ORG_TYPE_CODE in ('CC','CF','LB','PT','CT','OU','NS','TR','HA','LA','PH','NN')	
 			AND (ORG_CLOSE_DATE >= '$rp_enddate' OR ORG_CLOSE_DATE IS NULL)	
@@ -102,8 +102,8 @@ FROM			$db_source.MHS001MPI AS B
 
 LEFT JOIN
          (SELECT LSOA_CODE_2011, DECI_IMD, IMD_YEAR
-         FROM $$reference_data.english_indices_of_dep_v02
-         WHERE IMD_YEAR = (SELECT MAX(IMD_YEAR) FROM $$reference_data.english_indices_of_dep_v02) ) C ON B.LSOA2011 = LSOA_CODE_2011     
+         FROM $reference_data.english_indices_of_dep_v02
+         WHERE IMD_YEAR = (SELECT MAX(IMD_YEAR) FROM $reference_data.english_indices_of_dep_v02) ) C ON B.LSOA2011 = LSOA_CODE_2011     
          
 LEFT JOIN $db_output.CCG A ON A.PERSON_ID = b.PERSON_ID
      

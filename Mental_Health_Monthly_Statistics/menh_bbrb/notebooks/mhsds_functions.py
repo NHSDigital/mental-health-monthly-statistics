@@ -108,6 +108,37 @@ spark.udf.register("is_numeric", is_numeric)
  
 def parent_breakdown(whole_breakdown: str) -> str:
   return whole_breakdown.split(";")[0]
+ 
+def child_breakdown(whole_breakdown: str) -> str:
+  return whole_breakdown.split(";")[-1]
+ 
+def get_pyspark_column_name(col_expr: Column) -> str:
+  s = col_expr._jc.toString()
+  if s.startswith("`") and s.endswith("`"):
+      return s[1:-1]
+  
+  return s
+ 
+def get_unique_pyspark_column_list(col_list: list) -> list:
+  seen_exprs = set()
+  unique_columns = []
+  for col in col_list:
+      expr_str = str(col._jc.toString())  # low-level Spark column string
+      if expr_str not in seen_exprs:
+          seen_exprs.add(expr_str)
+          unique_columns.append(col)
+  
+  return unique_columns  
+ 
+def add_alias(pyspark_column_name: Column, alias: str) -> Column:
+  '''
+  This function returns a column (based on a string of a defined pyspark column 
+  that may change based on a parameter) with an alias in front of it, to enable 
+  joins between 2 tables and allow the user to choose which table to select the colunn from.
+  '''
+  pyspark_column_alias = F.col(f"{alias}.{pyspark_column_name}")
+  
+  return pyspark_column_alias     
 
 # COMMAND ----------
 
@@ -212,12 +243,12 @@ def get_financial_yr_start(rp_startdate: str) -> str:
   
 def get_year_of_count(rp_startdate):
   '''
-  This function returns the year_of_count which should be used to extract data from $reference_data.ONS_POPULATION_V2.  
-  If the financial_yr_start is greater than the existing max(current_year) in $reference_data.ONS_POPULATION_V2 then use
+  This function returns the year_of_count which should be used to extract data from reference_data.ONS_POPULATION_V2.  
+  If the financial_yr_start is greater than the existing max(current_year) in reference_data.ONS_POPULATION_V2 then use
   current_year = max(current_year).
   '''
   current_year = get_financial_yr_start(rp_startdate)[0:4]
-  max_year_of_count = spark.sql(f"select max(year_of_count) AS year_of_count from $reference_data.ONS_POPULATION_V2 where GEOGRAPHIC_GROUP_CODE = 'E38'")
+  max_year_of_count = spark.sql(f"select max(year_of_count) AS year_of_count from reference_data.ONS_POPULATION_V2 where GEOGRAPHIC_GROUP_CODE = 'E38'")
   max_year_of_count_value = max_year_of_count.first()["year_of_count"]
   year_of_count = current_year
   if (year_of_count > max_year_of_count_value):
@@ -244,7 +275,7 @@ class MHRunParameters:
   rp_startdate_12m: str = field(init=False)
   financial_year_start: str = field(init=False)
   year_of_count: int = field(init=False)
-  $reference_data: str = "$reference_data"
+  reference_data: str = "reference_data"
    
   def __post_init__(self):
     self.pub_month = get_pub_month(self.rp_startdate, self.status)
@@ -767,6 +798,439 @@ def produce_filter_bed_days_agg_df(
     
     return agg_df
   
+def join_standardisation_groupings(df1: df, df2: df, join_list: list, unique_fields: list) -> df:
+  #alias each dataframe
+  df1 = df1.alias("a")
+  df2 = df2.alias("b")
+  
+  #for each pyspark Column in the list change to column name string
+  join_cols = [get_pyspark_column_name(col) for col in join_list]
+  
+  #create conditions for join (this assumes you are joining on each column provided in join_list - both dataframes must have these columns)
+  join_conditions = [F.col(f"a.{col}") == F.col(f"b.{col}") for col in join_cols]
+  
+  #inner join dataframes based on conditions
+  joined_df = df1.join(df2, on=join_conditions, how="inner")  
+  
+  #create list of columns which exist in both dataframes and in join_list
+  #this will always prefer columns from df1 where column appears in both dataframes  
+  common_columns = [F.col(f"a.{col}") for col in join_cols]
+  
+  #select common_columns and unique_fields - which allows you to bring in fields which are unique to each dataframe
+  final_df = (
+    joined_df
+    .select(
+      *common_columns,
+      *unique_fields
+    )            
+  )
+  
+  return final_df
+ 
+def produce_direct_standardised_rate_df(
+  db_output: str,  
+  db_source: str,
+  table_name: str,
+  filter_clause: Column,
+  rp_startdate: str, 
+  rp_enddate: str, 
+  primary_level: Column, 
+  primary_level_desc: Column, 
+  secondary_level: Column, 
+  secondary_level_desc: Column,
+  aggregation_field: str,    
+  breakdown: str,
+  status: str,
+  measure_id: str, 
+  numerator_id: str,  
+  denominator_id: str,
+  measure_name: str,
+  column_order: list
+) -> df:    
+  """  This function produces the age and gender direct standardisation rate and
+  confidence interval range for a given breakdown aggregation output dataframe from 
+  a defined preparation table which produces the count based on the relevant breakdown,
+  a population table is selected for all standardisation rate and confidence interval 
+  measures and breakdowns according to the measure_metadata dictionary.
+  
+  This is the same function as below EXCEPT it doens't do the final step that produces 
+  agg_df. This is because the data produced through this function is not the final data
+  but instead feeds the absolute mean deviation function to produces measures MHS95d and 
+  MHS95e.
+  
+  Current measures
+  ----------------
+  MHS95d, MHS95e
+  """  
+  #all columns for direct standardisation by age and gender
+  columns_for_standardisation = [primary_level, primary_level_desc, secondary_level, secondary_level_desc, F.col("Age_Band"), F.col("Der_Gender")]
+  unique_columns_for_standardisation = get_unique_pyspark_column_list(columns_for_standardisation)
+  
+  #columns for breakdown, this is done after we have joined population at age/gender/breakdown
+  columns_for_breakdown = [primary_level, primary_level_desc, secondary_level, secondary_level_desc]
+  unique_columns_for_breakdown = get_unique_pyspark_column_list(columns_for_breakdown)
+  
+  #get prep table needed for counts
+  prep_df = spark.table(f"{db_output}.{table_name}")
+  
+  #putting this clause in now because CYP Access is the most complex measure in terms of aggregation, but might need amending as we add more complex aggregations
+  if numerator_id == "MHS95": 
+    prep_df = access_filter_for_breakdown(prep_df, breakdown)
+  
+  #apply filter to prep_df if "filter_clause" is populated in measure_metadata
+  if isinstance(filter_clause, Column):
+    prep_df = (
+      prep_df
+      .filter(filter_clause)
+    )
+    
+  #cant think of another way to get the logic for this as we need the aggregate_field to differentiate between DSR and CI in the aggregate field in measure_metadata
+  count_aggregation_logic = standardisation_counts_metadata[numerator_id]["aggregate_field"]
+  count_aggregation_field = (F.expr(count_aggregation_logic).alias("MEASURE_VALUE"))
+    
+  #aggregate counts by age x gender x breakdown
+  counts_df = (
+    prep_df
+    .where( (F.col("Age_Band") != "UNKNOWN") & (F.col("Der_Gender") != "UNKNOWN") )
+    .groupBy(*unique_columns_for_standardisation)
+    .agg(count_aggregation_field)
+  )
+  
+  #select correct population table based on breakdown (will need updating if we ever add more breakdowns for direct standardisation)
+  if "IMD" in child_breakdown(breakdown):
+      pop_df = spark.table(f"{db_output}.age_gender_std_imd_pop")
+  elif "Ethnicity" in child_breakdown(breakdown):
+      pop_df = spark.table(f"{db_output}.age_gender_std_eth_pop")
+  else:
+      raise ValueError("Invalid breakdown for standardisation rates")
+      
+  #look at age band value of counts_df and rename same column in pop_df to age band (for joining)
+  #this is needed because in prep_df the relevant age band is always called "Age_Band" but in pop_df there are many age bands
+  counts_age_values = set([row["Age_Band"] for row in counts_df.select("Age_Band").distinct().collect()])
+  pop_age_columns = [col for col in pop_df.columns if col.startswith("Age_Group")]
+  
+  for pop_age_col in pop_age_columns:
+    pop_age_values = set([row[pop_age_col] for row in pop_df.select(pop_age_col).distinct().collect()])
+    if all(age in pop_age_values for age in counts_age_values):            
+      matching_age_col = pop_age_col            
+      break
+      
+  #rename matching_age_col to Age_Band in pop_df
+  pop_df = pop_df.withColumnRenamed(matching_age_col, "Age_Band")
+  
+  #aggregate population by columns for standardisation align schemas for joining (pick only necessary columns)
+  pop_df = (
+    pop_df
+    .groupBy(*unique_columns_for_standardisation)
+    .agg(F.sum("POPULATION_COUNT").alias("POPULATION"))
+  )
+  
+  #join counts_df and pop_df to get counts and population by age x gender x breakdown
+  joined_df = join_standardisation_groupings(counts_df, pop_df, unique_columns_for_standardisation, [F.col("MEASURE_VALUE"), F.col("POPULATION")])
+    
+  #calculate total standard population by breakdown
+  total_pop_df = (
+    joined_df
+    .groupBy(*unique_columns_for_breakdown)
+    .agg(F.sum("POPULATION").alias("TOTAL_POPULATION"))
+  )
+  
+  #join joined_df and total_pop_df to get counts, population and total population by breakdown
+  std_pop_df = join_standardisation_groupings(joined_df, total_pop_df, unique_columns_for_breakdown, [F.col("MEASURE_VALUE"), F.col("POPULATION"), F.col("TOTAL_POPULATION")])
+  
+  #calculate weights and standardised rates
+  weight_df = (
+    std_pop_df
+    .withColumn("WEIGHT", F.col("POPULATION") / F.col("TOTAL_POPULATION")) #need to use withColumn as WEIGHT is needed in the next calculation
+    .withColumn("WEIGHTED_RATE", (F.col("MEASURE_VALUE") / F.col("POPULATION")) * F.col("WEIGHT"))
+  )
+  
+  #calculate directly standardised rate and variance (needed for calculating confidence intervals)
+  dsr_df = (
+    weight_df
+    .groupby(*unique_columns_for_breakdown)
+    .agg(
+      F.sum("WEIGHTED_RATE").alias("STANDARDISED_RATE"),
+      F.sum((F.col("WEIGHT") ** 2) * (F.col("MEASURE_VALUE") / (F.col("POPULATION") ** 2))).alias("VARIANCE")
+    )
+  )
+  
+  #calculate confidence interval range 1.96 * SQRT(VARIANCE)
+  dsr_ci_df = (
+    dsr_df
+    .select(
+      "*",
+      (1.96 * F.sqrt(F.col("VARIANCE"))).alias("CI_RANGE")
+    )
+  )
+  
+  return weight_df, dsr_ci_df, total_pop_df
+ 
+def produce_direct_standardised_rate_agg_df(
+  db_output: str,  
+  db_source: str,
+  table_name: str,
+  filter_clause: Column,
+  rp_startdate: str, 
+  rp_enddate: str, 
+  primary_level: Column, 
+  primary_level_desc: Column, 
+  secondary_level: Column, 
+  secondary_level_desc: Column,
+  aggregation_field: str,    
+  breakdown: str,
+  status: str,
+  measure_id: str, 
+  numerator_id: str,  
+  denominator_id: str,
+  measure_name: str,
+  column_order: list
+) -> df:    
+  """  This function produces the age and gender direct standardisation rate and
+  confidence interval range for a given breakdown aggregation output dataframe from 
+  a defined preparation table which produces the count based on the relevant breakdown,
+  a population table is selected for all standardisation rate and confidence interval 
+  measures and breakdowns according to the measure_metadata dictionary.
+  
+  Current measures
+  ----------------
+  MHS95b, MHS95c
+  """  
+  weight_df, dsr_ci_df, total_pop_df = produce_direct_standardised_rate_df(
+  db_output, db_source, table_name, filter_clause,rp_startdate, rp_enddate, 
+  primary_level, primary_level_desc, secondary_level, secondary_level_desc,
+  aggregation_field, breakdown, status, measure_id, numerator_id, denominator_id,
+  measure_name, column_order)
+ 
+  agg_groupby_cols = [primary_level.alias("PRIMARY_LEVEL"),            
+                      primary_level_desc.alias("PRIMARY_LEVEL_DESCRIPTION"),              
+                      secondary_level.alias("SECONDARY_LEVEL"),              
+                      secondary_level_desc.alias("SECONDARY_LEVEL_DESCRIPTION")]
+  
+  aggregation_field = (F.expr(aggregation_field).alias("MEASURE_VALUE"))
+  
+  agg_df = (    
+    dsr_ci_df
+    .groupBy(*agg_groupby_cols)
+    .agg(aggregation_field)
+    .select(
+      "*",
+      F.lit(rp_startdate).alias("REPORTING_PERIOD_START"),
+      F.lit(rp_enddate).alias("REPORTING_PERIOD_END"),
+      F.lit(breakdown).alias("BREAKDOWN"),
+      F.lit(status).alias("STATUS"),         
+      F.lit(measure_id).alias("MEASURE_ID"),
+      F.lit(measure_name).alias("MEASURE_NAME"),
+      F.lit(db_source).alias("SOURCE_DB"),
+    )
+    .select(*column_order)
+  )
+  
+  return agg_df
+ 
+def produce_absolute_mean_deviation_white_vs_non_white_upper_ethnicites_df(
+  db_output: str,  
+  db_source: str,
+  table_name: str,
+  filter_clause: Column,
+  rp_startdate: str, 
+  rp_enddate: str, 
+  primary_level: Column, 
+  primary_level_desc: Column, 
+  secondary_level: Column, 
+  secondary_level_desc: Column,
+  aggregation_field: str,    
+  breakdown: str,
+  status: str,
+  measure_id: str, 
+  numerator_id: str,  
+  denominator_id: str,
+  measure_name: str,
+  column_order: list
+) -> df:    
+  """ This function uses the produce_direct_standardisation_rate_df function to produce
+  age and gender direct standardisation rate for a given breakdown aggregation output dataframe.
+  This function then produces an absolute mean deviation OR weighted absolute mean deviation 
+  (determined in the measure_metadata) between the direct standardised rate of each non-White 
+  upper ethnicity and the White upper ethnicity.
+  
+  Current measures
+  ----------------
+  MHS95d, MHS95e
+  """  
+  weight_df, dsr_ci_df, total_pop_df = produce_direct_standardised_rate_df(
+  db_output, db_source, table_name, filter_clause,rp_startdate, rp_enddate, 
+  primary_level, primary_level_desc, secondary_level, secondary_level_desc,
+  aggregation_field, breakdown, status, measure_id, numerator_id, denominator_id,
+  measure_name, column_order)
+    
+  primary_level_name = get_pyspark_column_name(primary_level)
+  secondary_level_name = get_pyspark_column_name(secondary_level)
+  secondary_level_desc_name = get_pyspark_column_name(secondary_level_desc)
+  
+  if secondary_level_name == "NONE":
+ 
+    weight_df_subset = total_pop_df.filter(primary_level != "White or White British").agg(F.sum(F.col("TOTAL_POPULATION")).alias("Non-WhitePop"))
+    weight_df_subset2 = dsr_ci_df.filter(primary_level == "White or White British").agg(F.sum(F.col("STANDARDISED_RATE")).alias("WhiteStanRate"))
+ 
+    dev_weights_df = dsr_ci_df.alias("a").join(total_pop_df.alias("b"), (add_alias(primary_level_name, "a") == add_alias(primary_level_name, "b")), 'left') \
+                                         .select(add_alias(primary_level_name, "a"), F.col("a.STANDARDISED_RATE"), F.col("b.TOTAL_POPULATION")).alias("a") \
+                                         .crossJoin(F.broadcast(weight_df_subset)) \
+                                         .crossJoin(F.broadcast(weight_df_subset2))
+ 
+    count_ethnicities = dev_weights_df.agg(F.count(F.col("*")).alias("NumofEth"))
+ 
+    count_eth_join = dev_weights_df.alias("a").crossJoin(F.broadcast(count_ethnicities)) \
+                                              .select("a.*", (F.col("NumofEth") - 1).alias("NumofEth"))
+ 
+    dev_weights_df2 = count_eth_join.withColumn("PopWeight", F.col("TOTAL_POPULATION") / F.col("Non-WhitePop")) \
+                                    .withColumn("DiffFromWhite", F.col("STANDARDISED_RATE") - F.col("WhiteStanRate")) \
+                                    .withColumn("AbsoluteDiffFromWhite", F.abs(F.col("DiffFromWhite"))) \
+                                    .withColumn("AbsoluteDiffWeighted", F.col("AbsoluteDiffFromWhite") * F.col("PopWeight"))
+ 
+    mean_deviation = dev_weights_df2.groupBy(F.col("NumofEth")).agg((F.sum(F.col("AbsoluteDiffFromWhite")) / F.col("NumofEth")).alias("MeanAbsoluteDeviation"),
+                                                                     F.sum(F.col("AbsoluteDiffWeighted")).alias("WeightedMeanAbsoluteDeviation")) \
+                                    .drop("NumofEth")
+ 
+  else: 
+ 
+    weight_df_subset = total_pop_df.filter(primary_level != "White or White British").groupBy(secondary_level).agg(F.sum(F.col("TOTAL_POPULATION")).alias("Non-WhitePop"))
+    weight_df_subset2 = dsr_ci_df.filter(primary_level == "White or White British").groupBy(secondary_level).agg(F.sum(F.col("STANDARDISED_RATE")).alias("WhiteStanRate"))
+ 
+    dev_weights_df = dsr_ci_df.alias("a").join(total_pop_df.alias("b"), ((add_alias(primary_level_name, "a") == add_alias(primary_level_name, "b")) & (add_alias(secondary_level_name, "a") == add_alias(secondary_level_name, "b"))), 'left') \
+                                         .select(add_alias(primary_level_name, "a"), add_alias(secondary_level_name, "a"), add_alias(secondary_level_desc_name, "a"), F.col("a.STANDARDISED_RATE"), F.col("b.TOTAL_POPULATION")).alias("a") \
+                                         .join(weight_df_subset.alias("c"), add_alias(secondary_level_name, "a") == add_alias(secondary_level_name, "c"), 'left') \
+                                         .join(weight_df_subset2.alias("d"), add_alias(secondary_level_name, "a") == add_alias(secondary_level_name, "d"), 'left') \
+                                         .select("a.*", F.col("c.Non-WhitePop"), F.col("d.WhiteStanRate"))
+ 
+    count_ethnicities = dev_weights_df.groupBy(secondary_level).agg(F.count(F.col("*")).alias("NumofEth"))
+ 
+    count_eth_join = dev_weights_df.alias("a").join(count_ethnicities.alias("b"), add_alias(secondary_level_name, "a") == add_alias(secondary_level_name, "b"), 'left') \
+                                              .select("a.*", (F.col("NumofEth") - 1).alias("NumofEth"))
+ 
+    dev_weights_df2 = count_eth_join.withColumn("PopWeight", F.col("TOTAL_POPULATION") / F.col("Non-WhitePop")) \
+                                    .withColumn("DiffFromWhite", F.col("STANDARDISED_RATE") - F.col("WhiteStanRate")) \
+                                    .withColumn("AbsoluteDiffFromWhite", F.abs(F.col("DiffFromWhite"))) \
+                                    .withColumn("AbsoluteDiffWeighted", F.col("AbsoluteDiffFromWhite") * F.col("PopWeight"))
+ 
+    mean_deviation = dev_weights_df2.groupBy(secondary_level, secondary_level_desc, F.col("NumofEth")).agg((F.sum(F.col("AbsoluteDiffFromWhite")) / F.col("NumofEth")).alias("MeanAbsoluteDeviation"),
+                                                                                      F.sum(F.col("AbsoluteDiffWeighted")).alias("WeightedMeanAbsoluteDeviation")) \
+                                    .drop("NumofEth")
+  
+  agg_groupby_cols = [secondary_level.alias("SECONDARY_LEVEL"),              
+                      secondary_level_desc.alias("SECONDARY_LEVEL_DESCRIPTION")]
+ 
+  aggregation_field = (F.expr(aggregation_field).alias("MEASURE_VALUE"))
+  
+  agg_df = (    
+    mean_deviation
+    .groupBy(*agg_groupby_cols)
+    .agg(aggregation_field)
+    .select(
+      F.when(F.col("SECONDARY_LEVEL") == "NONE", F.lit("England")).otherwise(F.col("SECONDARY_LEVEL")).alias("PRIMARY_LEVEL"),
+      F.when(F.col("SECONDARY_LEVEL") == "NONE", F.lit("England")).otherwise(F.col("SECONDARY_LEVEL_DESCRIPTION")).alias("PRIMARY_LEVEL_DESCRIPTION"),
+      "*",
+      F.lit(rp_startdate).alias("REPORTING_PERIOD_START"),
+      F.lit(rp_enddate).alias("REPORTING_PERIOD_END"),
+      F.lit(breakdown).alias("BREAKDOWN"),
+      F.lit(status).alias("STATUS"),         
+      F.lit(measure_id).alias("MEASURE_ID"),
+      F.lit(measure_name).alias("MEASURE_NAME"),
+      F.lit(db_source).alias("SOURCE_DB"),
+    )
+    .withColumn("SECONDARY_LEVEL", F.lit("NONE"))
+    .withColumn("SECONDARY_LEVEL_DESCRIPTION", F.lit("NONE"))
+    .select(*column_order)
+  )
+  
+  return agg_df
+ 
+def produce_absolute_difference_between_two_standardised_rates_df(
+  db_output: str,  
+  db_source: str,
+  table_name: str,
+  filter_clause: Column,
+  rp_startdate: str, 
+  rp_enddate: str, 
+  primary_level: Column, 
+  primary_level_desc: Column, 
+  secondary_level: Column, 
+  secondary_level_desc: Column,
+  aggregation_field: str,    
+  breakdown: str,
+  status: str,
+  measure_id: str, 
+  numerator_id: str,  
+  denominator_id: str,
+  measure_name: str,
+  column_order: list
+) -> df:    
+ 
+  weight_df, dsr_ci_df, total_pop_df = produce_direct_standardised_rate_df(
+  db_output, db_source, table_name, filter_clause,rp_startdate, rp_enddate, 
+  primary_level, primary_level_desc, secondary_level, secondary_level_desc,
+  aggregation_field, breakdown, status, measure_id, numerator_id, denominator_id,
+  measure_name, column_order)
+ 
+  secondary_level_name = get_pyspark_column_name(secondary_level)
+ 
+  if "Ethnicity" in breakdown:
+    main_group = "White British"
+ 
+  else:
+    main_group = "Most deprived quintile"
+ 
+  if secondary_level_name == "NONE":
+ 
+    rate_subset = dsr_ci_df.filter(primary_level == main_group).agg(F.sum(F.col("STANDARDISED_RATE")).alias("MainRate"))
+ 
+    main_rate = dsr_ci_df.crossJoin(rate_subset)
+ 
+    main_rate2 = main_rate.withColumn("DiffFromMain", F.col("STANDARDISED_RATE") - F.col("MainRate")) \
+                          .withColumn("AbsoluteDiffFromMain", F.abs(F.col("DiffFromMain")))
+ 
+    diff_from_main = main_rate2.filter(primary_level != main_group).select(F.col("AbsoluteDiffFromMain"))
+ 
+  else: 
+ 
+    rate_subset = dsr_ci_df.filter(primary_level == main_group).groupBy(secondary_level).agg(F.sum(F.col("STANDARDISED_RATE")).alias("MainRate"))
+ 
+    main_rate = dsr_ci_df.alias("a").join(rate_subset.alias("b"), add_alias(secondary_level_name, "a") == add_alias(secondary_level_name, "b"), 'left') \
+                                    .select("a.*", F.col("b.MainRate"))
+ 
+    main_rate2 = main_rate.withColumn("DiffFromMain", F.col("STANDARDISED_RATE") - F.col("MainRate")) \
+                          .withColumn("AbsoluteDiffFromMain", F.abs(F.col("DiffFromMain")))
+ 
+    diff_from_main = main_rate2.filter(primary_level != main_group).select(secondary_level, secondary_level_desc, F.col("AbsoluteDiffFromMain"))
+  
+  agg_groupby_cols = [secondary_level.alias("SECONDARY_LEVEL"),              
+                      secondary_level_desc.alias("SECONDARY_LEVEL_DESCRIPTION")]
+ 
+  aggregation_field = (F.expr(aggregation_field).alias("MEASURE_VALUE"))
+  
+  agg_df = (    
+    diff_from_main
+    .groupBy(*agg_groupby_cols)
+    .agg(aggregation_field)
+    .select(
+      F.when(F.col("SECONDARY_LEVEL") == "NONE", F.lit("England")).otherwise(F.col("SECONDARY_LEVEL")).alias("PRIMARY_LEVEL"),
+      F.when(F.col("SECONDARY_LEVEL") == "NONE", F.lit("England")).otherwise(F.col("SECONDARY_LEVEL_DESCRIPTION")).alias("PRIMARY_LEVEL_DESCRIPTION"),
+      "*",
+      F.lit(rp_startdate).alias("REPORTING_PERIOD_START"),
+      F.lit(rp_enddate).alias("REPORTING_PERIOD_END"),
+      F.lit(breakdown).alias("BREAKDOWN"),
+      F.lit(status).alias("STATUS"),         
+      F.lit(measure_id).alias("MEASURE_ID"),
+      F.lit(measure_name).alias("MEASURE_NAME"),
+      F.lit(db_source).alias("SOURCE_DB"),
+    )
+    .withColumn("SECONDARY_LEVEL", F.lit("NONE"))
+    .withColumn("SECONDARY_LEVEL_DESCRIPTION", F.lit("NONE"))
+    .select(*column_order)
+  )
+  
+  return agg_df
+ 
 def insert_unsup_agg(agg_df: df, db_output: str, unsup_columns: list, output_table: str) -> None:
   """
   This function uses the aggregation dataframe produced in the different aggregation functions 
@@ -802,6 +1266,81 @@ def insert_sup_agg(agg_df: df, db_output: str, measure_name: str, sup_columns: l
 # COMMAND ----------
 
 # DBTITLE 1,Suppression functions - added to do one round of suppression at the end of the process, rather than one per product
+def mhsds_suppression_mean_dev_and_stan_rates_diff(df: df, suppression_type: str, breakdown: str, measure_id: str, rp_enddate: str, status: str, numerator_id: str, db_source: str) -> df:
+  """ The function has the logic for suppression of MHSDS measures
+  relating to mean deviation, specifically of non-White upper ethnicities
+  from White British, and difference in standardised rates between 2
+  groups, specifically of white vs non-white and IMD core 20 and other
+  IMD quintiles.
+  If numerator_id value for ANY numerator group = "*" then mean deviation 
+  value or difference in rates value = "*", else round to nearest whole number.
+  
+  Example:
+  """
+  supp_method = F.udf(lambda z: count_suppression(z))  
+  
+  perc_values = (
+    df
+    .filter(
+      (F.col("MEASURE_ID") == measure_id)
+      & (F.col("BREAKDOWN") == breakdown)
+      & (F.col("REPORTING_PERIOD_END") == rp_enddate)
+      & (F.col("STATUS") == status)
+      & (F.col("SOURCE_DB") == db_source)
+    )
+  )
+    
+  if child_breakdown(breakdown) == " Mean Deviation of Upper Ethnicity":
+    breakdown_2 = "; Upper Ethnicity"
+  elif "Most Deprived Quintile" in breakdown:
+    breakdown_2 = "; IMD Core20"
+  else:
+    breakdown_2 = "; Ethnicity (White British/Non-White British)"
+    
+  num_values = (
+    df
+    .filter(
+      (F.col("MEASURE_ID") == numerator_id)
+      & (F.col("BREAKDOWN") == F.concat(F.lit(parent_breakdown(breakdown)), F.lit(breakdown_2)))
+    & (F.col("REPORTING_PERIOD_END") == rp_enddate)
+    & (F.col("STATUS") == status)
+    & (F.col("SOURCE_DB") == db_source)
+  )
+  .select(
+    F.col("BREAKDOWN"), F.col("PRIMARY_LEVEL"), F.when(F.col("SECONDARY_LEVEL") == "NONE", F.lit("England")).otherwise(F.col("SECONDARY_LEVEL")).alias("SECONDARY_LEVEL"), F.col("MEASURE_ID").alias("NUMERATOR_ID"), F.col("MEASURE_VALUE").alias("NUMERATOR_VALUE")
+  )
+)
+ 
+  if parent_breakdown(breakdown) == "England":
+ 
+    perc_num_comb = perc_values.alias("a").join(num_values.alias("b"), F.col("a.PRIMARY_LEVEL") == F.col("b.SECONDARY_LEVEL"), 'left').select("a.*", F.col("NUMERATOR_ID"), F.col("NUMERATOR_VALUE"))
+ 
+  else:
+ 
+    perc_num_comb = perc_values.alias("a").join(num_values.alias("b"), F.col("a.PRIMARY_LEVEL") == F.col("b.PRIMARY_LEVEL"), 'left').select("a.*", F.col("NUMERATOR_ID"), F.col("NUMERATOR_VALUE"))
+ 
+  #percentage suppression logic
+  perc_supp_logic = (
+  F.when(F.col("NUMERATOR_VALUE_SUPP") == "*", F.lit("*"))
+   .otherwise(F.round(F.col("MEASURE_VALUE"), 0)) #round to nearest whole number (0dp)
+  )
+ 
+  perc_num_comb_supp_df = (
+    perc_num_comb
+    .withColumn("NUMERATOR_VALUE_SUPP", supp_method(F.col("NUMERATOR_VALUE")))
+    .withColumn("MEASURE_VALUE", perc_supp_logic)
+  )
+ 
+  perc_num_comb_flag = perc_num_comb_supp_df.withColumn("Suppression_Flag", F.when(F.col("MEASURE_VALUE") == "*", F.lit(1)).otherwise(F.lit(0)))
+ 
+  exclude_cols = ["NUMERATOR_ID", "NUMERATOR_VALUE", "NUMERATOR_VALUE_SUPP", "Suppression_Flag"]
+  group_cols = [col for col in perc_num_comb_flag.columns if col not in exclude_cols]
+  perc_num_comb_part = perc_num_comb_flag.groupBy(group_cols).agg(F.max("Suppression_Flag").alias("Any_Suppressed")) # how to group by on all except one column
+ 
+  supp_df = perc_num_comb_part.withColumn("MEASURE_VALUE", F.when(F.col("Any_Suppressed") == 1, F.lit("*")).otherwise(F.col("MEASURE_VALUE"))).drop("Any_Suppressed")                 
+  
+  return supp_df
+
 def count_suppression(x: int, base=5) -> str:  
   """  The function has the logic for suppression of MHSDS count measures
   i.e. "denominator" == 0 in measure_metadata
@@ -827,62 +1366,66 @@ def mhsds_suppression(df: df, suppression_type: str, breakdown: str, measure_id:
   """
   supp_method = F.udf(lambda z: count_suppression(z))
   
-  if suppression_type == "count":
-    supp_df = (
-      df
-      .filter(
-        (F.col("MEASURE_ID") == measure_id)
-        & (F.col("BREAKDOWN") == breakdown)
-        & (F.col("REPORTING_PERIOD_END") == rp_enddate)
-        & (F.col("STATUS") == status)
-        & (F.col("SOURCE_DB") == db_source)
-      )
-      .withColumn("MEASURE_VALUE", supp_method(F.col("MEASURE_VALUE")))
-    )  
+  if child_breakdown(breakdown) == " Mean Deviation of Upper Ethnicity" or "Standardised Rate Difference from" in breakdown:
+    supp_df = mhsds_suppression_mean_dev_and_stan_rates_diff(df, suppression_type, breakdown, measure_id, rp_enddate, status, numerator_id, db_source)
   
   else:
-    perc_values = (
-      df
-      .filter(
-        (F.col("MEASURE_ID") == measure_id)
-        & (F.col("BREAKDOWN") == breakdown)
-        & (F.col("REPORTING_PERIOD_END") == rp_enddate)
-        & (F.col("STATUS") == status)
-        & (F.col("SOURCE_DB") == db_source)
+    if suppression_type == "count":
+      supp_df = (
+        df
+        .filter(
+          (F.col("MEASURE_ID") == measure_id)
+          & (F.col("BREAKDOWN") == breakdown)
+          & (F.col("REPORTING_PERIOD_END") == rp_enddate)
+          & (F.col("STATUS") == status)
+          & (F.col("SOURCE_DB") == db_source)
+        )
+        .withColumn("MEASURE_VALUE", supp_method(F.col("MEASURE_VALUE")))
+      )  
+ 
+    else:
+      perc_values = (
+        df
+        .filter(
+          (F.col("MEASURE_ID") == measure_id)
+          & (F.col("BREAKDOWN") == breakdown)
+          & (F.col("REPORTING_PERIOD_END") == rp_enddate)
+          & (F.col("STATUS") == status)
+          & (F.col("SOURCE_DB") == db_source)
+        )
       )
-    )
  
-    num_values = (
-      df
-      .filter(
-        (F.col("MEASURE_ID") == numerator_id)
-        & (F.col("BREAKDOWN") == breakdown)
-        & (F.col("REPORTING_PERIOD_END") == rp_enddate)
-        & (F.col("STATUS") == status)
-        & (F.col("SOURCE_DB") == db_source)
+      num_values = (
+        df
+        .filter(
+          (F.col("MEASURE_ID") == numerator_id)
+          & (F.col("BREAKDOWN") == breakdown)
+          & (F.col("REPORTING_PERIOD_END") == rp_enddate)
+          & (F.col("STATUS") == status)
+          & (F.col("SOURCE_DB") == db_source)
+        )
+        .select(
+          F.col("BREAKDOWN"), F.col("PRIMARY_LEVEL"), F.col("SECONDARY_LEVEL"), F.col("MEASURE_ID").alias("NUMERATOR_ID"), F.col("MEASURE_VALUE").alias("NUMERATOR_VALUE")
+        )
       )
-      .select(
-        F.col("BREAKDOWN"), F.col("PRIMARY_LEVEL"), F.col("SECONDARY_LEVEL"), F.col("MEASURE_ID").alias("NUMERATOR_ID"), F.col("MEASURE_VALUE").alias("NUMERATOR_VALUE")
+ 
+      perc_num_comb = (
+        num_values
+        .join(perc_values, ["BREAKDOWN", "PRIMARY_LEVEL", "SECONDARY_LEVEL"])
       )
-    )
  
-    perc_num_comb = (
-      num_values
-      .join(perc_values, ["BREAKDOWN", "PRIMARY_LEVEL", "SECONDARY_LEVEL"])
-    )
+      #percentage suppression logic
+      perc_supp_logic = (
+      F.when(F.col("NUMERATOR_VALUE_SUPP") == "*", F.lit("*"))
+       .otherwise(F.round(F.col("MEASURE_VALUE"), 0)) #round to nearest whole number (0dp)
+      )
  
-    #percentage suppression logic
-    perc_supp_logic = (
-    F.when(F.col("NUMERATOR_VALUE_SUPP") == "*", F.lit("*"))
-     .otherwise(F.round(F.col("MEASURE_VALUE"), 0)) #round to nearest whole number (0dp)
-    )
+      supp_df = (
+        perc_num_comb
+        .withColumn("NUMERATOR_VALUE_SUPP", supp_method(F.col("NUMERATOR_VALUE")))
+        .withColumn("MEASURE_VALUE", perc_supp_logic)
+      )
  
-    supp_df = (
-      perc_num_comb
-      .withColumn("NUMERATOR_VALUE_SUPP", supp_method(F.col("NUMERATOR_VALUE")))
-      .withColumn("MEASURE_VALUE", perc_supp_logic)
-    )
-    
   return supp_df
 
 # COMMAND ----------

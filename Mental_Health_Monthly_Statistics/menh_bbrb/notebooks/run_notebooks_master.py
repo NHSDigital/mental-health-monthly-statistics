@@ -1,4 +1,14 @@
 # Databricks notebook source
+# %sql
+# create widget text db_output default "";
+# create widget text db_source default "";
+# create widget text rp_startdate default "";
+# create widget text rp_enddate default "";
+# create widget text status default "";
+# create widget text product default "";
+
+# COMMAND ----------
+
 import pandas as pd
 import numpy as np
 
@@ -151,12 +161,25 @@ unsup_breakdowns_df.createOrReplaceTempView("unsup_breakdowns")
 
 # COMMAND ----------
 
-#unsuppressed output
-sqlContext.sql(f"UPDATE {db_output}.bbrb_final_raw SET MEASURE_ID = LEFT(MEASURE_ID, length(MEASURE_ID)-1) WHERE LEFT(MEASURE_ID, 3) = 'OAP'")  #replace OAPs RP-specific MEASURE_IDs with same MEASURE_ID
+#Only run update if full run or OAPs specific run
+if (params['product'] == 'ALL') | (params['product'] == '08_OAPS'):
+  #unsuppressed output
+  sqlContext.sql(f"UPDATE {db_output}.bbrb_final_raw SET MEASURE_ID = LEFT(MEASURE_ID, length(MEASURE_ID)-1) WHERE LEFT(MEASURE_ID, 3) = 'OAP'")  #replace OAPs RP-specific MEASURE_IDs with same MEASURE_ID
+    #suppressed output
+  sqlContext.sql(f"UPDATE {db_output}.bbrb_final_suppressed SET MEASURE_ID = LEFT(MEASURE_ID, length(MEASURE_ID)-1) WHERE LEFT(MEASURE_ID, 3) = 'OAP'") #replace OAPs RP-specific MEASURE_IDs with same MEASURE_ID
+    #final output
+  sqlContext.sql(f"UPDATE {db_output}.bbrb_final SET MEASURE_ID = LEFT(MEASURE_ID, length(MEASURE_ID)-1) WHERE LEFT(MEASURE_ID, 3) = 'OAP'") #replace OAPs RP-specific MEASURE_IDs with same MEASURE_ID
+
+# COMMAND ----------
+
+#Only run update if full run or MHA specific run
+if (params['product'] == 'ALL') | (params['product'] == '10_MHA'):
+  #unsuppressed output
+  sqlContext.sql(f"UPDATE {db_output}.bbrb_final_raw SET MEASURE_ID = LEFT(MEASURE_ID, length(MEASURE_ID)-1) WHERE MEASURE_ID in ('MHS81Y', 'MHS84Y')")  #replace yearly MEASURE_IDs with same MEASURE_ID as monthly
   #suppressed output
-sqlContext.sql(f"UPDATE {db_output}.bbrb_final_suppressed SET MEASURE_ID = LEFT(MEASURE_ID, length(MEASURE_ID)-1) WHERE LEFT(MEASURE_ID, 3) = 'OAP'") #replace OAPs RP-specific MEASURE_IDs with same MEASURE_ID
+  sqlContext.sql(f"UPDATE {db_output}.bbrb_final_suppressed SET MEASURE_ID = LEFT(MEASURE_ID, length(MEASURE_ID)-1) WHERE MEASURE_ID in ('MHS81Y', 'MHS84Y')") 
   #final output
-sqlContext.sql(f"UPDATE {db_output}.bbrb_final SET MEASURE_ID = LEFT(MEASURE_ID, length(MEASURE_ID)-1) WHERE LEFT(MEASURE_ID, 3) = 'OAP'") #replace OAPs RP-specific MEASURE_IDs with same MEASURE_ID
+  sqlContext.sql(f"UPDATE {db_output}.bbrb_final SET MEASURE_ID = LEFT(MEASURE_ID, length(MEASURE_ID)-1) WHERE MEASURE_ID in ('MHS81Y', 'MHS84Y')") #replace yearly MEASURE_IDs with same MEASURE_ID as monthly
 
 # COMMAND ----------
 

@@ -236,6 +236,44 @@
 
 # COMMAND ----------
 
+# DBTITLE 1,MHS01 National; Autism Status
+ %sql
+ INSERT INTO $db_output.Main_monthly_unformatted
+     SELECT '$rp_startdate' AS REPORTING_PERIOD_START
+            ,'$rp_enddate' AS REPORTING_PERIOD_END
+            ,'$status' AS STATUS
+            ,'England; Autism Status' AS BREAKDOWN
+            ,'England' AS PRIMARY_LEVEL
+            ,'England' AS PRIMARY_LEVEL_DESCRIPTION
+            ,AutismStatus AS SECONDARY_LEVEL
+            ,AutismStatus_desc AS SECONDARY_LEVEL_DESCRIPTION
+            ,'MHS01' AS MEASURE_ID
+            ,COUNT (DISTINCT Person_ID) AS MEASURE_VALUE
+            ,'$db_source' AS SOURCE_DB          
+      FROM  $db_output.tmp_mhmab_mhs01_prep
+  GROUP BY  AutismStatus,AutismStatus_desc;
+
+# COMMAND ----------
+
+ %sql
+ INSERT INTO $db_output.Main_monthly_unformatted
+     SELECT '$rp_startdate' AS REPORTING_PERIOD_START
+            ,'$rp_enddate' AS REPORTING_PERIOD_END
+            ,'$status' AS STATUS
+            ,'England; LD Status' AS BREAKDOWN
+            ,'England' AS PRIMARY_LEVEL
+            ,'England' AS PRIMARY_LEVEL_DESCRIPTION
+            ,LDStatus AS SECONDARY_LEVEL
+            ,LDStatus_desc AS SECONDARY_LEVEL_DESCRIPTION
+            ,'MHS01' AS MEASURE_ID
+            ,COUNT (DISTINCT Person_ID) AS MEASURE_VALUE
+            ,'$db_source' AS SOURCE_DB          
+      FROM  $db_output.tmp_mhmab_mhs01_prep
+  GROUP BY  LDStatus,LDStatus_desc;
+
+
+# COMMAND ----------
+
 # DBTITLE 1,AMH01 National
  %sql
  INSERT INTO $db_output.Main_monthly_unformatted
@@ -924,6 +962,50 @@
 
 # COMMAND ----------
 
+ %sql
+ INSERT INTO $db_output.Main_monthly_unformatted
+  
+     SELECT '$rp_startdate' AS REPORTING_PERIOD_START
+             ,'$rp_enddate' AS REPORTING_PERIOD_END
+             ,'$status' AS STATUS
+             ,'England; LD Status' AS BREAKDOWN
+            ,'England' AS PRIMARY_LEVEL
+            ,'England' AS PRIMARY_LEVEL_DESCRIPTION
+             ,LDStatus AS SECONDARY_LEVEL
+             ,LDStatus_desc AS SECONDARY_LEVEL_DESCRIPTION
+             ,'MHS29' AS METRIC
+             ,CAST (COALESCE (cast(COUNT (DISTINCT UniqCareContID) as INT), 0) AS STRING)    AS METRIC_VALUE
+             ,'$db_source' AS SOURCE_DB           
+ FROM        global_temp.MHS29_prep A
+             LEFT JOIN $db_output.tmp_mhmab_mhs001mpi_latest_month_data B on a.Person_ID = b.Person_ID -- prep table in main monthly prep folder
+             
+ GROUP BY 
+ LDStatus, LDStatus_desc
+
+# COMMAND ----------
+
+ %sql
+ INSERT INTO $db_output.Main_monthly_unformatted
+  
+     SELECT '$rp_startdate' AS REPORTING_PERIOD_START
+             ,'$rp_enddate' AS REPORTING_PERIOD_END
+             ,'$status' AS STATUS
+             ,'England; Autism Status' AS BREAKDOWN
+            ,'England' AS PRIMARY_LEVEL
+            ,'England' AS PRIMARY_LEVEL_DESCRIPTION
+             ,AutismStatus AS SECONDARY_LEVEL
+             ,AutismStatus_desc AS SECONDARY_LEVEL_DESCRIPTION
+             ,'MHS29' AS METRIC
+             ,CAST (COALESCE (cast(COUNT (DISTINCT UniqCareContID) as INT), 0) AS STRING)    AS METRIC_VALUE
+             ,'$db_source' AS SOURCE_DB           
+ FROM        global_temp.MHS29_prep A
+             LEFT JOIN $db_output.tmp_mhmab_mhs001mpi_latest_month_data B on a.Person_ID = b.Person_ID -- prep table in main monthly prep folder
+             
+ GROUP BY 
+ AutismStatus, AutismStatus_desc
+
+# COMMAND ----------
+
 # DBTITLE 1,MHS29a National
  %sql
  --/**MHS29a - CONTACTS WITH PERINATAL MENTAL HEALTH TEAM IN REPORTING PERIOD**/
@@ -1513,6 +1595,44 @@
             
       FROM  $db_output.tmp_mhmab_mhs32_prep
   GROUP BY  RuralUrbanClassName
+
+# COMMAND ----------
+
+ %sql
+ INSERT INTO $db_output.Main_monthly_unformatted
+     SELECT '$rp_startdate' AS REPORTING_PERIOD_START
+            ,'$rp_enddate' AS REPORTING_PERIOD_END
+            ,'$status' AS STATUS
+            ,'England; LD Status' AS BREAKDOWN
+            ,'England' AS PRIMARY_LEVEL
+            ,'England' AS PRIMARY_LEVEL_DESCRIPTION
+            ,LDStatus AS SECONDARY_LEVEL
+            ,LDStatus_desc AS SECONDARY_LEVEL_DESCRIPTION
+            ,'MHS32' AS MEASURE_ID
+            ,COUNT (DISTINCT UniqServReqID) AS MEASURE_VALUE
+            ,'$db_source' AS SOURCE_DB
+            
+      FROM  $db_output.tmp_mhmab_mhs32_prep
+  GROUP BY  LDStatus,LDStatus_desc;
+
+# COMMAND ----------
+
+ %sql
+ INSERT INTO $db_output.Main_monthly_unformatted
+     SELECT '$rp_startdate' AS REPORTING_PERIOD_START
+            ,'$rp_enddate' AS REPORTING_PERIOD_END
+            ,'$status' AS STATUS
+            ,'England; Autism Status' AS BREAKDOWN
+            ,'England' AS PRIMARY_LEVEL
+            ,'England' AS PRIMARY_LEVEL_DESCRIPTION
+            ,AutismStatus AS SECONDARY_LEVEL
+            ,AutismStatus_desc AS SECONDARY_LEVEL_DESCRIPTION
+            ,'MHS32' AS MEASURE_ID
+            ,COUNT (DISTINCT UniqServReqID) AS MEASURE_VALUE
+            ,'$db_source' AS SOURCE_DB
+            
+      FROM  $db_output.tmp_mhmab_mhs32_prep
+  GROUP BY  AutismStatus,AutismStatus_desc;
 
 # COMMAND ----------
 

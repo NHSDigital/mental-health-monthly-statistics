@@ -60,11 +60,11 @@
  # status = "Performance"
  # rp_enddate =  "2020-12-31"
  # rp_startdate = "2020-12-01"
- # $reference_data =  "$reference_data"
+ # reference_data =  "reference_data"
 
 
  # db_output1 = 'menh_publications' #dbutils.widgets.get("menh_publications") #----------
- # menh_publications_source = '$mhsds' #dbutils.widgets.get("$mhsds") #-----------
+ # menh_publications_source = 'mhsds_database' #dbutils.widgets.get("mhsds_database") #-----------
 
 
 

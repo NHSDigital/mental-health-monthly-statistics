@@ -20,7 +20,7 @@
  status  = dbutils.widgets.get("status")
  rp_enddate  = dbutils.widgets.get("rp_enddate")
  rp_startdate  = dbutils.widgets.get("rp_startdate")
- $reference_data  = dbutils.widgets.get("$reference_data")
+ reference_data  = dbutils.widgets.get("reference_data")
  automatic_run  = dbutils.widgets.get("automatic_run")
  custom_run  = dbutils.widgets.get("custom_run")
  MonthPeriod  = dbutils.widgets.get("MonthPeriod")
@@ -35,7 +35,7 @@
      "status": status,
      "rp_enddate": rp_enddate,
      "rp_startdate": rp_startdate,
-     "$reference_data": $reference_data,
+     "reference_data": reference_data,
      "automatic_run": automatic_run,
      "MonthPeriod": MonthPeriod, # used in DQMI_extracts notebooks
      "custom_run": custom_run

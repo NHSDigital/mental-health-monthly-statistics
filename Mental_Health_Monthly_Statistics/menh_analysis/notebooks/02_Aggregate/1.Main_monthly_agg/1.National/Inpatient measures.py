@@ -195,6 +195,44 @@
 
 # COMMAND ----------
 
+ %sql
+ INSERT INTO $db_output.Main_monthly_unformatted
+     SELECT '$rp_startdate' AS REPORTING_PERIOD_START
+            ,'$rp_enddate' AS REPORTING_PERIOD_END
+            ,'$status' AS STATUS
+            ,'England; LD Status' AS BREAKDOWN
+            ,'England' AS PRIMARY_LEVEL
+            ,'England' AS PRIMARY_LEVEL_DESCRIPTION
+            ,LDStatus AS SECONDARY_LEVEL
+            ,LDStatus_desc AS SECONDARY_LEVEL_DESCRIPTION
+            ,'MHS07' AS MEASURE_ID
+            ,COUNT (DISTINCT Person_ID) AS MEASURE_VALUE
+            ,'$db_source' AS SOURCE_DB
+            
+      FROM  $db_output.tmp_mhmab_mhs07_prep
+  GROUP BY  LDStatus,LDStatus_desc;
+
+# COMMAND ----------
+
+ %sql
+ INSERT INTO $db_output.Main_monthly_unformatted
+     SELECT '$rp_startdate' AS REPORTING_PERIOD_START
+            ,'$rp_enddate' AS REPORTING_PERIOD_END
+            ,'$status' AS STATUS
+            ,'England; Autism Status' AS BREAKDOWN
+            ,'England' AS PRIMARY_LEVEL
+            ,'England' AS PRIMARY_LEVEL_DESCRIPTION
+            ,AutismStatus AS SECONDARY_LEVEL
+            ,AutismStatus_desc AS SECONDARY_LEVEL_DESCRIPTION
+            ,'MHS07' AS MEASURE_ID
+            ,COUNT (DISTINCT Person_ID) AS MEASURE_VALUE
+            ,'$db_source' AS SOURCE_DB
+            
+      FROM  $db_output.tmp_mhmab_mhs07_prep
+  GROUP BY  AutismStatus,AutismStatus_desc;
+
+# COMMAND ----------
+
 # DBTITLE 1,MHS07a National
  %sql
 

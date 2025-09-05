@@ -5,7 +5,7 @@
 -- COMMAND ----------
 
 -- create widget text db_output default "menh_analysis";
--- create widget text db_source default "mhsds_db";
+-- create widget text db_source default "mhsds_database";
 -- create widget text month_id default "1434";
 -- create widget text rp_startdate default "2019-09-01";
 -- create widget text rp_enddate default "2019-09-30";
@@ -176,7 +176,7 @@ LEFT JOIN $db_output.STP_Region_mapping_post_2018 AS stp
 
 -- COMMAND ----------
 
--- User note: updated following the advice of  - 2nd contact date should be used to determine quarter not first contact date...
+-- User note: updated following the advice of David Fisher - 2nd contact date should be used to determine quarter not first contact date...
 -- change made is to exclude the CASE statement
 
 CREATE OR REPLACE GLOBAL TEMPORARY VIEW ContPer_Quarterly AS
@@ -206,7 +206,7 @@ INNER JOIN global_temp.first_contacts f
 -- COMMAND ----------
 
 
--- User note: updated following the advice of  - 2nd contact date should be used to determine quarter not first contact date...
+-- User note: updated following the advice of David Fisher - 2nd contact date should be used to determine quarter not first contact date...
 -- change made is to change the WHERE statement
 
 TRUNCATE TABLE $db_output.CYPFinal_2nd_contact_Quarterly;

@@ -8,10 +8,10 @@
 
  # dbutils.widgets.text("dbtable", "MHS101Referral", "dbtable")
  # dbutils.widgets.text("db_output" , "charles_kelechi1_101304", "db_output")
- # dbutils.widgets.text("dbm" , "testdata_menh_dq_$mhsds", "dbm")
+ # dbutils.widgets.text("dbm" , "testdata_menh_dq_mhsds_database", "dbm")
 
  # dbutils.widgets.text("month_id", "1462", "month_id")
- # dbutils.widgets.text("$reference_data", "$reference_data", "$reference_data")
+ # dbutils.widgets.text("reference_data", "reference_data", "reference_data")
 
  # dbutils.widgets.text("rp_startdate", "2022-01-01", "rp_startdate")
  # dbutils.widgets.text("rp_enddate", '2022-01-31', "rp_enddate")
@@ -34,9 +34,9 @@
  # print(dbtable)
  # assert dbtable
 
- # $reference_data=dbutils.widgets.get("$reference_data")
- # print($reference_data)
- # assert $reference_data
+ # reference_data=dbutils.widgets.get("reference_data")
+ # print(reference_data)
+ # assert reference_data
 
  # rp_startdate=dbutils.widgets.get("rp_startdate")
  # print(rp_startdate)
@@ -152,7 +152,7 @@ FROM (
 				ORG_CLOSE_DATE,
 				ORG_TYPE_CODE,
                 ROW_NUMBER() OVER(PARTITION BY ORG_CODE ORDER BY IFNULL(BUSINESS_END_DATE, CURRENT_DATE()) DESC, IFNULL(ORG_CLOSE_DATE, CURRENT_DATE()) DESC) AS RowNumber
-				FROM $$reference_data.org_daily --$db_output.dq_vw_org_daily
+				FROM $reference_data.org_daily --$db_output.dq_vw_org_daily
 				WHERE BUSINESS_START_DATE <= '$rp_enddate'
                 AND (BUSINESS_END_DATE >= '$rp_enddate' OR BUSINESS_END_DATE IS NULL)) org --17/10/2022: updated to >= from > because the previous code was excluding organisations with a BUSINESS_END_DATE of the lat day of the month (BITC-4072)
 			ON org.ORG_CODE = dq.OrgIdComm 

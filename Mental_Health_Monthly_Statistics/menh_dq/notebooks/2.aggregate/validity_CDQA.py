@@ -3,10 +3,10 @@
 
 
 # dbutils.widgets.text("db_output" , "menh_dq", "db_output")
-# dbutils.widgets.text("dbm" , "testdata_menh_dq_$mhsds", "dbm")
+# dbutils.widgets.text("dbm" , "testdata_menh_dq_mhsds_database", "dbm")
 
 # dbutils.widgets.text("month_id", "1449", "month_id")
-# dbutils.widgets.text("$reference_data", "$reference_data", "$reference_data")
+# dbutils.widgets.text("reference_data", "reference_data", "reference_data")
 
 # dbutils.widgets.text("rp_startdate", "2020-12-01", "rp_startdate")
 # dbutils.widgets.text("rp_enddate", '2020-12-31', "rp_enddate")
@@ -28,9 +28,9 @@ rp_enddate  = dbutils.widgets.get("rp_enddate")
 print(rp_enddate)
 assert rp_enddate
 
-$reference_data  = dbutils.widgets.get("$reference_data")
-print($reference_data)
-assert $reference_data
+reference_data  = dbutils.widgets.get("reference_data")
+print(reference_data)
+assert reference_data
 
 month_id  = dbutils.widgets.get("month_id")
 print(month_id)
@@ -164,7 +164,7 @@ assert month_id
 
 # DBTITLE 1,Decided to Admit Date
  %sql
-
+  
  INSERT INTO $db_output.dq_stg_validity
  SELECT
    --'Decided to Admit Date' AS MeasureName,
@@ -173,14 +173,14 @@ assert month_id
    OrgIDProv,
    COUNT(*) AS Denominator,
    SUM(CASE
-         WHEN DecidedToAdmitDate <= '$rp_enddate' 
+         WHEN DecidedToAdmitDate <= StartDateHospProvSpell ---AT Apr-25 VODIM Changes
          AND DecidedToAdmitDate IS NOT NULL THEN 1
          ELSE 0
        END) AS Valid,
    0 AS Other,
    0 AS Default,
    SUM(CASE
-         WHEN DecidedToAdmitDate > '$rp_enddate'
+         WHEN DecidedToAdmitDate > StartDateHospProvSpell ---AT Apr-25 VODIM Changes
          AND DecidedToAdmitDate IS NOT NULL THEN 1
          ELSE 0
        END) AS Invalid,
@@ -269,7 +269,7 @@ assert month_id
 
 # DBTITLE 1,Destination Of Discharge (Hospital Provider Spell)
  %sql
-
+  
  INSERT INTO $db_output.dq_stg_validity
  SELECT
    --'Destination Of Discharge (Hospital Provider Spell)' AS MeasureName,
@@ -282,16 +282,16 @@ assert month_id
          ELSE 0
        END
        ) AS Valid,
- 	  0 as Other,
+       0 as Other,
    SUM(CASE
-         WHEN DestOfDischHospProvSpell IN ('98', '99') THEN 1
+         WHEN DestOfDischHospProvSpell IN ('99') THEN 1 ---Remove '98' from Default AT VODIM changes Apr25
          ELSE 0
        END
        ) AS Default,
    SUM(CASE
          WHEN vc.Measure is null
          AND DestOfDischHospProvSpell <> ''
-         AND DestOfDischHospProvSpell NOT IN ('98', '99')
+         AND DestOfDischHospProvSpell NOT IN ('99') ---Remove '98' from Default AT VODIM changes Apr25
          AND DestOfDischHospProvSpell IS NOT NULL THEN 1
          ELSE 0
        END
@@ -414,35 +414,29 @@ assert month_id
 
 # DBTITLE 1,Restrictive Intervention Type
  %sql
-
+  
  INSERT INTO $db_output.dq_stg_validity
  SELECT
-   --'Restrictive Intervention Type' AS MeasureName,
-   3 as DimensionTypeId,
-   74 as MeasureId,
-   OrgIDProv,
-   COUNT(*) AS Denominator,
-   SUM(CASE
-         WHEN RestrictiveIntType IN ('01', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17') THEN 1
-         ELSE 0
-       END
-       ) AS Valid,
-     0 as Other,
-     0 as Default,
-   SUM(CASE
-         WHEN RestrictiveIntType NOT IN ('01', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17')
-         AND RestrictiveIntType <> ''
-         AND RestrictiveIntType IS NOT NULL THEN 1
-         ELSE 0
-       END
-       ) AS Invalid,
-   SUM(CASE
-         WHEN RestrictiveIntType IS NULL
-         OR RestrictiveIntType = ''
-         OR RestrictiveIntType = ' ' THEN 1
-         ELSE 0
-       END
-       ) AS Missing
+ -- 'Restrictive Intervention Type' AS MeasureName,
+ 3 as DimensionTypeId,
+ 74 as MeasureId,
+ OrgIDProv,
+ COUNT(*) AS Denominator,
+ SUM(CASE WHEN RestrictiveIntType IN ('01', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17') THEN 1 ELSE 0 END) as Valid,
+ 0 as Other,
+ SUM(CASE WHEN RestrictiveIntType IN ('99') THEN 1 ELSE 0 END) as Default,
+   SUM(
+     CASE WHEN RestrictiveIntType NOT IN ('01', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '99')
+     AND RestrictiveIntType <> ''
+     AND RestrictiveIntType IS NOT NULL THEN 1
+     ELSE 0 END
+   ) AS Invalid,
+ SUM(CASE
+   WHEN RestrictiveIntType IS NULL
+   OR RestrictiveIntType = ''
+   OR RestrictiveIntType = ' ' THEN 1
+   ELSE 0
+   END) AS Missing
  FROM $dbm.MHS515RestrictiveInterventType
  WHERE UniqMonthID = $month_id
  GROUP BY OrgIDProv;
@@ -644,7 +638,7 @@ assert month_id
 
 # DBTITLE 1,Locked Ward Indicator
  %sql
-
+  
  INSERT INTO $db_output.dq_stg_validity
  SELECT
    --'Locked Ward Indicator' AS MeasureName,
@@ -674,5 +668,5 @@ assert month_id
        END
        ) AS Missing
  FROM $dbm.MHS502WardStay
- WHERE UniqMonthID = $month_id
+ WHERE UniqMonthID = $month_id AND WardSecLevel = '0'
  GROUP BY OrgIDProv;

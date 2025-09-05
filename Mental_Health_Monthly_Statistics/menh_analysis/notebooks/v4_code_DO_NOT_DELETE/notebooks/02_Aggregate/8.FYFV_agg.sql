@@ -1,7 +1,7 @@
 -- Databricks notebook source
  %sql
  create widget text db_output default "menh_analysis";
- create widget text db_source default "mhsds_db";
+ create widget text db_source default "mhsds_database";
  create widget text month_id default "1431";
  create widget text rp_startdate_m1 default "2019-04-01";
  create widget text rp_enddate default "2019-06-30";

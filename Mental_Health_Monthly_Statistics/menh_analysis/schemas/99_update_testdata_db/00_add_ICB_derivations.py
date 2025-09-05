@@ -1,5 +1,5 @@
 # Databricks notebook source
-# dbutils.widgets.text("db_source","testdata_menh_analysis_$mhsds_db","db_source")
+# dbutils.widgets.text("db_source","testdata_menh_analysis_mhsds_database","db_source")
 db_source = dbutils.widgets.get("db_source")
 assert db_source
 
@@ -113,6 +113,6 @@ for table, column in tableColumn.items():
 
 # update only needs doing once
 # for table, column in tableColumn.items():
-#   action = """Update {db_source}.{table} SET {column} = '{$mhsds_db}' where {column} is null""".format(db_source=db_source,table=table,column=column,$mhsds_db=$mhsds_db)
+#   action = """Update {db_source}.{table} SET {column} = '{mhsds_database}' where {column} is null""".format(db_source=db_source,table=table,column=column,mhsds_database=mhsds_database)
 #   print(action)
 #   spark.sql(action)

@@ -30,7 +30,7 @@ SELECT
   ORG_CODE,
   NAME,
   ROW_NUMBER() OVER(PARTITION BY ORG_CODE ORDER BY IFNULL(BUSINESS_END_DATE, CURRENT_DATE()) DESC, IFNULL(ORG_CLOSE_DATE, CURRENT_DATE()) DESC) AS RowNumber
-FROM $$reference_data.org_daily
+FROM $reference_data.org_daily
 WHERE BUSINESS_END_DATE IS NULL  
 --We don't care if the org has a close date since it flowed we just need the details for reporting
 )
@@ -120,9 +120,9 @@ SELECT
   il.Value,
   il.SOURCE_DB
 FROM InventoryList il
-  LEFT OUTER JOIN $db.dq_vw_org_daily od   -- $reference_data.org_daily
+  LEFT OUTER JOIN $db.dq_vw_org_daily od   -- reference_data.org_daily
   ON il.OrgIDProv = od.ORG_CODE
---WHERE od.BUSINESS_END_DATE IS NULL --User: this is already accounted for in creating dq_vw_org_daily
+--WHERE od.BUSINESS_END_DATE IS NULL --User note: this is already accounted for in creating dq_vw_org_daily
 --AND od.ORG_CLOSE_DATE IS NULL
 --ORDER BY OrgIdProv, UniqMonthID, DimensionTypeId, MeasureId, MetricTypeId
 

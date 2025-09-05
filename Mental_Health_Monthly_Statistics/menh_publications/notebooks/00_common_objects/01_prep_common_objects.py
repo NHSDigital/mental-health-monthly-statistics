@@ -47,7 +47,7 @@ for table in listoftables:
 # DBTITLE 1,Delete Existing Month Data - original - replaced by the code above
  %sql
 
- -- User: this needs PRODUCT adding in to it to prevent a re-run of a single product from annihilating the full month's data :o(
+ -- User note: this needs PRODUCT adding in to it to prevent a re-run of a single product from annihilating the full month's data :o(
 
  -- DELETE FROM $db_output.All_products_formatted
  -- WHERE MONTH_ID = '$month_id'

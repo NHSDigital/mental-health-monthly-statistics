@@ -14,9 +14,9 @@ assert db_source
 month_id=dbutils.widgets.get("month_id")
 print(month_id)
 assert month_id
-$reference_data=dbutils.widgets.get("$reference_data")
-print($reference_data)
-assert $reference_data
+reference_data=dbutils.widgets.get("reference_data")
+print(reference_data)
+assert reference_data
 
 
 # COMMAND ----------
@@ -79,7 +79,7 @@ spark.udf.register("get_provider_type", get_provider_type)
  CROSS JOIN
  ((select distinct h.OrgIDProvider from $db_source.mhs000header as h inner join $db_source.mhs501hospprovspell as hps 
      on h.UniqMonthID = hps.UniqMonthID and h.OrgIDProvider = hps.OrgIDProv where h.UniqMonthID = '$month_id') as o
- LEFT JOIN        $$reference_data.ORG_DAILY as od
+ LEFT JOIN        $reference_data.ORG_DAILY as od
                   ON o.OrgIDProvider = od.ORG_CODE AND od.BUSINESS_END_DATE IS NULL
                   AND od.ORG_OPEN_DATE <= '$rp_enddate'
                   AND ((od.ORG_CLOSE_DATE >= '$rp_startdate') OR od.ORG_CLOSE_DATE is NULL)) as org
