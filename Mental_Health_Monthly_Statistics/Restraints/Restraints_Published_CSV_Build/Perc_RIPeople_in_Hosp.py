@@ -1,15 +1,15 @@
 # Databricks notebook source
  %sql
- REFRESH TABLE $db_output.restraints_final_output1
+ REFRESH TABLE $db_output.restraints_final_output
 
 # COMMAND ----------
 
 # DBTITLE 1,MHS97 - Provider
  %sql
- insert into $db_output.restraints_final_output1
+ insert into $db_output.restraints_final_output
  select 
  '$rp_startdate' as ReportingPeriodStartDate,
- '$rp_enddate' as ReportingPeriodEndDate,
+ '$rp_enddate' as ReportingPeriodEndDate, '$status' as status,
  'Provider' as breakdown,
  ri.orgidprov as level_one,
  ri.orgidname as level_one_description,
@@ -34,10 +34,10 @@
 
 # DBTITLE 1,MHS97 - Provider; Specialised Commissioning Service
  %sql
- insert into $db_output.restraints_final_output1
+ insert into $db_output.restraints_final_output
  select 
  '$rp_startdate' as ReportingPeriodStartDate,
- '$rp_enddate' as ReportingPeriodEndDate,
+ '$rp_enddate' as ReportingPeriodEndDate, '$status' as status,
  'Provider; Specialised Commissioning Service' as breakdown,
  ri.orgidprov as level_one,
  ri.orgidname as level_one_description,
@@ -61,4 +61,4 @@
 # COMMAND ----------
 
  %sql
- OPTIMIZE $db_output.restraints_final_output1
+ OPTIMIZE $db_output.restraints_final_output

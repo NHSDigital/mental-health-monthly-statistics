@@ -29,10 +29,11 @@ spark.conf.set("spark.sql.legacy.allowCreatingManagedTableUsingNonemptyLocation"
 
 # DBTITLE 1,Unsuppressed Published CSV Final Table
  %sql
- DROP TABLE IF EXISTS $db_output.restraints_final_output1;
- CREATE TABLE IF NOT EXISTS $db_output.restraints_final_output1(
+ DROP TABLE IF EXISTS $db_output.restraints_final_output;
+ CREATE TABLE IF NOT EXISTS $db_output.restraints_final_output(
  ReportingPeriodStartDate string,
  ReportingPeriodEndDate string,
+ status string,
  breakdown string,
  level_one string,
  level_one_description string,
@@ -89,14 +90,19 @@ spark.conf.set("spark.sql.legacy.allowCreatingManagedTableUsingNonemptyLocation"
  specialised_service string,
  restrictiveintcode string,
  restrictiveintname string,
+ patient_injury string,
  variabletype string,
  variable string,
  restraints int,
+ incidents int,
+ avg_restraints_per_incident float,
  people int,
  bed_days int,
  ri_per_1000_bed_days float,
  avg_min_of_restraint float,
- max_min_of_restraint int
+ max_min_of_restraint int,
+ avg_min_of_incident float,
+ max_min_of_incident int
  ) USING DELTA
 
 # COMMAND ----------

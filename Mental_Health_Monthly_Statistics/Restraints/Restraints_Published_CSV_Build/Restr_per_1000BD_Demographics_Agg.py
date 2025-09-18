@@ -1,15 +1,20 @@
 # Databricks notebook source
  %sql
- REFRESH TABLE $db_output.restraints_final_output1
+ REFRESH TABLE $db_output.restraints_final_output
+
+# COMMAND ----------
+
+ %sql
+ REFRESH TABLE $db_output.RI_FINAL
 
 # COMMAND ----------
 
 # DBTITLE 1,MHS96 - England; Restrictive Intervention Type; Age Category
  %sql
- insert into $db_output.restraints_final_output1
+ insert into $db_output.restraints_final_output
  select
  '$rp_startdate' as ReportingPeriodStartDate,
- '$rp_enddate' as ReportingPeriodEndDate,
+ '$rp_enddate' as ReportingPeriodEndDate, '$status' as status,
  'England; Restrictive Intervention Type; Age Category' as breakdown,
  'England' as level_one,
  'England' as level_one_description,
@@ -24,7 +29,7 @@
  'NULL' as level_six,
  'NULL' as level_six_description,
  'MHS96' as metric,
- (count(distinct mhs505uniqid)/b.bed_days) * 1000 as metric_value
+ (count(distinct UniqRestrictiveIntIncID, UniqRestrictiveIntTypeID)/b.bed_days) * 1000 as metric_value
  from $db_output.RI_FINAL a
  left join $db_output.bed_days_pub_csv b
  on a.age_category = b.bd_age_category
@@ -39,9 +44,9 @@
  and b.bd_lowerethnicity = 'NULL'
  and b.bd_orgidprov = 'NULL'
  and b.bd_orgidname = 'NULL'
- and b.bd_specialised_service = 'NULL' 
- and b.bd_siteidoftreat = 'NULL'
- and b.bd_site_name = 'NULL'
+ -- and b.bd_specialised_service = 'NULL' 
+ -- and b.bd_siteidoftreat = 'NULL'
+ -- and b.bd_site_name = 'NULL'
  and b.bd_provider_type = 'NULL'
  and b.bd_length_of_restraint = 'NULL'
  and b.bd_bame_group = 'NULL'
@@ -52,10 +57,10 @@
 
 # DBTITLE 1,MHS96 - England; Restrictive Intervention Type; Age Group
  %sql
- insert into $db_output.restraints_final_output1
+ insert into $db_output.restraints_final_output
  select
  '$rp_startdate' as ReportingPeriodStartDate,
- '$rp_enddate' as ReportingPeriodEndDate,
+ '$rp_enddate' as ReportingPeriodEndDate, '$status' as status,
  'England; Restrictive Intervention Type; Age Group' as breakdown,
  'England' as level_one,
  'England' as level_one_description,
@@ -70,7 +75,7 @@
  'NULL' as level_six,
  'NULL' as level_six_description,
  'MHS96' as metric,
- (count(distinct mhs505uniqid)/b.bed_days) * 1000 as metric_value
+ (count(distinct UniqRestrictiveIntIncID, UniqRestrictiveIntTypeID)/b.bed_days) * 1000 as metric_value
  from $db_output.RI_FINAL a
  left join $db_output.bed_days_pub_csv b
  on a.age_group = b.bd_age_group
@@ -85,9 +90,9 @@
  and b.bd_lowerethnicity = 'NULL'
  and b.bd_orgidprov = 'NULL'
  and b.bd_orgidname = 'NULL'
- and b.bd_specialised_service = 'NULL' 
- and b.bd_siteidoftreat = 'NULL'
- and b.bd_site_name = 'NULL'
+ -- and b.bd_specialised_service = 'NULL' 
+ -- and b.bd_siteidoftreat = 'NULL'
+ -- and b.bd_site_name = 'NULL'
  and b.bd_provider_type = 'NULL'
  and b.bd_length_of_restraint = 'NULL'
  and b.bd_bame_group = 'NULL'
@@ -98,10 +103,10 @@
 
 # DBTITLE 1,MHS96 - England; Restrictive Intervention Type; BAME Group
  %sql
- insert into $db_output.restraints_final_output1
+ insert into $db_output.restraints_final_output
  select
  '$rp_startdate' as ReportingPeriodStartDate,
- '$rp_enddate' as ReportingPeriodEndDate,
+ '$rp_enddate' as ReportingPeriodEndDate, '$status' as status,
  'England; Restrictive Intervention Type; BAME Group' as breakdown,
  'England' as level_one,
  'England' as level_one_description,
@@ -116,7 +121,7 @@
  'NULL' as level_six,
  'NULL' as level_six_description,
  'MHS96' as metric,
- (count(distinct mhs505uniqid)/b.bed_days) * 1000 as metric_value
+ (count(distinct UniqRestrictiveIntIncID, UniqRestrictiveIntTypeID)/b.bed_days) * 1000 as metric_value
  from $db_output.RI_FINAL a
  left join $db_output.bed_days_pub_csv b
  on a.bame_group = b.bd_bame_group
@@ -132,9 +137,9 @@
  and b.bd_lowerethnicity = 'NULL'
  and b.bd_orgidprov = 'NULL'
  and b.bd_orgidname = 'NULL'
- and b.bd_specialised_service = 'NULL' 
- and b.bd_siteidoftreat = 'NULL'
- and b.bd_site_name = 'NULL'
+ -- and b.bd_specialised_service = 'NULL' 
+ -- and b.bd_siteidoftreat = 'NULL'
+ -- and b.bd_site_name = 'NULL'
  and b.bd_provider_type = 'NULL'
  and b.bd_length_of_restraint = 'NULL'
  where person_id is not null
@@ -144,10 +149,10 @@
 
 # DBTITLE 1,MHS96 - England; Restrictive Intervention Type; Gender
  %sql
- insert into $db_output.restraints_final_output1
+ insert into $db_output.restraints_final_output
  select
  '$rp_startdate' as ReportingPeriodStartDate,
- '$rp_enddate' as ReportingPeriodEndDate,
+ '$rp_enddate' as ReportingPeriodEndDate, '$status' as status,
  'England; Restrictive Intervention Type; Gender' as breakdown,
  'England' as level_one,
  'England' as level_one_description,
@@ -162,7 +167,7 @@
  'NULL' as level_six,
  'NULL' as level_six_description,
  'MHS96' as metric,
- (count(distinct mhs505uniqid)/b.bed_days) * 1000 as metric_value
+ (count(distinct UniqRestrictiveIntIncID, UniqRestrictiveIntTypeID)/b.bed_days) * 1000 as metric_value
  from $db_output.RI_FINAL a
  left join $db_output.bed_days_pub_csv b
  on a.gendercode = b.bd_gendercode
@@ -178,9 +183,9 @@
  and b.bd_lowerethnicity = 'NULL'
  and b.bd_orgidprov = 'NULL'
  and b.bd_orgidname = 'NULL'
- and b.bd_specialised_service = 'NULL' 
- and b.bd_siteidoftreat = 'NULL'
- and b.bd_site_name = 'NULL'
+ -- and b.bd_specialised_service = 'NULL' 
+ -- and b.bd_siteidoftreat = 'NULL'
+ -- and b.bd_site_name = 'NULL'
  and b.bd_provider_type = 'NULL'
  and b.bd_length_of_restraint = 'NULL'
  where person_id is not null
@@ -190,10 +195,10 @@
 
 # DBTITLE 1,MHS96 - England; Restrictive Intervention Type; Upper Ethnicity
  %sql
- insert into $db_output.restraints_final_output1
+ insert into $db_output.restraints_final_output
  select
  '$rp_startdate' as ReportingPeriodStartDate,
- '$rp_enddate' as ReportingPeriodEndDate,
+ '$rp_enddate' as ReportingPeriodEndDate, '$status' as status,
  'England; Restrictive Intervention Type; Upper Ethnicity' as breakdown,
  'England' as level_one,
  'England' as level_one_description,
@@ -208,7 +213,7 @@
  'NULL' as level_six,
  'NULL' as level_six_description,
  'MHS96' as metric,
- (count(distinct mhs505uniqid)/b.bed_days) * 1000 as metric_value
+ (count(distinct UniqRestrictiveIntIncID, UniqRestrictiveIntTypeID)/b.bed_days) * 1000 as metric_value
  from $db_output.RI_FINAL a
  left join $db_output.bed_days_pub_csv b
  on a.upperethnicitycode = b.bd_upperethnicitycode
@@ -224,9 +229,9 @@
  and b.bd_lowerethnicity = 'NULL'
  and b.bd_orgidprov = 'NULL'
  and b.bd_orgidname = 'NULL'
- and b.bd_specialised_service = 'NULL' 
- and b.bd_siteidoftreat = 'NULL'
- and b.bd_site_name = 'NULL'
+ -- and b.bd_specialised_service = 'NULL' 
+ -- and b.bd_siteidoftreat = 'NULL'
+ -- and b.bd_site_name = 'NULL'
  and b.bd_provider_type = 'NULL'
  and b.bd_length_of_restraint = 'NULL'
  where person_id is not null
@@ -236,10 +241,10 @@
 
 # DBTITLE 1,MHS96 - England; Restrictive Intervention Type; Lower Ethnicity
  %sql
- insert into $db_output.restraints_final_output1
+ insert into $db_output.restraints_final_output
  select
  '$rp_startdate' as ReportingPeriodStartDate,
- '$rp_enddate' as ReportingPeriodEndDate,
+ '$rp_enddate' as ReportingPeriodEndDate, '$status' as status,
  'England; Restrictive Intervention Type; Lower Ethnicity' as breakdown,
  'England' as level_one,
  'England' as level_one_description,
@@ -254,7 +259,7 @@
  'NULL' as level_six,
  'NULL' as level_six_description,
  'MHS96' as metric,
- (count(distinct mhs505uniqid)/b.bed_days) * 1000 as metric_value
+ (count(distinct UniqRestrictiveIntIncID, UniqRestrictiveIntTypeID)/b.bed_days) * 1000 as metric_value
  from $db_output.RI_FINAL a
  left join $db_output.bed_days_pub_csv b
  on a.lowerethnicitycode = b.bd_lowerethnicitycode
@@ -270,9 +275,9 @@
  and b.bd_region_name = 'NULL'
  and b.bd_orgidprov = 'NULL'
  and b.bd_orgidname = 'NULL'
- and b.bd_specialised_service = 'NULL' 
- and b.bd_siteidoftreat = 'NULL'
- and b.bd_site_name = 'NULL'
+ -- and b.bd_specialised_service = 'NULL' 
+ -- and b.bd_siteidoftreat = 'NULL'
+ -- and b.bd_site_name = 'NULL'
  and b.bd_provider_type = 'NULL'
  and b.bd_length_of_restraint = 'NULL'
  where person_id is not null
@@ -282,10 +287,10 @@
 
 # DBTITLE 1,MHS96 - Region; Restrictive Intervention Type; Age Category
  %sql
- insert into $db_output.restraints_final_output1
+ insert into $db_output.restraints_final_output
  select
  '$rp_startdate' as ReportingPeriodStartDate,
- '$rp_enddate' as ReportingPeriodEndDate,
+ '$rp_enddate' as ReportingPeriodEndDate, '$status' as status,
  'Region; Restrictive Intervention Type; Age Category' as breakdown,
  region_code as level_one,
  region_name as level_one_description,
@@ -300,7 +305,7 @@
  'NULL' as level_six,
  'NULL' as level_six_description,
  'MHS96' as metric,
- (count(distinct mhs505uniqid)/b.bed_days) * 1000 as metric_value
+ (count(distinct UniqRestrictiveIntIncID, UniqRestrictiveIntTypeID)/b.bed_days) * 1000 as metric_value
  from $db_output.RI_FINAL a
  left join $db_output.bed_days_pub_csv b
  on a.region_code = b.bd_region_code
@@ -316,9 +321,9 @@
  and b.bd_age_group = 'NULL'
  and b.bd_orgidprov = 'NULL'
  and b.bd_orgidname = 'NULL'
- and b.bd_specialised_service = 'NULL' 
- and b.bd_siteidoftreat = 'NULL'
- and b.bd_site_name = 'NULL'
+ -- and b.bd_specialised_service = 'NULL' 
+ -- and b.bd_siteidoftreat = 'NULL'
+ -- and b.bd_site_name = 'NULL'
  and b.bd_provider_type = 'NULL'
  and b.bd_length_of_restraint = 'NULL'
  where person_id is not null
@@ -328,10 +333,10 @@
 
 # DBTITLE 1,MHS96 - Region; Restrictive Intervention Type; Age Group
  %sql
- insert into $db_output.restraints_final_output1
+ insert into $db_output.restraints_final_output
  select
  '$rp_startdate' as ReportingPeriodStartDate,
- '$rp_enddate' as ReportingPeriodEndDate,
+ '$rp_enddate' as ReportingPeriodEndDate, '$status' as status,
  'Region; Restrictive Intervention Type; Age Group' as breakdown,
  region_code as level_one,
  region_name as level_one_description,
@@ -346,7 +351,7 @@
  'NULL' as level_six,
  'NULL' as level_six_description,
  'MHS96' as metric,
- (count(distinct mhs505uniqid)/b.bed_days) * 1000 as metric_value
+ (count(distinct UniqRestrictiveIntIncID, UniqRestrictiveIntTypeID)/b.bed_days) * 1000 as metric_value
  from $db_output.RI_FINAL a
  left join $db_output.bed_days_pub_csv b
  on a.region_code = b.bd_region_code
@@ -362,9 +367,9 @@
  and b.bd_bame_group = 'NULL'
  and b.bd_orgidprov = 'NULL'
  and b.bd_orgidname = 'NULL'
- and b.bd_specialised_service = 'NULL' 
- and b.bd_siteidoftreat = 'NULL'
- and b.bd_site_name = 'NULL'
+ -- and b.bd_specialised_service = 'NULL' 
+ -- and b.bd_siteidoftreat = 'NULL'
+ -- and b.bd_site_name = 'NULL'
  and b.bd_provider_type = 'NULL'
  and b.bd_length_of_restraint = 'NULL'
  where person_id is not null
@@ -374,10 +379,10 @@
 
 # DBTITLE 1,MHS96 - Region; Restrictive Intervention Type; BAME Group
  %sql
- insert into $db_output.restraints_final_output1
+ insert into $db_output.restraints_final_output
  select
  '$rp_startdate' as ReportingPeriodStartDate,
- '$rp_enddate' as ReportingPeriodEndDate,
+ '$rp_enddate' as ReportingPeriodEndDate, '$status' as status,
  'Region; Restrictive Intervention Type; BAME Group' as breakdown,
  region_code as level_one,
  region_name as level_one_description,
@@ -392,7 +397,7 @@
  'NULL' as level_six,
  'NULL' as level_six_description,
  'MHS96' as metric,
- (count(distinct mhs505uniqid)/b.bed_days) * 1000 as metric_value
+ (count(distinct UniqRestrictiveIntIncID, UniqRestrictiveIntTypeID)/b.bed_days) * 1000 as metric_value
  from $db_output.RI_FINAL a
  left join $db_output.bed_days_pub_csv b
  on a.region_code = b.bd_region_code
@@ -408,9 +413,9 @@
  and b.bd_gendername = 'NULL'
  and b.bd_orgidprov = 'NULL'
  and b.bd_orgidname = 'NULL'
- and b.bd_specialised_service = 'NULL' 
- and b.bd_siteidoftreat = 'NULL'
- and b.bd_site_name = 'NULL'
+ -- and b.bd_specialised_service = 'NULL' 
+ -- and b.bd_siteidoftreat = 'NULL'
+ -- and b.bd_site_name = 'NULL'
  and b.bd_provider_type = 'NULL'
  and b.bd_length_of_restraint = 'NULL'
  where person_id is not null
@@ -420,10 +425,10 @@
 
 # DBTITLE 1,MHS96 - Region; Restrictive Intervention Type; Gender
  %sql
- insert into $db_output.restraints_final_output1
+ insert into $db_output.restraints_final_output
  select
  '$rp_startdate' as ReportingPeriodStartDate,
- '$rp_enddate' as ReportingPeriodEndDate,
+ '$rp_enddate' as ReportingPeriodEndDate, '$status' as status,
  'Region; Restrictive Intervention Type; Gender' as breakdown,
  region_code as level_one,
  region_name as level_one_description,
@@ -438,7 +443,7 @@
  'NULL' as level_six,
  'NULL' as level_six_description,
  'MHS96' as metric,
- (count(distinct mhs505uniqid)/b.bed_days) * 1000 as metric_value
+ (count(distinct UniqRestrictiveIntIncID, UniqRestrictiveIntTypeID)/b.bed_days) * 1000 as metric_value
  from $db_output.RI_FINAL a
  left join $db_output.bed_days_pub_csv b
  on a.region_code = b.bd_region_code
@@ -454,9 +459,9 @@
  and b.bd_upperethnicityname = 'NULL'
  and b.bd_orgidprov = 'NULL'
  and b.bd_orgidname = 'NULL'
- and b.bd_specialised_service = 'NULL' 
- and b.bd_siteidoftreat = 'NULL'
- and b.bd_site_name = 'NULL'
+ -- and b.bd_specialised_service = 'NULL' 
+ -- and b.bd_siteidoftreat = 'NULL'
+ -- and b.bd_site_name = 'NULL'
  and b.bd_provider_type = 'NULL'
  and b.bd_length_of_restraint = 'NULL'
  where person_id is not null
@@ -466,10 +471,10 @@
 
 # DBTITLE 1,MHS96 - Region; Restrictive Intervention Type; Upper Ethnicity
  %sql
- insert into $db_output.restraints_final_output1
+ insert into $db_output.restraints_final_output
  select
  '$rp_startdate' as ReportingPeriodStartDate,
- '$rp_enddate' as ReportingPeriodEndDate,
+ '$rp_enddate' as ReportingPeriodEndDate, '$status' as status,
  'Region; Restrictive Intervention Type; Upper Ethnicity' as breakdown,
  region_code as level_one,
  region_name as level_one_description,
@@ -484,7 +489,7 @@
  'NULL' as level_six,
  'NULL' as level_six_description,
  'MHS96' as metric,
- (count(distinct mhs505uniqid)/b.bed_days) * 1000 as metric_value
+ (count(distinct UniqRestrictiveIntIncID, UniqRestrictiveIntTypeID)/b.bed_days) * 1000 as metric_value
  from $db_output.RI_FINAL a
  left join $db_output.bed_days_pub_csv b
  on a.region_code = b.bd_region_code
@@ -500,9 +505,9 @@
  and b.bd_lowerethnicity = 'NULL'
  and b.bd_orgidprov = 'NULL'
  and b.bd_orgidname = 'NULL'
- and b.bd_specialised_service = 'NULL' 
- and b.bd_siteidoftreat = 'NULL'
- and b.bd_site_name = 'NULL'
+ -- and b.bd_specialised_service = 'NULL' 
+ -- and b.bd_siteidoftreat = 'NULL'
+ -- and b.bd_site_name = 'NULL'
  and b.bd_provider_type = 'NULL'
  and b.bd_length_of_restraint = 'NULL'
  where person_id is not null
@@ -512,10 +517,10 @@
 
 # DBTITLE 1,MHS96 - Region; Restrictive Intervention Type; Lower Ethnicity
  %sql
- insert into $db_output.restraints_final_output1
+ insert into $db_output.restraints_final_output
  select
  '$rp_startdate' as ReportingPeriodStartDate,
- '$rp_enddate' as ReportingPeriodEndDate,
+ '$rp_enddate' as ReportingPeriodEndDate, '$status' as status,
  'Region; Restrictive Intervention Type; Lower Ethnicity' as breakdown,
  region_code as level_one,
  region_name as level_one_description,
@@ -530,7 +535,7 @@
  'NULL' as level_six,
  'NULL' as level_six_description,
  'MHS96' as metric,
- (count(distinct mhs505uniqid)/b.bed_days) * 1000 as metric_value
+ (count(distinct UniqRestrictiveIntIncID, UniqRestrictiveIntTypeID)/b.bed_days) * 1000 as metric_value
  from $db_output.RI_FINAL a
  left join $db_output.bed_days_pub_csv b
  on a.region_code = b.bd_region_code
@@ -546,9 +551,9 @@
  and b.bd_age_category = 'NULL'
  and b.bd_orgidprov = 'NULL'
  and b.bd_orgidname = 'NULL'
- and b.bd_specialised_service = 'NULL' 
- and b.bd_siteidoftreat = 'NULL'
- and b.bd_site_name = 'NULL'
+ -- and b.bd_specialised_service = 'NULL' 
+ -- and b.bd_siteidoftreat = 'NULL'
+ -- and b.bd_site_name = 'NULL'
  and b.bd_provider_type = 'NULL'
  and b.bd_length_of_restraint = 'NULL'
  where person_id is not null
@@ -558,10 +563,10 @@
 
 # DBTITLE 1,MHS96 - Provider; Restrictive Intervention Type; Age Category
  %sql
- insert into $db_output.restraints_final_output1
+ insert into $db_output.restraints_final_output
  select
  '$rp_startdate' as ReportingPeriodStartDate,
- '$rp_enddate' as ReportingPeriodEndDate,
+ '$rp_enddate' as ReportingPeriodEndDate, '$status' as status,
  'Provider; Restrictive Intervention Type; Age Category' as breakdown,
  orgidprov as level_one,
  orgidname as level_one_description,
@@ -576,7 +581,7 @@
  'NULL' as level_six,
  'NULL' as level_six_description,
  'MHS96' as metric,
- (count(distinct mhs505uniqid)/b.bed_days) * 1000 as metric_value
+ (count(distinct UniqRestrictiveIntIncID, UniqRestrictiveIntTypeID)/b.bed_days) * 1000 as metric_value
  from $db_output.RI_FINAL a
  left join $db_output.bed_days_pub_csv b
  on a.orgidprov = b.bd_orgidprov
@@ -592,9 +597,9 @@
  and b.bd_gendername = 'NULL'
  and b.bd_bame_group = 'NULL'
  and b.bd_age_group = 'NULL'
- and b.bd_specialised_service = 'NULL' 
- and b.bd_siteidoftreat = 'NULL'
- and b.bd_site_name = 'NULL'
+ -- and b.bd_specialised_service = 'NULL' 
+ -- and b.bd_siteidoftreat = 'NULL'
+ -- and b.bd_site_name = 'NULL'
  and b.bd_provider_type = 'NULL'
  and b.bd_length_of_restraint = 'NULL'
  where person_id is not null
@@ -604,10 +609,10 @@
 
 # DBTITLE 1,MHS96 - Provider; Restrictive Intervention Type; Age Group
  %sql
- insert into $db_output.restraints_final_output1
+ insert into $db_output.restraints_final_output
  select
  '$rp_startdate' as ReportingPeriodStartDate,
- '$rp_enddate' as ReportingPeriodEndDate,
+ '$rp_enddate' as ReportingPeriodEndDate, '$status' as status,
  'Provider; Restrictive Intervention Type; Age Group' as breakdown,
  orgidprov as level_one,
  orgidname as level_one_description,
@@ -622,7 +627,7 @@
  'NULL' as level_six,
  'NULL' as level_six_description,
  'MHS96' as metric,
- (count(distinct mhs505uniqid)/b.bed_days) * 1000 as metric_value
+ (count(distinct UniqRestrictiveIntIncID, UniqRestrictiveIntTypeID)/b.bed_days) * 1000 as metric_value
  from $db_output.RI_FINAL a
  left join $db_output.bed_days_pub_csv b
  on a.orgidprov = b.bd_orgidprov
@@ -638,9 +643,9 @@
  and b.bd_gendercode = 'NULL'
  and b.bd_gendername = 'NULL'
  and b.bd_bame_group = 'NULL'
- and b.bd_specialised_service = 'NULL' 
- and b.bd_siteidoftreat = 'NULL'
- and b.bd_site_name = 'NULL'
+ -- and b.bd_specialised_service = 'NULL' 
+ -- and b.bd_siteidoftreat = 'NULL'
+ -- and b.bd_site_name = 'NULL'
  and b.bd_provider_type = 'NULL'
  and b.bd_length_of_restraint = 'NULL'
  where person_id is not null
@@ -650,10 +655,10 @@
 
 # DBTITLE 1,MHS96 - Provider; Restrictive Intervention Type; BAME Group
  %sql
- insert into $db_output.restraints_final_output1
+ insert into $db_output.restraints_final_output
  select
  '$rp_startdate' as ReportingPeriodStartDate,
- '$rp_enddate' as ReportingPeriodEndDate,
+ '$rp_enddate' as ReportingPeriodEndDate, '$status' as status,
  'Provider; Restrictive Intervention Type; BAME Group' as breakdown,
  orgidprov as level_one,
  orgidname as level_one_description,
@@ -668,7 +673,7 @@
  'NULL' as level_six,
  'NULL' as level_six_description,
  'MHS96' as metric,
- (count(distinct mhs505uniqid)/b.bed_days) * 1000 as metric_value
+ (count(distinct UniqRestrictiveIntIncID, UniqRestrictiveIntTypeID)/b.bed_days) * 1000 as metric_value
  from $db_output.RI_FINAL a
  left join $db_output.bed_days_pub_csv b
  on a.orgidprov = b.bd_orgidprov
@@ -684,9 +689,9 @@
  and b.bd_upperethnicityname = 'NULL'
  and b.bd_gendercode = 'NULL'
  and b.bd_gendername = 'NULL'
- and b.bd_specialised_service = 'NULL' 
- and b.bd_siteidoftreat = 'NULL'
- and b.bd_site_name = 'NULL'
+ -- and b.bd_specialised_service = 'NULL' 
+ -- and b.bd_siteidoftreat = 'NULL'
+ -- and b.bd_site_name = 'NULL'
  and b.bd_provider_type = 'NULL'
  and b.bd_length_of_restraint = 'NULL'
  where person_id is not null
@@ -696,10 +701,10 @@
 
 # DBTITLE 1,MHS96 - Provider; Restrictive Intervention Type; Gender
  %sql
- insert into $db_output.restraints_final_output1
+ insert into $db_output.restraints_final_output
  select
  '$rp_startdate' as ReportingPeriodStartDate,
- '$rp_enddate' as ReportingPeriodEndDate,
+ '$rp_enddate' as ReportingPeriodEndDate, '$status' as status,
  'Provider; Restrictive Intervention Type; Gender' as breakdown,
  orgidprov as level_one,
  orgidname as level_one_description,
@@ -714,7 +719,7 @@
  'NULL' as level_six,
  'NULL' as level_six_description,
  'MHS96' as metric,
- (count(distinct mhs505uniqid)/b.bed_days) * 1000 as metric_value
+ (count(distinct UniqRestrictiveIntIncID, UniqRestrictiveIntTypeID)/b.bed_days) * 1000 as metric_value
  from $db_output.RI_FINAL a
  left join $db_output.bed_days_pub_csv b
  on a.orgidprov = b.bd_orgidprov
@@ -730,9 +735,9 @@
  and b.bd_lowerethnicity = 'NULL'
  and b.bd_upperethnicitycode = 'NULL'
  and b.bd_upperethnicityname = 'NULL'
- and b.bd_specialised_service = 'NULL' 
- and b.bd_siteidoftreat = 'NULL'
- and b.bd_site_name = 'NULL'
+ -- and b.bd_specialised_service = 'NULL' 
+ -- and b.bd_siteidoftreat = 'NULL'
+ -- and b.bd_site_name = 'NULL'
  and b.bd_provider_type = 'NULL'
  and b.bd_length_of_restraint = 'NULL'
  where person_id is not null
@@ -742,10 +747,10 @@
 
 # DBTITLE 1,MHS96 - Provider; Restrictive Intervention Type; Upper Ethnicity
  %sql
- insert into $db_output.restraints_final_output1
+ insert into $db_output.restraints_final_output
  select
  '$rp_startdate' as ReportingPeriodStartDate,
- '$rp_enddate' as ReportingPeriodEndDate,
+ '$rp_enddate' as ReportingPeriodEndDate, '$status' as status,
  'Provider; Restrictive Intervention Type; Upper Ethnicity' as breakdown,
  orgidprov as level_one,
  orgidname as level_one_description,
@@ -760,7 +765,7 @@
  'NULL' as level_six,
  'NULL' as level_six_description,
  'MHS96' as metric,
- (count(distinct mhs505uniqid)/b.bed_days) * 1000 as metric_value
+ (count(distinct UniqRestrictiveIntIncID, UniqRestrictiveIntTypeID)/b.bed_days) * 1000 as metric_value
  from $db_output.RI_FINAL a
  left join $db_output.bed_days_pub_csv b
  on a.orgidprov = b.bd_orgidprov
@@ -776,9 +781,9 @@
  and b.bd_region_name = 'NULL'
  and b.bd_lowerethnicitycode = 'NULL'
  and b.bd_lowerethnicity = 'NULL'
- and b.bd_specialised_service = 'NULL' 
- and b.bd_siteidoftreat = 'NULL'
- and b.bd_site_name = 'NULL'
+ -- and b.bd_specialised_service = 'NULL' 
+ -- and b.bd_siteidoftreat = 'NULL'
+ -- and b.bd_site_name = 'NULL'
  and b.bd_provider_type = 'NULL'
  and b.bd_length_of_restraint = 'NULL'
  where person_id is not null
@@ -788,10 +793,10 @@
 
 # DBTITLE 1,MHS96 - Provider; Restrictive Intervention Type; Lower Ethnicity
  %sql
- insert into $db_output.restraints_final_output1
+ insert into $db_output.restraints_final_output
  select
  '$rp_startdate' as ReportingPeriodStartDate,
- '$rp_enddate' as ReportingPeriodEndDate,
+ '$rp_enddate' as ReportingPeriodEndDate, '$status' as status,
  'Provider; Restrictive Intervention Type; Lower Ethnicity' as breakdown,
  orgidprov as level_one,
  orgidname as level_one_description,
@@ -806,7 +811,7 @@
  'NULL' as level_six,
  'NULL' as level_six_description,
  'MHS96' as metric,
- (count(distinct mhs505uniqid)/b.bed_days) * 1000 as metric_value
+ (count(distinct UniqRestrictiveIntIncID, UniqRestrictiveIntTypeID)/b.bed_days) * 1000 as metric_value
  from $db_output.RI_FINAL a
  left join $db_output.bed_days_pub_csv b
  on a.orgidprov = b.bd_orgidprov
@@ -822,9 +827,9 @@
  and b.bd_age_category = 'NULL'
  and b.bd_region_code = 'NULL'
  and b.bd_region_name = 'NULL'
- and b.bd_specialised_service = 'NULL' 
- and b.bd_siteidoftreat = 'NULL'
- and b.bd_site_name = 'NULL'
+ -- and b.bd_specialised_service = 'NULL' 
+ -- and b.bd_siteidoftreat = 'NULL'
+ -- and b.bd_site_name = 'NULL'
  and b.bd_provider_type = 'NULL'
  and b.bd_length_of_restraint = 'NULL'
  where person_id is not null
@@ -832,12 +837,12 @@
 
 # COMMAND ----------
 
-# DBTITLE 1,MHS96 - Specialised Commissioning Service; Restrictive Intervention Type; Age Category
+# DBTITLE 1,MHS116 - Specialised Commissioning Service; Restrictive Intervention Type; Age Category
  %sql
- insert into $db_output.restraints_final_output1
+ insert into $db_output.restraints_final_output
  select
  '$rp_startdate' as ReportingPeriodStartDate,
- '$rp_enddate' as ReportingPeriodEndDate,
+ '$rp_enddate' as ReportingPeriodEndDate, '$status' as status,
  'Specialised Commissioning Service; Restrictive Intervention Type; Age Category' as breakdown,
  specialised_service as level_one,
  specialised_service as level_one_description,
@@ -851,10 +856,10 @@
  'NULL' as level_five_description,
  'NULL' as level_six,
  'NULL' as level_six_description,
- 'MHS96' as metric,
- (count(distinct mhs505uniqid)/b.bed_days) * 1000 as metric_value
+ 'MHS117' as metric,
+ (count(distinct UniqRestrictiveIntIncID, UniqRestrictiveIntTypeID)/b.bed_days) * 1000 as metric_value
  from $db_output.RI_FINAL a
- left join $db_output.bed_days_pub_csv b
+ left join $db_output.WS_bed_days_pub_csv b
  on a.specialised_service = b.bd_specialised_service 
  and a.age_category = b.bd_age_category
  and b.bd_orgidprov = 'NULL'
@@ -872,18 +877,18 @@
  and b.bd_siteidoftreat = 'NULL'
  and b.bd_site_name = 'NULL'
  and b.bd_provider_type = 'NULL'
- and b.bd_length_of_restraint = 'NULL'
- where person_id is not null
+ ---and b.bd_length_of_restraint = 'NULL'
+ where person_id is not null and ss_type_ward_Rank = 1   and a.specialised_service <>  'No associated Ward Stay'                       -------------------------WS flag changes-------
  group by specialised_service, restrictiveintcode, restrictiveintname, age_category, b.bed_days
 
 # COMMAND ----------
 
-# DBTITLE 1,MHS96 - Specialised Commissioning Service; Restrictive Intervention Type; Age Group
+# DBTITLE 1,MHS116 - Specialised Commissioning Service; Restrictive Intervention Type; Age Group
  %sql
- insert into $db_output.restraints_final_output1
+ insert into $db_output.restraints_final_output
  select
  '$rp_startdate' as ReportingPeriodStartDate,
- '$rp_enddate' as ReportingPeriodEndDate,
+ '$rp_enddate' as ReportingPeriodEndDate, '$status' as status,
  'Specialised Commissioning Service; Restrictive Intervention Type; Age Group' as breakdown,
  specialised_service as level_one,
  specialised_service as level_one_description,
@@ -897,10 +902,10 @@
  'NULL' as level_five_description,
  'NULL' as level_six,
  'NULL' as level_six_description,
- 'MHS96' as metric,
- (count(distinct mhs505uniqid)/b.bed_days) * 1000 as metric_value
+ 'MHS117' as metric,
+ (count(distinct UniqRestrictiveIntIncID, UniqRestrictiveIntTypeID)/b.bed_days) * 1000 as metric_value
  from $db_output.RI_FINAL a
- left join $db_output.bed_days_pub_csv b
+ left join $db_output.WS_bed_days_pub_csv b
  on a.specialised_service = b.bd_specialised_service 
  and a.age_group = b.bd_age_group
  and b.bd_age_category = 'NULL'
@@ -918,18 +923,18 @@
  and b.bd_siteidoftreat = 'NULL'
  and b.bd_site_name = 'NULL'
  and b.bd_provider_type = 'NULL'
- and b.bd_length_of_restraint = 'NULL'
- where person_id is not null
+ --and b.bd_length_of_restraint = 'NULL'
+ where person_id is not null and ss_type_ward_Rank = 1  and a.specialised_service <>  'No associated Ward Stay'    
  group by specialised_service, restrictiveintcode, restrictiveintname, age_group, b.bed_days
 
 # COMMAND ----------
 
-# DBTITLE 1,MHS96 - Specialised Commissioning Service; Restrictive Intervention Type; BAME Group
+# DBTITLE 1,MHS116 - Specialised Commissioning Service; Restrictive Intervention Type; BAME Group
  %sql
- insert into $db_output.restraints_final_output1
+ insert into $db_output.restraints_final_output
  select
  '$rp_startdate' as ReportingPeriodStartDate,
- '$rp_enddate' as ReportingPeriodEndDate,
+ '$rp_enddate' as ReportingPeriodEndDate, '$status' as status,
  'Specialised Commissioning Service; Restrictive Intervention Type; BAME Group' as breakdown,
  specialised_service as level_one,
  specialised_service as level_one_description,
@@ -943,10 +948,10 @@
  'NULL' as level_five_description,
  'NULL' as level_six,
  'NULL' as level_six_description,
- 'MHS96' as metric,
- (count(distinct mhs505uniqid)/b.bed_days) * 1000 as metric_value
+ 'MHS117' as metric,
+ (count(distinct UniqRestrictiveIntIncID, UniqRestrictiveIntTypeID)/b.bed_days) * 1000 as metric_value
  from $db_output.RI_FINAL a
- left join $db_output.bed_days_pub_csv b
+ left join $db_output.WS_bed_days_pub_csv b
  on a.specialised_service = b.bd_specialised_service 
  and a.bame_group = b.bd_bame_group
  and b.bd_age_group = 'NULL'
@@ -964,18 +969,18 @@
  and b.bd_siteidoftreat = 'NULL'
  and b.bd_site_name = 'NULL'
  and b.bd_provider_type = 'NULL'
- and b.bd_length_of_restraint = 'NULL'
- where person_id is not null
+ --and b.bd_length_of_restraint = 'NULL'
+ where person_id is not null and ss_type_ward_Rank = 1 and a.specialised_service <>  'No associated Ward Stay'                         -------------------------WS flag changes-------
  group by specialised_service, restrictiveintcode, restrictiveintname, bame_group, b.bed_days
 
 # COMMAND ----------
 
-# DBTITLE 1,MHS96 - Specialised Commissioning Service; Restrictive Intervention Type; Gender
+# DBTITLE 1,MHS116 - Specialised Commissioning Service; Restrictive Intervention Type; Gender
  %sql
- insert into $db_output.restraints_final_output1
+ insert into $db_output.restraints_final_output
  select
  '$rp_startdate' as ReportingPeriodStartDate,
- '$rp_enddate' as ReportingPeriodEndDate,
+ '$rp_enddate' as ReportingPeriodEndDate, '$status' as status,
  'Specialised Commissioning Service; Restrictive Intervention Type; Gender' as breakdown,
  specialised_service as level_one,
  specialised_service as level_one_description,
@@ -989,10 +994,10 @@
  'NULL' as level_five_description,
  'NULL' as level_six,
  'NULL' as level_six_description,
- 'MHS96' as metric,
- (count(distinct mhs505uniqid)/b.bed_days) * 1000 as metric_value
+ 'MHS117' as metric,
+ (count(distinct UniqRestrictiveIntIncID, UniqRestrictiveIntTypeID)/b.bed_days) * 1000 as metric_value
  from $db_output.RI_FINAL a
- left join $db_output.bed_days_pub_csv b
+ left join $db_output.WS_bed_days_pub_csv b
  on a.specialised_service = b.bd_specialised_service 
  and a.gendercode = b.bd_gendercode
  and a.gendername = b.bd_gendername
@@ -1010,18 +1015,18 @@
  and b.bd_siteidoftreat = 'NULL'
  and b.bd_site_name = 'NULL'
  and b.bd_provider_type = 'NULL'
- and b.bd_length_of_restraint = 'NULL'
- where person_id is not null
+ --and b.bd_length_of_restraint = 'NULL'
+ where person_id is not null and ss_type_ward_Rank = 1 and a.specialised_service <>  'No associated Ward Stay'                          -------------------------WS flag changes-------
  group by specialised_service, restrictiveintcode, restrictiveintname, gendercode, gendername, b.bed_days
 
 # COMMAND ----------
 
-# DBTITLE 1,MHS96 - Specialised Commissioning Service; Restrictive Intervention Type; Upper Ethnicity
+# DBTITLE 1,MHS116 - Specialised Commissioning Service; Restrictive Intervention Type; Upper Ethnicity
  %sql
- insert into $db_output.restraints_final_output1
+ insert into $db_output.restraints_final_output
  select
  '$rp_startdate' as ReportingPeriodStartDate,
- '$rp_enddate' as ReportingPeriodEndDate,
+ '$rp_enddate' as ReportingPeriodEndDate, '$status' as status,
  'Specialised Commissioning Service; Restrictive Intervention Type; Upper Ethnicity' as breakdown,
  specialised_service as level_one,
  specialised_service as level_one_description,
@@ -1035,10 +1040,10 @@
  'NULL' as level_five_description,
  'NULL' as level_six,
  'NULL' as level_six_description,
- 'MHS96' as metric,
- (count(distinct mhs505uniqid)/b.bed_days) * 1000 as metric_value
+ 'MHS117' as metric,
+ (count(distinct UniqRestrictiveIntIncID, UniqRestrictiveIntTypeID)/b.bed_days) * 1000 as metric_value
  from $db_output.RI_FINAL a
- left join $db_output.bed_days_pub_csv b
+ left join $db_output.WS_bed_days_pub_csv b
  on a.specialised_service = b.bd_specialised_service 
  and a.upperethnicitycode = b.bd_upperethnicitycode
  and a.upperethnicityname = b.bd_upperethnicityname
@@ -1056,18 +1061,18 @@
  and b.bd_siteidoftreat = 'NULL'
  and b.bd_site_name = 'NULL'
  and b.bd_provider_type = 'NULL'
- and b.bd_length_of_restraint = 'NULL'
- where person_id is not null
+ ---and b.bd_length_of_restraint = 'NULL'
+ where person_id is not null and ss_type_ward_Rank = 1 and a.specialised_service <>  'No associated Ward Stay'                          -------------------------WS flag changes-------
  group by specialised_service, restrictiveintcode, restrictiveintname, upperethnicitycode, upperethnicityname, b.bed_days 
 
 # COMMAND ----------
 
-# DBTITLE 1,MHS96 - Specialised Commissioning Service; Restrictive Intervention Type; Lower Ethnicity
+# DBTITLE 1,MHS116 - Specialised Commissioning Service; Restrictive Intervention Type; Lower Ethnicity
  %sql
- insert into $db_output.restraints_final_output1
+ insert into $db_output.restraints_final_output
  select
  '$rp_startdate' as ReportingPeriodStartDate,
- '$rp_enddate' as ReportingPeriodEndDate,
+ '$rp_enddate' as ReportingPeriodEndDate, '$status' as status,
  'Specialised Commissioning Service; Restrictive Intervention Type; Lower Ethnicity' as breakdown,
  specialised_service as level_one,
  specialised_service as level_one_description,
@@ -1081,10 +1086,10 @@
  'NULL' as level_five_description,
  'NULL' as level_six,
  'NULL' as level_six_description,
- 'MHS96' as metric,
- (count(distinct mhs505uniqid)/b.bed_days) * 1000 as metric_value
+ 'MHS117' as metric,
+ (count(distinct UniqRestrictiveIntIncID, UniqRestrictiveIntTypeID)/b.bed_days) * 1000 as metric_value
  from $db_output.RI_FINAL a
- left join $db_output.bed_days_pub_csv b
+ left join $db_output.WS_bed_days_pub_csv b
  on a.specialised_service = b.bd_specialised_service 
  and a.lowerethnicitycode = b.bd_lowerethnicitycode
  and a.lowerethnicity = b.bd_lowerethnicity
@@ -1102,18 +1107,18 @@
  and b.bd_siteidoftreat = 'NULL'
  and b.bd_site_name = 'NULL'
  and b.bd_provider_type = 'NULL'
- and b.bd_length_of_restraint = 'NULL'
- where person_id is not null
+ --and b.bd_length_of_restraint = 'NULL'
+ where person_id is not null and ss_type_ward_Rank = 1 and a.specialised_service <>  'No associated Ward Stay'                          -------------------------WS flag changes-------
  group by specialised_service, restrictiveintcode, restrictiveintname, lowerethnicitycode, lowerethnicity, b.bed_days  
 
 # COMMAND ----------
 
 # DBTITLE 1,MHS96 - Region; Provider; Restrictive Intervention Type; Age Category
  %sql
- insert into $db_output.restraints_final_output1
+ insert into $db_output.restraints_final_output
  select
  '$rp_startdate' as ReportingPeriodStartDate,
- '$rp_enddate' as ReportingPeriodEndDate,
+ '$rp_enddate' as ReportingPeriodEndDate, '$status' as status,
  'Region; Provider; Restrictive Intervention Type; Age Category' as breakdown,
  region_code as level_one,
  region_name as level_one_description,
@@ -1128,7 +1133,7 @@
  'NULL' as level_six,
  'NULL' as level_six_description,
  'MHS96' as metric,
- (count(distinct mhs505uniqid)/b.bed_days) * 1000 as metric_value
+ (count(distinct UniqRestrictiveIntIncID, UniqRestrictiveIntTypeID)/b.bed_days) * 1000 as metric_value
  from $db_output.RI_FINAL a
  left join $db_output.bed_days_pub_csv b
  on a.region_code = b.bd_region_code
@@ -1136,7 +1141,7 @@
  and a.orgidprov = b.bd_orgidprov
  and a.orgidname = b.bd_orgidname
  and a.age_category = b.bd_age_category
- and b.bd_specialised_service = 'NULL'
+ -- and b.bd_specialised_service = 'NULL'
  and b.bd_lowerethnicitycode = 'NULL'
  and b.bd_lowerethnicity = 'NULL'
  and b.bd_upperethnicitycode = 'NULL'
@@ -1145,8 +1150,8 @@
  and b.bd_gendername = 'NULL'
  and b.bd_bame_group ='NULL'
  and b.bd_age_group = 'NULL'
- and b.bd_siteidoftreat = 'NULL'
- and b.bd_site_name = 'NULL'
+ -- and b.bd_siteidoftreat = 'NULL'
+ -- and b.bd_site_name = 'NULL'
  and b.bd_provider_type = 'NULL'
  and b.bd_length_of_restraint = 'NULL'
  where person_id is not null
@@ -1156,10 +1161,10 @@
 
 # DBTITLE 1,MHS96 - Region; Provider; Restrictive Intervention Type; Age Group
  %sql
- insert into $db_output.restraints_final_output1
+ insert into $db_output.restraints_final_output
  select
  '$rp_startdate' as ReportingPeriodStartDate,
- '$rp_enddate' as ReportingPeriodEndDate,
+ '$rp_enddate' as ReportingPeriodEndDate, '$status' as status,
  'Region; Provider; Restrictive Intervention Type; Age Group' as breakdown,
  region_code as level_one,
  region_name as level_one_description,
@@ -1174,7 +1179,7 @@
  'NULL' as level_six,
  'NULL' as level_six_description,
  'MHS96' as metric,
- (count(distinct mhs505uniqid)/b.bed_days) * 1000 as metric_value
+ (count(distinct UniqRestrictiveIntIncID, UniqRestrictiveIntTypeID)/b.bed_days) * 1000 as metric_value
  from $db_output.RI_FINAL a
  left join $db_output.bed_days_pub_csv b
  on a.region_code = b.bd_region_code
@@ -1182,7 +1187,7 @@
  and a.orgidprov = b.bd_orgidprov
  and a.orgidname = b.bd_orgidname
  and a.age_group = b.bd_age_group
- and b.bd_specialised_service = 'NULL'
+ -- and b.bd_specialised_service = 'NULL'
  and b.bd_lowerethnicitycode = 'NULL'
  and b.bd_lowerethnicity = 'NULL'
  and b.bd_upperethnicitycode = 'NULL'
@@ -1191,8 +1196,8 @@
  and b.bd_gendername = 'NULL'
  and b.bd_bame_group ='NULL'
  and b.bd_age_category = 'NULL'
- and b.bd_siteidoftreat = 'NULL'
- and b.bd_site_name = 'NULL'
+ -- and b.bd_siteidoftreat = 'NULL'
+ -- and b.bd_site_name = 'NULL'
  and b.bd_provider_type = 'NULL'
  and b.bd_length_of_restraint = 'NULL'
  where person_id is not null
@@ -1202,10 +1207,10 @@
 
 # DBTITLE 1,MHS96 - Region; Provider; Restrictive Intervention Type; BAME Group
  %sql
- insert into $db_output.restraints_final_output1
+ insert into $db_output.restraints_final_output
  select
  '$rp_startdate' as ReportingPeriodStartDate,
- '$rp_enddate' as ReportingPeriodEndDate,
+ '$rp_enddate' as ReportingPeriodEndDate, '$status' as status,
  'Region; Provider; Restrictive Intervention Type; BAME Group' as breakdown,
  region_code as level_one,
  region_name as level_one_description,
@@ -1220,7 +1225,7 @@
  'NULL' as level_six,
  'NULL' as level_six_description,
  'MHS96' as metric,
- (count(distinct mhs505uniqid)/b.bed_days) * 1000 as metric_value
+ (count(distinct UniqRestrictiveIntIncID, UniqRestrictiveIntTypeID)/b.bed_days) * 1000 as metric_value
  from $db_output.RI_FINAL a
  left join $db_output.bed_days_pub_csv b
  on a.region_code = b.bd_region_code
@@ -1229,7 +1234,7 @@
  and a.orgidname = b.bd_orgidname
  and a.bame_group = b.bd_bame_group
  and b.bd_age_group = 'NULL'
- and b.bd_specialised_service = 'NULL'
+ -- and b.bd_specialised_service = 'NULL'
  and b.bd_lowerethnicitycode = 'NULL'
  and b.bd_lowerethnicity = 'NULL'
  and b.bd_upperethnicitycode = 'NULL'
@@ -1237,8 +1242,8 @@
  and b.bd_gendercode = 'NULL'
  and b.bd_gendername = 'NULL'
  and b.bd_age_category = 'NULL'
- and b.bd_siteidoftreat = 'NULL'
- and b.bd_site_name = 'NULL'
+ -- and b.bd_siteidoftreat = 'NULL'
+ -- and b.bd_site_name = 'NULL'
  and b.bd_provider_type = 'NULL'
  and b.bd_length_of_restraint = 'NULL'
  where person_id is not null
@@ -1248,10 +1253,10 @@
 
 # DBTITLE 1,MHS96 - Region; Provider; Restrictive Intervention Type; Gender
  %sql
- insert into $db_output.restraints_final_output1
+ insert into $db_output.restraints_final_output
  select
  '$rp_startdate' as ReportingPeriodStartDate,
- '$rp_enddate' as ReportingPeriodEndDate,
+ '$rp_enddate' as ReportingPeriodEndDate, '$status' as status,
  'Region; Provider; Restrictive Intervention Type; Gender' as breakdown,
  region_code as level_one,
  region_name as level_one_description,
@@ -1266,7 +1271,7 @@
  'NULL' as level_six,
  'NULL' as level_six_description,
  'MHS96' as metric,
- (count(distinct mhs505uniqid)/b.bed_days) * 1000 as metric_value
+ (count(distinct UniqRestrictiveIntIncID, UniqRestrictiveIntTypeID)/b.bed_days) * 1000 as metric_value
  from $db_output.RI_FINAL a
  left join $db_output.bed_days_pub_csv b
  on a.region_code = b.bd_region_code
@@ -1277,14 +1282,14 @@
  and a.gendername = b.bd_gendername
  and b.bd_bame_group = 'NULL'
  and b.bd_age_group = 'NULL'
- and b.bd_specialised_service = 'NULL'
+ -- and b.bd_specialised_service = 'NULL'
  and b.bd_lowerethnicitycode = 'NULL'
  and b.bd_lowerethnicity = 'NULL'
  and b.bd_upperethnicitycode = 'NULL'
  and b.bd_upperethnicityname = 'NULL'
  and b.bd_age_category = 'NULL'
- and b.bd_siteidoftreat = 'NULL'
- and b.bd_site_name = 'NULL'
+ -- and b.bd_siteidoftreat = 'NULL'
+ -- and b.bd_site_name = 'NULL'
  and b.bd_provider_type = 'NULL'
  and b.bd_length_of_restraint = 'NULL'
  where person_id is not null
@@ -1294,10 +1299,10 @@
 
 # DBTITLE 1,MHS96 - Region; Provider; Restrictive Intervention Type; Upper Ethnicity
  %sql
- insert into $db_output.restraints_final_output1
+ insert into $db_output.restraints_final_output
  select
  '$rp_startdate' as ReportingPeriodStartDate,
- '$rp_enddate' as ReportingPeriodEndDate,
+ '$rp_enddate' as ReportingPeriodEndDate, '$status' as status,
  'Region; Provider; Restrictive Intervention Type; Upper Ethnicity' as breakdown,
  region_code as level_one,
  region_name as level_one_description,
@@ -1312,7 +1317,7 @@
  'NULL' as level_six,
  'NULL' as level_six_description,
  'MHS96' as metric,
- (count(distinct mhs505uniqid)/b.bed_days) * 1000 as metric_value
+ (count(distinct UniqRestrictiveIntIncID, UniqRestrictiveIntTypeID)/b.bed_days) * 1000 as metric_value
  from $db_output.RI_FINAL a
  left join $db_output.bed_days_pub_csv b
  on a.region_code = b.bd_region_code
@@ -1325,12 +1330,12 @@
  and b.bd_gendername = 'NULL'
  and b.bd_bame_group = 'NULL'
  and b.bd_age_group = 'NULL'
- and b.bd_specialised_service = 'NULL'
+ -- and b.bd_specialised_service = 'NULL'
  and b.bd_lowerethnicitycode = 'NULL'
  and b.bd_lowerethnicity = 'NULL'
  and b.bd_age_category = 'NULL'
- and b.bd_siteidoftreat = 'NULL'
- and b.bd_site_name = 'NULL'
+ -- and b.bd_siteidoftreat = 'NULL'
+ -- and b.bd_site_name = 'NULL'
  and b.bd_provider_type = 'NULL'
  and b.bd_length_of_restraint = 'NULL'
  where person_id is not null
@@ -1340,10 +1345,10 @@
 
 # DBTITLE 1,MHS96 - Region; Provider; Restrictive Intervention Type; Lower Ethnicity
  %sql
- insert into $db_output.restraints_final_output1
+ insert into $db_output.restraints_final_output
  select
  '$rp_startdate' as ReportingPeriodStartDate,
- '$rp_enddate' as ReportingPeriodEndDate,
+ '$rp_enddate' as ReportingPeriodEndDate, '$status' as status,
  'Region; Provider; Restrictive Intervention Type; Lower Ethnicity' as breakdown,
  region_code as level_one,
  region_name as level_one_description,
@@ -1358,7 +1363,7 @@
  'NULL' as level_six,
  'NULL' as level_six_description,
  'MHS96' as metric,
- (count(distinct mhs505uniqid)/b.bed_days) * 1000 as metric_value
+ (count(distinct UniqRestrictiveIntIncID, UniqRestrictiveIntTypeID)/b.bed_days) * 1000 as metric_value
  from $db_output.RI_FINAL a
  left join $db_output.bed_days_pub_csv b
  on a.region_code = b.bd_region_code
@@ -1373,10 +1378,10 @@
  and b.bd_gendername = 'NULL'
  and b.bd_bame_group = 'NULL'
  and b.bd_age_group = 'NULL'
- and b.bd_specialised_service = 'NULL'
+ -- and b.bd_specialised_service = 'NULL'
  and b.bd_age_category = 'NULL'
- and b.bd_siteidoftreat = 'NULL'
- and b.bd_site_name = 'NULL'
+ -- and b.bd_siteidoftreat = 'NULL'
+ -- and b.bd_site_name = 'NULL'
  and b.bd_provider_type = 'NULL'
  and b.bd_length_of_restraint = 'NULL'
  where person_id is not null
@@ -1384,12 +1389,12 @@
 
 # COMMAND ----------
 
-# DBTITLE 1,MHS96 - Region; Specialised Commissioning Service; Restrictive Intervention Type; Age Category
+# DBTITLE 1,MHS116 - Region; Specialised Commissioning Service; Restrictive Intervention Type; Age Category
  %sql
- insert into $db_output.restraints_final_output1
+ insert into $db_output.restraints_final_output
  select
  '$rp_startdate' as ReportingPeriodStartDate,
- '$rp_enddate' as ReportingPeriodEndDate,
+ '$rp_enddate' as ReportingPeriodEndDate, '$status' as status,
  'Region; Specialised Commissioning Service; Restrictive Intervention Type; Age Category' as breakdown,
  region_code as level_one,
  region_name as level_one_description,
@@ -1403,10 +1408,10 @@
  'NULL' as level_five_description,
  'NULL' as level_six,
  'NULL' as level_six_description,
- 'MHS96' as metric,
- (count(distinct mhs505uniqid)/b.bed_days) * 1000 as metric_value
+ 'MHS117' as metric,
+ (count(distinct UniqRestrictiveIntIncID, UniqRestrictiveIntTypeID)/b.bed_days) * 1000 as metric_value
  from $db_output.RI_FINAL a
- left join $db_output.bed_days_pub_csv b
+ left join $db_output.WS_bed_days_pub_csv b
  on a.region_code = b.bd_region_code
  and a.region_name = b.bd_region_name
  and a.specialised_service = b.bd_specialised_service
@@ -1424,18 +1429,18 @@
  and b.bd_siteidoftreat = 'NULL'
  and b.bd_site_name = 'NULL'
  and b.bd_provider_type = 'NULL'
- and b.bd_length_of_restraint = 'NULL'
- where person_id is not null
+ --and b.bd_length_of_restraint = 'NULL'
+ where person_id is not null and ss_type_ward_Rank = 1 and a.specialised_service <>  'No associated Ward Stay'                          -------------------------WS flag changes-------
  group by region_code, region_name, specialised_service, restrictiveintcode, restrictiveintname, age_category, b.bed_days  
 
 # COMMAND ----------
 
-# DBTITLE 1,MHS96 - Region; Specialised Commissioning Service; Restrictive Intervention Type; Age Group
+# DBTITLE 1,MHS116 - Region; Specialised Commissioning Service; Restrictive Intervention Type; Age Group
  %sql
- insert into $db_output.restraints_final_output1
+ insert into $db_output.restraints_final_output
  select
  '$rp_startdate' as ReportingPeriodStartDate,
- '$rp_enddate' as ReportingPeriodEndDate,
+ '$rp_enddate' as ReportingPeriodEndDate, '$status' as status,
  'Region; Specialised Commissioning Service; Restrictive Intervention Type; Age Group' as breakdown,
  region_code as level_one,
  region_name as level_one_description,
@@ -1449,10 +1454,10 @@
  'NULL' as level_five_description,
  'NULL' as level_six,
  'NULL' as level_six_description,
- 'MHS96' as metric,
- (count(distinct mhs505uniqid)/b.bed_days) * 1000 as metric_value
+ 'MHS117' as metric,
+ (count(distinct UniqRestrictiveIntIncID, UniqRestrictiveIntTypeID)/b.bed_days) * 1000 as metric_value
  from $db_output.RI_FINAL a
- left join $db_output.bed_days_pub_csv b
+ left join $db_output.WS_bed_days_pub_csv b
  on a.region_code = b.bd_region_code
  and a.region_name = b.bd_region_name
  and a.specialised_service = b.bd_specialised_service
@@ -1470,18 +1475,18 @@
  and b.bd_siteidoftreat = 'NULL'
  and b.bd_site_name = 'NULL'
  and b.bd_provider_type = 'NULL'
- and b.bd_length_of_restraint = 'NULL'
- where person_id is not null
+ ---and b.bd_length_of_restraint = 'NULL'
+ where person_id is not null and ss_type_ward_Rank = 1  and a.specialised_service <>  'No associated Ward Stay'                         -------------------------WS flag changes-------
  group by region_code, region_name, specialised_service, restrictiveintcode, restrictiveintname, age_group, b.bed_days  
 
 # COMMAND ----------
 
-# DBTITLE 1,MHS96 - Region; Specialised Commissioning Service; Restrictive Intervention Type; BAME Group
+# DBTITLE 1,MHS116 - Region; Specialised Commissioning Service; Restrictive Intervention Type; BAME Group
  %sql
- insert into $db_output.restraints_final_output1
+ insert into $db_output.restraints_final_output
  select
  '$rp_startdate' as ReportingPeriodStartDate,
- '$rp_enddate' as ReportingPeriodEndDate,
+ '$rp_enddate' as ReportingPeriodEndDate, '$status' as status,
  'Region; Specialised Commissioning Service; Restrictive Intervention Type; BAME Group' as breakdown,
  region_code as level_one,
  region_name as level_one_description,
@@ -1495,10 +1500,10 @@
  'NULL' as level_five_description,
  'NULL' as level_six,
  'NULL' as level_six_description,
- 'MHS96' as metric,
- (count(distinct mhs505uniqid)/b.bed_days) * 1000 as metric_value
+ 'MHS117' as metric,
+ (count(distinct UniqRestrictiveIntIncID, UniqRestrictiveIntTypeID)/b.bed_days) * 1000 as metric_value
  from $db_output.RI_FINAL a
- left join $db_output.bed_days_pub_csv b
+ left join $db_output.WS_bed_days_pub_csv b
  on a.region_code = b.bd_region_code
  and a.region_name = b.bd_region_name
  and a.specialised_service = b.bd_specialised_service
@@ -1516,18 +1521,18 @@
  and b.bd_siteidoftreat = 'NULL'
  and b.bd_site_name = 'NULL'
  and b.bd_provider_type = 'NULL'
- and b.bd_length_of_restraint = 'NULL'
- where person_id is not null
+ --and b.bd_length_of_restraint = 'NULL'
+ where person_id is not null and ss_type_ward_Rank = 1 and a.specialised_service <>  'No associated Ward Stay'                          -------------------------WS flag changes-------
  group by region_code, region_name, specialised_service, restrictiveintcode, restrictiveintname, bame_group, b.bed_days 
 
 # COMMAND ----------
 
-# DBTITLE 1,MHS96 - Region; Specialised Commissioning Service; Restrictive Intervention Type; Gender
+# DBTITLE 1,MHS116 - Region; Specialised Commissioning Service; Restrictive Intervention Type; Gender
  %sql
- insert into $db_output.restraints_final_output1
+ insert into $db_output.restraints_final_output
  select
  '$rp_startdate' as ReportingPeriodStartDate,
- '$rp_enddate' as ReportingPeriodEndDate,
+ '$rp_enddate' as ReportingPeriodEndDate, '$status' as status,
  'Region; Specialised Commissioning Service; Restrictive Intervention Type; Gender' as breakdown,
  region_code as level_one,
  region_name as level_one_description,
@@ -1541,10 +1546,10 @@
  'NULL' as level_five_description,
  'NULL' as level_six,
  'NULL' as level_six_description,
- 'MHS96' as metric,
- (count(distinct mhs505uniqid)/b.bed_days) * 1000 as metric_value
+ 'MHS117' as metric,
+ (count(distinct UniqRestrictiveIntIncID, UniqRestrictiveIntTypeID)/b.bed_days) * 1000 as metric_value
  from $db_output.RI_FINAL a
- left join $db_output.bed_days_pub_csv b
+ left join $db_output.WS_bed_days_pub_csv b
  on a.region_code = b.bd_region_code
  and a.region_name = b.bd_region_name
  and a.specialised_service = b.bd_specialised_service
@@ -1562,18 +1567,18 @@
  and b.bd_siteidoftreat = 'NULL'
  and b.bd_site_name = 'NULL'
  and b.bd_provider_type = 'NULL'
- and b.bd_length_of_restraint = 'NULL'
- where person_id is not null
+ ----and b.bd_length_of_restraint = 'NULL'
+ where person_id is not null and ss_type_ward_Rank = 1 and a.specialised_service <>  'No associated Ward Stay'                          -------------------------WS flag changes-------
  group by region_code, region_name, specialised_service, restrictiveintcode, restrictiveintname, gendercode, gendername, b.bed_days 
 
 # COMMAND ----------
 
-# DBTITLE 1,MHS96 - Region; Specialised Commissioning Service; Restrictive Intervention Type; Upper Ethnicity
+# DBTITLE 1,MHS116 - Region; Specialised Commissioning Service; Restrictive Intervention Type; Upper Ethnicity
  %sql
- insert into $db_output.restraints_final_output1
+ insert into $db_output.restraints_final_output
  select
  '$rp_startdate' as ReportingPeriodStartDate,
- '$rp_enddate' as ReportingPeriodEndDate,
+ '$rp_enddate' as ReportingPeriodEndDate, '$status' as status,
  'Region; Specialised Commissioning Service; Restrictive Intervention Type; Upper Ethnicity' as breakdown,
  region_code as level_one,
  region_name as level_one_description,
@@ -1587,10 +1592,10 @@
  'NULL' as level_five_description,
  'NULL' as level_six,
  'NULL' as level_six_description,
- 'MHS96' as metric,
- (count(distinct mhs505uniqid)/b.bed_days) * 1000 as metric_value
+ 'MHS117' as metric,
+ (count(distinct UniqRestrictiveIntIncID, UniqRestrictiveIntTypeID)/b.bed_days) * 1000 as metric_value
  from $db_output.RI_FINAL a
- left join $db_output.bed_days_pub_csv b
+ left join $db_output.WS_bed_days_pub_csv b
  on a.region_code = b.bd_region_code
  and a.region_name = b.bd_region_name
  and a.specialised_service = b.bd_specialised_service
@@ -1608,18 +1613,18 @@
  and b.bd_siteidoftreat = 'NULL'
  and b.bd_site_name = 'NULL'
  and b.bd_provider_type = 'NULL'
- and b.bd_length_of_restraint = 'NULL'
- where person_id is not null
+ ----and b.bd_length_of_restraint = 'NULL'
+ where person_id is not null and ss_type_ward_Rank = 1 and a.specialised_service <>  'No associated Ward Stay'                                -------------------------WS flag changes-------
  group by region_code, region_name, specialised_service, restrictiveintcode, restrictiveintname, upperethnicitycode, upperethnicityname, b.bed_days  
 
 # COMMAND ----------
 
-# DBTITLE 1,MHS96 - Region; Specialised Commissioning Service; Restrictive Intervention Type; Lower Ethnicity
+# DBTITLE 1,MHS116 - Region; Specialised Commissioning Service; Restrictive Intervention Type; Lower Ethnicity
  %sql
- insert into $db_output.restraints_final_output1
+ insert into $db_output.restraints_final_output
  select
  '$rp_startdate' as ReportingPeriodStartDate,
- '$rp_enddate' as ReportingPeriodEndDate,
+ '$rp_enddate' as ReportingPeriodEndDate, '$status' as status,
  'Region; Specialised Commissioning Service; Restrictive Intervention Type; Lower Ethnicity' as breakdown,
  region_code as level_one,
  region_name as level_one_description,
@@ -1633,10 +1638,10 @@
  'NULL' as level_five_description,
  'NULL' as level_six,
  'NULL' as level_six_description,
- 'MHS96' as metric,
- (count(distinct mhs505uniqid)/b.bed_days) * 1000 as metric_value
+ 'MHS117' as metric,
+ (count(distinct UniqRestrictiveIntIncID, UniqRestrictiveIntTypeID)/b.bed_days) * 1000 as metric_value
  from $db_output.RI_FINAL a
- left join $db_output.bed_days_pub_csv b
+ left join $db_output.WS_bed_days_pub_csv b
  on a.region_code = b.bd_region_code
  and a.region_name = b.bd_region_name
  and a.specialised_service = b.bd_specialised_service
@@ -1654,18 +1659,18 @@
  and b.bd_siteidoftreat = 'NULL'
  and b.bd_site_name = 'NULL'
  and b.bd_provider_type = 'NULL'
- and b.bd_length_of_restraint = 'NULL'
- where person_id is not null
+ ---and b.bd_length_of_restraint = 'NULL'
+ where person_id is not null and ss_type_ward_Rank = 1 and a.specialised_service <>  'No associated Ward Stay'                                -------------------------WS flag changes-------
  group by region_code, region_name, specialised_service, restrictiveintcode, restrictiveintname, lowerethnicitycode, lowerethnicity, b.bed_days  
 
 # COMMAND ----------
 
-# DBTITLE 1,MHS96 - Region; Provider; Specialised Commissioning Service; Restrictive Intervention Type; Age Category
+# DBTITLE 1,MHS116 - Region; Provider; Specialised Commissioning Service; Restrictive Intervention Type; Age Category
  %sql
- insert into $db_output.restraints_final_output1
+ insert into $db_output.restraints_final_output
  select
  '$rp_startdate' as ReportingPeriodStartDate,
- '$rp_enddate' as ReportingPeriodEndDate,
+ '$rp_enddate' as ReportingPeriodEndDate, '$status' as status,
  'Region; Provider; Specialised Commissioning Service; Restrictive Intervention Type; Age Category' as breakdown,
  region_code as level_one,
  region_name as level_one_description,
@@ -1679,10 +1684,10 @@
  age_category as level_five_description,
  'NULL' as level_six,
  'NULL' as level_six_description,
- 'MHS96' as metric,
- (count(distinct mhs505uniqid)/b.bed_days) * 1000 as metric_value
+ 'MHS117' as metric,
+ (count(distinct UniqRestrictiveIntIncID, UniqRestrictiveIntTypeID)/b.bed_days) * 1000 as metric_value
  from $db_output.RI_FINAL a
- left join $db_output.bed_days_pub_csv b
+ left join $db_output.WS_bed_days_pub_csv b
  on a.region_code = b.bd_region_code
  and a.region_name = b.bd_region_name
  and a.orgidprov = b.bd_orgidprov 
@@ -1700,18 +1705,18 @@
  and b.bd_siteidoftreat = 'NULL'
  and b.bd_site_name = 'NULL'
  and b.bd_provider_type = 'NULL'
- and b.bd_length_of_restraint = 'NULL'
- where person_id is not null
+ ----and b.bd_length_of_restraint = 'NULL'
+ where person_id is not null and ss_type_ward_Rank = 1 and a.specialised_service <>  'No associated Ward Stay'                                -------------------------WS flag changes-------
  group by region_code, region_name, orgidprov, orgidname, specialised_service, restrictiveintcode, restrictiveintname, age_category, b.bed_days
 
 # COMMAND ----------
 
-# DBTITLE 1,MHS96 - Region; Provider; Specialised Commissioning Service; Restrictive Intervention Type; Age Group
+# DBTITLE 1,MHS116 - Region; Provider; Specialised Commissioning Service; Restrictive Intervention Type; Age Group
  %sql
- insert into $db_output.restraints_final_output1
+ insert into $db_output.restraints_final_output
  select
  '$rp_startdate' as ReportingPeriodStartDate,
- '$rp_enddate' as ReportingPeriodEndDate,
+ '$rp_enddate' as ReportingPeriodEndDate, '$status' as status,
  'Region; Provider; Specialised Commissioning Service; Restrictive Intervention Type; Age Group' as breakdown,
  region_code as level_one,
  region_name as level_one_description,
@@ -1725,10 +1730,10 @@
  age_group as level_five_description,
  'NULL' as level_six,
  'NULL' as level_six_description,
- 'MHS96' as metric,
- (count(distinct mhs505uniqid)/b.bed_days) * 1000 as metric_value
+ 'MHS117' as metric,
+ (count(distinct UniqRestrictiveIntIncID, UniqRestrictiveIntTypeID)/b.bed_days) * 1000 as metric_value
  from $db_output.RI_FINAL a
- left join $db_output.bed_days_pub_csv b
+ left join $db_output.WS_bed_days_pub_csv b
  on a.region_code = b.bd_region_code
  and a.region_name = b.bd_region_name
  and a.orgidprov = b.bd_orgidprov 
@@ -1746,18 +1751,18 @@
  and b.bd_siteidoftreat = 'NULL'
  and b.bd_site_name = 'NULL'
  and b.bd_provider_type = 'NULL'
- and b.bd_length_of_restraint = 'NULL'
- where person_id is not null
+ ---and b.bd_length_of_restraint = 'NULL'
+ where person_id is not null and ss_type_ward_Rank = 1 and a.specialised_service <>  'No associated Ward Stay'                                 -------------------------WS flag changes-------
  group by region_code, region_name, orgidprov, orgidname, specialised_service, restrictiveintcode, restrictiveintname, age_group, b.bed_days
 
 # COMMAND ----------
 
-# DBTITLE 1,MHS96 - Region; Provider; Specialised Commissioning Service; Restrictive Intervention Type; BAME Group
+# DBTITLE 1,MHS116 - Region; Provider; Specialised Commissioning Service; Restrictive Intervention Type; BAME Group
  %sql
- insert into $db_output.restraints_final_output1
+ insert into $db_output.restraints_final_output
  select
  '$rp_startdate' as ReportingPeriodStartDate,
- '$rp_enddate' as ReportingPeriodEndDate,
+ '$rp_enddate' as ReportingPeriodEndDate, '$status' as status,
  'Region; Provider; Specialised Commissioning Service; Restrictive Intervention Type; BAME Group' as breakdown,
  region_code as level_one,
  region_name as level_one_description,
@@ -1771,10 +1776,10 @@
  bame_group as level_five_description,
  'NULL' as level_six,
  'NULL' as level_six_description,
- 'MHS96' as metric,
- (count(distinct mhs505uniqid)/b.bed_days) * 1000 as metric_value
+ 'MHS117' as metric,
+ (count(distinct UniqRestrictiveIntIncID, UniqRestrictiveIntTypeID)/b.bed_days) * 1000 as metric_value
  from $db_output.RI_FINAL a
- left join $db_output.bed_days_pub_csv b
+ left join $db_output.WS_bed_days_pub_csv b
  on a.region_code = b.bd_region_code
  and a.region_name = b.bd_region_name
  and a.orgidprov = b.bd_orgidprov 
@@ -1792,18 +1797,18 @@
  and b.bd_siteidoftreat = 'NULL'
  and b.bd_site_name = 'NULL'
  and b.bd_provider_type = 'NULL'
- and b.bd_length_of_restraint = 'NULL'
- where person_id is not null
+ ---and b.bd_length_of_restraint = 'NULL'
+ where person_id is not null and ss_type_ward_Rank = 1 and a.specialised_service <>  'No associated Ward Stay'                           -------------------------WS flag changes-------
  group by region_code, region_name, orgidprov, orgidname, specialised_service, restrictiveintcode, restrictiveintname, bame_group, b.bed_days
 
 # COMMAND ----------
 
-# DBTITLE 1,MHS96 - Region; Provider; Specialised Commissioning Service; Restrictive Intervention Type; Gender
+# DBTITLE 1,MHS116 - Region; Provider; Specialised Commissioning Service; Restrictive Intervention Type; Gender
  %sql
- insert into $db_output.restraints_final_output1
+ insert into $db_output.restraints_final_output
  select
  '$rp_startdate' as ReportingPeriodStartDate,
- '$rp_enddate' as ReportingPeriodEndDate,
+ '$rp_enddate' as ReportingPeriodEndDate, '$status' as status,
  'Region; Provider; Specialised Commissioning Service; Restrictive Intervention Type; Gender' as breakdown,
  region_code as level_one,
  region_name as level_one_description,
@@ -1817,10 +1822,10 @@
  gendername as level_five_description,
  'NULL' as level_six,
  'NULL' as level_six_description,
- 'MHS96' as metric,
- (count(distinct mhs505uniqid)/b.bed_days) * 1000 as metric_value
+ 'MHS117' as metric,
+ (count(distinct UniqRestrictiveIntIncID, UniqRestrictiveIntTypeID)/b.bed_days) * 1000 as metric_value
  from $db_output.RI_FINAL a
- left join $db_output.bed_days_pub_csv b
+ left join $db_output.WS_bed_days_pub_csv b
  on a.region_code = b.bd_region_code
  and a.region_name = b.bd_region_name
  and a.orgidprov = b.bd_orgidprov 
@@ -1838,18 +1843,18 @@
  and b.bd_siteidoftreat = 'NULL'
  and b.bd_site_name = 'NULL'
  and b.bd_provider_type = 'NULL'
- and b.bd_length_of_restraint = 'NULL'
- where person_id is not null
+ --and b.bd_length_of_restraint = 'NULL'
+ where person_id is not null and ss_type_ward_Rank = 1  and a.specialised_service <>  'No associated Ward Stay'                          -------------------------WS flag changes-------
  group by region_code, region_name, orgidprov, orgidname, specialised_service, restrictiveintcode, restrictiveintname, gendercode, gendername, b.bed_days
 
 # COMMAND ----------
 
-# DBTITLE 1,MHS96 - Region; Provider; Specialised Commissioning Service; Restrictive Intervention Type; Upper Ethnicity
+# DBTITLE 1,MHS116 - Region; Provider; Specialised Commissioning Service; Restrictive Intervention Type; Upper Ethnicity
  %sql
- insert into $db_output.restraints_final_output1
+ insert into $db_output.restraints_final_output
  select
  '$rp_startdate' as ReportingPeriodStartDate,
- '$rp_enddate' as ReportingPeriodEndDate,
+ '$rp_enddate' as ReportingPeriodEndDate, '$status' as status,
  'Region; Provider; Specialised Commissioning Service; Restrictive Intervention Type; Upper Ethnicity' as breakdown,
  region_code as level_one,
  region_name as level_one_description,
@@ -1863,10 +1868,10 @@
  upperethnicityname as level_five_description,
  'NULL' as level_six,
  'NULL' as level_six_description,
- 'MHS96' as metric,
- (count(distinct mhs505uniqid)/b.bed_days) * 1000 as metric_value
+ 'MHS117' as metric,
+ (count(distinct UniqRestrictiveIntIncID, UniqRestrictiveIntTypeID)/b.bed_days) * 1000 as metric_value
  from $db_output.RI_FINAL a
- left join $db_output.bed_days_pub_csv b
+ left join $db_output.WS_bed_days_pub_csv b
  on a.region_code = b.bd_region_code
  and a.region_name = b.bd_region_name
  and a.orgidprov = b.bd_orgidprov 
@@ -1884,18 +1889,18 @@
  and b.bd_siteidoftreat = 'NULL'
  and b.bd_site_name = 'NULL'
  and b.bd_provider_type = 'NULL'
- and b.bd_length_of_restraint = 'NULL'
- where person_id is not null
+ --and b.bd_length_of_restraint = 'NULL'
+ where person_id is not null and ss_type_ward_Rank = 1  and a.specialised_service <>  'No associated Ward Stay'                         -------------------------WS flag changes-------
  group by region_code, region_name, orgidprov, orgidname, specialised_service, restrictiveintcode, restrictiveintname, upperethnicitycode, upperethnicityname, b.bed_days 
 
 # COMMAND ----------
 
-# DBTITLE 1,MHS96 - Region; Provider; Specialised Commissioning Service; Restrictive Intervention Type; Lower Ethnicity
+# DBTITLE 1,MHS116 - Region; Provider; Specialised Commissioning Service; Restrictive Intervention Type; Lower Ethnicity
  %sql
- insert into $db_output.restraints_final_output1
+ insert into $db_output.restraints_final_output
  select
  '$rp_startdate' as ReportingPeriodStartDate,
- '$rp_enddate' as ReportingPeriodEndDate,
+ '$rp_enddate' as ReportingPeriodEndDate, '$status' as status,
  'Region; Provider; Specialised Commissioning Service; Restrictive Intervention Type; Lower Ethnicity' as breakdown,
  region_code as level_one,
  region_name as level_one_description,
@@ -1909,10 +1914,10 @@
  lowerethnicity as level_five_description,
  'NULL' as level_six,
  'NULL' as level_six_description,
- 'MHS96' as metric,
- (count(distinct mhs505uniqid)/b.bed_days) * 1000 as metric_value
+ 'MHS117' as metric,
+ (count(distinct UniqRestrictiveIntIncID, UniqRestrictiveIntTypeID)/b.bed_days) * 1000 as metric_value
  from $db_output.RI_FINAL a
- left join $db_output.bed_days_pub_csv b
+ left join $db_output.WS_bed_days_pub_csv b
  on a.region_code = b.bd_region_code
  and a.region_name = b.bd_region_name
  and a.orgidprov = b.bd_orgidprov 
@@ -1930,18 +1935,18 @@
  and b.bd_siteidoftreat = 'NULL'
  and b.bd_site_name = 'NULL'
  and b.bd_provider_type = 'NULL'
- and b.bd_length_of_restraint = 'NULL'
- where person_id is not null
+ --and b.bd_length_of_restraint = 'NULL'
+ where person_id is not null and ss_type_ward_Rank = 1  and a.specialised_service <>  'No associated Ward Stay'                           -------------------------WS flag changes-------
  group by region_code, region_name, orgidprov, orgidname, specialised_service, restrictiveintcode, restrictiveintname, lowerethnicitycode, lowerethnicity, b.bed_days  
 
 # COMMAND ----------
 
-# DBTITLE 1,MHS96 - Provider; Specialised Commissioning Service; Restrictive Intervention Type; Age Category
+# DBTITLE 1,MHS116 - Provider; Specialised Commissioning Service; Restrictive Intervention Type; Age Category
  %sql
- insert into $db_output.restraints_final_output1
+ insert into $db_output.restraints_final_output
  select
  '$rp_startdate' as ReportingPeriodStartDate,
- '$rp_enddate' as ReportingPeriodEndDate,
+ '$rp_enddate' as ReportingPeriodEndDate, '$status' as status,
  'Provider; Specialised Commissioning Service; Restrictive Intervention Type; Age Category' as breakdown,
  orgidprov as level_one,
  orgidname as level_one_description,
@@ -1955,10 +1960,10 @@
  'NULL' as level_five_description,
  'NULL' as level_six,
  'NULL' as level_six_description,
- 'MHS96' as metric,
- (count(distinct mhs505uniqid)/b.bed_days) * 1000 as metric_value
+ 'MHS117' as metric,
+ (count(distinct UniqRestrictiveIntIncID, UniqRestrictiveIntTypeID)/b.bed_days) * 1000 as metric_value
  from $db_output.RI_FINAL a
- left join $db_output.bed_days_pub_csv b
+ left join $db_output.WS_bed_days_pub_csv b
  on a.orgidprov = b.bd_orgidprov 
  and a.orgidname = b.bd_orgidname 
  and a.specialised_service = b.bd_specialised_service
@@ -1976,18 +1981,18 @@
  and b.bd_siteidoftreat = 'NULL'
  and b.bd_site_name = 'NULL'
  and b.bd_provider_type = 'NULL'
- and b.bd_length_of_restraint = 'NULL'
- where person_id is not null
+ --and b.bd_length_of_restraint = 'NULL'
+ where person_id is not null and ss_type_ward_Rank = 1  and a.specialised_service <>  'No associated Ward Stay'                           -------------------------WS flag changes-------
  group by orgidprov, orgidname, specialised_service, restrictiveintcode, restrictiveintname, age_category, b.bed_days   
 
 # COMMAND ----------
 
-# DBTITLE 1,MHS96 - Provider; Specialised Commissioning Service; Restrictive Intervention Type; Age Group
+# DBTITLE 1,MHS116 - Provider; Specialised Commissioning Service; Restrictive Intervention Type; Age Group
  %sql
- insert into $db_output.restraints_final_output1
+ insert into $db_output.restraints_final_output
  select
  '$rp_startdate' as ReportingPeriodStartDate,
- '$rp_enddate' as ReportingPeriodEndDate,
+ '$rp_enddate' as ReportingPeriodEndDate, '$status' as status,
  'Provider; Specialised Commissioning Service; Restrictive Intervention Type; Age Group' as breakdown,
  orgidprov as level_one,
  orgidname as level_one_description,
@@ -2001,10 +2006,10 @@
  'NULL' as level_five_description,
  'NULL' as level_six,
  'NULL' as level_six_description,
- 'MHS96' as metric,
- (count(distinct mhs505uniqid)/b.bed_days) * 1000 as metric_value
+ 'MHS117' as metric,
+ (count(distinct UniqRestrictiveIntIncID, UniqRestrictiveIntTypeID)/b.bed_days) * 1000 as metric_value
  from $db_output.RI_FINAL a
- left join $db_output.bed_days_pub_csv b
+ left join $db_output.WS_bed_days_pub_csv b
  on a.orgidprov = b.bd_orgidprov 
  and a.orgidname = b.bd_orgidname 
  and a.specialised_service = b.bd_specialised_service
@@ -2022,18 +2027,18 @@
  and b.bd_siteidoftreat = 'NULL'
  and b.bd_site_name = 'NULL'
  and b.bd_provider_type = 'NULL'
- and b.bd_length_of_restraint = 'NULL'
- where person_id is not null
+ --and b.bd_length_of_restraint = 'NULL'
+ where person_id is not null and ss_type_ward_Rank = 1  and a.specialised_service <>  'No associated Ward Stay'                           -------------------------WS flag changes-------
  group by orgidprov, orgidname, specialised_service, restrictiveintcode, restrictiveintname, age_group, b.bed_days   
 
 # COMMAND ----------
 
-# DBTITLE 1,MHS96 - Provider; Specialised Commissioning Service; Restrictive Intervention Type; BAME Group
+# DBTITLE 1,MHS116 - Provider; Specialised Commissioning Service; Restrictive Intervention Type; BAME Group
  %sql
- insert into $db_output.restraints_final_output1
+ insert into $db_output.restraints_final_output
  select
  '$rp_startdate' as ReportingPeriodStartDate,
- '$rp_enddate' as ReportingPeriodEndDate,
+ '$rp_enddate' as ReportingPeriodEndDate, '$status' as status,
  'Provider; Specialised Commissioning Service; Restrictive Intervention Type; BAME Group' as breakdown,
  orgidprov as level_one,
  orgidname as level_one_description,
@@ -2047,10 +2052,10 @@
  'NULL' as level_five_description,
  'NULL' as level_six,
  'NULL' as level_six_description,
- 'MHS96' as metric,
- (count(distinct mhs505uniqid)/b.bed_days) * 1000 as metric_value
+ 'MHS117' as metric,
+ (count(distinct UniqRestrictiveIntIncID, UniqRestrictiveIntTypeID)/b.bed_days) * 1000 as metric_value
  from $db_output.RI_FINAL a
- left join $db_output.bed_days_pub_csv b
+ left join $db_output.WS_bed_days_pub_csv b
  on a.orgidprov = b.bd_orgidprov 
  and a.orgidname = b.bd_orgidname 
  and a.specialised_service = b.bd_specialised_service
@@ -2068,18 +2073,18 @@
  and b.bd_siteidoftreat = 'NULL'
  and b.bd_site_name = 'NULL'
  and b.bd_provider_type = 'NULL'
- and b.bd_length_of_restraint = 'NULL'
- where person_id is not null
+ --and b.bd_length_of_restraint = 'NULL'
+ where person_id is not null and ss_type_ward_Rank = 1  and a.specialised_service <>  'No associated Ward Stay'                          -------------------------WS flag changes-------
  group by orgidprov, orgidname, specialised_service, restrictiveintcode, restrictiveintname, bame_group, b.bed_days  
 
 # COMMAND ----------
 
-# DBTITLE 1,MHS96 - Provider; Specialised Commissioning Service; Restrictive Intervention Type; Gender
+# DBTITLE 1,MHS116 - Provider; Specialised Commissioning Service; Restrictive Intervention Type; Gender
  %sql
- insert into $db_output.restraints_final_output1
+ insert into $db_output.restraints_final_output
  select
  '$rp_startdate' as ReportingPeriodStartDate,
- '$rp_enddate' as ReportingPeriodEndDate,
+ '$rp_enddate' as ReportingPeriodEndDate, '$status' as status,
  'Provider; Specialised Commissioning Service; Restrictive Intervention Type; Gender' as breakdown,
  orgidprov as level_one,
  orgidname as level_one_description,
@@ -2093,10 +2098,10 @@
  'NULL' as level_five_description,
  'NULL' as level_six,
  'NULL' as level_six_description,
- 'MHS96' as metric,
- (count(distinct mhs505uniqid)/b.bed_days) * 1000 as metric_value
+ 'MHS117' as metric,
+ (count(distinct UniqRestrictiveIntIncID, UniqRestrictiveIntTypeID)/b.bed_days) * 1000 as metric_value
  from $db_output.RI_FINAL a
- left join $db_output.bed_days_pub_csv b
+ left join $db_output.WS_bed_days_pub_csv b
  on a.orgidprov = b.bd_orgidprov 
  and a.orgidname = b.bd_orgidname 
  and a.specialised_service = b.bd_specialised_service
@@ -2114,18 +2119,18 @@
  and b.bd_siteidoftreat = 'NULL'
  and b.bd_site_name = 'NULL'
  and b.bd_provider_type = 'NULL'
- and b.bd_length_of_restraint = 'NULL'
- where person_id is not null
+ --and b.bd_length_of_restraint = 'NULL'
+ where person_id is not null and ss_type_ward_Rank = 1  and a.specialised_service <>  'No associated Ward Stay'                          -------------------------WS flag changes-------
  group by orgidprov, orgidname, specialised_service, restrictiveintcode, restrictiveintname, gendercode, gendername, b.bed_days
 
 # COMMAND ----------
 
-# DBTITLE 1,MHS96 - Provider; Specialised Commissioning Service; Restrictive Intervention Type; Upper Ethnicity
+# DBTITLE 1,MHS116 - Provider; Specialised Commissioning Service; Restrictive Intervention Type; Upper Ethnicity
  %sql
- insert into $db_output.restraints_final_output1
+ insert into $db_output.restraints_final_output
  select
  '$rp_startdate' as ReportingPeriodStartDate,
- '$rp_enddate' as ReportingPeriodEndDate,
+ '$rp_enddate' as ReportingPeriodEndDate, '$status' as status,
  'Provider; Specialised Commissioning Service; Restrictive Intervention Type; Upper Ethnicity' as breakdown,
  orgidprov as level_one,
  orgidname as level_one_description,
@@ -2139,10 +2144,10 @@
  'NULL' as level_five_description,
  'NULL' as level_six,
  'NULL' as level_six_description,
- 'MHS96' as metric,
- (count(distinct mhs505uniqid)/b.bed_days) * 1000 as metric_value
+ 'MHS117' as metric,
+ (count(distinct UniqRestrictiveIntIncID, UniqRestrictiveIntTypeID)/b.bed_days) * 1000 as metric_value
  from $db_output.RI_FINAL a
- left join $db_output.bed_days_pub_csv b
+ left join $db_output.WS_bed_days_pub_csv b
  on a.orgidprov = b.bd_orgidprov 
  and a.orgidname = b.bd_orgidname 
  and a.specialised_service = b.bd_specialised_service
@@ -2160,18 +2165,18 @@
  and b.bd_siteidoftreat = 'NULL'
  and b.bd_site_name = 'NULL'
  and b.bd_provider_type = 'NULL'
- and b.bd_length_of_restraint = 'NULL'
- where person_id is not null
+ --and b.bd_length_of_restraint = 'NULL'
+ where person_id is not null and ss_type_ward_Rank = 1  and a.specialised_service <>  'No associated Ward Stay'                          -------------------------WS flag changes-------
  group by orgidprov, orgidname, specialised_service, restrictiveintcode, restrictiveintname, upperethnicitycode, upperethnicityname, b.bed_days 
 
 # COMMAND ----------
 
-# DBTITLE 1,MHS96 - Provider; Specialised Commissioning Service; Restrictive Intervention Type; Lower Ethnicity
+# DBTITLE 1,MHS116 - Provider; Specialised Commissioning Service; Restrictive Intervention Type; Lower Ethnicity
  %sql
- insert into $db_output.restraints_final_output1
+ insert into $db_output.restraints_final_output
  select
  '$rp_startdate' as ReportingPeriodStartDate,
- '$rp_enddate' as ReportingPeriodEndDate,
+ '$rp_enddate' as ReportingPeriodEndDate, '$status' as status,
  'Provider; Specialised Commissioning Service; Restrictive Intervention Type; Lower Ethnicity' as breakdown,
  orgidprov as level_one,
  orgidname as level_one_description,
@@ -2185,10 +2190,10 @@
  'NULL' as level_five_description,
  'NULL' as level_six,
  'NULL' as level_six_description,
- 'MHS96' as metric,
- (count(distinct mhs505uniqid)/b.bed_days) * 1000 as metric_value
+ 'MHS117' as metric,
+ (count(distinct UniqRestrictiveIntIncID, UniqRestrictiveIntTypeID)/b.bed_days) * 1000 as metric_value
  from $db_output.RI_FINAL a
- left join $db_output.bed_days_pub_csv b
+ left join $db_output.WS_bed_days_pub_csv b
  on a.orgidprov = b.bd_orgidprov 
  and a.orgidname = b.bd_orgidname 
  and a.specialised_service = b.bd_specialised_service
@@ -2206,11 +2211,149 @@
  and b.bd_siteidoftreat = 'NULL'
  and b.bd_site_name = 'NULL'
  and b.bd_provider_type = 'NULL'
- and b.bd_length_of_restraint = 'NULL'
- where person_id is not null
+ ---and b.bd_length_of_restraint = 'NULL'
+ where person_id is not null and ss_type_ward_Rank = 1  and a.specialised_service <>  'No associated Ward Stay'                          -------------------------WS flag changes-------
  group by orgidprov, orgidname, specialised_service, restrictiveintcode, restrictiveintname, lowerethnicitycode, lowerethnicity, b.bed_days  
 
 # COMMAND ----------
 
+# DBTITLE 1,MHS96 - England; Restrictive Intervention Type; Gender; Upper Ethnicity --TO CHECK
  %sql
- OPTIMIZE $db_output.restraints_final_output1
+ insert into $db_output.restraints_final_output
+ select
+ '$rp_startdate' as ReportingPeriodStartDate,
+ '$rp_enddate' as ReportingPeriodEndDate, '$status' as status,
+ 'England; Restrictive Intervention Type; Gender; Upper Ethnicity' as breakdown,
+ 'England' as level_one,
+ 'England' as level_one_description,
+ restrictiveintcode as level_two,
+ restrictiveintname as level_two_description,
+ gendercode as level_three,
+ gendername as level_three_description,
+ upperethnicitycode as level_four,
+ upperethnicityname as level_four_description,
+ 'NULL' as level_five,
+ 'NULL' as level_five_description,
+ 'NULL' as level_six,
+ 'NULL' as level_six_description,
+ 'MHS96' as metric,
+ (count(distinct UniqRestrictiveIntIncID, UniqRestrictiveIntTypeID)/b.bed_days) * 1000 as metric_value
+ from $db_output.RI_FINAL a
+ left join $db_output.bed_days_pub_csv b
+ on a.gendercode = b.bd_gendercode
+ and a.gendername = b.bd_gendername
+ and a.upperethnicitycode = b.bd_upperethnicitycode
+ and a.upperethnicityname = b.bd_upperethnicityname
+ and b.bd_bame_group = 'NULL'
+ and b.bd_age_group = 'NULL'
+ and b.bd_age_category = 'NULL'
+ and b.bd_region_code = 'NULL'
+ and b.bd_region_name = 'NULL'
+ and b.bd_lowerethnicitycode = 'NULL'
+ and b.bd_lowerethnicity = 'NULL'
+ and b.bd_orgidprov = 'NULL'
+ and b.bd_orgidname = 'NULL'
+ -- and b.bd_specialised_service = 'NULL' 
+ -- and b.bd_siteidoftreat = 'NULL'
+ -- and b.bd_site_name = 'NULL'
+ and b.bd_provider_type = 'NULL'
+ and b.bd_length_of_restraint = 'NULL'
+ where person_id is not null
+ group by restrictiveintcode, restrictiveintname, gendercode, gendername, upperethnicitycode, upperethnicityname, b.bed_days
+
+# COMMAND ----------
+
+# DBTITLE 1,MHS96 - England; Restrictive Intervention Type; Age Group; Upper Ethnicity --TO CHECK
+ %sql
+ insert into $db_output.restraints_final_output
+ select
+ '$rp_startdate' as ReportingPeriodStartDate,
+ '$rp_enddate' as ReportingPeriodEndDate, '$status' as status,
+ 'England; Restrictive Intervention Type; Age Group; Upper Ethnicity' as breakdown,
+ 'England' as level_one,
+ 'England' as level_one_description,
+ restrictiveintcode as level_two,
+ restrictiveintname as level_two_description,
+ age_group as level_three,
+ age_group as level_three_description,
+ upperethnicitycode as level_four,
+ upperethnicityname as level_four_description,
+ 'NULL' as level_five,
+ 'NULL' as level_five_description,
+ 'NULL' as level_six,
+ 'NULL' as level_six_description,
+ 'MHS96' as metric,
+ (count(distinct UniqRestrictiveIntIncID, UniqRestrictiveIntTypeID)/b.bed_days) * 1000 as metric_value
+ from $db_output.RI_FINAL a
+ left join $db_output.bed_days_pub_csv b
+ on a.age_group = b.bd_age_group
+ and a.upperethnicitycode = b.bd_upperethnicitycode
+ and a.upperethnicityname = b.bd_upperethnicityname
+ and b.bd_age_category = 'NULL'
+ and b.bd_region_code = 'NULL'
+ and b.bd_region_name = 'NULL'
+ and b.bd_gendercode = 'NULL' 
+ and b.bd_gendername = 'NULL'
+ and b.bd_lowerethnicitycode = 'NULL'
+ and b.bd_lowerethnicity = 'NULL'
+ and b.bd_orgidprov = 'NULL'
+ and b.bd_orgidname = 'NULL'
+ -- and b.bd_specialised_service = 'NULL' 
+ -- and b.bd_siteidoftreat = 'NULL'
+ -- and b.bd_site_name = 'NULL'
+ and b.bd_provider_type = 'NULL'
+ and b.bd_length_of_restraint = 'NULL'
+ and b.bd_bame_group = 'NULL'
+ where person_id is not null
+ group by restrictiveintcode, restrictiveintname, age_group, upperethnicitycode, upperethnicityname, b.bed_days
+
+# COMMAND ----------
+
+# DBTITLE 1,MHS96 - England; Restrictive Intervention Type; Gender; Lower Ethnicity --TO CHECK
+ %sql
+ insert into $db_output.restraints_final_output
+ select
+ '$rp_startdate' as ReportingPeriodStartDate,
+ '$rp_enddate' as ReportingPeriodEndDate, '$status' as status,
+ 'England; Restrictive Intervention Type; Gender; Lower Ethnicity' as breakdown,
+ 'England' as level_one,
+ 'England' as level_one_description,
+ restrictiveintcode as level_two,
+ restrictiveintname as level_two_description,
+ gendercode as level_three,
+ gendername as level_three_description,
+ lowerethnicitycode as level_four,
+ lowerethnicity as level_four_description,
+ 'NULL' as level_five,
+ 'NULL' as level_five_description,
+ 'NULL' as level_six,
+ 'NULL' as level_six_description,
+ 'MHS96' as metric,
+ (count(distinct UniqRestrictiveIntIncID, UniqRestrictiveIntTypeID)/b.bed_days) * 1000 as metric_value
+ from $db_output.RI_FINAL a
+ left join $db_output.bed_days_pub_csv b
+ on a.gendercode = b.bd_gendercode
+ and a.gendername = b.bd_gendername
+ and a.lowerethnicitycode = b.bd_lowerethnicitycode
+ and a.lowerethnicity = b.bd_lowerethnicity
+ and b.bd_bame_group = 'NULL'
+ and b.bd_age_group = 'NULL'
+ and b.bd_age_category = 'NULL'
+ and b.bd_region_code = 'NULL'
+ and b.bd_region_name = 'NULL'
+ and b.bd_upperethnicitycode = 'NULL'
+ and b.bd_upperethnicityname = 'NULL'
+ and b.bd_orgidprov = 'NULL'
+ and b.bd_orgidname = 'NULL'
+ -- and b.bd_specialised_service = 'NULL' 
+ -- and b.bd_siteidoftreat = 'NULL'
+ -- and b.bd_site_name = 'NULL'
+ and b.bd_provider_type = 'NULL'
+ and b.bd_length_of_restraint = 'NULL'
+ where person_id is not null
+ group by restrictiveintcode, restrictiveintname, gendercode, gendername, lowerethnicitycode, lowerethnicity, b.bed_days
+
+# COMMAND ----------
+
+ %sql
+ OPTIMIZE $db_output.restraints_final_output

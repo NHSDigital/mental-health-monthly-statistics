@@ -23,7 +23,8 @@ rp_startdate = dbutils.widgets.get("rp_startdate")
 # COMMAND ----------
 
  %sql
- CREATE OR REPLACE GLOBAL TEMP VIEW pre2_86 AS
+ DROP TABLE IF EXISTS $db_output.rest_dash_hosp_supp;
+ CREATE TABLE IF NOT EXISTS $db_output.rest_dash_hosp_supp AS
  select
  ReportingPeriodStartDate, 
  ReportingPeriodEndDate,

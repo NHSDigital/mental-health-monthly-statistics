@@ -1,21 +1,21 @@
 # Databricks notebook source
  %sql
- REFRESH TABLE $db_output.restraints_final_output1
+ REFRESH TABLE $db_output.restraints_final_output
 
 # COMMAND ----------
 
-# DBTITLE 1,MHS96 - Provider; Restrictive Intervention Type; Provider Site
+# DBTITLE 1,MHSXXa - Provider; Restrictive Intervention Type; Provider Site
  %sql
- insert into $db_output.restraints_final_output1
+ insert into $db_output.restraints_final_output
  select
  '$rp_startdate' as ReportingPeriodStartDate,
- '$rp_enddate' as ReportingPeriodEndDate,
+ '$rp_enddate' as ReportingPeriodEndDate, '$status' as status,
  'Provider; Restrictive Intervention Type; Provider Site' as breakdown,
  orgidprov as level_one,
  orgidname as level_one_description,
  restrictiveintcode as level_two,
  restrictiveintname as level_two_description,
- siteidoftreat as level_three,
+ siteidoftreat as level_three,                                                      
  site_name as level_three_description,
  'NULL' as level_four,
  'NULL' as level_four_description,
@@ -23,10 +23,10 @@
  'NULL' as level_five_description,
  'NULL' as level_six,
  'NULL' as level_six_description,
- 'MHSXX' as metric,
+ 'MHSXXa' as metric,
  b.bed_days as metric_value
  from $db_output.RI_FINAL a
- left join $db_output.bed_days_pub_csv b
+ left join $db_output.WS_bed_days_pub_csv b
  on a.orgidprov = b.bd_orgidprov 
  and a.orgidname = b.bd_orgidname 
  and a.siteidoftreat = b.bd_siteidoftreat 
@@ -44,18 +44,18 @@
  and b.bd_region_name = 'NULL'
  and b.bd_specialised_service = 'NULL'
  and b.bd_provider_type = 'NULL'
- and b.bd_length_of_restraint = 'NULL'
- where person_id is not null
+ --and b.bd_length_of_restraint = 'NULL'
+ where person_id is not null and ss_type_ward_Rank = 1  and a.specialised_service <>  'No associated Ward Stay' 
  group by orgidprov, orgidname, restrictiveintcode, restrictiveintname, siteidoftreat, site_name, b.bed_days 
 
 # COMMAND ----------
 
-# DBTITLE 1,MHS96 - Region; Provider; Restrictive Intervention Type; Provider Site
+# DBTITLE 1,MHSXXa - Region; Provider; Restrictive Intervention Type; Provider Site
  %sql
- insert into $db_output.restraints_final_output1
+ insert into $db_output.restraints_final_output
  select
  '$rp_startdate' as ReportingPeriodStartDate,
- '$rp_enddate' as ReportingPeriodEndDate,
+ '$rp_enddate' as ReportingPeriodEndDate, '$status' as status,
  'Region; Provider; Restrictive Intervention Type; Provider Site' as breakdown,
  region_code as level_one,
  region_name as level_one_description,
@@ -69,10 +69,10 @@
  'NULL' as level_five_description,
  'NULL' as level_six,
  'NULL' as level_six_description,
- 'MHSXX' as metric,
+ 'MHSXXa' as metric,
  b.bed_days as metric_value
  from $db_output.RI_FINAL a
- left join $db_output.bed_days_pub_csv b
+ left join $db_output.WS_bed_days_pub_csv b
  on a.orgidprov = b.bd_orgidprov 
  and a.orgidname = b.bd_orgidname 
  and a.region_code = b.bd_region_code
@@ -90,18 +90,18 @@
  and b.bd_age_category = 'NULL'
  and b.bd_specialised_service = 'NULL'
  and b.bd_provider_type = 'NULL'
- and b.bd_length_of_restraint = 'NULL'
- where person_id is not null
+ --and b.bd_length_of_restraint = 'NULL'
+ where person_id is not null and ss_type_ward_Rank = 1  and a.specialised_service <>  'No associated Ward Stay' 
  group by region_code, region_name, orgidprov, orgidname, restrictiveintcode, restrictiveintname, siteidoftreat, site_name, b.bed_days
 
 # COMMAND ----------
 
-# DBTITLE 1,MHS96 - Region; Provider; Specialised Commissioning Service; Restrictive Intervention Type; Provider Site
+# DBTITLE 1,MHSXXa - Region; Provider; Specialised Commissioning Service; Restrictive Intervention Type; Provider Site
  %sql
- insert into $db_output.restraints_final_output1
+ insert into $db_output.restraints_final_output
  select
  '$rp_startdate' as ReportingPeriodStartDate,
- '$rp_enddate' as ReportingPeriodEndDate,
+ '$rp_enddate' as ReportingPeriodEndDate, '$status' as status,
  'Region; Provider; Specialised Commissioning Service; Restrictive Intervention Type; Provider Site' as breakdown,
  region_code as level_one,
  region_name as level_one_description,
@@ -115,10 +115,10 @@
  site_name as level_five_description,
  'NULL' as level_six,
  'NULL' as level_six_description,
- 'MHSXX' as metric,
+ 'MHSXXa' as metric,
  b.bed_days as metric_value
  from $db_output.RI_FINAL a
- left join $db_output.bed_days_pub_csv b
+ left join $db_output.WS_bed_days_pub_csv b
  on a.orgidprov = b.bd_orgidprov 
  and a.orgidname = b.bd_orgidname 
  and a.region_code = b.bd_region_code
@@ -136,18 +136,18 @@
  and b.bd_age_group = 'NULL'
  and b.bd_age_category = 'NULL'
  and b.bd_provider_type = 'NULL'
- and b.bd_length_of_restraint = 'NULL'
- where person_id is not null
+ --and b.bd_length_of_restraint = 'NULL'
+ where person_id is not null  and ss_type_ward_Rank = 1  and a.specialised_service <>  'No associated Ward Stay'                            -------------------------WS flag changes-------
  group by region_code, region_name, orgidprov, orgidname, specialised_service, restrictiveintcode, restrictiveintname, siteidoftreat, site_name, b.bed_days
 
 # COMMAND ----------
 
-# DBTITLE 1,MHS96 - Provider; Specialised Commissioning Service; Restrictive Intervention Type; Provider Site
+# DBTITLE 1,MHSXXa - Provider; Specialised Commissioning Service; Restrictive Intervention Type; Provider Site
  %sql
- insert into $db_output.restraints_final_output1
+ insert into $db_output.restraints_final_output
  select
  '$rp_startdate' as ReportingPeriodStartDate,
- '$rp_enddate' as ReportingPeriodEndDate,
+ '$rp_enddate' as ReportingPeriodEndDate, '$status' as status,
  'Provider; Specialised Commissioning Service; Restrictive Intervention Type; Provider Site' as breakdown,
  orgidprov as level_one,
  orgidname as level_one_description,
@@ -161,10 +161,10 @@
  'NULL' as level_five_description,
  'NULL' as level_six,
  'NULL' as level_six_description,
- 'MHSXX' as metric,
+ 'MHSXXa' as metric,
  b.bed_days as metric_value
  from $db_output.RI_FINAL a
- left join $db_output.bed_days_pub_csv b
+ left join $db_output.WS_bed_days_pub_csv b
  on a.orgidprov = b.bd_orgidprov 
  and a.orgidname = b.bd_orgidname 
  and a.specialised_service = b.bd_specialised_service
@@ -182,11 +182,11 @@
  and b.bd_age_group = 'NULL'
  and b.bd_age_category = 'NULL'
  and b.bd_provider_type = 'NULL'
- and b.bd_length_of_restraint = 'NULL'
- where person_id is not null
+ --and b.bd_length_of_restraint = 'NULL'
+ where person_id is not null and ss_type_ward_Rank = 1  and a.specialised_service <>  'No associated Ward Stay'                            -------------------------WS flag changes-------
  group by orgidprov, orgidname, specialised_service, restrictiveintcode, restrictiveintname, siteidoftreat, site_name, b.bed_days
 
 # COMMAND ----------
 
  %sql
- OPTIMIZE $db_output.restraints_final_output1
+ OPTIMIZE $db_output.restraints_final_output

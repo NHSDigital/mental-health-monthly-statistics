@@ -1,15 +1,15 @@
 # Databricks notebook source
  %sql
- REFRESH TABLE $db_output.restraints_final_output1
+ REFRESH TABLE $db_output.restraints_final_output
 
 # COMMAND ----------
 
 # DBTITLE 1,MHS76 - England; Restrictive Intervention Type
  %sql
- insert into $db_output.restraints_final_output1
+ insert into $db_output.restraints_final_output
  select
  '$rp_startdate' as ReportingPeriodStartDate,
- '$rp_enddate' as ReportingPeriodEndDate,
+ '$rp_enddate' as ReportingPeriodEndDate, '$status' as status,
  'England; Restrictive Intervention Type' as breakdown,
  'England' as level_one,
  'England' as level_one_description,
@@ -33,10 +33,10 @@
 
 # DBTITLE 1,MHS76 - Region; Restrictive Intervention Type
  %sql
- insert into $db_output.restraints_final_output1
+ insert into $db_output.restraints_final_output
  select
  '$rp_startdate' as ReportingPeriodStartDate,
- '$rp_enddate' as ReportingPeriodEndDate,
+ '$rp_enddate' as ReportingPeriodEndDate, '$status' as status,
  'Region; Restrictive Intervention Type' as breakdown,
  region_code as level_one,
  region_name as level_one_description,
@@ -60,10 +60,10 @@
 
 # DBTITLE 1,MHS76 - Provider; Restrictive Intervention Type
  %sql
- insert into $db_output.restraints_final_output1
+ insert into $db_output.restraints_final_output
  select
  '$rp_startdate' as ReportingPeriodStartDate,
- '$rp_enddate' as ReportingPeriodEndDate,
+ '$rp_enddate' as ReportingPeriodEndDate, '$status' as status,
  'Provider; Restrictive Intervention Type' as breakdown,
  orgidprov as level_one,
  orgidname as level_one_description,
@@ -87,10 +87,10 @@
 
 # DBTITLE 1,MHS76 - Specialised Commissioning Service; Restrictive Intervention Type
  %sql
- insert into $db_output.restraints_final_output1
+ insert into $db_output.restraints_final_output
  select
  '$rp_startdate' as ReportingPeriodStartDate,
- '$rp_enddate' as ReportingPeriodEndDate,
+ '$rp_enddate' as ReportingPeriodEndDate, '$status' as status,
  'Specialised Commissioning Service; Restrictive Intervention Type' as breakdown,
  specialised_service as level_one,
  specialised_service as level_one_description,
@@ -107,17 +107,17 @@
  'MHS76' as metric,
  count(distinct person_id) as metric_value
  from $db_output.RI_FINAL
- where person_id is not null
+ where person_id is not null and ss_type_ward_Rank = 1                          -------------------------WS flag changes-------
  group by specialised_service, restrictiveintcode, restrictiveintname
 
 # COMMAND ----------
 
 # DBTITLE 1,MHS76 - Region; Provider; Restrictive Intervention Type
  %sql
- insert into $db_output.restraints_final_output1
+ insert into $db_output.restraints_final_output
  select
  '$rp_startdate' as ReportingPeriodStartDate,
- '$rp_enddate' as ReportingPeriodEndDate,
+ '$rp_enddate' as ReportingPeriodEndDate, '$status' as status,
  'Region; Provider; Restrictive Intervention Type' as breakdown,
  region_code as level_one,
  region_name as level_one_description,
@@ -141,10 +141,10 @@
 
 # DBTITLE 1,MHS76 - Region; Specialised Commissioning Service; Restrictive Intervention Type
  %sql
- insert into $db_output.restraints_final_output1
+ insert into $db_output.restraints_final_output
  select
  '$rp_startdate' as ReportingPeriodStartDate,
- '$rp_enddate' as ReportingPeriodEndDate,
+ '$rp_enddate' as ReportingPeriodEndDate, '$status' as status,
  'Region; Specialised Commissioning Service; Restrictive Intervention Type' as breakdown,
  region_code as level_one,
  region_name as level_one_description,
@@ -161,17 +161,17 @@
  'MHS76' as metric,
  count(distinct person_id) as metric_value
  from $db_output.RI_FINAL
- where person_id is not null
+ where person_id is not null and ss_type_ward_Rank = 1                          -------------------------WS flag changes-------
  group by region_code, region_name, specialised_service, restrictiveintcode, restrictiveintname
 
 # COMMAND ----------
 
 # DBTITLE 1,MHS76 - Region; Provider; Specialised Commissioning Service; Restrictive Intervention Type
  %sql
- insert into $db_output.restraints_final_output1
+ insert into $db_output.restraints_final_output
  select
  '$rp_startdate' as ReportingPeriodStartDate,
- '$rp_enddate' as ReportingPeriodEndDate,
+ '$rp_enddate' as ReportingPeriodEndDate, '$status' as status,
  'Region; Provider; Specialised Commissioning Service; Restrictive Intervention Type' as breakdown,
  region_code as level_one,
  region_name as level_one_description,
@@ -188,17 +188,17 @@
  'MHS76' as metric,
  count(distinct person_id) as metric_value
  from $db_output.RI_FINAL
- where person_id is not null
+ where person_id is not null and ss_type_ward_Rank = 1                          -------------------------WS flag changes-------
  group by region_code, region_name, orgidprov, orgidname, specialised_service, restrictiveintcode, restrictiveintname
 
 # COMMAND ----------
 
 # DBTITLE 1,MHS76 - Provider; Specialised Commissioning Service; Restrictive Intervention Type
  %sql
- insert into $db_output.restraints_final_output1
+ insert into $db_output.restraints_final_output
  select
  '$rp_startdate' as ReportingPeriodStartDate,
- '$rp_enddate' as ReportingPeriodEndDate,
+ '$rp_enddate' as ReportingPeriodEndDate, '$status' as status,
  'Provider; Specialised Commissioning Service; Restrictive Intervention Type' as breakdown,
  orgidprov as level_one,
  orgidname as level_one_description,
@@ -215,17 +215,17 @@
  'MHS76' as metric,
  count(distinct person_id) as metric_value
  from $db_output.RI_FINAL
- where person_id is not null
+ where person_id is not null and ss_type_ward_Rank = 1                          -------------------------WS flag changes-------
  group by orgidprov, orgidname, specialised_service, restrictiveintcode, restrictiveintname
 
 # COMMAND ----------
 
 # DBTITLE 1,MHS76 - England; Restrictive Intervention Type; Length of Restraint
  %sql
- insert into $db_output.restraints_final_output1
+ insert into $db_output.restraints_final_output
  select
  '$rp_startdate' as ReportingPeriodStartDate,
- '$rp_enddate' as ReportingPeriodEndDate,
+ '$rp_enddate' as ReportingPeriodEndDate, '$status' as status,
  'England; Restrictive Intervention Type; Length of Restraint' as breakdown,
  'England' as level_one,
  'England' as level_one_description,
@@ -249,10 +249,10 @@
 
 # DBTITLE 1,MHS76 - Region; Restrictive Intervention Type; Length of Restraint
  %sql
- insert into $db_output.restraints_final_output1
+ insert into $db_output.restraints_final_output
  select
  '$rp_startdate' as ReportingPeriodStartDate,
- '$rp_enddate' as ReportingPeriodEndDate,
+ '$rp_enddate' as ReportingPeriodEndDate, '$status' as status,
  'Region; Restrictive Intervention Type; Length of Restraint' as breakdown,
  region_code as level_one,
  region_name as level_one_description,
@@ -276,10 +276,10 @@
 
 # DBTITLE 1,MHS76 - Provider; Restrictive Intervention Type; Length of Restraint
  %sql
- insert into $db_output.restraints_final_output1
+ insert into $db_output.restraints_final_output
  select
  '$rp_startdate' as ReportingPeriodStartDate,
- '$rp_enddate' as ReportingPeriodEndDate,
+ '$rp_enddate' as ReportingPeriodEndDate, '$status' as status,
  'Provider; Restrictive Intervention Type; Length of Restraint' as breakdown,
  orgidprov as level_one,
  orgidname as level_one_description,
@@ -303,10 +303,10 @@
 
 # DBTITLE 1,MHS76 - Specialised Commissioning Service; Restrictive Intervention Type; Length of Restraint
  %sql
- insert into $db_output.restraints_final_output1
+ insert into $db_output.restraints_final_output
  select
  '$rp_startdate' as ReportingPeriodStartDate,
- '$rp_enddate' as ReportingPeriodEndDate,
+ '$rp_enddate' as ReportingPeriodEndDate, '$status' as status,
  'Specialised Commissioning Service; Restrictive Intervention Type; Length of Restraint' as breakdown,
  specialised_service as level_one,
  specialised_service as level_one_description,
@@ -323,17 +323,17 @@
  'MHS76' as metric,
  count(distinct person_id) as metric_value
  from $db_output.RI_FINAL
- where person_id is not null
+ where person_id is not null and ss_type_ward_Rank = 1                          -------------------------WS flag changes-------
  group by specialised_service, restrictiveintcode, restrictiveintname, length_of_restraint
 
 # COMMAND ----------
 
 # DBTITLE 1,MHS76 - Region; Provider; Restrictive Intervention Type; Length of Restraint
  %sql
- insert into $db_output.restraints_final_output1
+ insert into $db_output.restraints_final_output
  select
  '$rp_startdate' as ReportingPeriodStartDate,
- '$rp_enddate' as ReportingPeriodEndDate,
+ '$rp_enddate' as ReportingPeriodEndDate, '$status' as status,
  'Region; Provider; Restrictive Intervention Type; Length of Restraint' as breakdown,
  region_code as level_one,
  region_name as level_one_description,
@@ -357,10 +357,10 @@
 
 # DBTITLE 1,MHS76 - Region; Specialised Commissioning Service; Restrictive Intervention Type; Length of Restraint
  %sql
- insert into $db_output.restraints_final_output1
+ insert into $db_output.restraints_final_output
  select
  '$rp_startdate' as ReportingPeriodStartDate,
- '$rp_enddate' as ReportingPeriodEndDate,
+ '$rp_enddate' as ReportingPeriodEndDate, '$status' as status,
  'Region; Specialised Commissioning Service; Restrictive Intervention Type; Length of Restraint' as breakdown,
  region_code as level_one,
  region_name as level_one_description,
@@ -377,17 +377,17 @@
  'MHS76' as metric,
  count(distinct person_id) as metric_value
  from $db_output.RI_FINAL
- where person_id is not null
+ where person_id is not null and ss_type_ward_Rank = 1                          -------------------------WS flag changes-------
  group by region_code, region_name, specialised_service, restrictiveintcode, restrictiveintname, length_of_restraint
 
 # COMMAND ----------
 
 # DBTITLE 1,MHS76 - Region; Provider; Specialised Commissioning Service; Restrictive Intervention Type; Length of Restraint
  %sql
- insert into $db_output.restraints_final_output1
+ insert into $db_output.restraints_final_output
  select
  '$rp_startdate' as ReportingPeriodStartDate,
- '$rp_enddate' as ReportingPeriodEndDate,
+ '$rp_enddate' as ReportingPeriodEndDate, '$status' as status,
  'Region; Provider; Specialised Commissioning Service; Restrictive Intervention Type; Length of Restraint' as breakdown,
  region_code as level_one,
  region_name as level_one_description,
@@ -404,17 +404,17 @@
  'MHS76' as metric,
  count(distinct person_id) as metric_value
  from $db_output.RI_FINAL
- where person_id is not null
+ where person_id is not null and ss_type_ward_Rank = 1                          -------------------------WS flag changes-------
  group by region_code, region_name, orgidprov, orgidname, specialised_service, restrictiveintcode, restrictiveintname, length_of_restraint
 
 # COMMAND ----------
 
 # DBTITLE 1,MHS76 - Provider; Specialised Commissioning Service; Restrictive Intervention Type; Length of Restraint
  %sql
- insert into $db_output.restraints_final_output1
+ insert into $db_output.restraints_final_output
  select
  '$rp_startdate' as ReportingPeriodStartDate,
- '$rp_enddate' as ReportingPeriodEndDate,
+ '$rp_enddate' as ReportingPeriodEndDate, '$status' as status,
  'Provider; Specialised Commissioning Service; Restrictive Intervention Type; Length of Restraint' as breakdown,
  orgidprov as level_one,
  orgidname as level_one_description,
@@ -431,10 +431,10 @@
  'MHS76' as metric,
  count(distinct person_id) as metric_value
  from $db_output.RI_FINAL
- where person_id is not null
+ where person_id is not null and ss_type_ward_Rank = 1                          -------------------------WS flag changes-------
  group by orgidprov, orgidname, specialised_service, restrictiveintcode, restrictiveintname, length_of_restraint
 
 # COMMAND ----------
 
  %sql
- OPTIMIZE $db_output.restraints_final_output1
+ OPTIMIZE $db_output.restraints_final_output

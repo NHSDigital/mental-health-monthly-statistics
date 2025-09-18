@@ -1,15 +1,15 @@
 # Databricks notebook source
  %sql
- REFRESH TABLE $db_output.restraints_final_output1
+ REFRESH TABLE $db_output.restraints_final_output
 
 # COMMAND ----------
 
 # DBTITLE 1,MHS77 - Provider; Restrictive Intervention Type; Provider Site
  %sql
- insert into $db_output.restraints_final_output1
+ insert into $db_output.restraints_final_output
  select
  '$rp_startdate' as ReportingPeriodStartDate,
- '$rp_enddate' as ReportingPeriodEndDate,
+ '$rp_enddate' as ReportingPeriodEndDate, '$status' as status,
  'Provider; Restrictive Intervention Type; Provider Site' as breakdown,
  orgidprov as level_one,
  orgidname as level_one_description,
@@ -24,19 +24,19 @@
  'NULL' as level_six,
  'NULL' as level_six_description,
  'MHS77' as metric,
- count(distinct mhs505uniqid) as metric_value
+ count(distinct UniqRestrictiveIntIncID, UniqRestrictiveIntTypeID) as metric_value
  from $db_output.RI_FINAL
- where person_id is not null
+ where person_id is not null and ss_type_ward_Rank = 1                          -------------------------WS flag changes-------
  group by orgidprov, orgidname, restrictiveintcode, restrictiveintname, siteidoftreat, site_name
 
 # COMMAND ----------
 
 # DBTITLE 1,MHS77 - Region; Provider; Restrictive Intervention Type; Provider Site
  %sql
- insert into $db_output.restraints_final_output1
+ insert into $db_output.restraints_final_output
  select
  '$rp_startdate' as ReportingPeriodStartDate,
- '$rp_enddate' as ReportingPeriodEndDate,
+ '$rp_enddate' as ReportingPeriodEndDate, '$status' as status,
  'Region; Provider; Restrictive Intervention Type; Provider Site' as breakdown,
  region_code as level_one,
  region_name as level_one_description,
@@ -51,19 +51,19 @@
  'NULL' as level_six,
  'NULL' as level_six_description,
  'MHS77' as metric,
- count(distinct mhs505uniqid) as metric_value
+ count(distinct UniqRestrictiveIntIncID, UniqRestrictiveIntTypeID) as metric_value
  from $db_output.RI_FINAL
- where person_id is not null
+ where person_id is not null and ss_type_ward_Rank = 1                          -------------------------WS flag changes-------
  group by region_code, region_name, orgidprov, orgidname, restrictiveintcode, restrictiveintname, siteidoftreat, site_name
 
 # COMMAND ----------
 
 # DBTITLE 1,MHS77 - Region; Provider; Specialised Commissioning Service; Restrictive Intervention Type; Provider Site
  %sql
- insert into $db_output.restraints_final_output1
+ insert into $db_output.restraints_final_output
  select
  '$rp_startdate' as ReportingPeriodStartDate,
- '$rp_enddate' as ReportingPeriodEndDate,
+ '$rp_enddate' as ReportingPeriodEndDate, '$status' as status,
  'Region; Provider; Specialised Commissioning Service; Restrictive Intervention Type; Provider Site' as breakdown,
  region_code as level_one,
  region_name as level_one_description,
@@ -78,19 +78,19 @@
  'NULL' as level_six,
  'NULL' as level_six_description,
  'MHS77' as metric,
- count(distinct mhs505uniqid) as metric_value
+ count(distinct UniqRestrictiveIntIncID, UniqRestrictiveIntTypeID) as metric_value
  from $db_output.RI_FINAL
- where person_id is not null
+ where person_id is not null and ss_type_ward_Rank = 1                          -------------------------WS flag changes-------
  group by region_code, region_name, orgidprov, orgidname, specialised_service, restrictiveintcode, restrictiveintname, siteidoftreat, site_name
 
 # COMMAND ----------
 
 # DBTITLE 1,MHS77 - Provider; Specialised Commissioning Service; Restrictive Intervention Type; Provider Site
  %sql
- insert into $db_output.restraints_final_output1
+ insert into $db_output.restraints_final_output
  select
  '$rp_startdate' as ReportingPeriodStartDate,
- '$rp_enddate' as ReportingPeriodEndDate,
+ '$rp_enddate' as ReportingPeriodEndDate, '$status' as status,
  'Provider; Specialised Commissioning Service; Restrictive Intervention Type; Provider Site' as breakdown,
  orgidprov as level_one,
  orgidname as level_one_description,
@@ -105,12 +105,12 @@
  'NULL' as level_six,
  'NULL' as level_six_description,
  'MHS77' as metric,
- count(distinct mhs505uniqid) as metric_value
+ count(distinct UniqRestrictiveIntIncID, UniqRestrictiveIntTypeID) as metric_value
  from $db_output.RI_FINAL
- where person_id is not null
+ where person_id is not null and ss_type_ward_Rank = 1                          -------------------------WS flag changes-------
  group by orgidprov, orgidname, specialised_service, restrictiveintcode, restrictiveintname, siteidoftreat, site_name
 
 # COMMAND ----------
 
  %sql
- OPTIMIZE $db_output.restraints_final_output1
+ OPTIMIZE $db_output.restraints_final_output

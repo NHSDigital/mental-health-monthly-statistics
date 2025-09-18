@@ -7,7 +7,7 @@ rp_startdate = dbutils.widgets.get("rp_startdate")
 
 # COMMAND ----------
 
-df = spark.table("{}.restraints_final_output1".format(db_output))
+df = spark.table("{}.restraints_final_output".format(db_output))
 none_df = df.na.replace("NULL", "NONE")
 spark.sql("DROP TABLE IF EXISTS {}.restr_pub_csv".format(db_output))
 none_df.write.saveAsTable("{}.restr_pub_csv".format(db_output))
@@ -17,11 +17,11 @@ none_df.write.saveAsTable("{}.restr_pub_csv".format(db_output))
  %sql
  -- create or replace global temporary view supp_pub_csv as
  DROP TABLE IF EXISTS $db_output.supp_pub_csv;
- CREATE TABLE $db_output.supp_pub_csv AS
+ CREATE TABLE $db_output.supp_pub_csv USING DELTA AS
  select 
  ReportingPeriodStartDate as REPORTING_PERIOD_START,
  ReportingPeriodEndDate as REPORTING_PERIOD_END,
- 'Performance' as STATUS,
+ status as STATUS,
  breakdown as BREAKDOWN,
  level_one as LEVEL_ONE,
  level_one_description as LEVEL_ONE_DESCRIPTION,
@@ -38,12 +38,12 @@ none_df.write.saveAsTable("{}.restr_pub_csv".format(db_output))
  metric as METRIC,
  cast(case when cast(metric_value as int) < 5 then '9999999' else cast(round(metric_value/5,0)*5 as int) end as string) as METRIC_VALUE
  from $db_output.restr_pub_csv
- where metric in ('MHS76', 'MHS77')
+ where metric in ('MHS76', 'MHS77', 'MHS136') --suppression where measure is a count
  UNION ALL
  select 
  a.ReportingPeriodStartDate as REPORTING_PERIOD_START,
  a.ReportingPeriodEndDate as REPORTING_PERIOD_END,
- 'Performance' as STATUS,
+ a.status as STATUS,
  a.breakdown as BREAKDOWN,
  a.level_one as LEVEL_ONE,
  a.level_one_description as LEVEL_ONE_DESCRIPTION,
@@ -63,7 +63,8 @@ none_df.write.saveAsTable("{}.restr_pub_csv".format(db_output))
       when d.METRIC = 'MHSXX' and d.metric_value <100 then '9999999'
       else cast(round(a.metric_value,0) as int) end as METRIC_VALUE
  from $db_output.restr_pub_csv a      
- left join $db_output.restr_pub_csv b on a.breakdown = b.breakdown 
+ left join $db_output.restr_pub_csv b on             a.status = b.status
+                                                     and a.breakdown = b.breakdown 
                                                      and a.level_one = b.level_one
                                                      and a.level_two = b.level_two
                                                      and a.level_three = b.level_three
@@ -72,7 +73,8 @@ none_df.write.saveAsTable("{}.restr_pub_csv".format(db_output))
                                                      and a.level_six = b.level_six
                                                      and a.metric = 'MHS96'
                                                      and b.metric = 'MHS76'                                                    
- left join $db_output.restr_pub_csv c on a.breakdown = c.breakdown
+ left join $db_output.restr_pub_csv c on             a.status = c.status
+                                                     and a.breakdown = c.breakdown
                                                      and a.level_one = c.level_one
                                                      and a.level_two = c.level_two
                                                      and a.level_three = c.level_three
@@ -81,7 +83,8 @@ none_df.write.saveAsTable("{}.restr_pub_csv".format(db_output))
                                                      and a.level_six = c.level_six
                                                      and a.metric = 'MHS96'
                                                      and c.metric = 'MHS77'
- left join $db_output.restr_pub_csv d on a.breakdown = d.breakdown
+ left join $db_output.restr_pub_csv d on             a.status = d.status
+                                                     and a.breakdown = d.breakdown
                                                      and a.level_one = d.level_one
                                                      and a.level_two = d.level_two
                                                      and a.level_three = d.level_three
@@ -89,13 +92,68 @@ none_df.write.saveAsTable("{}.restr_pub_csv".format(db_output))
                                                      and a.level_five = d.level_five
                                                      and a.level_six = d.level_six
                                                      and a.metric = 'MHS96'
-                                                     and d.metric = 'MHSXX'                                                    
- where a.metric = 'MHS96'
+                                                     and d.metric = 'MHSXX'
+ where a.metric = 'MHS96' --suppression for restraints per hospital spell days
  UNION ALL
  select 
  a.ReportingPeriodStartDate as REPORTING_PERIOD_START,
  a.ReportingPeriodEndDate as REPORTING_PERIOD_END,
- 'Performance' as STATUS,
+ a.status as STATUS,
+ a.breakdown as BREAKDOWN,
+ a.level_one as LEVEL_ONE,
+ a.level_one_description as LEVEL_ONE_DESCRIPTION,
+ a.level_two as LEVEL_TWO,
+ a.level_two_description as LEVEL_TWO_DESCRIPTION,
+ a.level_three as LEVEL_THREE,
+ a.level_three_description as LEVEL_THREE_DESCRIPTION,
+ a.level_four as LEVEL_FOUR,
+ a.level_four_description as LEVEL_FOUR_DESCRIPTION,
+ a.level_five as LEVEL_FIVE,
+ a.level_five_description as LEVEL_FIVE_DESCRIPTION,
+ a.level_six as LEVEL_SIX,
+ a.level_six_description as LEVEL_SIX_DESCRIPTION,
+ a.metric as METRIC,
+ case when b.METRIC = 'MHS76' and b.metric_value <5 then '9999999' 
+ 	 when c.METRIC = 'MHS77' and c.metric_value <5 then '9999999' 
+      when d.METRIC = 'MHSXXa' and d.metric_value <100 then '9999999'
+      else cast(round(a.metric_value,0) as int) end as METRIC_VALUE
+ from $db_output.restr_pub_csv a      
+ left join $db_output.restr_pub_csv b on             a.status = b.status
+                                                     and a.breakdown = b.breakdown 
+                                                     and a.level_one = b.level_one
+                                                     and a.level_two = b.level_two
+                                                     and a.level_three = b.level_three
+                                                     and a.level_four = b.level_four
+                                                     and a.level_five = b.level_five
+                                                     and a.level_six = b.level_six
+                                                     and a.metric = 'MHS117'
+                                                     and b.metric = 'MHS76'                                                    
+ left join $db_output.restr_pub_csv c on             a.status = c.status
+                                                     and a.breakdown = c.breakdown
+                                                     and a.level_one = c.level_one
+                                                     and a.level_two = c.level_two
+                                                     and a.level_three = c.level_three
+                                                     and a.level_four = c.level_four
+                                                     and a.level_five = c.level_five
+                                                     and a.level_six = c.level_six
+                                                     and a.metric = 'MHS117'
+                                                     and c.metric = 'MHS77'
+ left join $db_output.restr_pub_csv d on             a.status = d.status
+                                                     and a.breakdown = d.breakdown
+                                                     and a.level_one = d.level_one
+                                                     and a.level_two = d.level_two
+                                                     and a.level_three = d.level_three
+                                                     and a.level_four = d.level_four
+                                                     and a.level_five = d.level_five
+                                                     and a.level_six = d.level_six
+                                                     and a.metric = 'MHS117'
+                                                     and d.metric = 'MHSXXa'                                                  
+ where a.metric = 'MHS117' --suppression for restraints per hospital ward stay bed days
+ UNION ALL
+ select 
+ a.ReportingPeriodStartDate as REPORTING_PERIOD_START,
+ a.ReportingPeriodEndDate as REPORTING_PERIOD_END,
+ a.status as STATUS,
  a.breakdown as BREAKDOWN,
  a.level_one as LEVEL_ONE,
  a.level_one_description as LEVEL_ONE_DESCRIPTION,
@@ -112,7 +170,8 @@ none_df.write.saveAsTable("{}.restr_pub_csv".format(db_output))
  a.metric as METRIC,
  case when b.METRIC = 'MHS76' and b.metric_value <5 then '9999999' else cast(round(a.metric_value,0) as int) end as METRIC_VALUE
  from $db_output.restr_pub_csv a      
- left join $db_output.restr_pub_csv b on a.breakdown = b.breakdown 
+ left join $db_output.restr_pub_csv b on             a.status = b.status
+                                                     and a.breakdown = b.breakdown 
                                                      and a.level_one = b.level_one
                                                      and a.level_two = b.level_two
                                                      and a.level_three = b.level_three
@@ -121,12 +180,12 @@ none_df.write.saveAsTable("{}.restr_pub_csv".format(db_output))
                                                      and a.level_six = b.level_six
                                                      and a.metric = 'MHS97'
                                                      and b.metric = 'MHS76'
- where a.metric = 'MHS97'
+ where a.metric = 'MHS97' --suppression for percentage of pepole in hospital that were restained
  UNION ALL
  select 
  ReportingPeriodStartDate as REPORTING_PERIOD_START,
  ReportingPeriodEndDate as REPORTING_PERIOD_END,
- 'Performance' as STATUS,
+ status as STATUS,
  breakdown as BREAKDOWN,
  level_one as LEVEL_ONE,
  level_one_description as LEVEL_ONE_DESCRIPTION,
@@ -143,7 +202,51 @@ none_df.write.saveAsTable("{}.restr_pub_csv".format(db_output))
  metric as METRIC,
  metric_value as METRIC_VALUE
  from $db_output.restr_pub_csv
- where metric in ('MHS98', 'MHS99')
+ where metric in ('MHS98', 'MHS98a', 'MHS99', 'MHS138', 'MHS138a', 'MHS139', 'MHS146', 'MHS146a', 'MHS147', 'MHS147a') --no suppression for average/max times
+ UNION ALL
+ select 
+ a.ReportingPeriodStartDate as REPORTING_PERIOD_START,
+ a.ReportingPeriodEndDate as REPORTING_PERIOD_END,
+ a.status as STATUS,
+ a.breakdown as BREAKDOWN,
+ a.level_one as LEVEL_ONE,
+ a.level_one_description as LEVEL_ONE_DESCRIPTION,
+ a.level_two as LEVEL_TWO,
+ a.level_two_description as LEVEL_TWO_DESCRIPTION,
+ a.level_three as LEVEL_THREE,
+ a.level_three_description as LEVEL_THREE_DESCRIPTION,
+ a.level_four as LEVEL_FOUR,
+ a.level_four_description as LEVEL_FOUR_DESCRIPTION,
+ a.level_five as LEVEL_FIVE,
+ a.level_five_description as LEVEL_FIVE_DESCRIPTION,
+ a.level_six as LEVEL_SIX,
+ a.level_six_description as LEVEL_SIX_DESCRIPTION,
+ a.metric as METRIC,
+ case when b.METRIC = 'MHS136' and b.metric_value <5 then '9999999' 
+ 	 when c.METRIC = 'MHS77' and c.metric_value <5 then '9999999' 
+      else cast(round(a.metric_value,1) as float) end as METRIC_VALUE
+ from $db_output.restr_pub_csv a      
+ left join $db_output.restr_pub_csv b on             a.status = b.status
+                                                     and a.breakdown = b.breakdown 
+                                                     and a.level_one = b.level_one
+                                                     and a.level_two = b.level_two
+                                                     and a.level_three = b.level_three
+                                                     and a.level_four = b.level_four
+                                                     and a.level_five = b.level_five
+                                                     and a.level_six = b.level_six
+                                                     and a.metric = 'MHS137'
+                                                     and b.metric = 'MHS136'                                                    
+ left join $db_output.restr_pub_csv c on             a.status = c.status
+                                                     and a.breakdown = c.breakdown
+                                                     and a.level_one = c.level_one
+                                                     and a.level_two = c.level_two
+                                                     and a.level_three = c.level_three
+                                                     and a.level_four = c.level_four
+                                                     and a.level_five = c.level_five
+                                                     and a.level_six = c.level_six
+                                                     and a.metric = 'MHS137'
+                                                     and c.metric = 'MHS77'                                             
+ where a.metric = 'MHS137'
 
 # COMMAND ----------
 
@@ -180,3 +283,5 @@ none_df.write.saveAsTable("{}.restr_pub_csv".format(db_output))
 
 # COMMAND ----------
 
+ %sql
+ OPTIMIZE $db_output.supp_pub_csv

@@ -23,8 +23,8 @@
  'NULL' as level_five_description,
  'NULL' as level_six,
  'NULL' as level_six_description,
- 'MHS98' as metric,
- sum(minutes_of_restraint)/count(distinct UniqRestrictiveIntIncID, UniqRestrictiveIntTypeID) as metric_value
+ 'MHS98a' as metric,
+ percentile(minutes_of_restraint, 0.5) as metric_value
  from $db_output.RI_FINAL
  where person_id is not null and avg_min_flag_type = 'Y' and RI_RecordNumber_Type =1
  group by restrictiveintcode, restrictiveintname
@@ -50,8 +50,8 @@
  'NULL' as level_five_description,
  'NULL' as level_six,
  'NULL' as level_six_description,
- 'MHS98' as metric,
- sum(minutes_of_restraint)/count(distinct UniqRestrictiveIntIncID, UniqRestrictiveIntTypeID) as metric_value
+ 'MHS98a' as metric,
+ percentile(minutes_of_restraint, 0.5) as metric_value
  from $db_output.RI_FINAL
  where person_id is not null and avg_min_flag_type = 'Y' and RI_RecordNumber_Type = 1
  group by region_code, region_name, restrictiveintcode, restrictiveintname
@@ -77,8 +77,8 @@
  'NULL' as level_five_description,
  'NULL' as level_six,
  'NULL' as level_six_description,
- 'MHS98' as metric,
- sum(minutes_of_restraint)/count(distinct UniqRestrictiveIntIncID, UniqRestrictiveIntTypeID) as metric_value
+ 'MHS98a' as metric,
+ percentile(minutes_of_restraint, 0.5) as metric_value
  from $db_output.RI_FINAL
  where person_id is not null and avg_min_flag_type = 'Y' and RI_RecordNumber_Type = 1
  group by orgidprov,orgidname, restrictiveintcode, restrictiveintname
@@ -104,8 +104,8 @@
  'NULL' as level_five_description,
  'NULL' as level_six,
  'NULL' as level_six_description,
- 'MHS98' as metric,
- sum(minutes_of_restraint)/count(distinct UniqRestrictiveIntIncID, UniqRestrictiveIntTypeID) as metric_value
+ 'MHS98a' as metric,
+ percentile(minutes_of_restraint, 0.5) as metric_value
  from $db_output.RI_FINAL
  where person_id is not null and avg_min_flag_type = 'Y' and RI_RecordNumber_Type = 1
  group by specialised_service, restrictiveintcode, restrictiveintname
@@ -131,8 +131,8 @@
  'NULL' as level_five_description,
  'NULL' as level_six,
  'NULL' as level_six_description,
- 'MHS98' as metric,
- sum(minutes_of_restraint)/count(distinct UniqRestrictiveIntIncID, UniqRestrictiveIntTypeID) as metric_value
+ 'MHS98a' as metric,
+ percentile(minutes_of_restraint, 0.5) as metric_value
  from $db_output.RI_FINAL
  where person_id is not null and avg_min_flag_type = 'Y' and RI_RecordNumber_Type = 1
  group by region_code, region_name, orgidprov, orgidname, restrictiveintcode, restrictiveintname
@@ -157,8 +157,8 @@
  'NULL' as level_five_description,
  'NULL' as level_six,
  'NULL' as level_six_description,
- 'MHS98' as metric,
- sum(minutes_of_restraint)/count(distinct UniqRestrictiveIntIncID, UniqRestrictiveIntTypeID) as metric_value
+ 'MHS98a' as metric,
+ percentile(minutes_of_restraint, 0.5) as metric_value
  from $db_output.RI_FINAL
  where person_id is not null and avg_min_flag_type = 'Y' and RI_RecordNumber_Type = 1
  group by region_code, region_name, specialised_service, restrictiveintcode, restrictiveintname
@@ -184,8 +184,8 @@
  'NULL' as level_five_description,
  'NULL' as level_six,
  'NULL' as level_six_description,
- 'MHS98' as metric,
- sum(minutes_of_restraint)/count(distinct UniqRestrictiveIntIncID, UniqRestrictiveIntTypeID) as metric_value
+ 'MHS98a' as metric,
+ percentile(minutes_of_restraint, 0.5) as metric_value
  from $db_output.RI_FINAL
  where person_id is not null and avg_min_flag_type = 'Y' and RI_RecordNumber_Type = 1
  group by region_code, region_name, orgidprov, orgidname, specialised_service, restrictiveintcode, restrictiveintname
@@ -211,8 +211,8 @@
  'NULL' as level_five_description,
  'NULL' as level_six,
  'NULL' as level_six_description,
- 'MHS98' as metric,
- sum(minutes_of_restraint)/count(distinct UniqRestrictiveIntIncID, UniqRestrictiveIntTypeID) as metric_value
+ 'MHS98a' as metric,
+ percentile(minutes_of_restraint, 0.5) as metric_value
  from $db_output.RI_FINAL
  where person_id is not null and avg_min_flag_type = 'Y' and RI_RecordNumber_Type = 1
  group by orgidprov, orgidname, specialised_service, restrictiveintcode, restrictiveintname
